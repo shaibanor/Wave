@@ -252,7 +252,7 @@ footer b{color:var(--ink)}
       <div data-howmk="saudi"><h3>حد التذبذب اليومي</h3>
       <p>في السوق السعودي لا يتحرك السهم في اليوم الواحد أكثر من 10% صعودًا أو هبوطًا عن إغلاق اليوم السابق، لذلك ترى أحيانًا شمعة تتوقف عند هذا الحد بالضبط. وعند توزيع الأرباح ينخفض السعر في اليوم التالي للأحقية بمقدار التوزيع تقريبًا.</p></div>
       <h3>المقارنة</h3>
-      <p>في صفحة الأسابيع يظهر توقع التحليل بجانب توقع <i class="sig-inline" role="img" aria-label="شيبان"></i> لكل أسبوع، وبعد الإغلاق تظهر نتيجة كل منهما.</p>
+      <p>في صفحة الأسابيع يظهر توقع التحليل بجانب توقع شيبان لكل أسبوع، وبعد الإغلاق تظهر نتيجة كل منهما.</p>
     </div>
   </section>
 
@@ -317,7 +317,7 @@ footer b{color:var(--ink)}
   const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const biasTxt={up:'صعود ↑',down:'هبوط ↓',flat:'حياد ↔'};
   const LS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
-  const SIG='<i class="sig-inline" role="img" aria-label="شيبان"></i>';
+  const SIG='شيبان';
 
   function weeksOf(rows){
     const W=new Map();
