@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="اختبار موجة: منصة تعليمية لقراءة شموع إيثيريوم وريبل وتقدير منطقة الإغلاق الأسبوعية.">
+<meta name="description" content="موجة التحليل الخاص: منصة تعليمية لقراءة الشموع وتقدير منطقة الإغلاق الأسبوعية.">
 <meta name="robots" content="noindex">
-<title>اختبار موجة · ETH وXRP</title>
+<title>موجة التحليل الخاص · العملات المشفرة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
@@ -30,14 +30,18 @@
   --warn:#E3A44B; --chip:#1C2A36; --mine:#A993F2; --mineSoft:#2C2546; color-scheme:dark}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65;direction:rtl}
-.wrap{max-width:820px;margin:0 auto;padding-block:16px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+.wrap{max-width:820px;margin:0 auto;padding-block:16px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
 h1{font-family:var(--f-display);font-weight:700;font-size:1.5rem;margin:0;text-wrap:balance}
 h2{font-family:var(--f-display);font-weight:500;font-size:1.05rem;margin:0 0 10px}
 p{margin:0}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
 .muted{color:var(--muted)} .small{font-size:.84rem}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
-.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between}
+.byline{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-top:4px}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;padding:2px 10px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.tag.edu{color:var(--warn)}
+.ticker{font-family:var(--f-num);font-size:.85rem;color:var(--muted);direction:ltr;unicode-bidi:isolate}
 .seg{display:inline-flex;background:var(--chip);border-radius:999px;padding:4px;gap:4px}
 .seg button{font:600 .92rem var(--f-body);border:0;background:transparent;color:var(--muted);padding:6px 16px;border-radius:999px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.14)}
@@ -48,6 +52,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .hero{display:flex;flex-direction:column;gap:14px}
 .price-row{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
 .price{font-family:var(--f-num);font-size:2rem;font-weight:600;direction:ltr;unicode-bidi:isolate}
+.cur{font-size:.95rem;color:var(--muted);font-weight:500}
 .chg.up{color:var(--up)} .chg.down{color:var(--down)}
 .say{font-size:1.12rem;line-height:1.7}
 .say b{font-family:var(--f-num);direction:ltr;unicode-bidi:isolate;background:var(--zone);padding:1px 8px;border-radius:6px;font-weight:600}
@@ -61,6 +66,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .ruler .lab{position:absolute;font-size:.74rem;color:var(--muted);transform:translateX(50%);white-space:nowrap}
 .ruler .lab.t{top:-4px} .ruler .lab.b{top:48px}
 .note{background:var(--chip);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.alert{border-right:4px solid var(--warn);background:var(--chip);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.alert b{color:var(--warn)}
 .trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .trust>div{background:var(--chip);border-radius:10px;padding:10px 12px;min-width:0}
 .trust .big{font-family:var(--f-num);font-size:1.35rem;font-weight:600;direction:ltr;unicode-bidi:isolate}
@@ -91,6 +98,12 @@ svg text{fill:var(--muted);font-family:var(--f-num);font-size:11px}
 .how{display:flex;flex-direction:column;gap:12px;max-width:65ch}
 .how h3{font-family:var(--f-display);font-weight:500;font-size:1rem;margin:4px 0 0}
 .empty{padding:26px 12px;text-align:center;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+footer b{color:var(--ink)}
+.brand-en{font-family:var(--f-num);font-weight:600;font-size:.7em;color:var(--accent);letter-spacing:.04em}
+.sub-title{margin:2px 0 0;font-family:var(--f-display);font-weight:500;font-size:1.05rem;color:var(--muted)}
+.owner{margin:0;text-align:center;font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--accent);letter-spacing:.02em}
+.owner.foot{margin-top:8px;font-size:.98rem}
 @media (max-width:560px){.rows{grid-template-columns:1fr}.price{font-size:1.7rem}}
 
 .hero-band{position:relative;overflow:hidden;border-radius:22px;background:#0A1724;color:#EFE7D6;padding:34px 20px 26px;isolation:isolate;box-shadow:0 18px 40px -24px rgba(5,14,24,.7)}
@@ -113,33 +126,34 @@ svg text{fill:var(--muted);font-family:var(--f-num);font-size:11px}
   @keyframes sign{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
 }
 
-footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 .asset-row{display:flex;justify-content:center}
-.site-nav{display:flex;gap:6px;margin-top:6px}.site-nav a,.site-nav span{font-size:.84rem;font-weight:600;padding:4px 14px;border-radius:999px;border:1px solid rgba(201,165,92,.4);text-decoration:none}.site-nav a{color:#D9CCB0}.site-nav a:hover{background:rgba(201,165,92,.12)}.site-nav span{background:#C9A55C;color:#0A1724;border-color:#C9A55C}
+.asset-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.asset-name{font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.site-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:6px}
+.site-nav a,.site-nav span{font-size:.84rem;font-weight:600;padding:4px 14px;border-radius:999px;border:1px solid rgba(201,165,92,.4);text-decoration:none}
+.site-nav a{color:#D9CCB0}.site-nav a:hover{background:rgba(201,165,92,.12)}
+.site-nav span{background:#C9A55C;color:#0A1724;border-color:#C9A55C}
+.sig-inline{display:inline-block;vertical-align:middle;width:64px;aspect-ratio:900/239;background:var(--mine);-webkit-mask:var(--sig) center/contain no-repeat;mask:var(--sig) center/contain no-repeat;margin-inline-start:2px}
+.how .sig-inline{width:56px;background:var(--accent)}
+.seg{flex-wrap:wrap;justify-content:center}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header class="hero-band">
     <canvas id="waves" aria-hidden="true"></canvas>
     <div class="hb-inner">
-      <div class="sig" role="img" aria-label="توقيع شيبان"></div>
+      <div class="sig" role="img" aria-label="شيبان"></div>
       <p class="handle">wavehub.shaibanor</p>
       <span class="rule" aria-hidden="true"></span>
-      <h1>اختبار موجة</h1>
-      <p class="hb-sub">إيثيريوم وريبل · <span class="num">ETH · XRP</span></p>
-      <nav class="site-nav" aria-label="الصفحات"><a href="../">سهم عناية</a><span aria-current="page">ETH · XRP</span></nav>
+      <h1>موجة التحليل الخاص</h1>
+      <p class="hb-sub">العملات المشفرة · <span class="num">BTC · ETH · XRP</span></p>
+      <nav class="site-nav" aria-label="الأقسام"><a href="../">الرئيسية</a><a href="../saudi/">السوق السعودي</a><span aria-current="page">العملات المشفرة</span></nav>
       <p class="hb-q">أين سيغلق السعر هذا الأسبوع؟ منطقة متوقعة قبل بداية الأسبوع، ثم نتحقق بعد إغلاق الأحد.</p>
     </div>
   </header>
 
-  <div class="asset-row">
-    <div class="seg" role="group" aria-label="العملة">
-      <button id="a-ETH" data-a="ETH" aria-pressed="true">ETH</button>
-      <button id="a-XRP" data-a="XRP" aria-pressed="false">XRP</button>
-    </div>
-  </div>
+  <div class="asset-row"><div class="seg" role="group" aria-label="الأصل"><button id="a-BTC" data-a="BTC" aria-pressed="true">BTC</button><button id="a-ETH" data-a="ETH" aria-pressed="false">ETH</button><button id="a-XRP" data-a="XRP" aria-pressed="false">XRP</button></div></div>
 
   <nav class="tabs" role="tablist">
     <button id="t-now" role="tab" data-t="now" aria-selected="true">الآن</button>
@@ -154,7 +168,7 @@ footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:
 
   <section id="v-candles" class="view" hidden>
     <div class="panel">
-      <div class="top" style="margin-bottom:10px">
+      <div class="top" style="margin-bottom:10px;align-items:center">
         <h2 style="margin:0">الشموع</h2>
         <div class="seg" role="group" aria-label="الإطار الزمني">
           <button id="f-W" data-f="W" aria-pressed="true">أسبوعي</button>
@@ -204,19 +218,20 @@ footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:
       <h3>الميل</h3>
       <p>«صعود» أو «هبوط» أو «حياد» تقدير ثانوي لاتجاه الأسبوع، ويُقاس منفصلًا. توقع الاتجاه أصعب بكثير من توقع المنطقة، والسجل سيُظهر ذلك.</p>
       <h3>المقارنة</h3>
-      <p>في صفحة الأسابيع يظهر توقع موجة بجانب توقع شيبان لكل أسبوع، وبعد الإغلاق تظهر نتيجة كل منهما.</p>
+      <p>في صفحة الأسابيع يظهر توقع موجة بجانب توقع <i class="sig-inline" role="img" aria-label="شيبان"></i> لكل أسبوع، وبعد الإغلاق تظهر نتيجة كل منهما.</p>
     </div>
   </section>
 
   <footer>
-    <p>اختبار موجة: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
+    <p>موجة التحليل الخاص: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
     <p>المحتوى لغرض تعليمي فقط، وليس توصية استثمارية ولا دعوة للشراء أو البيع. القرار الاستثماري مسؤولية صاحبه.</p>
     <p>الأسعار بالدولار الأمريكي، والأسبوع من الاثنين إلى الأحد بتوقيت UTC، وتُحدَّث يوميًا.</p>
-    <div class="foot-sig"><div class="sig" role="img" aria-label="توقيع شيبان"></div><p class="handle">wavehub.shaibanor</p></div>
+    <div class="foot-sig"><div class="sig" role="img" aria-label="شيبان"></div><p class="handle">wavehub.shaibanor</p></div>
   </footer>
 </div>
 
 <script>
+
 (function(){
   const c=document.getElementById('waves');if(!c)return;const x=c.getContext('2d');
   const still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;let w,h,t=0;
@@ -228,158 +243,181 @@ footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:
     if(!still){t+=.006;requestAnimationFrame(draw);}}
   size();draw();window.addEventListener('resize',()=>{size();if(still)draw();});
 })();
+
 </script>
+<script>window.WAVE_CFG={"market": "crypto", "weekStart": 1, "weekSpan": 7, "td": 7, "assets": [{"id": "BTC", "name": "بيتكوين", "btn": "BTC", "code": "BTC / USD", "dp": 0, "zdp": 0, "pre": "$"}, {"id": "ETH", "name": "إيثيريوم", "btn": "ETH", "code": "ETH / USD", "dp": 2, "zdp": 0, "pre": "$"}, {"id": "XRP", "name": "ريبل", "btn": "XRP", "code": "XRP / USD", "dp": 4, "zdp": 2, "pre": "$"}], "notes": {"BTC": [{"kind": "alert", "html": "<b>حدث قريب:</b> اجتماع الفيدرالي الأمريكي يومي 27 و28 أكتوبر 2026، والقرار والمؤتمر الصحفي يوم 28. توقّع تذبذبًا أعلى من المعتاد حوله."}], "ETH": [{"kind": "alert", "html": "<b>حدث قريب:</b> اجتماع الفيدرالي الأمريكي يومي 27 و28 أكتوبر 2026، والقرار والمؤتمر الصحفي يوم 28. توقّع تذبذبًا أعلى من المعتاد حوله."}], "XRP": [{"kind": "alert", "html": "<b>حدث قريب:</b> اجتماع الفيدرالي الأمريكي يومي 27 و28 أكتوبر 2026، والقرار والمؤتمر الصحفي يوم 28. توقّع تذبذبًا أعلى من المعتاد حوله."}]}, "mode": "json"};</script>
 <script>
 (function(){
+  const CFG=window.WAVE_CFG;
   const AR_M=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
   const AR_D=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-  const S={asset:'ETH',tab:'now',frame:'W',daily:{ETH:[],XRP:[]},weeks:{},loaded:false,chart:null};
+  const IDS=CFG.assets.map(a=>a.id);
+  const A=Object.fromEntries(CFG.assets.map(a=>[a.id,a]));
+  const S={asset:IDS[0],tab:'now',frame:'W',daily:Object.fromEntries(IDS.map(i=>[i,[]])),weeks:{},loaded:false,db:null,canWrite:false,chart:null};
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const dp=a=>a==='XRP'?4:2;
-  const fmt=(v,a)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:dp(a),maximumFractionDigits:dp(a)});
-  const fz=(v,a)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:a==='XRP'?2:0,maximumFractionDigits:a==='XRP'?4:0});
+  const nf=(v,d)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const fmt=(v,a)=>nf(v,A[a].dp);
+  const fz=(v,a)=>nf(v,A[a].zdp);
+  const money=(v,a,z)=>{const t=z?fz(v,a):fmt(v,a);return A[a].pre?A[a].pre+t:t;};
+  const cur=a=>A[a].cur?` ${A[a].cur}`:'';
   const D0=iso=>new Date(iso+'T00:00:00Z');
   const addD=(iso,n)=>{const d=D0(iso);d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
   const arDay=iso=>{const d=D0(iso);return AR_D[d.getUTCDay()]+' '+d.getUTCDate()+' '+AR_M[d.getUTCMonth()];};
   const arShort=iso=>{const d=D0(iso);return d.getUTCDate()+' '+AR_M[d.getUTCMonth()];};
-  const monday=iso=>{const d=D0(iso);const k=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-k);return d.toISOString().slice(0,10)};
+  const wkKey=iso=>{const d=D0(iso);const k=(d.getUTCDay()-CFG.weekStart+7)%7;d.setUTCDate(d.getUTCDate()-k);return d.toISOString().slice(0,10)};
+  const wkEnd=w=>addD(w,CFG.weekSpan-1);
   const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const biasTxt={up:'صعود ↑',down:'هبوط ↓',flat:'حياد ↔'};
-  const safeLS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+  const LS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+  const SIG='<i class="sig-inline" role="img" aria-label="شيبان"></i>';
 
   function weeksOf(rows){
     const W=new Map();
-    for(const r of rows){const m=monday(r.d);let w=W.get(m);
-      if(!w){w={w:m,o:r.o,h:r.h,l:r.l,c:r.c,n:0,last:r.d};W.set(m,w);}
+    for(const r of rows){const k=wkKey(r.d);let w=W.get(k);
+      if(!w){w={w:k,o:r.o,h:r.h,l:r.l,c:r.c,n:0,last:r.d};W.set(k,w);}
       w.h=Math.max(w.h,r.h);w.l=Math.min(w.l,r.l);w.c=r.c;w.n++;w.last=r.d;}
-    return [...W.values()].sort((a,b)=>a.w<b.w?-1:1);
+    const arr=[...W.values()].sort((a,b)=>a.w<b.w?-1:1);
+    arr.forEach((w,i)=>{w.done=i<arr.length-1||w.last===wkEnd(w.w);});
+    return arr;
   }
   function ewma(rows){const lam=.94,warm=10,s=new Array(rows.length).fill(null);if(rows.length<warm+2)return s;
     const r=[0];for(let i=1;i<rows.length;i++)r.push(Math.log(rows[i].c/rows[i-1].c));
     let v=0;for(let i=1;i<=warm;i++)v+=r[i]*r[i];v/=warm;s[warm]=Math.sqrt(v);
     for(let t=warm+1;t<rows.length;t++){v=lam*v+(1-lam)*r[t]*r[t];s[t]=Math.sqrt(v);}return s;}
   function backtest(rows){
-    const s=ewma(rows),idx=new Map(rows.map((r,i)=>[r.d,i])),W=weeksOf(rows).filter(w=>w.n===7),res=[];
-    for(let k=1;k<W.length;k++){const i=idx.get(addD(W[k-1].w,6));if(i==null||s[i]==null)continue;
-      const sw=s[i]*Math.sqrt(7),p=rows[i].c,z=Math.log(W[k].c/p)/sw;res.push(Math.abs(z)<=1);}
+    const s=ewma(rows),idx=new Map(rows.map((r,i)=>[r.d,i])),W=weeksOf(rows).filter(w=>w.done),res=[];
+    for(let k=1;k<W.length;k++){const i=idx.get(W[k-1].last);if(i==null||s[i]==null)continue;
+      const sw=s[i]*Math.sqrt(CFG.td);res.push(Math.abs(Math.log(W[k].c/rows[i].c))<=sw);}
     return res;
   }
-
   function state(){
-    const a=S.asset,rows=S.daily[a];
-    const W=weeksOf(rows);
-    const last=rows[rows.length-1];
-    const curWeek=last?monday(addD(last.d,1)):null; // week the next unknown day belongs to
-    const wk=k=>S.weeks[a+'_'+k];
-    return{a,rows,W,last,curWeek,wk};
+    const a=S.asset,rows=S.daily[a]||[],W=weeksOf(rows),last=rows[rows.length-1];
+    let curWeek=null;
+    if(last){const lw=W[W.length-1];const today=new Date(Date.now()+(CFG.tz||0)*36e5).toISOString().slice(0,10);curWeek=(lw.done||wkEnd(lw.w)<today)?addD(lw.w,7):lw.w;}
+    return{a,rows,W,last,curWeek,wk:k=>S.weeks[a+'_'+k]};
   }
 
   function renderHero(){
-    const {a,rows,W,last,curWeek,wk}=state();
-    if(!rows.length){$('hero').innerHTML='<div class="empty">'+(S.loaded?'لا توجد بيانات بعد.':'جارٍ تحميل البيانات…')+'</div>';return;}
+    const {a,rows,W,last,curWeek,wk}=state();const el=$('hero');
+    if(!rows.length){el.innerHTML='<div class="empty">'+(S.loaded?'لا توجد بيانات بعد.':'جارٍ تحميل البيانات…')+'</div>';return;}
     const prev=rows[rows.length-2],chg=prev?last.c/prev.c-1:0;
     const f=wk(curWeek),nextF=wk(addD(curWeek,7));
-    const wc=W.find(w=>w.w===curWeek), lastFull=W.filter(w=>w.n===7).slice(-1)[0];
-    const end=addD(curWeek,6);
-    let html=`<div class="price-row"><span class="price">$${fmt(last.c,a)}</span>
-      <span class="chg ${chg>=0?'up':'down'} num">${chg>=0?'+':''}${(chg*100).toFixed(1)}%</span>
+    const wc=W.find(w=>w.w===curWeek),lastFull=W.filter(w=>w.done&&w.w<curWeek).slice(-1)[0];
+    const end=wkEnd(curWeek);
+    let h=`<div class="asset-head"><span class="asset-name">${esc(A[a].name)}</span><span class="ticker">${esc(A[a].code)}</span></div>
+      <div class="price-row"><span class="price">${money(last.c,a)}</span>${A[a].cur?`<span class="cur">${A[a].cur}</span>`:''}
+      <span class="chg ${chg>=0?'up':'down'} num">${chg>=0?'+':''}${(chg*100).toFixed(2)}%</span>
       <span class="muted small">إغلاق ${arDay(last.d)}</span></div>`;
     if(f&&f.lab){const c=f.lab;
-      html+=`<p class="say">توقع موجة لإغلاق الأسبوع (${arDay(end)}): بين <b>${fz(c.low,a)}</b> و <b>${fz(c.high,a)}</b></p>
+      h+=`<p class="say">توقع موجة لإغلاق الأسبوع (${arDay(end)}): بين <b>${money(c.low,a,1)}</b> و <b>${money(c.high,a,1)}</b>${cur(a)}</p>
       <div><span class="bias ${c.bias}">الميل: ${biasTxt[c.bias]||'—'}</span></div>`;
       const pts=[c.low,c.high,last.c].concat(lastFull?[lastFull.c]:[]).concat(wc?[wc.h,wc.l]:[]);
       let lo=Math.min(...pts),hi=Math.max(...pts);const pad=(hi-lo)*.12;lo-=pad;hi+=pad;
       const X=v=>((hi-v)/(hi-lo)*100).toFixed(2)+'%';
-      html+=`<div class="ruler" aria-hidden="true"><div class="track"></div>
+      const same=lastFull&&Math.abs(lastFull.c-last.c)<1e-9;
+      h+=`<div class="ruler" aria-hidden="true"><div class="track"></div>
         <div class="z" style="right:${X(c.high)};left:calc(100% - ${X(c.low)})"></div>
-        ${lastFull?`<div class="m prev" style="right:${X(lastFull.c)}"></div><div class="lab b" style="right:${X(lastFull.c)}">إغلاق الأسبوع الماضي</div>`:''}
-        <div class="m" style="right:${X(last.c)}"></div><div class="lab t" style="right:${X(last.c)}">السعر الآن</div>
-      </div>`;
-      if(c.note)html+=`<p class="note">${esc(c.note)}</p>`;
-    } else html+=`<p class="say muted">لم يُسجَّل توقع لهذا الأسبوع بعد. يُضاف تلقائيًا صباح الاثنين.</p>`;
-    html+=`<div><h2 style="margin-top:6px">آخر 16 أسبوعًا</h2><div id="miniW" class="chartbox" style="min-height:240px"></div></div>`;
+        ${lastFull&&!same?`<div class="m prev" style="right:${X(lastFull.c)}"></div><div class="lab b" style="right:${X(lastFull.c)}">إغلاق الأسبوع الماضي</div>`:''}
+        <div class="m" style="right:${X(last.c)}"></div><div class="lab t" style="right:${X(last.c)}">${same?'إغلاق الأسبوع':'آخر إغلاق'}</div></div>`;
+      if(c.note)h+=`<p class="note">${esc(c.note)}</p>`;
+    } else h+=`<p class="say muted">لم يُسجَّل توقع لهذا الأسبوع بعد.</p>`;
+    for(const n of (CFG.notes[a]||[]))h+=`<p class="${n.kind==='alert'?'alert':'note small'}">${n.html}</p>`;
+    h+=`<div><h2 style="margin-top:6px">الشموع الأسبوعية</h2><div id="miniW" class="chartbox" style="min-height:240px"></div></div>`;
     const bt=backtest(rows),hits=bt.filter(Boolean).length;
-    const mine=Object.values(S.weeks).filter(x=>x.asset===a&&x.lab).map(x=>{const w=W.find(q=>q.w===x.week&&q.n===7);return w?(w.c>=x.lab.low&&w.c<=x.lab.high):null}).filter(v=>v!==null);
-    html+=`<div class="trust">
-      <div><div class="muted small">لو طُبّقت طريقة موجة على آخر ${bt.length} أسبوعًا</div><div class="big">${hits} / ${bt.length}</div><div class="small">أسبوعًا أغلق داخل المنطقة (${bt.length?Math.round(hits/bt.length*10):0} من كل 10)</div><div class="dots">${bt.slice(-30).map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
-      <div><div class="muted small">توقعات موجة المسجلة منذ 22 أكتوبر</div><div class="big">${mine.filter(Boolean).length} / ${mine.length}</div><div class="small">${mine.length?'أسبوعًا صدق':'أول نتيجة تظهر بعد إغلاق الأحد 25 أكتوبر'}</div><div class="dots">${mine.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
+    const mine=Object.values(S.weeks).filter(x=>x.asset===a&&x.lab&&!x.lab.provisional).map(x=>{const w=W.find(q=>q.w===x.week&&q.done);return w?(w.c>=x.lab.low&&w.c<=x.lab.high):null}).filter(v=>v!==null);
+    h+=`<div class="trust">
+      <div><div class="muted small">لو طُبّقت طريقة موجة على آخر ${bt.length} أسبوعًا</div><div class="big">${hits} / ${bt.length}</div><div class="small">أسبوعًا أغلق داخل المنطقة (${bt.length?Math.round(hits/bt.length*10):0} من كل 10)</div><div class="dots">${bt.slice(-40).map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
+      <div><div class="muted small">توقعات موجة المسجلة</div><div class="big">${mine.filter(Boolean).length} / ${mine.length}</div><div class="small">${mine.length?'أسبوعًا صدق':'أول نتيجة بعد إغلاق '+arDay(end)}</div><div class="dots">${mine.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
     </div>`;
     if(nextF&&nextF.lab){const n=nextF.lab;
-      html+=`<p class="small muted">الأسبوع القادم (${arShort(addD(curWeek,7))} – ${arShort(addD(curWeek,13))})${n.provisional?' · مبدئي':''}: بين <span class="num">${fz(n.low,a)}</span> و <span class="num">${fz(n.high,a)}</span></p>`;}
-    $('hero').innerHTML=html;
-    svgCandles($('miniW'),W.slice(-16),a,f&&f.lab,curWeek);
+      h+=`<p class="small muted">الأسبوع التالي (${arShort(addD(curWeek,7))} – ${arShort(wkEnd(addD(curWeek,7)))})${n.provisional?' · مبدئي':''}: بين <span class="num">${money(n.low,a,1)}</span> و <span class="num">${money(n.high,a,1)}</span>${cur(a)}</p>`;}
+    el.innerHTML=h;
+    svgCandles($('miniW'),W.slice(-20),a,f&&f.lab,curWeek);
   }
 
   function svgCandles(el,C,a,zone,zoneWeek){
     if(!el||!C.length){if(el)el.innerHTML='';return;}
-    const W=Math.max(320,el.clientWidth||640),H=240,L=6,R=70,T=12,B=26,n=C.length+(zone&&!C.find(c=>c.w===zoneWeek)?1:0);
+    const Wd=Math.max(320,el.clientWidth||640),H=240,L=6,R=72,T=12,B=26,n=C.length+(zone&&!C.find(c=>c.w===zoneWeek)?1:0);
     const vals=C.flatMap(c=>[c.h,c.l]).concat(zone?[zone.low,zone.high]:[]);
     let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.05;lo-=pad;hi+=pad;
-    const cw=(W-L-R)/n,x=i=>L+cw*(i+.5),y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
-    let g='';for(let k=0;k<=4;k++){const v=lo+(hi-lo)*k/4;g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${W-R+6}" y="${y(v)+4}">${fmt(v,a)}</text>`;}
+    const cw=(Wd-L-R)/n,x=i=>L+cw*(i+.5),y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
     let z='';if(zone){const zi=C.findIndex(c=>c.w===zoneWeek);const i=zi<0?C.length:zi;
       z=`<rect x="${x(i)-cw*.62}" y="${y(zone.high)}" width="${cw*1.24}" height="${Math.max(2,y(zone.low)-y(zone.high))}" rx="4" fill="var(--zone)" stroke="var(--zoneEdge)" stroke-width="1.5"/>`;}
+    let g='';for(let k=0;k<=4;k++){const v=lo+(hi-lo)*k/4;g+=`<line x1="${L}" x2="${Wd-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${Wd-R+6}" y="${y(v)+4}">${fmt(v,a)}</text>`;}
     const bw=Math.max(3,cw*.58);
     const cs=C.map((c,i)=>{const up=c.c>=c.o,col=up?'var(--up)':'var(--down)',top=y(Math.max(c.o,c.c)),bot=y(Math.min(c.o,c.c));
-      return `<line x1="${x(i)}" x2="${x(i)}" y1="${y(c.h)}" y2="${y(c.l)}" stroke="${col}" stroke-width="1.4"/><rect x="${x(i)-bw/2}" y="${top}" width="${bw}" height="${Math.max(1.5,bot-top)}" fill="${col}" ${c.n<7?'fill-opacity=".45"':''}/>`;}).join('');
+      return `<line x1="${x(i)}" x2="${x(i)}" y1="${y(c.h)}" y2="${y(c.l)}" stroke="${col}" stroke-width="1.4"/><rect x="${x(i)-bw/2}" y="${top}" width="${bw}" height="${Math.max(1.5,bot-top)}" fill="${col}" ${c.done===false?'fill-opacity=".45"':''}/>`;}).join('');
     const lab=(i,t)=>`<text x="${x(i)}" y="${H-7}" text-anchor="middle">${t}</text>`;
-    const md=c=>c.w.slice(5).replace('-','/');
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="شموع أسبوعية">${g}${z}${cs}${lab(0,md(C[0]))}${lab(Math.floor(C.length/2),md(C[Math.floor(C.length/2)]))}${lab(C.length-1,md(C[C.length-1]))}</svg>`;
+    const md=c=>c.w.slice(5).replace('-','/'),mid=Math.floor(C.length/2);
+    el.innerHTML=`<svg viewBox="0 0 ${Wd} ${H}" width="100%" role="img" aria-label="شموع أسبوعية مع منطقة التوقع">${z}${g}${cs}${lab(0,md(C[0]))}${lab(mid,md(C[mid]))}${lab(C.length-1,md(C[C.length-1]))}</svg>`;
   }
 
   function renderCandles(){
     const {a,rows,W,curWeek,wk}=state();const el=$('bigChart');
     document.querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===S.frame)));
+    if(S.chart){S.chart.remove();S.chart=null;}
     if(!rows.length){el.innerHTML='<div class="empty">لا توجد بيانات.</div>';return;}
     const data=S.frame==='W'?W.map(w=>({time:w.w,open:w.o,high:w.h,low:w.l,close:w.c})):rows.map(r=>({time:r.d,open:r.o,high:r.h,low:r.l,close:r.c}));
     const f=wk(curWeek);
-    if(!window.LightweightCharts){svgCandles(el,(S.frame==='W'?W:rows.map(r=>({w:r.d,o:r.o,h:r.h,l:r.l,c:r.c,n:7}))).slice(-40),a,f&&f.lab,curWeek);return;}
-    if(S.chart){S.chart.remove();S.chart=null;}
+    if(!window.LightweightCharts){svgCandles(el,(S.frame==='W'?W:rows.map(r=>({w:r.d,o:r.o,h:r.h,l:r.l,c:r.c}))).slice(-40),a,f&&f.lab,curWeek);return;}
     el.innerHTML='';
     const ch=LightweightCharts.createChart(el,{width:el.clientWidth||640,height:360,
       layout:{background:{type:'solid',color:css('--panel')},textColor:css('--muted'),fontFamily:'JetBrains Mono, monospace'},
       grid:{vertLines:{color:css('--line')},horzLines:{color:css('--line')}},
-      rightPriceScale:{borderColor:css('--line')},timeScale:{borderColor:css('--line'),rightOffset:4},
+      rightPriceScale:{borderColor:css('--line')},timeScale:{borderColor:css('--line'),rightOffset:3},
       localization:{locale:'en-US',priceFormatter:p=>fmt(p,a)},crosshair:{mode:0}});
-    const s=ch.addCandlestickSeries({upColor:css('--up'),downColor:css('--down'),borderVisible:false,wickUpColor:css('--up'),wickDownColor:css('--down'),priceFormat:{type:'price',precision:dp(a),minMove:a==='XRP'?0.0001:0.01}});
+    const s=ch.addCandlestickSeries({upColor:css('--up'),downColor:css('--down'),borderVisible:false,wickUpColor:css('--up'),wickDownColor:css('--down'),priceFormat:{type:'price',precision:A[a].dp,minMove:Math.pow(10,-A[a].dp)}});
     s.setData(data);
     const ma=[];for(let i=19;i<data.length;i++){let t=0;for(let j=i-19;j<=i;j++)t+=data[j].close;ma.push({time:data[i].time,value:t/20});}
-    const m=ch.addLineSeries({color:css('--warn'),lineWidth:1.5,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});m.setData(ma);
+    if(ma.length){const m=ch.addLineSeries({color:css('--warn'),lineWidth:1.5,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});m.setData(ma);}
     if(f&&f.lab){
       s.createPriceLine({price:f.lab.high,color:css('--zoneEdge'),lineWidth:2,lineStyle:2,axisLabelVisible:true,title:'أعلى المنطقة'});
       s.createPriceLine({price:f.lab.low,color:css('--zoneEdge'),lineWidth:2,lineStyle:2,axisLabelVisible:true,title:'أدنى المنطقة'});
     }
-    const span=S.frame==='W'?30:90;ch.timeScale().setVisibleLogicalRange({from:Math.max(0,data.length-span),to:data.length+2});
+    const span=S.frame==='W'?30:80;ch.timeScale().setVisibleLogicalRange({from:Math.max(0,data.length-span),to:data.length+2});
     S.chart=ch;
   }
 
   function renderWeeks(){
-    const {a,W,curWeek}=state();
-    const dist=k=>Math.round((D0(k)-D0(curWeek))/864e5);
+    const {a,W,curWeek}=state();const el=$('weeksList');
+    const dist=k=>Math.round((D0(k)-D0(curWeek||k))/864e5);
     const docs=Object.values(S.weeks).filter(x=>x.asset===a).sort((p,q)=>{const u=dist(p.week),v=dist(q.week);return Math.abs(u)-Math.abs(v)||v-u;});
-    if(!docs.length){$('weeksList').innerHTML='<div class="panel empty">لا توجد أسابيع مسجلة بعد.</div>';return;}
-    $('weeksList').innerHTML=docs.map(x=>{
-      const w=W.find(q=>q.w===x.week),done=w&&w.n===7,c=x.lab||{},me=x.me||null;
+    if(!docs.length){el.innerHTML='<div class="panel empty">لا توجد أسابيع مسجلة بعد.</div>';return;}
+    el.innerHTML=docs.map(x=>{
+      const w=W.find(q=>q.w===x.week),done=!!(w&&w.done),c=x.lab||{},me=x.me||null;
       const inZ=z=>z&&done?(w.c>=z.low&&w.c<=z.high):null;
       const dirOk=b=>b&&done?(b==='flat'?Math.abs(w.c/w.o-1)<0.02:(b==='up')===(w.c>=w.o)):null;
-      const st=done?'<span class="pill">أُغلق</span>':(x.week===curWeek?'<span class="pill live">جارٍ الآن</span>':(x.week>curWeek?'<span class="pill">قادم</span>':'<span class="pill">ناقص البيانات</span>'));
+      const st=done?'<span class="pill">أُغلق</span>':(x.week===curWeek?(w?'<span class="pill live">جارٍ الآن</span>':'<span class="pill live">يبدأ '+AR_D[CFG.weekStart]+'</span>'):'<span class="pill">قادم</span>');
       const res=(v,t)=>v==null?'':`<span class="pill ${v?'ok':'no'}">${t} ${v?'✓':'✗'}</span>`;
-      const meBox=me&&isFinite(me.low)?`<div class="rng">${fz(me.low,a)} – ${fz(me.high,a)}</div><div class="small">الميل: ${biasTxt[me.bias]||'—'}${me.savedAt?` · سُجّل ${me.savedAt<x.week?'قبل بداية الأسبوع':'أثناء الأسبوع'}`:''}</div>`:'<div class="small muted">لم يُسجَّل</div>';
-      const form='';
+      const hasMe=me&&isFinite(me.low);
+      const meBox=hasMe?`<div class="rng">${money(me.low,a,1)} – ${money(me.high,a,1)}</div><div class="small">الميل: ${biasTxt[me.bias]||'—'}${me.savedAt?` · سُجّل ${me.savedAt<x.week?'قبل بداية الأسبوع':'أثناء الأسبوع'}`:''}</div>`:'<div class="small muted">لم يُسجَّل</div>';
+      const id=esc(x.week);
+      const form=(S.canWrite&&!done)?`<div class="form">
+          <label>من<input type="number" step="any" inputmode="decimal" id="lo-${id}" value="${hasMe?me.low:''}"></label>
+          <label>إلى<input type="number" step="any" inputmode="decimal" id="hi-${id}" value="${hasMe?me.high:''}"></label>
+          <label>الميل<select id="bs-${id}"><option value="up">صعود</option><option value="down">هبوط</option><option value="flat">حياد</option></select></label>
+          <button class="btn" data-save="${id}">حفظ التوقع</button></div><p class="small muted" id="msg-${id}"></p>`:'';
       return `<article class="panel">
-        <div class="wk-head"><h2 style="margin:0">${arShort(x.week)} – ${arShort(addD(x.week,6))}</h2>${st}</div>
-        ${done?`<p class="small">الافتتاح <span class="num">${fmt(w.o,a)}</span> · الأعلى <span class="num">${fmt(w.h,a)}</span> · الأدنى <span class="num">${fmt(w.l,a)}</span> · <b>الإغلاق <span class="num">${fmt(w.c,a)}</span></b></p>`:(w?`<p class="small muted">حتى الآن: آخر سعر <span class="num">${fmt(w.c,a)}</span> بعد ${w.n} من 7 أيام</p>`:'')}
+        <div class="wk-head"><h2 style="margin:0">${arShort(x.week)} – ${arShort(wkEnd(x.week))}</h2>${st}</div>
+        ${done?`<p class="small">الافتتاح <span class="num">${fmt(w.o,a)}</span> · الأعلى <span class="num">${fmt(w.h,a)}</span> · الأدنى <span class="num">${fmt(w.l,a)}</span> · <b>الإغلاق <span class="num">${fmt(w.c,a)}</span></b></p>`:(w?`<p class="small muted">حتى الآن: آخر سعر <span class="num">${fmt(w.c,a)}</span> بعد ${w.n} من ${CFG.td} أيام</p>`:'')}
         <div class="rows" style="margin-top:8px">
-          <div class="who c"><div class="lbl">توقع موجة${c.provisional?' (مبدئي)':''}</div><div class="rng">${fz(c.low,a)} – ${fz(c.high,a)}</div><div class="small">الميل: ${biasTxt[c.bias]||'—'}</div>
+          <div class="who c"><div class="lbl">توقع موجة${c.provisional?' (مبدئي)':''}</div><div class="rng">${money(c.low,a,1)} – ${money(c.high,a,1)}</div><div class="small">الميل: ${biasTxt[c.bias]||'—'}</div>
             <div class="res" style="margin-top:4px">${res(inZ(c),'المنطقة')} ${res(dirOk(c.bias),'الميل')}</div></div>
-          <div class="who me"><div class="lbl">توقع شيبان</div>${meBox}<div class="res" style="margin-top:4px">${res(inZ(me&&isFinite(me.low)?me:null),'المنطقة')} ${res(me?dirOk(me.bias):null,'الميل')}</div>${form}</div>
+          <div class="who me"><div class="lbl">توقع ${SIG}</div>${meBox}<div class="res" style="margin-top:4px">${res(inZ(hasMe?me:null),'المنطقة')} ${res(hasMe?dirOk(me.bias):null,'الميل')}</div>${form}</div>
         </div>
         ${c.note?`<p class="note small" style="margin-top:8px">${esc(c.note)}</p>`:''}
       </article>`;}).join('');
     docs.forEach(x=>{const s=$('bs-'+x.week);if(s&&x.me&&x.me.bias)s.value=x.me.bias;});
   }
 
+  async function saveMine(week){
+    const a=S.asset,lo=parseFloat($('lo-'+week).value),hi=parseFloat($('hi-'+week).value),bias=$('bs-'+week).value,msg=$('msg-'+week);
+    if(!(lo>0&&hi>0)){msg.textContent='اكتب رقمين موجبين.';return;}
+    const btn=document.querySelector(`[data-save="${week}"]`);btn.disabled=true;msg.textContent='جارٍ الحفظ…';
+    try{await S.db.doc('weeks/'+a+'_'+week).update({me:{low:Math.min(lo,hi),high:Math.max(lo,hi),bias,savedAt:new Date().toISOString().slice(0,10)}});msg.textContent='تم الحفظ.';}
+    catch(e){msg.textContent=e&&e.code==='invalid_argument'?'الحفظ متاح للمالك فقط.':'تعذر الحفظ. حاول مرة أخرى.';btn.disabled=false;}
+  }
 
   function render(){
     document.querySelectorAll('[data-a]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.a===S.asset)));
@@ -390,24 +428,31 @@ footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:
     if(S.tab==='weeks')renderWeeks();
   }
 
-  document.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{S.asset=b.dataset.a;safeLS.set('lab-a',S.asset);render();}));
+  function ingest(candles,weeks){
+    const m=Object.fromEntries(IDS.map(i=>[i,[]]));
+    for(const v of (candles||[])){if(!v||!m[v.asset]||!v.days)continue;
+      for(const [k,c] of Object.entries(v.days)){if(c&&c.c>0&&c.h>0&&c.l>0&&c.o>0)m[v.asset].push({d:k,o:+c.o,h:+c.h,l:+c.l,c:+c.c});}}
+    for(const k in m)m[k].sort((p,q)=>p.d<q.d?-1:1);
+    if(candles)S.daily=m;
+    if(weeks){const o={};for(const v of weeks){if(v&&v.asset&&v.week)o[v.asset+'_'+v.week]=v;}S.weeks=o;}
+  }
+
+  document.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{S.asset=b.dataset.a;LS.set('wave-'+CFG.market,S.asset);render();}));
   document.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{S.tab=b.dataset.t;render();}));
   document.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{S.frame=b.dataset.f;renderCandles();}));
-  const sa=safeLS.get('lab-a');if(sa==='ETH'||sa==='XRP')S.asset=sa;
+  $('weeksList').addEventListener('click',e=>{const w=e.target.closest('[data-save]');if(w)saveMine(w.dataset.save);});
+  const sa=LS.get('wave-'+CFG.market);if(sa&&A[sa])S.asset=sa;
   let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(S.tab==='now')renderHero();if(S.tab==='candles'&&S.chart)S.chart.applyOptions({width:$('bigChart').clientWidth});},200);});
   try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);}catch(_){}
   new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
   render();
 
-  fetch('data.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(d=>{
-    const m={ETH:[],XRP:[]};
-    for(const v of Object.values(d.candles||{})){if(!v||!m[v.asset]||!v.days)continue;
-      for(const [k,c] of Object.entries(v.days)){if(c&&c.c>0&&c.h>0&&c.l>0&&c.o>0)m[v.asset].push({d:k,o:+c.o,h:+c.h,l:+c.l,c:+c.c});}}
-    for(const k in m)m[k].sort((p,q)=>p.d<q.d?-1:1);S.daily=m;
-    const o={};for(const [id,v] of Object.entries(d.weeks||{})){if(v&&v.asset&&v.week)o[id]=v;}S.weeks=o;
-    S.loaded=true;render();
-  }).catch(()=>{S.loaded=true;$('hero').innerHTML='<div class="empty">تعذر تحميل البيانات. حدّث الصفحة.</div>';});
-})();
+  if(CFG.mode==='json'){
+    fetch('data.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(d=>{
+      ingest(Object.values(d.candles||{}),Object.values(d.weeks||{}));S.loaded=true;render();
+    }).catch(()=>{S.loaded=true;$('hero').innerHTML='<div class="empty">تعذر تحميل البيانات. حدّث الصفحة.</div>';});
+  }
+  })();
 </script>
 </body>
 </html>

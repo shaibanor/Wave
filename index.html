@@ -3,12 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="اختبار موجة: منصة تعليمية لقراءة شموع سهم عناية 8311 وتقدير منطقة الإغلاق الأسبوعية.">
+<meta name="description" content="موجة التحليل الخاص: منصة تعليمية لقراءة الشموع وتقدير منطقة الإغلاق الأسبوعية في السوق السعودي والعملات المشفرة.">
 <meta name="robots" content="noindex">
-<title>اختبار موجة · سهم عناية</title>
+<title>موجة التحليل الخاص</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
-<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <style>
 /* Layout: one calm column; tabs on top; the weekly forecast zone is the hero, candles support it. */
 :root{
@@ -88,6 +87,12 @@ svg text{fill:var(--muted);font-family:var(--f-num);font-size:11px}
 .who.c{background:var(--zone)} .who.me{background:var(--mineSoft)}
 .who .lbl{font-size:.78rem;color:var(--muted)}
 .who .rng{font-family:var(--f-num);font-weight:600;direction:ltr;unicode-bidi:isolate}
+.form{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-top:6px}
+.form label{display:flex;flex-direction:column;font-size:.76rem;color:var(--muted);gap:2px}
+.form input,.form select{font:500 .92rem var(--f-num);width:7.2em;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);direction:ltr}
+.form select{font-family:var(--f-body);direction:rtl;width:auto}
+.btn{font:600 .9rem var(--f-body);background:var(--mine);color:#fff;border:0;border-radius:8px;padding:7px 14px;cursor:pointer}
+.btn[disabled]{opacity:.5;cursor:default}
 .res{font-size:.88rem}
 .how{display:flex;flex-direction:column;gap:12px;max-width:65ch}
 .how h3{font-family:var(--f-display);font-weight:500;font-size:1rem;margin:4px 0 0}
@@ -119,102 +124,70 @@ footer b{color:var(--ink)}
   .hero-band .sig{animation:sign 1.8s cubic-bezier(.6,.05,.3,1) .15s both}
   @keyframes sign{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
 }
-.site-nav{display:flex;gap:6px;margin-top:6px}.site-nav a,.site-nav span{font-size:.84rem;font-weight:600;padding:4px 14px;border-radius:999px;border:1px solid rgba(201,165,92,.4);text-decoration:none}.site-nav a{color:#D9CCB0}.site-nav a:hover{background:rgba(201,165,92,.12)}.site-nav span{background:#C9A55C;color:#0A1724;border-color:#C9A55C}
+
+.asset-row{display:flex;justify-content:center}
+.asset-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.asset-name{font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.site-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:6px}
+.site-nav a,.site-nav span{font-size:.84rem;font-weight:600;padding:4px 14px;border-radius:999px;border:1px solid rgba(201,165,92,.4);text-decoration:none}
+.site-nav a{color:#D9CCB0}.site-nav a:hover{background:rgba(201,165,92,.12)}
+.site-nav span{background:#C9A55C;color:#0A1724;border-color:#C9A55C}
+.sig-inline{display:inline-block;vertical-align:middle;width:64px;aspect-ratio:900/239;background:var(--mine);-webkit-mask:var(--sig) center/contain no-repeat;mask:var(--sig) center/contain no-repeat;margin-inline-start:2px}
+.how .sig-inline{width:56px;background:var(--accent)}
+.seg{flex-wrap:wrap;justify-content:center}
+
+.markets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mk{display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;transition:border-color .2s,transform .2s}
+.mk:hover{border-color:#C9A55C;transform:translateY(-2px)}
+.mk:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.mk-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.mk h2{font-family:var(--f-display);font-weight:700;font-size:1.2rem;margin:0}
+.mk .go{font-size:.85rem;color:var(--accent);font-weight:600;white-space:nowrap}
+.mk-list{display:flex;flex-direction:column;gap:8px}
+.mk-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;padding:10px 12px;border-radius:12px;background:var(--chip)}
+.mk-row .n{font-weight:600}
+.mk-row .p{font-family:var(--f-num);font-weight:600;direction:ltr;unicode-bidi:isolate}
+.mk-row .z{grid-column:1/-1;font-size:.8rem;color:var(--muted)}
+.mk-row .z b{font-family:var(--f-num);font-weight:600;color:var(--ink);direction:ltr;unicode-bidi:isolate}
+.mk-row .z .bias{font-size:.76rem;padding:0 8px}
+@media (max-width:640px){.markets{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header class="hero-band">
     <canvas id="waves" aria-hidden="true"></canvas>
     <div class="hb-inner">
-      <div class="sig" role="img" aria-label="توقيع شيبان"></div>
+      <div class="sig" role="img" aria-label="شيبان"></div>
       <p class="handle">wavehub.shaibanor</p>
       <span class="rule" aria-hidden="true"></span>
-      <h1>اختبار موجة</h1>
-      <p class="hb-sub">سهم عناية · <span class="num">TADAWUL 8311</span></p>
-      <nav class="site-nav" aria-label="الصفحات"><span aria-current="page">سهم عناية</span><a href="crypto/">ETH · XRP</a></nav>
-      <p class="hb-q">أين سيغلق السهم هذا الأسبوع؟ منطقة متوقعة قبل بداية الأسبوع، ثم نتحقق بعد إغلاق الخميس.</p>
+      <h1>موجة التحليل الخاص</h1>
+      <p class="hb-sub">منصة لقراءة الشموع وتقدير منطقة الإغلاق الأسبوعية</p>
+      <nav class="site-nav" aria-label="الأقسام"><span aria-current="page">الرئيسية</span><a href="saudi/">السوق السعودي</a><a href="crypto/">العملات المشفرة</a></nav>
+      <p class="hb-q">منطقة متوقعة لكل أصل قبل بداية الأسبوع، ثم نتحقق منها بعد الإغلاق.</p>
     </div>
   </header>
 
-  <nav class="tabs" role="tablist">
-    <button id="t-now" role="tab" data-t="now" aria-selected="true">الآن</button>
-    <button id="t-candles" role="tab" data-t="candles" aria-selected="false">الشموع</button>
-    <button id="t-weeks" role="tab" data-t="weeks" aria-selected="false">الأسابيع</button>
-    <button id="t-how" role="tab" data-t="how" aria-selected="false">كيف أقرأ؟</button>
-  </nav>
-
-  <section id="v-now" class="view">
-    <div class="panel hero" id="hero"><div class="empty">جارٍ تحميل البيانات…</div></div>
-  </section>
-
-  <section id="v-candles" class="view" hidden>
-    <div class="panel">
-      <div class="top" style="margin-bottom:10px;align-items:center">
-        <h2 style="margin:0">الشموع</h2>
-        <div class="seg" role="group" aria-label="الإطار الزمني">
-          <button id="f-W" data-f="W" aria-pressed="true">أسبوعي</button>
-          <button id="f-D" data-f="D" aria-pressed="false">يومي</button>
-        </div>
-      </div>
-      <div id="bigChart" class="chartbox"></div>
-      <div class="legend">
-        <span><i class="sw" style="background:var(--up)"></i>شمعة صاعدة: أغلقت أعلى من افتتاحها</span>
-        <span><i class="sw" style="background:var(--down)"></i>شمعة هابطة: أغلقت أدنى من افتتاحها</span>
-        <span><i class="sw" style="background:var(--zoneEdge)"></i>حدود منطقة توقع هذا الأسبوع</span>
-        <span><i class="sw" style="background:var(--warn)"></i>متوسط 20 شمعة</span>
-      </div>
-      <p class="muted small" style="margin-top:6px">اسحب الرسم لليمين واليسار، وكبّر بإصبعين أو بعجلة الفأرة. المس أي شمعة لترى أسعارها.</p>
-    </div>
-  </section>
-
-  <section id="v-weeks" class="view" hidden>
-    <div id="weeksList" class="wk"></div>
-  </section>
-
-  <section id="v-how" class="view" hidden>
-    <div class="panel how">
-      <h2>كيف تقرأ موجة في دقيقة</h2>
-      <svg viewBox="0 0 360 170" width="100%" style="max-width:420px" role="img" aria-label="رسم يوضح أجزاء الشمعة">
-        <line x1="90" y1="18" x2="90" y2="150" stroke="var(--up)" stroke-width="3"/>
-        <rect x="70" y="48" width="40" height="70" rx="3" fill="var(--up)"/>
-        <line x1="250" y1="18" x2="250" y2="150" stroke="var(--down)" stroke-width="3"/>
-        <rect x="230" y="40" width="40" height="80" rx="3" fill="var(--down)"/>
-        <text x="122" y="22" style="font-family:var(--f-body);font-size:12px">أعلى سعر</text>
-        <text x="122" y="52" style="font-family:var(--f-body);font-size:12px">الإغلاق</text>
-        <text x="122" y="122" style="font-family:var(--f-body);font-size:12px">الافتتاح</text>
-        <text x="122" y="152" style="font-family:var(--f-body);font-size:12px">أدنى سعر</text>
-        <text x="282" y="44" style="font-family:var(--f-body);font-size:12px">الافتتاح</text>
-        <text x="282" y="124" style="font-family:var(--f-body);font-size:12px">الإغلاق</text>
-        <text x="60" y="166" style="font-family:var(--f-body);font-size:12px">صاعدة</text>
-        <text x="222" y="166" style="font-family:var(--f-body);font-size:12px">هابطة</text>
-      </svg>
-      <h3>الشمعة</h3>
-      <p>كل شمعة تلخص فترة: يوم تداول في الرسم اليومي، أو أسبوع تداول في الأسبوعي. الجسم بين سعر الافتتاح وسعر الإغلاق، والخيطان يصلان لأعلى وأدنى سعر في الفترة. الأخضر يعني أن الفترة انتهت أعلى مما بدأت، والأحمر أدنى.</p>
-      <h3>أسبوع السوق السعودي</h3>
-      <p>يبدأ التداول الأحد وينتهي الخميس. الشمعة الأسبوعية تبدأ من افتتاح الأحد وتنتهي بإغلاق الخميس الساعة 3:00 عصرًا تقريبًا. التوقع يُكتب مساء الخميس للأسبوع التالي، أي قبل أن يبدأ.</p>
-      <h3>منطقة التوقع</h3>
-      <p>هي المستطيل الأزرق، ومعناها: «المتوقع أن يغلق السهم يوم الخميس بين هذين السعرين». لا يُحدَّد سعر واحد لأن لا أحد يعرفه، بل منطقة واسعة بما يكفي لتصدق في أغلب الأسابيع، وضيقة بما يكفي لتكون مفيدة.</p>
-      <h3>كيف حُددت المنطقة</h3>
-      <p>يُقاس كم يتحرك السهم عادة في أسبوع تداول خلال الفترة الأخيرة، ثم تُعدَّل الحدود عند مستويات قريبة توقف عندها السعر سابقًا: قاع أو قمة واضحة، أو متوسط 20 يومًا. عند وجود حدث خاص بالشركة، مثل نتائج مالية أو إجراء على رأس المال، تُوسَّع المنطقة.</p>
-      <h3>الميل</h3>
-      <p>«صعود» أو «هبوط» أو «حياد» تقدير ثانوي لاتجاه الأسبوع، ويُقاس منفصلًا. توقع الاتجاه أصعب بكثير من توقع المنطقة، والسجل سيُظهر ذلك.</p>
-      <h3>حد التذبذب اليومي</h3>
-      <p>في السوق السعودي لا يتحرك السهم في اليوم الواحد أكثر من 10% صعودًا أو هبوطًا عن إغلاق اليوم السابق. لذلك ترى أحيانًا شمعة تتوقف عند هذا الحد بالضبط.</p>
-      <h3>المقارنة</h3>
-      <p>في صفحة الأسابيع يظهر توقع موجة بجانب توقع شيبان لكل أسبوع، وبعد إغلاق الخميس تظهر نتيجة كل منهما.</p>
-    </div>
+  <section class="markets">
+    <a class="mk" href="saudi/">
+      <div class="mk-top"><h2>السوق السعودي</h2><span class="go">افتح ←</span></div>
+      <div class="mk-list" id="mk-saudi"><div class="empty">جارٍ التحميل…</div></div>
+    </a>
+    <a class="mk" href="crypto/">
+      <div class="mk-top"><h2>العملات المشفرة</h2><span class="go">افتح ←</span></div>
+      <div class="mk-list" id="mk-crypto"><div class="empty">جارٍ التحميل…</div></div>
+    </a>
   </section>
 
   <footer>
-    <p>اختبار موجة: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
+    <p>موجة التحليل الخاص: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
     <p>المحتوى لغرض تعليمي فقط، وليس توصية استثمارية ولا دعوة للشراء أو البيع. القرار الاستثماري مسؤولية صاحبه.</p>
-    <p>الأسعار بالريال السعودي، وتُحدَّث بعد إغلاق كل يوم تداول.</p>
-    <div class="foot-sig"><div class="sig" role="img" aria-label="توقيع شيبان"></div><p class="handle">wavehub.shaibanor</p></div>
+    <p>الأسهم السعودية بالريال والأسبوع من الأحد إلى الخميس. العملات المشفرة بالدولار والأسبوع من الاثنين إلى الأحد بتوقيت UTC.</p>
+    <div class="foot-sig"><div class="sig" role="img" aria-label="شيبان"></div><p class="handle">wavehub.shaibanor</p></div>
   </footer>
 </div>
 <script>
+
 (function(){
   const c=document.getElementById('waves');if(!c)return;const x=c.getContext('2d');
   const still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;let w,h,t=0;
@@ -226,182 +199,29 @@ footer b{color:var(--ink)}
     if(!still){t+=.006;requestAnimationFrame(draw);}}
   size();draw();window.addEventListener('resize',()=>{size();if(still)draw();});
 })();
+
 </script>
 <script>
 (function(){
   const AR_M=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  const AR_D=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-  const TD=5;
-  const S={tab:'now',frame:'W',daily:[],weeks:{},loaded:false,chart:null};
-  const $=id=>document.getElementById(id);
-  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const fmt=v=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  const D0=iso=>new Date(iso+'T00:00:00Z');
-  const addD=(iso,n)=>{const d=D0(iso);d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
-  const arDay=iso=>{const d=D0(iso);return AR_D[d.getUTCDay()]+' '+d.getUTCDate()+' '+AR_M[d.getUTCMonth()];};
-  const arShort=iso=>{const d=D0(iso);return d.getUTCDate()+' '+AR_M[d.getUTCMonth()];};
-  const sunday=iso=>{const d=D0(iso);d.setUTCDate(d.getUTCDate()-d.getUTCDay());return d.toISOString().slice(0,10)};
-  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  const biasTxt={up:'صعود ↑',down:'هبوط ↓',flat:'حياد ↔'};
-
-  function weeksOf(rows){
-    const W=new Map();
-    for(const r of rows){const k=sunday(r.d);let w=W.get(k);
-      if(!w){w={w:k,o:r.o,h:r.h,l:r.l,c:r.c,n:0,last:r.d};W.set(k,w);}
-      w.h=Math.max(w.h,r.h);w.l=Math.min(w.l,r.l);w.c=r.c;w.n++;w.last=r.d;}
-    const arr=[...W.values()].sort((a,b)=>a.w<b.w?-1:1);
-    arr.forEach((w,i)=>{w.done=i<arr.length-1||D0(w.last).getUTCDay()===4;});
-    return arr;
+  const nf=(v,d)=>Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const short=iso=>{const d=new Date(iso+'T00:00:00Z');return d.getUTCDate()+' '+AR_M[d.getUTCMonth()];};
+  const bias={up:'صعود ↑',down:'هبوط ↓',flat:'حياد ↔'};
+  const M={
+    saudi:[{id:'8311',n:'عناية',dp:2,zdp:2,pre:'',suf:' ريال'},{id:'1120',n:'مصرف الراجحي',dp:2,zdp:2,pre:'',suf:' ريال'}],
+    crypto:[{id:'BTC',n:'بيتكوين · BTC',dp:0,zdp:0,pre:'$',suf:''},{id:'ETH',n:'إيثيريوم · ETH',dp:2,zdp:0,pre:'$',suf:''},{id:'XRP',n:'ريبل · XRP',dp:4,zdp:2,pre:'$',suf:''}]
+  };
+  for(const mk of Object.keys(M)){
+    fetch(mk+'/data.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{
+      const rows=M[mk].map(a=>{
+        let last=null;for(const v of Object.values(d.candles||{})){if(v.asset!==a.id)continue;for(const [k,c] of Object.entries(v.days||{})){if(!last||k>last.d)last={d:k,c:c.c};}}
+        const ws=Object.values(d.weeks||{}).filter(w=>w.asset===a.id&&w.lab&&!w.lab.provisional).sort((p,q)=>p.week<q.week?1:-1)[0];
+        const z=ws?`منطقة أسبوع ${short(ws.week)}: <b>${a.pre}${nf(ws.lab.low,a.zdp)} – ${a.pre}${nf(ws.lab.high,a.zdp)}</b> <span class="bias ${ws.lab.bias}">${bias[ws.lab.bias]||''}</span>`:'';
+        return `<div class="mk-row"><span class="n">${a.n}</span><span class="p">${last?a.pre+nf(last.c,a.dp)+a.suf:'—'}</span><span class="z">${z}</span></div>`;
+      }).join('');
+      document.getElementById('mk-'+mk).innerHTML=rows;
+    }).catch(()=>{document.getElementById('mk-'+mk).innerHTML='<div class="empty">تعذر التحميل.</div>';});
   }
-  function ewma(rows){const lam=.94,warm=10,s=new Array(rows.length).fill(null);if(rows.length<warm+2)return s;
-    const r=[0];for(let i=1;i<rows.length;i++)r.push(Math.log(rows[i].c/rows[i-1].c));
-    let v=0;for(let i=1;i<=warm;i++)v+=r[i]*r[i];v/=warm;s[warm]=Math.sqrt(v);
-    for(let t=warm+1;t<rows.length;t++){v=lam*v+(1-lam)*r[t]*r[t];s[t]=Math.sqrt(v);}return s;}
-  function backtest(rows){
-    const s=ewma(rows),idx=new Map(rows.map((r,i)=>[r.d,i])),W=weeksOf(rows).filter(w=>w.done),res=[];
-    for(let k=1;k<W.length;k++){const i=idx.get(W[k-1].last);if(i==null||s[i]==null)continue;
-      const sw=s[i]*Math.sqrt(TD),z=Math.log(W[k].c/rows[i].c)/sw;res.push(Math.abs(z)<=1);}
-    return res;
-  }
-  function state(){
-    const rows=S.daily,W=weeksOf(rows),last=rows[rows.length-1];
-    let curWeek=null;
-    if(last){const lw=W[W.length-1];curWeek=lw.done?addD(lw.w,7):lw.w;}
-    return{rows,W,last,curWeek,wk:k=>S.weeks[k]};
-  }
-
-  function renderHero(){
-    const {rows,W,last,curWeek,wk}=state();
-    if(!rows.length){$('hero').innerHTML='<div class="empty">'+(S.loaded?'لا توجد بيانات بعد.':'جارٍ تحميل البيانات…')+'</div>';return;}
-    const prev=rows[rows.length-2],chg=prev?last.c/prev.c-1:0;
-    const f=wk(curWeek),nextF=wk(addD(curWeek,7));
-    const wc=W.find(w=>w.w===curWeek),lastFull=W.filter(w=>w.done&&w.w<curWeek).slice(-1)[0];
-    const end=addD(curWeek,4);
-    let html=`<div class="price-row"><span class="price">${fmt(last.c)}</span><span class="cur">ريال</span>
-      <span class="chg ${chg>=0?'up':'down'} num">${chg>=0?'+':''}${(chg*100).toFixed(2)}%</span>
-      <span class="muted small">إغلاق ${arDay(last.d)}</span></div>`;
-    if(f&&f.lab){const c=f.lab;
-      html+=`<p class="say">توقع موجة لإغلاق الأسبوع (${arDay(end)}): بين <b>${fmt(c.low)}</b> و <b>${fmt(c.high)}</b> ريال</p>
-      <div><span class="bias ${c.bias}">الميل: ${biasTxt[c.bias]||'—'}</span></div>`;
-      const pts=[c.low,c.high,last.c].concat(lastFull?[lastFull.c]:[]).concat(wc?[wc.h,wc.l]:[]);
-      let lo=Math.min(...pts),hi=Math.max(...pts);const pad=(hi-lo)*.12;lo-=pad;hi+=pad;
-      const X=v=>((hi-v)/(hi-lo)*100).toFixed(2)+'%';
-      const sameAsLast=lastFull&&Math.abs(lastFull.c-last.c)<1e-9;
-      html+=`<div class="ruler" aria-hidden="true"><div class="track"></div>
-        <div class="z" style="right:${X(c.high)};left:calc(100% - ${X(c.low)})"></div>
-        ${lastFull&&!sameAsLast?`<div class="m prev" style="right:${X(lastFull.c)}"></div><div class="lab b" style="right:${X(lastFull.c)}">إغلاق الأسبوع الماضي</div>`:''}
-        <div class="m" style="right:${X(last.c)}"></div><div class="lab t" style="right:${X(last.c)}">${sameAsLast?'إغلاق الخميس':'السعر الآن'}</div>
-      </div>`;
-      if(c.note)html+=`<p class="note">${esc(c.note)}</p>`;
-    } else html+=`<p class="say muted">لم يُسجَّل توقع لهذا الأسبوع بعد. يُضاف مساء الخميس بعد الإغلاق.</p>`;
-    html+=`<p class="alert"><b>حدث قد يحرك السهم بقوة:</b> أوصى مجلس الإدارة في يوليو 2026 بخفض رأس المال لإطفاء الخسائر المتراكمة، ثم زيادته بنحو 160 مليون ريال عبر طرح أسهم حقوق أولوية، والخطة بانتظار موافقة الجمعية العامة غير العادية والجهات المختصة. عند تنفيذ حقوق الأولوية يُعدَّل سعر السهم آليًا، وقد يخرج السعر من المنطقة لسبب لا علاقة له بالحركة المعتادة.</p>`;
-    html+=`<div><h2 style="margin-top:6px">الشموع الأسبوعية</h2><div id="miniW" class="chartbox" style="min-height:240px"></div></div>`;
-    const bt=backtest(rows),hits=bt.filter(Boolean).length;
-    const mine=Object.values(S.weeks).filter(x=>x.lab&&!x.lab.provisional).map(x=>{const w=W.find(q=>q.w===x.week&&q.done);return w?(w.c>=x.lab.low&&w.c<=x.lab.high):null}).filter(v=>v!==null);
-    html+=`<div class="trust">
-      <div><div class="muted small">لو طُبّقت طريقة موجة على آخر ${bt.length} أسبوعًا</div><div class="big">${hits} / ${bt.length}</div><div class="small">أسبوعًا أغلق داخل المنطقة (${bt.length?Math.round(hits/bt.length*10):0} من كل 10)</div><div class="dots">${bt.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
-      <div><div class="muted small">توقعات موجة المسجلة منذ 22 أكتوبر</div><div class="big">${mine.filter(Boolean).length} / ${mine.length}</div><div class="small">${mine.length?'أسبوعًا صدق':'أول نتيجة بعد إغلاق الخميس 29 أكتوبر'}</div><div class="dots">${mine.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
-    </div>`;
-    if(nextF&&nextF.lab){const n=nextF.lab;
-      html+=`<p class="small muted">الأسبوع التالي (${arShort(addD(curWeek,7))} – ${arShort(addD(curWeek,11))})${n.provisional?' · مبدئي':''}: بين <span class="num">${fmt(n.low)}</span> و <span class="num">${fmt(n.high)}</span> ريال</p>`;}
-    html+=`<div class="note small"><b>الصورة الكبيرة:</b> على الرسم الأسبوعي الطويل، هبط السهم من قمة 47.62 ريال في 2021 إلى قاع قرب 6.69. السعر الحالي أقرب كثيرًا للقاع، وأول مستوى فيبوناتشي فوقه (0.236) عند 16.35 ريال، وهو بعيد عن حركة أسبوع واحد. نطاق آخر 52 أسبوعًا: من 6.40 إلى 12.42 ريال.</div>`;
-    $('hero').innerHTML=html;
-    svgCandles($('miniW'),W.slice(-20),f&&f.lab,curWeek);
-  }
-
-  function svgCandles(el,C,zone,zoneWeek){
-    if(!el||!C.length){if(el)el.innerHTML='';return;}
-    const W=Math.max(320,el.clientWidth||640),H=240,L=6,R=60,T=12,B=26,extra=zone&&!C.find(c=>c.w===zoneWeek)?1:0,n=C.length+extra;
-    const vals=C.flatMap(c=>[c.h,c.l]).concat(zone?[zone.low,zone.high]:[]);
-    let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.05;lo-=pad;hi+=pad;
-    const cw=(W-L-R)/n,x=i=>L+cw*(i+.5),y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
-    let g='';for(let k=0;k<=4;k++){const v=lo+(hi-lo)*k/4;g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${W-R+6}" y="${y(v)+4}">${fmt(v)}</text>`;}
-    let z='';if(zone){const zi=C.findIndex(c=>c.w===zoneWeek);const i=zi<0?C.length:zi;
-      z=`<rect x="${x(i)-cw*.62}" y="${y(zone.high)}" width="${cw*1.24}" height="${Math.max(2,y(zone.low)-y(zone.high))}" rx="4" fill="var(--zone)" stroke="var(--zoneEdge)" stroke-width="1.5"/>`;}
-    const bw=Math.max(3,cw*.58);
-    const cs=C.map((c,i)=>{const up=c.c>=c.o,col=up?'var(--up)':'var(--down)',top=y(Math.max(c.o,c.c)),bot=y(Math.min(c.o,c.c));
-      return `<line x1="${x(i)}" x2="${x(i)}" y1="${y(c.h)}" y2="${y(c.l)}" stroke="${col}" stroke-width="1.4"/><rect x="${x(i)-bw/2}" y="${top}" width="${bw}" height="${Math.max(1.5,bot-top)}" fill="${col}" ${c.done===false?'fill-opacity=".45"':''}/>`;}).join('');
-    const lab=(i,t)=>`<text x="${x(i)}" y="${H-7}" text-anchor="middle">${t}</text>`;
-    const md=c=>c.w.slice(5).replace('-','/');
-    const mid=Math.floor(C.length/2);
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="شموع أسبوعية مع منطقة التوقع">${z}${g}${cs}${lab(0,md(C[0]))}${lab(mid,md(C[mid]))}${lab(C.length-1,md(C[C.length-1]))}</svg>`;
-  }
-
-  function renderCandles(){
-    const {rows,W,curWeek,wk}=state();const el=$('bigChart');
-    document.querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===S.frame)));
-    if(!rows.length){el.innerHTML='<div class="empty">لا توجد بيانات.</div>';return;}
-    const data=S.frame==='W'?W.map(w=>({time:w.w,open:w.o,high:w.h,low:w.l,close:w.c})):rows.map(r=>({time:r.d,open:r.o,high:r.h,low:r.l,close:r.c}));
-    const f=wk(curWeek);
-    if(S.chart){S.chart.remove();S.chart=null;}
-    if(!window.LightweightCharts){svgCandles(el,(S.frame==='W'?W:rows.map(r=>({w:r.d,o:r.o,h:r.h,l:r.l,c:r.c}))).slice(-40),f&&f.lab,curWeek);return;}
-    el.innerHTML='';
-    const ch=LightweightCharts.createChart(el,{width:el.clientWidth||640,height:360,
-      layout:{background:{type:'solid',color:css('--panel')},textColor:css('--muted'),fontFamily:'JetBrains Mono, monospace'},
-      grid:{vertLines:{color:css('--line')},horzLines:{color:css('--line')}},
-      rightPriceScale:{borderColor:css('--line')},timeScale:{borderColor:css('--line'),rightOffset:3},
-      localization:{locale:'en-US',priceFormatter:p=>fmt(p)},crosshair:{mode:0}});
-    const s=ch.addCandlestickSeries({upColor:css('--up'),downColor:css('--down'),borderVisible:false,wickUpColor:css('--up'),wickDownColor:css('--down'),priceFormat:{type:'price',precision:2,minMove:0.01}});
-    s.setData(data);
-    const ma=[];for(let i=19;i<data.length;i++){let t=0;for(let j=i-19;j<=i;j++)t+=data[j].close;ma.push({time:data[i].time,value:t/20});}
-    if(ma.length){const m=ch.addLineSeries({color:css('--warn'),lineWidth:1.5,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});m.setData(ma);}
-    if(f&&f.lab){
-      s.createPriceLine({price:f.lab.high,color:css('--zoneEdge'),lineWidth:2,lineStyle:2,axisLabelVisible:true,title:'أعلى المنطقة'});
-      s.createPriceLine({price:f.lab.low,color:css('--zoneEdge'),lineWidth:2,lineStyle:2,axisLabelVisible:true,title:'أدنى المنطقة'});
-    }
-    const span=S.frame==='W'?30:70;ch.timeScale().setVisibleLogicalRange({from:Math.max(0,data.length-span),to:data.length+2});
-    S.chart=ch;
-  }
-
-  function renderWeeks(){
-    const {W,curWeek}=state();
-    const dist=k=>Math.round((D0(k)-D0(curWeek))/864e5);
-    const docs=Object.values(S.weeks).sort((p,q)=>{const a=dist(p.week),b=dist(q.week);return Math.abs(a)-Math.abs(b)||b-a;});
-    if(!docs.length){$('weeksList').innerHTML='<div class="panel empty">لا توجد أسابيع مسجلة بعد.</div>';return;}
-    $('weeksList').innerHTML=docs.map(x=>{
-      const w=W.find(q=>q.w===x.week),done=!!(w&&w.done),c=x.lab||{},me=x.me||null;
-      const inZ=z=>z&&done?(w.c>=z.low&&w.c<=z.high):null;
-      const dirOk=b=>b&&done?(b==='flat'?Math.abs(w.c/w.o-1)<0.02:(b==='up')===(w.c>=w.o)):null;
-      const st=done?'<span class="pill">أُغلق</span>':(x.week===curWeek?(w?'<span class="pill live">جارٍ الآن</span>':'<span class="pill live">يبدأ الأحد</span>'):'<span class="pill">قادم</span>');
-      const res=(v,t)=>v==null?'':`<span class="pill ${v?'ok':'no'}">${t} ${v?'✓':'✗'}</span>`;
-      const meBox=me&&isFinite(me.low)?`<div class="rng">${fmt(me.low)} – ${fmt(me.high)}</div><div class="small">الميل: ${biasTxt[me.bias]||'—'}${me.savedAt?` · سُجّل ${me.savedAt<x.week?'قبل بداية الأسبوع':'أثناء الأسبوع'}`:''}</div>`:'<div class="small muted">لم يُسجَّل</div>';
-      const form='';
-      return `<article class="panel">
-        <div class="wk-head"><h2 style="margin:0">${arShort(x.week)} – ${arShort(addD(x.week,4))}</h2>${st}</div>
-        ${done?`<p class="small">الافتتاح <span class="num">${fmt(w.o)}</span> · الأعلى <span class="num">${fmt(w.h)}</span> · الأدنى <span class="num">${fmt(w.l)}</span> · <b>إغلاق الخميس <span class="num">${fmt(w.c)}</span></b></p>`:(w?`<p class="small muted">حتى الآن: آخر سعر <span class="num">${fmt(w.c)}</span> بعد ${w.n} من 5 أيام تداول</p>`:'')}
-        <div class="rows" style="margin-top:8px">
-          <div class="who c"><div class="lbl">توقع موجة${c.provisional?' (مبدئي)':''}</div><div class="rng">${fmt(c.low)} – ${fmt(c.high)}</div><div class="small">الميل: ${biasTxt[c.bias]||'—'}</div>
-            <div class="res" style="margin-top:4px">${res(inZ(c),'المنطقة')} ${res(dirOk(c.bias),'الميل')}</div></div>
-          <div class="who me"><div class="lbl">توقع شيبان</div>${meBox}<div class="res" style="margin-top:4px">${res(inZ(me&&isFinite(me.low)?me:null),'المنطقة')} ${res(me?dirOk(me.bias):null,'الميل')}</div>${form}</div>
-        </div>
-        ${c.note?`<p class="note small" style="margin-top:8px">${esc(c.note)}</p>`:''}
-      </article>`;}).join('');
-    docs.forEach(x=>{const s=$('bs-'+x.week);if(s&&x.me&&x.me.bias)s.value=x.me.bias;});
-  }
-
-
-  function render(){
-    document.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===S.tab)));
-    ['now','candles','weeks','how'].forEach(t=>$('v-'+t).hidden=t!==S.tab);
-    if(S.tab==='now')renderHero();
-    if(S.tab==='candles')renderCandles();
-    if(S.tab==='weeks')renderWeeks();
-  }
-
-  document.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{S.tab=b.dataset.t;render();}));
-  document.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{S.frame=b.dataset.f;renderCandles();}));
-  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(S.tab==='now')renderHero();if(S.tab==='candles'&&S.chart)S.chart.applyOptions({width:$('bigChart').clientWidth});},200);});
-  try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);}catch(_){}
-  new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-  render();
-
-  fetch('data.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(d=>{
-    const m=[];
-    for(const v of Object.values(d.candles||{})){for(const [k,c] of Object.entries(v.days||{})){if(c&&c.c>0&&c.h>0&&c.l>0&&c.o>0)m.push({d:k,o:+c.o,h:+c.h,l:+c.l,c:+c.c});}}
-    m.sort((p,q)=>p.d<q.d?-1:1);S.daily=m;
-    const o={};for(const v of Object.values(d.weeks||{})){if(v&&v.week)o[v.week]=v;}S.weeks=o;
-    S.loaded=true;render();
-  }).catch(()=>{S.loaded=true;$('hero').innerHTML='<div class="empty">تعذر تحميل البيانات. حدّث الصفحة.</div>';});
 })();
 </script>
 </body>
