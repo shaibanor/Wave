@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="مختبر تعليمي لقراءة شموع سهم عناية 8311 وتقدير منطقة الإغلاق الأسبوعية.">
+<meta name="description" content="موجة: منصة تعليمية لقراءة شموع سهم عناية 8311 وتقدير منطقة الإغلاق الأسبوعية.">
 <meta name="robots" content="noindex">
-<title>مختبر توقع سهم عناية</title>
+<title>موجة Wave · سهم عناية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
@@ -93,6 +93,8 @@ svg text{fill:var(--muted);font-family:var(--f-num);font-size:11px}
 .empty{padding:26px 12px;text-align:center;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding-top:12px;font-size:.84rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 footer b{color:var(--ink)}
+.brand-en{font-family:var(--f-num);font-weight:600;font-size:.7em;color:var(--accent);letter-spacing:.04em}
+.sub-title{margin:2px 0 0;font-family:var(--f-display);font-weight:500;font-size:1.05rem;color:var(--muted)}
 .owner{margin:0;text-align:center;font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--accent);letter-spacing:.02em}
 .owner.foot{margin-top:8px;font-size:.98rem}
 @media (max-width:560px){.rows{grid-template-columns:1fr}.price{font-size:1.7rem}}
@@ -104,7 +106,8 @@ footer b{color:var(--ink)}
   <p class="owner">شيبان</p>
   <header class="top">
     <div>
-      <h1>مختبر توقع سهم عناية</h1>
+      <h1>موجة <span class="brand-en">Wave</span></h1>
+      <p class="sub-title">توقع سهم عناية</p>
       <div class="byline">
         <span class="ticker">TADAWUL: 8311</span>
         <span class="tag edu">لغرض تعليمي، وليس توصية استثمارية</span>
@@ -150,7 +153,7 @@ footer b{color:var(--ink)}
 
   <section id="v-how" class="view" hidden>
     <div class="panel how">
-      <h2>كيف تقرأ المختبر في دقيقة</h2>
+      <h2>كيف تقرأ موجة في دقيقة</h2>
       <svg viewBox="0 0 360 170" width="100%" style="max-width:420px" role="img" aria-label="رسم يوضح أجزاء الشمعة">
         <line x1="90" y1="18" x2="90" y2="150" stroke="var(--up)" stroke-width="3"/>
         <rect x="70" y="48" width="40" height="70" rx="3" fill="var(--up)"/>
@@ -178,12 +181,12 @@ footer b{color:var(--ink)}
       <h3>حد التذبذب اليومي</h3>
       <p>في السوق السعودي لا يتحرك السهم في اليوم الواحد أكثر من 10% صعودًا أو هبوطًا عن إغلاق اليوم السابق. لذلك ترى أحيانًا شمعة تتوقف عند هذا الحد بالضبط.</p>
       <h3>المقارنة</h3>
-      <p>في صفحة الأسابيع يظهر توقع المختبر بجانب توقع شيبان لكل أسبوع، وبعد إغلاق الخميس تظهر نتيجة كل منهما.</p>
+      <p>في صفحة الأسابيع يظهر توقع موجة بجانب توقع شيبان لكل أسبوع، وبعد إغلاق الخميس تظهر نتيجة كل منهما.</p>
     </div>
   </section>
 
   <footer>
-    <p>مختبر تعليمي لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
+    <p>موجة: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
     <p>المحتوى لغرض تعليمي فقط، وليس توصية استثمارية ولا دعوة للشراء أو البيع. القرار الاستثماري مسؤولية صاحبه.</p>
     <p>الأسعار بالريال السعودي، وتُحدَّث بعد إغلاق كل يوم تداول.</p>
     <p class="owner foot">شيبان</p>
@@ -244,7 +247,7 @@ footer b{color:var(--ink)}
       <span class="chg ${chg>=0?'up':'down'} num">${chg>=0?'+':''}${(chg*100).toFixed(2)}%</span>
       <span class="muted small">إغلاق ${arDay(last.d)}</span></div>`;
     if(f&&f.lab){const c=f.lab;
-      html+=`<p class="say">توقع المختبر لإغلاق الأسبوع (${arDay(end)}): بين <b>${fmt(c.low)}</b> و <b>${fmt(c.high)}</b> ريال</p>
+      html+=`<p class="say">توقع موجة لإغلاق الأسبوع (${arDay(end)}): بين <b>${fmt(c.low)}</b> و <b>${fmt(c.high)}</b> ريال</p>
       <div><span class="bias ${c.bias}">الميل: ${biasTxt[c.bias]||'—'}</span></div>`;
       const pts=[c.low,c.high,last.c].concat(lastFull?[lastFull.c]:[]).concat(wc?[wc.h,wc.l]:[]);
       let lo=Math.min(...pts),hi=Math.max(...pts);const pad=(hi-lo)*.12;lo-=pad;hi+=pad;
@@ -262,8 +265,8 @@ footer b{color:var(--ink)}
     const bt=backtest(rows),hits=bt.filter(Boolean).length;
     const mine=Object.values(S.weeks).filter(x=>x.lab&&!x.lab.provisional).map(x=>{const w=W.find(q=>q.w===x.week&&q.done);return w?(w.c>=x.lab.low&&w.c<=x.lab.high):null}).filter(v=>v!==null);
     html+=`<div class="trust">
-      <div><div class="muted small">لو طُبّقت طريقة المختبر على آخر ${bt.length} أسبوعًا</div><div class="big">${hits} / ${bt.length}</div><div class="small">أسبوعًا أغلق داخل المنطقة (${bt.length?Math.round(hits/bt.length*10):0} من كل 10)</div><div class="dots">${bt.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
-      <div><div class="muted small">توقعات المختبر المسجلة منذ 22 أكتوبر</div><div class="big">${mine.filter(Boolean).length} / ${mine.length}</div><div class="small">${mine.length?'أسبوعًا صدق':'أول نتيجة بعد إغلاق الخميس 29 أكتوبر'}</div><div class="dots">${mine.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
+      <div><div class="muted small">لو طُبّقت طريقة موجة على آخر ${bt.length} أسبوعًا</div><div class="big">${hits} / ${bt.length}</div><div class="small">أسبوعًا أغلق داخل المنطقة (${bt.length?Math.round(hits/bt.length*10):0} من كل 10)</div><div class="dots">${bt.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
+      <div><div class="muted small">توقعات موجة المسجلة منذ 22 أكتوبر</div><div class="big">${mine.filter(Boolean).length} / ${mine.length}</div><div class="small">${mine.length?'أسبوعًا صدق':'أول نتيجة بعد إغلاق الخميس 29 أكتوبر'}</div><div class="dots">${mine.map(v=>`<i class="${v?'ok':''}"></i>`).join('')}</div></div>
     </div>`;
     if(nextF&&nextF.lab){const n=nextF.lab;
       html+=`<p class="small muted">الأسبوع التالي (${arShort(addD(curWeek,7))} – ${arShort(addD(curWeek,11))})${n.provisional?' · مبدئي':''}: بين <span class="num">${fmt(n.low)}</span> و <span class="num">${fmt(n.high)}</span> ريال</p>`;}
@@ -333,7 +336,7 @@ footer b{color:var(--ink)}
         <div class="wk-head"><h2 style="margin:0">${arShort(x.week)} – ${arShort(addD(x.week,4))}</h2>${st}</div>
         ${done?`<p class="small">الافتتاح <span class="num">${fmt(w.o)}</span> · الأعلى <span class="num">${fmt(w.h)}</span> · الأدنى <span class="num">${fmt(w.l)}</span> · <b>إغلاق الخميس <span class="num">${fmt(w.c)}</span></b></p>`:(w?`<p class="small muted">حتى الآن: آخر سعر <span class="num">${fmt(w.c)}</span> بعد ${w.n} من 5 أيام تداول</p>`:'')}
         <div class="rows" style="margin-top:8px">
-          <div class="who c"><div class="lbl">توقع المختبر${c.provisional?' (مبدئي)':''}</div><div class="rng">${fmt(c.low)} – ${fmt(c.high)}</div><div class="small">الميل: ${biasTxt[c.bias]||'—'}</div>
+          <div class="who c"><div class="lbl">توقع موجة${c.provisional?' (مبدئي)':''}</div><div class="rng">${fmt(c.low)} – ${fmt(c.high)}</div><div class="small">الميل: ${biasTxt[c.bias]||'—'}</div>
             <div class="res" style="margin-top:4px">${res(inZ(c),'المنطقة')} ${res(dirOk(c.bias),'الميل')}</div></div>
           <div class="who me"><div class="lbl">توقع شيبان</div>${meBox}<div class="res" style="margin-top:4px">${res(inZ(me&&isFinite(me.low)?me:null),'المنطقة')} ${res(me?dirOk(me.bias):null,'الميل')}</div>${form}</div>
         </div>
