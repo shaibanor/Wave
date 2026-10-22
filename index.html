@@ -142,6 +142,29 @@ footer b{color:var(--ink)}
 .mk-cap{font-size:.78rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
 .mk-group.on .mk-cap{color:var(--warn)}
 @media (max-width:520px){.mk-sel{grid-template-columns:1fr}}
+
+.vault{perspective:1100px;display:flex;justify-content:center;padding:6px 0 4px}
+.vbox{position:relative;width:min(520px,100%);transform-style:preserve-3d;transform:rotateX(14deg) rotateY(-10deg);transition:transform .6s cubic-bezier(.2,.7,.2,1);cursor:pointer;outline:none}
+.vbox:hover,.vbox:focus-visible{transform:rotateX(8deg) rotateY(-4deg)}
+.vface{position:relative;border-radius:20px;background:linear-gradient(155deg,#0F2234,#0A1724 60%,#101C28);border:1px solid rgba(201,165,92,.45);padding:18px 16px 16px;overflow:hidden;box-shadow:0 30px 50px -30px rgba(3,10,18,.9),inset 0 1px 0 rgba(255,255,255,.06)}
+.vside{position:absolute;left:10px;right:10px;bottom:-14px;height:16px;border-radius:0 0 18px 18px;background:linear-gradient(#07111B,#050C14);transform:rotateX(-70deg);transform-origin:top;border:1px solid rgba(201,165,92,.25);border-top:0}
+.vside.r{left:auto;right:-12px;top:12px;bottom:12px;width:14px;height:auto;border-radius:0 16px 16px 0;transform:rotateY(70deg);transform-origin:left;border:1px solid rgba(201,165,92,.25);border-left:0}
+.vhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.vtitle{font-family:var(--f-display);font-weight:700;color:#F3E7CC;font-size:1.02rem;margin:0}
+.vtag{font-size:.72rem;font-weight:600;color:#E2C988;border:1px solid rgba(201,165,92,.45);border-radius:999px;padding:2px 10px}
+.vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;filter:blur(1.1px) saturate(.85);opacity:.8;user-select:none;pointer-events:none}
+.vchip{border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(201,165,92,.18);padding:8px 8px 7px;min-width:0}
+.vchip b{display:block;font-family:var(--f-num);font-size:.82rem;color:#EFE2C2;direction:ltr;letter-spacing:.03em}
+.vchip span{display:block;font-size:.72rem;color:#9FB1C2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vchip i{display:block;height:3px;border-radius:2px;margin-top:6px;background:linear-gradient(90deg,#C9A55C,rgba(201,165,92,.15))}
+.vlock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:radial-gradient(60% 70% at 50% 55%,rgba(10,23,36,.55),rgba(10,23,36,.15));pointer-events:none}
+.vlock svg{width:54px;height:54px;filter:drop-shadow(0 6px 14px rgba(201,165,92,.35))}
+.vlock p{margin:0;font-size:.8rem;font-weight:600;color:#E9D7A8;letter-spacing:.02em;background:rgba(10,23,36,.7);border:1px solid rgba(201,165,92,.35);padding:3px 12px;border-radius:999px}
+.vbox.shake .vlock svg{animation:lockshake .5s}
+@keyframes lockshake{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+@media (prefers-reduced-motion:no-preference){.vbox{animation:vfloat 7s ease-in-out infinite}}
+@keyframes vfloat{0%,100%{translate:0 0}50%{translate:0 -6px}}
+@media (max-width:520px){.vgrid{gap:6px}.vchip{padding:6px 6px 5px}.vchip b{font-size:.74rem}.vchip span{font-size:.64rem}.vchip:nth-child(n+10){display:none}.vtag{display:none}}
 </style>
 </head>
 <body>
@@ -232,6 +255,18 @@ footer b{color:var(--ink)}
       <p>في صفحة الأسابيع يظهر توقع التحليل بجانب توقع <i class="sig-inline" role="img" aria-label="شيبان"></i> لكل أسبوع، وبعد الإغلاق تظهر نتيجة كل منهما.</p>
     </div>
   </section>
+
+  <section class="vault" aria-label="تحليلات خاصة">
+    <div class="vbox" id="vault" tabindex="0" role="button" aria-label="تحليلات خاصة مقفلة">
+      <div class="vface">
+        <div class="vhead"><p class="vtitle">تحليلات خاصة</p><span class="vtag">أسهم أمريكية · سعودية · متنوعة</span></div>
+        <div class="vgrid" aria-hidden="true"><div class="vchip"><b>2222</b><span>أرامكو السعودية</span><i style="width:40%"></i></div><div class="vchip"><b>AAPL</b><span>Apple</span><i style="width:77%"></i></div><div class="vchip"><b>2010</b><span>سابك</span><i style="width:59%"></i></div><div class="vchip"><b>NVDA</b><span>NVIDIA</span><i style="width:41%"></i></div><div class="vchip"><b>7010</b><span>إس تي سي</span><i style="width:78%"></i></div><div class="vchip"><b>MSFT</b><span>Microsoft</span><i style="width:60%"></i></div><div class="vchip"><b>1211</b><span>معادن</span><i style="width:42%"></i></div><div class="vchip"><b>TSLA</b><span>Tesla</span><i style="width:79%"></i></div><div class="vchip"><b>XAU</b><span>الذهب / دولار</span><i style="width:61%"></i></div><div class="vchip"><b>2082</b><span>أكوا باور</span><i style="width:43%"></i></div><div class="vchip"><b>AMZN</b><span>Amazon</span><i style="width:80%"></i></div><div class="vchip"><b>SPX</b><span>S&P 500</span><i style="width:62%"></i></div></div>
+        <div class="vlock"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DFA8"/><stop offset=".5" stop-color="#C9A55C"/><stop offset="1" stop-color="#8E6A2C"/></linearGradient></defs><path d="M20 28v-8a12 12 0 0 1 24 0v8" fill="none" stroke="url(#lg)" stroke-width="5" stroke-linecap="round"/><rect x="12" y="27" width="40" height="30" rx="7" fill="url(#lg)"/><circle cx="32" cy="40" r="4" fill="#0A1724"/><rect x="30.5" y="41" width="3" height="8" rx="1.5" fill="#0A1724"/></svg><p>محتوى خاص</p></div>
+      </div>
+      <div class="vside" aria-hidden="true"></div><div class="vside r" aria-hidden="true"></div>
+    </div>
+  </section>
+
 
   <footer>
     <p>التحليل الخاص: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
@@ -467,6 +502,9 @@ footer b{color:var(--ink)}
     }).catch(()=>{S.loaded=true;$('hero').innerHTML='<div class="empty">تعذر تحميل البيانات. حدّث الصفحة.</div>';});
   }
   })();
+</script>
+<script>
+(function(){const v=document.getElementById('vault');if(!v)return;const f=()=>{v.classList.remove('shake');void v.offsetWidth;v.classList.add('shake');};v.addEventListener('click',f);v.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});})();
 </script>
 </body>
 </html>
