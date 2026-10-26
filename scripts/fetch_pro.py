@@ -68,6 +68,11 @@ def main():
     now = dt.datetime.utcnow().strftime('%Y-%m-%dT%H:%MZ')
     status = {'updated': now, 'sa': {}, 'cx': {}}
     try:
+        import yfinance
+        status['yf'] = yfinance.__version__
+    except Exception as e:
+        status['yf'] = 'missing: ' + str(e)[:80]
+    try:
         allsa = yahoo_all()
     except Exception as e:
         allsa = {c: {'err': str(e)[:160]} for c in SA}
