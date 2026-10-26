@@ -1,0 +1,29 @@
+name: health
+on:
+  schedule:
+    - cron: '50 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Site responds
+        run: |
+          for p in "" "pro.html" "data.json"; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://shaibanor.github.io/Wave/$p")
+            echo "$code /$p"; [ "$code" = "200" ] || exit 1
+          done
+      - name: Data is fresh and valid
+        run: python3 scripts/validate.py
+      - name: Weekly backup tag (Fridays)
+        if: always()
+        run: |
+          if [ "$(date -u +%u)" = "5" ] && [ "$(date -u +%H)" -lt 6 ]; then
+            t="backup-$(date -u +%Y-%m-%d)"; git tag "$t" && git push origin "$t" || true
+          fi

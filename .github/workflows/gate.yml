@@ -1,0 +1,38 @@
+name: gate
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate data and pages
+        id: v
+        run: python scripts/validate.py
+      - name: Check inline scripts parse
+        run: |
+          node -e '
+          const fs=require("fs");let bad=0;
+          for(const f of ["index.html","pro.html"]){if(!fs.existsSync(f))continue;const h=fs.readFileSync(f,"utf8");
+            [...h.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/g)].forEach((m,i)=>{try{new Function(m[1])}catch(e){bad++;console.log("FAIL",f,"script",i,e.message)}});}
+          process.exit(bad?1:0);'
+      - name: Roll back a broken automatic data update
+        if: failure() && startsWith(github.event.head_commit.message, 'تحديث')
+        run: |
+          git config user.name "shaibanor"
+          git config user.email "shaibanor@users.noreply.github.com"
+          git revert --no-edit HEAD
+          git push origin HEAD:main

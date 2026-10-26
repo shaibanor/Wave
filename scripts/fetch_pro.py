@@ -9,11 +9,11 @@ CX = {'BTC': 'BTCUSDT', 'ETH': 'ETHUSDT', 'BNB': 'BNBUSDT', 'XRP': 'XRPUSDT', 'S
       'TRX': 'TRXUSDT', 'DOGE': 'DOGEUSDT', 'ZEC': 'ZECUSDT', 'LINK': 'LINKUSDT', 'ADA': 'ADAUSDT'}
 CX_TF = {'1h': 500, '4h': 500, '1d': 1000, '1w': 400, '1M': 150}
 
-def get(url, tries=4):
+def get(url, tries=2):
     last = None
     for i in range(tries):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=20) as r:
                 return json.loads(r.read().decode())
         except Exception as e:  # network / rate limit
             last = e
@@ -23,31 +23,30 @@ def get(url, tries=4):
 def num(x, nd):
     return None if x is None else round(float(x), nd)
 
-def yahoo(sym, interval, rng):
-    for host in ('query1', 'query2'):
+def yahoo_all():
+    """Daily (2y) and monthly (max) bars for all Saudi tickers via yfinance."""
+    import yfinance as yf
+    out = {}
+    for c in SA:
         try:
-            d = get(f'https://{host}.finance.yahoo.com/v8/finance/chart/{sym}?interval={interval}&range={rng}&includePrePost=false')
-            res = d['chart']['result'][0]
-            break
+            t = yf.Ticker(f'{c}.SR')
+            res = {}
+            for key, kw in (('d', dict(period='2y', interval='1d')), ('m', dict(period='max', interval='1mo'))):
+                df = t.history(auto_adjust=False, actions=False, **kw)
+                rows = []
+                for idx, r in df.iterrows():
+                    o, h, l, cl, v = (r.get(k) for k in ('Open', 'High', 'Low', 'Close', 'Volume'))
+                    if any(x is None or x != x or x <= 0 for x in (o, h, l, cl)):
+                        continue
+                    day = idx.date()
+                    t0 = int(dt.datetime(day.year, day.month, day.day, tzinfo=dt.timezone.utc).timestamp())
+                    rows.append([t0, num(o, 3), num(max(h, o, cl), 3), num(min(l, o, cl), 3), num(cl, 3), int(v if v == v else 0)])
+                res[key] = rows
+            out[c] = res
         except Exception as e:
-            err = e
-    else:
-        raise RuntimeError(err)
-    ts = res.get('timestamp') or []
-    q = res['indicators']['quote'][0]
-    out = []
-    for i, t in enumerate(ts):
-        o, h, l, c, v = (q[k][i] for k in ('open', 'high', 'low', 'close', 'volume'))
-        if None in (o, h, l, c) or min(o, h, l, c) <= 0:
-            continue
-        day = (dt.datetime.utcfromtimestamp(t) + dt.timedelta(hours=3)).date()
-        t0 = int(dt.datetime(day.year, day.month, day.day, tzinfo=dt.timezone.utc).timestamp())
-        h, l = max(h, o, c), min(l, o, c)
-        out.append([t0, num(o, 3), num(h, 3), num(l, 3), num(c, 3), int(v or 0)])
-    dedup = {}
-    for r in out:
-        dedup[r[0]] = r
-    return [dedup[k] for k in sorted(dedup)], res.get('meta', {})
+            out[c] = {'err': str(e)[:160]}
+        time.sleep(1)
+    return out
 
 def binance(sym, tf, limit):
     for base in ('https://data-api.binance.vision', 'https://api.binance.com', 'https://api1.binance.com'):
@@ -68,17 +67,18 @@ def write(path, obj):
 def main():
     now = dt.datetime.utcnow().strftime('%Y-%m-%dT%H:%MZ')
     status = {'updated': now, 'sa': {}, 'cx': {}}
+    try:
+        allsa = yahoo_all()
+    except Exception as e:
+        allsa = {c: {'err': str(e)[:160]} for c in SA}
     for c in SA:
-        try:
-            d, meta = yahoo(f'{c}.SR', '1d', '2y')
-            m, _ = yahoo(f'{c}.SR', '1mo', 'max')
-            if len(d) < 60:
-                raise RuntimeError('too few daily rows')
-            write(f'{ROOT}/sa/{c}.json', {'id': c, 'updated': now, 'cur': meta.get('currency', 'SAR'), 'd': d, 'm': m})
-            status['sa'][c] = {'ok': True, 'last': dt.datetime.utcfromtimestamp(d[-1][0]).strftime('%Y-%m-%d'), 'n': len(d)}
-        except Exception as e:
-            status['sa'][c] = {'ok': False, 'err': str(e)[:160]}
-        time.sleep(1.5)
+        r = allsa.get(c, {})
+        d, m = r.get('d') or [], r.get('m') or []
+        if len(d) >= 60:
+            write(f'{ROOT}/sa/{c}.json', {'id': c, 'updated': now, 'cur': 'SAR', 'd': d, 'm': m})
+            status['sa'][c] = {'ok': True, 'last': dt.datetime.utcfromtimestamp(d[-1][0]).strftime('%Y-%m-%d'), 'n': len(d), 'nm': len(m)}
+        else:
+            status['sa'][c] = {'ok': False, 'err': r.get('err', f'only {len(d)} daily rows')}
     for k, sym in CX.items():
         try:
             obj = {'id': k, 'updated': now}

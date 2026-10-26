@@ -1,0 +1,34 @@
+name: qa
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['pro.html', 'index.html', 'scripts/qa_shots.js', '.github/workflows/qa.yml']
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install browser
+        run: |
+          mkdir -p /tmp/qa && cd /tmp/qa && npm init -y >/dev/null && npm i playwright@1.47.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Screenshots
+        run: |
+          python3 -m http.server 8099 >/dev/null 2>&1 &
+          sleep 1
+          export GATE_HASH=$(grep -o "var H='[0-9a-f]*'" index.html | head -1 | cut -d"'" -f2)
+          NODE_PATH=/tmp/qa/node_modules node scripts/qa_shots.js
+      - name: Publish to qa branch
+        run: |
+          cd qa
+          git init -q && git checkout -q -b qa
+          git config user.name "shaibanor" && git config user.email "shaibanor@users.noreply.github.com"
+          git add . && git commit -qm "qa"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" qa
