@@ -25,9 +25,15 @@ jobs:
           sleep 1
           export GATE_HASH=$(grep -o "var H='[0-9a-f]*'" index.html | head -1 | cut -d"'" -f2)
           NODE_PATH=/tmp/qa/node_modules node scripts/qa_shots.js
-      - name: Publish to qa branch
+      - name: Fail on page errors
+        run: |
+          if grep -q "pageerror" qa/log.txt; then grep "pageerror" qa/log.txt; exit 1; fi
+          grep -q "sa status: آخر إغلاق" qa/log.txt || { echo "Saudi data did not load"; exit 1; }
+      - name: Publish log to qa branch
+        if: always()
         run: |
           cd qa
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then rm -f *.png; fi
           git init -q && git checkout -q -b qa
           git config user.name "shaibanor" && git config user.email "shaibanor@users.noreply.github.com"
           git add . && git commit -qm "qa"
