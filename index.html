@@ -321,8 +321,13 @@ ul.ll.warn li::before{background:var(--warn)}
 @media (max-width:760px){.scns{grid-template-columns:1fr}}
 .scn{border:1px solid var(--line);border-radius:12px;padding:10px 12px;position:relative;font-size:.86rem;background:var(--panel)}
 .scn.bull{border-top:3px solid var(--up)}.scn.bear{border-top:3px solid var(--down)}.scn.side{border-top:3px solid var(--muted)}
-.scn.pick{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
-.badge{display:inline-block;font-size:.7rem;font-weight:700;color:var(--panel);background:var(--gold);border-radius:999px;padding:1px 9px;margin-bottom:6px}
+.scn.pick,.pick3d{background:linear-gradient(160deg,color-mix(in srgb,var(--up) 17%,var(--panel)),color-mix(in srgb,var(--up) 7%,var(--panel)));border:1px solid color-mix(in srgb,var(--up) 45%,var(--line));
+  box-shadow:0 7px 0 -1px color-mix(in srgb,var(--up) 38%,#0b1a14 30%),0 18px 26px -14px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);transform:perspective(1200px) rotateX(4deg);transform-origin:bottom;transition:transform .25s,box-shadow .25s}
+.scn.pick h4,.scn.pick p:not(.muted){color:var(--ink)}.scn.pick p.muted{color:color-mix(in srgb,var(--ink) 70%,transparent)}
+.scn.pick:hover,.pick3d:hover{transform:perspective(900px) rotateX(0) translateY(-2px)}
+.pick3d{border-radius:12px;padding:8px 12px;margin:2px 0 6px;font-size:.86rem}
+.pick3d b{color:color-mix(in srgb,var(--up) 85%,var(--ink))}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;background:color-mix(in srgb,var(--up) 82%,#0b1a14);border-radius:999px;padding:1px 9px;margin-bottom:6px}
 .disc{font-size:.8rem;color:var(--muted);text-align:center;margin:4px 0 0}
 .psum{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:14px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
 @media (max-width:520px){.psum{grid-template-columns:1fr}}
@@ -931,7 +936,7 @@ html.locked .gate{display:flex}
     return`<div class="psum"><div class="psum-g">${gauge(conf)}</div><div class="psum-b"><h3>التحليل المتقدم</h3>
       <div class="tfchips">${TFS.map(chip).join('')}</div>
       <ul class="kv"><li><span>المقاومة الأقرب</span><b class="num">${px(lv.R.p)}</b></li><li><span>الدعم الأقرب</span><b class="num">${px(lv.S.p)}</b></li><li><span>ATR اليومي</span><b class="num">${px((I.atr[n]))}</b></li></ul>
-      <p class="small">الأرجح حسب المؤشرات: <b>${pick}</b> · بعد التدقيق المعاكس <b class="num">${sc.eff}%</b></p>
+      <div class="pick3d">الأرجح حسب المؤشرات: <b>${pick}</b> · بعد التدقيق المعاكس <b class="num">${sc.eff}%</b></div>
       <button class="btn" data-goto="pro">التحليل الكامل ←</button></div></div>`;}
   let bound=false;
   function bind(){if(bound)return;bound=true;
