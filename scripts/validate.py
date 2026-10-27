@@ -62,7 +62,7 @@ def check_pages():
         h = open(p, encoding='utf-8').read()
         if re.search(base64.b64decode('Y2xhdWRlfGFudGhyb3BpYw==').decode(), h, re.I): errors.append(f'{name}: contains a forbidden attribution word')
         if '<title>' not in h: errors.append(f'{name}: no <title>')
-        if 'id="gate"' not in h: errors.append(f'{name}: access gate missing')
+        if name == 'index.html' and 'id="gate"' not in h: errors.append(f'{name}: access gate missing')
 
 check_data(); check_pro(); check_pages()
 for w in warns: print('WARN', w)

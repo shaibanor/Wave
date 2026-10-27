@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['pro.html', 'index.html', 'scripts/qa_shots.js', '.github/workflows/qa.yml']
+    paths: ['index.html', 'scripts/qa_shots.js', '.github/workflows/qa.yml']
 permissions:
   contents: write
 jobs:
