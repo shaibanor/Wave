@@ -29,6 +29,7 @@ jobs:
         run: |
           if grep -q "pageerror" qa/log.txt; then grep "pageerror" qa/log.txt; exit 1; fi
           grep -q "sa status: آخر إغلاق" qa/log.txt || { echo "Saudi data did not load"; exit 1; }
+          grep -q "sol status: مباشر" qa/log.txt || echo "::warning::crypto live feed not reachable from the runner"
       - name: Publish log to qa branch
         if: always()
         run: |

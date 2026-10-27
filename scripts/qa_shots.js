@@ -10,6 +10,6 @@ const H=process.env.GATE_HASH;const base='http://localhost:8099/';
   log.push(tag+' live: '+(await p.textContent('#lvHead')).replace(/\s+/g,' ').slice(0,90));
   await p.click('#t-pro');await p.waitForTimeout(5000);log.push(tag+' sa status: '+(await p.textContent('#pStatus')));
   await p.click('[data-ptf="4h"]');await p.waitForTimeout(2000);await p.screenshot({path:`qa/pro_2222_4h_${tag}.png`,fullPage:true});
-  await p.click('[data-cat="crypto"]');await p.click('[data-a="BTC"]');await p.waitForTimeout(6000);log.push(tag+' btc status: '+(await p.textContent('#pStatus')));
-  await p.screenshot({path:`qa/pro_btc_${tag}.png`,fullPage:true});await p.close();}
+  await p.click('[data-cat="crypto"]');await p.click('[data-a="SOL"]');await p.waitForTimeout(6000);log.push(tag+' sol status: '+(await p.textContent('#pStatus')));
+  await p.screenshot({path:`qa/pro_sol_${tag}.png`,fullPage:true});await p.close();}
  fs.writeFileSync('qa/log.txt',log.join('\n')+'\n');console.log(log.join('\n'));await b.close();})();
