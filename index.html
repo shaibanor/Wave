@@ -330,6 +330,128 @@ ul.ll.warn li::before{background:var(--warn)}
 .tfchips{display:flex;flex-wrap:wrap;gap:6px}
 .tfchip{font-size:.75rem;background:var(--chip);border-radius:999px;padding:2px 9px;display:inline-flex;align-items:center}
 .psum .btn{align-self:flex-start}
+.miss{margin-top:10px;border-radius:12px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line));background:color-mix(in srgb,var(--warn) 8%,var(--panel))}
+.ms-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.ms-h b{font-family:var(--f-display);font-size:.95rem}
+.ms-sev{font-size:.72rem;font-weight:700;border-radius:999px;padding:1px 10px;background:var(--chip);color:var(--muted)}
+.ms-sev.hi{background:color-mix(in srgb,var(--down) 18%,transparent);color:var(--down)}
+.ms-m{margin:0 0 6px;font-size:.86rem}
+.ms-l{margin:0;padding-inline-start:18px;display:flex;flex-direction:column;gap:5px;font-size:.86rem;line-height:1.7}
+.ms-n{margin:4px 0 0;padding-inline-start:16px}
+.ms-n a{color:var(--accent)}
+
+.vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
+.vx-stage{position:relative;width:220px;height:250px;perspective:900px}
+.vx-halo{position:absolute;inset:-10px;background:radial-gradient(50% 45% at 50% 42%,rgba(233,207,143,.28),rgba(201,165,92,.06) 55%,transparent 72%);filter:blur(6px);animation:vxh 5s ease-in-out infinite}
+.vx-cube{position:absolute;left:35px;top:28px;width:150px;height:150px;transform-style:preserve-3d;transform:rotateX(-20deg) rotateY(-32deg);animation:vxr 18s linear infinite;cursor:pointer;outline:none}
+.vx-cube:hover,.vx-cube:focus-visible{animation-play-state:paused}
+.vx-cube:focus-visible .vf{box-shadow:0 0 0 2px #E9CF8F inset,0 0 30px rgba(233,207,143,.5)}
+.vf{position:absolute;inset:0;border-radius:18px;background:linear-gradient(145deg,#132a40 0%,#0A1724 55%,#0e2032 100%);border:1px solid rgba(233,207,143,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),inset 0 0 40px rgba(201,165,92,.14);display:flex;align-items:center;justify-content:center;overflow:hidden;backface-visibility:hidden}
+.vf::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 68%,rgba(233,207,143,.12) 100%);pointer-events:none}
+.vf::after{content:"";position:absolute;inset:8px;border-radius:12px;border:1px solid rgba(233,207,143,.22);pointer-events:none}
+.vf-in{display:flex;flex-direction:column;align-items:center;gap:8px;width:76%}
+.vf-in svg{width:100%;height:auto;filter:drop-shadow(0 0 8px rgba(233,207,143,.35))}
+.vf-in b{font:700 .95rem var(--f-display);color:#F3E7CC;letter-spacing:.01em;text-shadow:0 0 12px rgba(233,207,143,.35)}
+.vf.rt .vf-in{width:44%}
+.vf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:62%}
+.vf-grid i{aspect-ratio:1;border-radius:6px;background:linear-gradient(145deg,rgba(233,207,143,.5),rgba(201,165,92,.1));box-shadow:0 0 8px rgba(233,207,143,.2)}
+.vf-grid i:nth-child(odd){opacity:.45}
+.vf-ring{width:70px;height:70px;border-radius:50%;border:2px solid rgba(233,207,143,.7);box-shadow:0 0 18px rgba(233,207,143,.4),inset 0 0 18px rgba(233,207,143,.3)}
+.vf.fr{transform:translateZ(75px)}.vf.bk{transform:rotateY(180deg) translateZ(75px)}
+.vf.rt{transform:rotateY(90deg) translateZ(75px)}.vf.lf{transform:rotateY(-90deg) translateZ(75px)}
+.vf.tp{transform:rotateX(90deg) translateZ(75px)}.vf.bt{transform:rotateX(-90deg) translateZ(75px);background:#06101A}
+.vx-floor{position:absolute;left:50%;bottom:6px;width:150px;height:22px;margin-left:-75px;border-radius:50%;background:radial-gradient(closest-side,rgba(201,165,92,.45),rgba(201,165,92,0));filter:blur(4px);animation:vxf 18s linear infinite}
+.vx-cap{margin:0;font:700 1rem var(--f-display);color:var(--ink)}
+.vx-cap span{color:var(--muted);font-weight:500;font-size:.85rem}
+@keyframes vxr{from{transform:rotateX(-20deg) rotateY(0deg)}to{transform:rotateX(-20deg) rotateY(360deg)}}
+@keyframes vxh{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes vxf{0%,100%{transform:scaleX(1)}25%,75%{transform:scaleX(.82)}50%{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.vx-cube,.vx-halo,.vx-floor{animation:none}}
+.vxo{position:fixed;inset:0;z-index:70;display:flex;justify-content:center;overflow-y:auto;opacity:0;transition:opacity .25s;color:#E8EEF4}
+.vxo.on{opacity:1}
+.vxo-bg{position:fixed;inset:0;background:radial-gradient(70% 50% at 50% 0%,rgba(201,165,92,.18),transparent 60%),linear-gradient(180deg,#0B1826,#060D15);}
+.vxo-x{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:max(14px,env(safe-area-inset-left,0px));z-index:3;width:40px;height:40px;border-radius:50%;border:1px solid rgba(233,207,143,.45);background:rgba(10,23,36,.7);color:#E9CF8F;font-size:1rem;cursor:pointer}
+.vxo-x:focus-visible{outline:2px solid #E9CF8F;outline-offset:2px}
+.vxo-in{position:relative;z-index:2;width:min(980px,100%);padding:calc(64px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.vp{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:340px;margin:4vh auto 0;text-align:center}
+.vp-ring{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(233,207,143,.18),rgba(201,165,92,0) 70%);border:1px solid rgba(233,207,143,.35);box-shadow:0 0 40px rgba(201,165,92,.25)}
+.vp-ring svg{width:46px}
+.vp-t{margin:6px 0 0;font:700 1.5rem var(--f-display);color:#F6EFE0}
+.vp-s{margin:0;color:#9FB1C2;font-size:.9rem}
+.vp-cells{display:flex;gap:14px;margin:10px 0 2px;direction:ltr}
+.vp-cells span{width:16px;height:16px;border-radius:50%;border:2px solid rgba(233,207,143,.6);transition:all .15s}
+.vp-cells span.f{background:linear-gradient(135deg,#F7E7BC,#C9A55C);box-shadow:0 0 12px rgba(233,207,143,.6)}
+.vp-cells.busy span{animation:vpb 1s ease-in-out infinite}
+.vp-cells.busy span:nth-child(2){animation-delay:.1s}.vp-cells.busy span:nth-child(3){animation-delay:.2s}.vp-cells.busy span:nth-child(4){animation-delay:.3s}.vp-cells.busy span:nth-child(5){animation-delay:.4s}
+@keyframes vpb{50%{transform:translateY(-6px)}}
+.vp-in{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.vp-msg{min-height:1.3em;margin:0;font-size:.88rem;color:#F08A7E}
+.vp.bad{animation:lockshake .45s}
+.vp-pad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;direction:ltr;margin-top:4px}
+.vp-pad button{height:72px;border-radius:50%;border:1px solid rgba(233,207,143,.35);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.10),rgba(255,255,255,.02) 60%),rgba(15,34,52,.75);color:#F3E7CC;font:600 1.5rem var(--f-num);cursor:pointer;box-shadow:0 8px 18px -10px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .08s,background .15s}
+.vp-pad button:active{transform:scale(.94);background:rgba(201,165,92,.25)}
+.vp-pad button:focus-visible{outline:2px solid #E9CF8F;outline-offset:2px}
+.vb{display:flex;flex-direction:column;gap:16px}
+.vb-h h2{margin:0;font:700 1.6rem var(--f-display);background:linear-gradient(100deg,#F1DCA0,#C9A55C);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vb-h p{margin:2px 0 0;color:#9FB1C2;font-size:.82rem}
+.vb-k{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:720px){.vb-k{grid-template-columns:1fr 1fr}}
+.kc{position:relative;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:2px;min-width:0;background:linear-gradient(160deg,rgba(25,48,70,.95),rgba(10,23,36,.95));border:1px solid rgba(233,207,143,.35);box-shadow:0 18px 30px -18px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.03) inset;transform:perspective(900px) rotateX(8deg);transform-origin:bottom;transition:transform .3s}
+.kc:hover{transform:perspective(900px) rotateX(0) translateY(-3px)}
+.kc::before{content:"";position:absolute;inset:0;border-radius:16px;background:linear-gradient(120deg,rgba(255,255,255,.10),transparent 40%);pointer-events:none}
+.kc span{font-size:.78rem;color:#9FB1C2}
+.kc b{font-size:1.35rem;font-weight:700;color:#F6EFE0}
+.kc em{font-style:normal;font-size:.74rem;color:#8FA3B5}
+.vxo .up{color:#4CC285!important}.vxo .down{color:#F06A5C!important}
+.vb-c{border-radius:16px;border:1px solid rgba(233,207,143,.25);background:rgba(10,23,36,.6);padding:8px 6px 4px}
+.vb-t{display:flex;gap:6px;overflow-x:auto;padding:2px}
+.vb-t button{flex:0 0 auto;font:600 .9rem var(--f-body);color:#9FB1C2;background:rgba(15,34,52,.7);border:1px solid rgba(233,207,143,.2);border-radius:999px;padding:7px 16px;cursor:pointer}
+.vb-t button small{font-family:var(--f-num);opacity:.8}
+.vb-t button[aria-selected="true"]{color:#0A1724;background:linear-gradient(100deg,#B8903F,#E9CF8F,#C9A55C);border-color:transparent}
+.vb-e{text-align:center;color:#9FB1C2;padding:30px 10px}
+.tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.vb-more{display:block;margin:14px auto 0;font:600 .9rem var(--f-body);color:#E9CF8F;background:rgba(15,34,52,.8);border:1px solid rgba(233,207,143,.4);border-radius:999px;padding:8px 22px;cursor:pointer}
+.tc{position:relative;border-radius:18px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(165deg,rgba(24,45,66,.96),rgba(9,20,32,.97));border:1px solid rgba(233,207,143,.28);box-shadow:0 24px 40px -26px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.03) inset;transform:perspective(1100px) rotateX(3deg);transition:transform .3s,box-shadow .3s;min-width:0}
+.tc:hover{transform:perspective(1100px) rotateX(0) translateY(-4px);box-shadow:0 30px 50px -26px rgba(0,0,0,.95),0 0 24px rgba(201,165,92,.15)}
+.tc::before{content:"";position:absolute;inset-inline-start:0;top:16px;bottom:16px;width:3px;border-radius:3px;background:#C9A55C}
+.tc.win::before{background:#4CC285}.tc.loss::before{background:#F06A5C}.tc.live::before{background:linear-gradient(#E9CF8F,#C9A55C)}
+.tc header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.tc h4{margin:0;font:700 1.05rem var(--f-display);color:#F6EFE0}
+.tid{font-family:var(--f-num);font-size:.72rem;color:#8FA3B5}
+.side{font-size:.72rem;font-weight:700;color:#0A1724;background:#4CC285;border-radius:999px;padding:2px 10px}
+.tc-d{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:.8rem}
+.tc-d span{color:#8FA3B5}.tc-d b{color:#E8EEF4;font-weight:600}
+.tc-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tc-g>div{border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);padding:7px 9px;display:flex;flex-direction:column;min-width:0}
+.tc-g span{font-size:.7rem;color:#8FA3B5}.tc-g b{font-size:.95rem;color:#F3E7CC}.tc-g em{font-style:normal;font-size:.72rem;color:#9FB1C2}
+.tc-g .g1 b,.tc-g .g2 b{color:#4CC285}.tc-g .gs b{color:#F06A5C}
+.tfd{display:inline-block;font-size:.66rem;border-radius:999px;padding:0 6px;margin-inline-end:3px;background:rgba(255,255,255,.06)}
+.tfd.up{color:#4CC285}.tfd.down{color:#F06A5C}.tfd.flat{color:#9FB1C2}
+.tb{position:relative;height:10px;margin:6px 4px 0}
+.tb-r{position:absolute;inset:3px 0;border-radius:4px;background:linear-gradient(270deg,rgba(240,106,92,.55),rgba(233,207,143,.35) 40%,rgba(76,194,133,.6))}
+.tb .mk{position:absolute;top:-2px;width:2px;height:14px;background:rgba(232,238,244,.6);transform:translateX(50%)}
+.tb .mk.en{background:#E9CF8F}
+.tb .now{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;background:#F6EFE0;box-shadow:0 0 0 3px rgba(233,207,143,.45),0 0 12px rgba(233,207,143,.7);transform:translateX(50%)}
+.tb-l{display:flex;justify-content:space-between;font-size:.64rem;color:#8FA3B5;margin-top:4px}
+.tc-f{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.84rem;border-top:1px dashed rgba(233,207,143,.2);padding-top:8px}
+.tc-f>span{color:#9FB1C2}
+.tc-n{margin:0;font-size:.78rem;color:#E9CF8F}
+.tc-w{margin:0;font-size:.76rem;color:#9FB1C2;line-height:1.6}
+.tc-x{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.tc-x li{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:.74rem;background:rgba(255,255,255,.03);border-radius:8px;padding:5px 8px;color:#C8D6E2}
+.al{display:flex;flex-direction:column;gap:8px}
+.ar{display:grid;grid-template-columns:1.3fr 1.2fr auto 90px;grid-template-areas:"n e p s" "t t t s";gap:2px 12px;align-items:center;border-radius:14px;padding:10px 12px;background:linear-gradient(165deg,rgba(22,42,62,.9),rgba(10,22,34,.9));border:1px solid rgba(233,207,143,.18);transition:transform .2s}
+.ar:hover{transform:translateX(-3px)}
+.ar-n{grid-area:n;display:flex;flex-direction:column;min-width:0}.ar-n b{color:#F3E7CC;font-size:.92rem}.ar-n span{font-size:.7rem;color:#8FA3B5}
+.ar-e{grid-area:e;font-size:.82rem;color:#C8D6E2}.ar-e b{color:#F6EFE0}.ar-e small{color:#8FA3B5}
+.ar-p{grid-area:p;font-weight:700}
+.ar-t{grid-area:t;font-size:.72rem;color:#8FA3B5}.ar-t .op{color:#E9CF8F}
+.ar .sp{grid-area:s}
+@media (max-width:520px){.ar{grid-template-columns:1fr auto;grid-template-areas:"n p" "e e" "t s"}}
+.rl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.rl>div{border-radius:14px;padding:12px 14px;background:rgba(15,34,52,.7);border:1px solid rgba(233,207,143,.2)}
+.rl h4{margin:0 0 4px;font:700 .95rem var(--f-display);color:#E9CF8F}
+.rl p{margin:0;font-size:.84rem;color:#C8D6E2;line-height:1.7}
 
 html.locked body{overflow:hidden}
 html.locked .wrap{visibility:hidden}
@@ -480,6 +602,27 @@ html.locked .gate{display:flex}
 </ul></details>
     </div>
   </section>
+
+  <section class="vx" aria-label="سجل الصفقات">
+    <div class="vx-stage">
+      <div class="vx-halo" aria-hidden="true"></div>
+      <div class="vx-cube" id="vxCube" role="button" tabindex="0" aria-label="فتح سجل الصفقات">
+        <div class="vf fr"><div class="vf-in"><svg viewBox="0 0 120 70" aria-hidden="true"><polyline points="4,58 22,46 36,52 52,30 66,38 84,16 100,24 116,8" fill="none" stroke="url(#vxg1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="vxg1" x1="0" x2="1"><stop offset="0" stop-color="#8E6A2C"/><stop offset=".5" stop-color="#F7E7BC"/><stop offset="1" stop-color="#C9A55C"/></linearGradient></defs></svg><b>سجل الصفقات</b></div></div>
+        <div class="vf bk"><div class="vf-in"><svg viewBox="0 0 120 70" aria-hidden="true"><g stroke="#C9A55C" stroke-width="2"><line x1="20" y1="10" x2="20" y2="60"/><line x1="44" y1="18" x2="44" y2="64"/><line x1="68" y1="6" x2="68" y2="52"/><line x1="92" y1="14" x2="92" y2="58"/></g><g fill="#C9A55C"><rect x="13" y="22" width="14" height="26" rx="2"/><rect x="37" y="30" width="14" height="22" rx="2" fill-opacity=".45"/><rect x="61" y="14" width="14" height="28" rx="2"/><rect x="85" y="24" width="14" height="22" rx="2" fill-opacity=".45"/></g></svg></div></div>
+        <div class="vf rt"><div class="vf-in"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 28v-8a12 12 0 0 1 24 0v8" fill="none" stroke="#C9A55C" stroke-width="5" stroke-linecap="round"/><rect x="12" y="27" width="40" height="30" rx="7" fill="#C9A55C"/><circle cx="32" cy="40" r="4" fill="#0A1724"/></svg></div></div>
+        <div class="vf lf"><div class="vf-in vf-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="vf tp"><div class="vf-in"><span class="vf-ring"></span></div></div>
+        <div class="vf bt"></div>
+      </div>
+      <div class="vx-floor" aria-hidden="true"></div>
+    </div>
+    <p class="vx-cap">سجل الصفقات <span>· مشفّر</span></p>
+  </section>
+  <div class="vxo" id="vxo" hidden role="dialog" aria-modal="true" aria-label="سجل الصفقات">
+    <div class="vxo-bg" aria-hidden="true"></div>
+    <button class="vxo-x" id="vxClose" aria-label="إغلاق">✕</button>
+    <div class="vxo-in" id="vxBody"></div>
+  </div>
 
   <section class="vault" aria-label="تحليلات خاصة">
     <div class="vbox" id="vault" tabindex="0" role="button" aria-label="تحليلات خاصة مقفلة">
@@ -771,7 +914,7 @@ html.locked .gate{display:flex}
   /* ---------- shell ---------- */
   function setStatus(s){const el=$('pStatus');if(s==='loading'){el.innerHTML='<span class="pulse wait"></span>جارٍ تحميل البيانات…';$('pCard').innerHTML='';return;}
     if(s==='error'){el.innerHTML='<span class="pulse err"></span>تعذر الوصول إلى مصدر البيانات الآن. حاول بعد قليل.';return;}
-    const t=S.upd?new Date(S.upd):null,tt=t&&!isNaN(t)?t.toLocaleString('ar-SA-u-nu-latn',{timeZone:'Asia/Riyadh',hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}):'';
+    const t=S.upd?new Date(S.upd):null,tt=t&&!isNaN(t)?t.toLocaleString('ar-SA-u-ca-gregory-nu-latn',{timeZone:'Asia/Riyadh',hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}):'';
     el.innerHTML=S.src==='live'?`<span class="pulse live"></span>مباشر · يتحدث كل دقيقة`:S.src==='mixed'?`<span class="pulse live"></span>مباشر جزئيًا · ${tt}`:S.src==='snap'?`<span class="pulse wait"></span>نسخة محفوظة · ${tt}`:`<span class="pulse wait"></span>آخر إغلاق متاح · يتحدث كل 4 ساعات`;}
   function renderHead(){const b=S.data[S.tf]||S.data['1d'];if(!b||!b.length)return;const L=b[b.length-1],P=b[b.length-2],ch=P?pct(L.c,P.c):0;
     $('pAhead').innerHTML=`<div><h2 class="an">${esc(nameOf())}</h2><span class="tk">${S.kind==='sa'?'TADAWUL '+S.id:S.kind==='us'?S.id:S.id+' / USDT'}</span></div>
@@ -881,6 +1024,124 @@ html.locked .gate{display:flex}
     stop(){clearInterval(L.timer);cancelAnimationFrame(L.raf);if(typeof L.unsub==='function')try{L.unsub()}catch(_){};L.unsub=null;L.ref=null;}
   };
   let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(L.ref)draw(1);},150);});
+})();
+
+</script>
+<script>
+(function(){
+  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const nf=(v,d=2)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const px=v=>{const a=Math.abs(v);return nf(v,a>=1000?2:a>=10?2:a>=1?4:6);};
+  const qn=v=>{const a=Math.abs(v);return nf(v,a>=100?0:a>=1?2:6);};
+  const M=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'],DW=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const dS=s=>{if(!s)return'—';const d=new Date(s+'T00:00:00Z');return DW[d.getUTCDay()]+' '+d.getUTCDate()+' '+M[d.getUTCMonth()]+' '+d.getUTCFullYear();};
+  const pc=(a,b)=>(a/b-1)*100;
+  const sg=v=>(v>0?'+':'')+v;
+  const DIR={up:'صاعد',down:'هابط',flat:'محايد'};
+  const KN={sa:'السوق السعودي',cx:'العملات المشفرة',us:'الأسهم الأمريكية'};
+  const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  let BOOK=null,pin='',busy=false,tab='open',shown=20;
+
+  async function getJSON(path){for(const base of [RAW,'']){try{const r=await fetch(base+path+'?v='+Date.now(),{cache:'no-store'});if(r.ok)return await r.json();}catch(_){}}throw new Error('net');}
+  async function decrypt(code){const [K,B]=await Promise.all([getJSON('vault/key.json'),getJSON('vault/book.json')]);const S=crypto.subtle;
+    const km=await S.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
+    const kek=await S.deriveKey({name:'PBKDF2',salt:b64(K.salt),iterations:K.iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+    let pk;try{pk=await S.decrypt({name:'AES-GCM',iv:b64(K.iv)},kek,b64(K.key));}catch(_){const e=new Error('code');throw e;}
+    const priv=await S.importKey('pkcs8',pk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+    const raw=await S.decrypt({name:'RSA-OAEP'},priv,b64(B.wk));const dk=await S.importKey('raw',raw,'AES-GCM',false,['decrypt']);
+    const pt=await S.decrypt({name:'AES-GCM',iv:b64(B.iv)},dk,b64(B.ct));return JSON.parse(new TextDecoder().decode(pt));}
+
+  /* ---------- overlay shell ---------- */
+  function open(){const o=$('vxo');o.hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>o.classList.add('on'));
+    if(BOOK){renderBook();return;}pin='';renderPin();setTimeout(()=>{const i=$('vxIn');if(i)i.focus();},60);}
+  function close(){const o=$('vxo');o.classList.remove('on');document.body.style.overflow='';setTimeout(()=>{o.hidden=true;},260);}
+  function renderPin(msg){$('vxBody').innerHTML=`<div class="vp">
+      <div class="vp-ring"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 28v-8a12 12 0 0 1 24 0v8" fill="none" stroke="url(#vg)" stroke-width="5" stroke-linecap="round"/><rect x="12" y="27" width="40" height="30" rx="7" fill="url(#vg)"/><circle cx="32" cy="40" r="4" fill="#07111B"/><rect x="30.5" y="41" width="3" height="8" rx="1.5" fill="#07111B"/><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7E7BC"/><stop offset=".5" stop-color="#C9A55C"/><stop offset="1" stop-color="#8E6A2C"/></linearGradient></defs></svg></div>
+      <h2 class="vp-t">سجل الصفقات</h2><p class="vp-s">اكتب الرمز لفتح السجل</p>
+      <div class="vp-cells" id="vxCells" aria-hidden="true">${[0,1,2,3,4].map(i=>`<span class="${i<pin.length?'f':''}"></span>`).join('')}</div>
+      <input id="vxIn" class="vp-in" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="off" aria-label="الرمز" value="${pin}">
+      <p class="vp-msg" id="vxMsg" aria-live="polite">${msg||''}</p>
+      <div class="vp-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join('')}<span></span><button data-k="0">0</button><button data-k="del" aria-label="حذف">⌫</button></div></div>`;
+    const i=$('vxIn');i.addEventListener('input',()=>{pin=i.value.replace(/\D/g,'').slice(0,5);i.value=pin;cells();if(pin.length===5)submit();});}
+  function cells(){const c=$('vxCells');if(c)[...c.children].forEach((s,i)=>s.classList.toggle('f',i<pin.length));}
+  async function submit(){if(busy)return;busy=true;$('vxMsg').textContent='جارٍ فك التشفير…';$('vxCells').classList.add('busy');
+    try{BOOK=await decrypt(pin);pin='';renderBook();}
+    catch(e){pin='';const box=document.querySelector('.vp');renderPin(e.message==='code'?'الرمز غير صحيح':'تعذر تحميل السجل الآن. حاول بعد قليل.');const v=document.querySelector('.vp');v.classList.add('bad');setTimeout(()=>{const i=$('vxIn');if(i)i.focus();},50);}
+    finally{busy=false;}}
+
+  /* ---------- book ---------- */
+  const tfDots=tf=>['M','W','D'].filter(k=>tf&&tf[k]).map(k=>`<span class="tfd ${tf[k]}">${({M:'شهري',W:'أسبوعي',D:'يومي'})[k]}</span>`).join('');
+  function bar(t,now){const lo=Math.min(t.stop0,now,t.entry),hi=Math.max(t.t2,now),P=v=>((v-lo)/(hi-lo)*100).toFixed(1);
+    return `<div class="tb"><div class="tb-r"></div><i class="mk st" style="right:${P(t.stop0)}%"></i><i class="mk en" style="right:${P(t.entry)}%"></i><i class="mk t1" style="right:${P(t.t1)}%"></i><i class="mk t2" style="right:${P(t.t2)}%"></i><b class="now" style="right:${P(now)}%"></b></div>
+      <div class="tb-l"><span>الوقف</span><span>الدخول</span><span>الهدف 1</span><span>الهدف 2</span></div>`;}
+  function card(t,closed){const cur=t.cur==='ريال'?' ريال':' $';const v=closed?t.pnl:t.upnl;const vp=closed?t.pnl_pct:(t.upnl/(t.qty*t.entry)*100);
+    const ex=(t.exits||[]).map(e=>`<li><span>${dS(e.d)}</span><span>${esc(e.why)}</span><span class="num">${qn(e.qty)} × ${px(e.price)}</span></li>`).join('');
+    return `<article class="tc ${closed?(t.pnl>0?'win':'loss'):'live'}">
+      <header><div><h4>${esc(t.name)}</h4><span class="tid">${esc(t.id)} · ${KN[t.kind]}</span></div><span class="side">شراء</span></header>
+      <div class="tc-d"><span>تاريخ الدخول</span><b>${dS(t.opened)}</b>${closed?`<span>تاريخ الإغلاق</span><b>${dS(t.closed)}</b>`:''}</div>
+      <div class="tc-g">
+        <div><span>سعر الدخول</span><b class="num">${px(t.entry)}</b></div>
+        <div><span>الكمية · القيمة</span><b class="num">${qn(t.qty)} · ${nf(t.value)}${cur}</b></div>
+        <div class="g1"><span>الهدف الأول · نصف الكمية</span><b class="num">${px(t.t1)}</b><em class="num">${sg(pc(t.t1,t.entry).toFixed(2))}% · ${qn(t.q1)}</em></div>
+        <div class="g2"><span>الهدف الثاني · النصف الباقي</span><b class="num">${px(t.t2)}</b><em class="num">${sg(pc(t.t2,t.entry).toFixed(2))}% · ${qn(t.q2)}</em></div>
+        <div class="gs"><span>وقف الخسارة</span><b class="num">${px(t.stop0)}</b><em class="num">${pc(t.stop0,t.entry).toFixed(2)}%</em></div>
+        <div><span>التوافق عند الدخول</span><b class="num">${t.conf}%</b><em>${tfDots(t.tf)}</em></div>
+      </div>
+      ${closed?'':bar(t,t.now)}
+      <div class="tc-f"><span>${closed?'النتيجة':'السعر الآن '+`<b class="num">${px(t.now)}</b>`}</span><b class="num ${v>=0?'up':'down'}">${sg(nf(v))}${cur} (${sg(vp.toFixed(2))}%)</b></div>
+      ${t.t1_hit&&!closed?'<p class="tc-n">تحقق الهدف الأول ونُقل الوقف إلى سعر الدخول.</p>':''}
+      <p class="tc-w">${esc(t.why)}</p>
+      ${ex?`<ul class="tc-x">${ex}</ul>`:''}
+    </article>`;}
+  function accRow(a){const usd=a.kind==='sa'?` <small class="num">≈ $${nf(a.equity_usd)}</small>`:'';
+    return `<div class="ar"><div class="ar-n"><b>${esc(a.name)}</b><span class="num">${esc(a.id)}</span></div><div class="ar-e"><b class="num">${nf(a.equity)}</b> ${a.cur}${usd}</div>
+      <div class="ar-p num ${a.pnl>=0?'up':'down'}">${sg(a.pnl_pct.toFixed(2))}%</div><div class="ar-t">${a.closed_n} مغلقة${a.closed_n?' · '+a.wins+' رابحة':''}${a.open?' · <span class="op">صفقة مفتوحة</span>':''}</div><canvas class="sp" data-c='${JSON.stringify((a.curve||[]).map(x=>x[1]))}'></canvas></div>`;}
+  function renderBook(){const B=BOOK,T=B.totals,up=T.pnl_usd>=0;
+    const upd=new Date(B.updated).toLocaleString('ar-SA-u-ca-gregory-nu-latn',{timeZone:'Asia/Riyadh',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+    $('vxBody').innerHTML=`<div class="vb">
+      <div class="vb-h"><div><h2>سجل الصفقات</h2><p>محاكاة تداول بقواعد ثابتة · بدأت ${dS(B.launch)} · آخر تحديث ${upd}</p></div></div>
+      <div class="vb-k">
+        <div class="kc"><span>القيمة الإجمالية</span><b class="num">$${nf(T.equity_usd)}</b><em>من $${nf(T.start_usd,0)} · ${B.accounts.length} حسابًا × $${nf(B.per_asset_usd,0)}</em></div>
+        <div class="kc"><span>الربح / الخسارة</span><b class="num ${up?'up':'down'}">${sg(nf(T.pnl_usd))}$</b><em class="num ${up?'up':'down'}">${sg(T.pct.toFixed(2))}%</em></div>
+        <div class="kc"><span>نسبة النجاح</span><b class="num">${T.win_rate==null?'—':T.win_rate+'%'}</b><em>${T.closed_n} صفقة مغلقة</em></div>
+        <div class="kc"><span>صفقات مفتوحة</span><b class="num">${T.open_n}</b><em>تُدار تلقائيًا</em></div>
+      </div>
+      <div class="vb-c"><canvas id="vxCurve"></canvas></div>
+      <nav class="vb-t" role="tablist">${[['open','المفتوحة',T.open_n],['closed','المغلقة',T.closed_n],['acc','الحسابات',B.accounts.length],['rules','القواعد','']].map(([k,l,n])=>`<button role="tab" data-vt="${k}" aria-selected="${tab===k}">${l}${n!==''?` <small>${n}</small>`:''}</button>`).join('')}</nav>
+      <div id="vxTab"></div></div>`;
+    drawCurve($('vxCurve'),B.curve.map(x=>x[1]),B.totals.start_usd);renderTab();}
+  function renderTab(){const B=BOOK,el=$('vxTab');document.querySelectorAll('[data-vt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.vt===tab)));
+    if(tab==='open')el.innerHTML=B.open.length?`<div class="tl">${B.open.map(t=>card(t,false)).join('')}</div>`:'<p class="vb-e">لا توجد صفقات مفتوحة الآن. يدخل البوت عند توافق صاعد قوي بين الأطر.</p>';
+    if(tab==='closed')el.innerHTML=B.closed.length?`<div class="tl">${B.closed.slice(0,shown).map(t=>card(t,true)).join('')}</div>${B.closed.length>shown?`<button class="vb-more" data-more="1">عرض المزيد (${B.closed.length-shown})</button>`:''}`:'<p class="vb-e">لم تُغلق أي صفقة بعد.</p>';
+    if(tab==='acc'){el.innerHTML=`<div class="al">${B.accounts.map(accRow).join('')}</div>`;el.querySelectorAll('canvas.sp').forEach(c=>{try{drawSpark(c,JSON.parse(c.dataset.c));}catch(_){}});}
+    if(tab==='rules'){const R=B.rules;el.innerHTML=`<div class="rl">
+      <div><h4>متى يدخل</h4><p>عند إغلاق اليوم إذا كان التوافق بين الشهري والأسبوعي واليومي صاعدًا بنسبة ${'50%'} أو أكثر، واليومي صاعدًا، والسعر فوق متوسط 50 يومًا، وRSI أقل من 75.</p></div>
+      <div><h4>حجم الصفقة</h4><p>مخاطرة ${R.risk*100}% من رصيد الحساب: المسافة بين الدخول والوقف تساوي ${R.stop_atr}×ATR، والكمية تُحسب حتى تكون الخسارة عند الوقف ${R.risk*100}% فقط.</p></div>
+      <div><h4>قسمة الصفقة</h4><p>نصف الكمية يُباع عند الهدف الأول (${R.t1_atr}×ATR فوق الدخول)، ثم يُنقل الوقف إلى سعر الدخول، والنصف الباقي عند الهدف الثاني (${R.t2_atr}×ATR).</p></div>
+      <div><h4>الخروج</h4><p>عند الوقف، أو الهدفين، أو انعكاس التوافق إلى هابط، أو مرور ${R.max_hold} يومًا.</p></div>
+      <div><h4>التكاليف</h4><p>عمولة ${R.fees.sa*100}% للسوق السعودي، و${R.fees.us*100}% للأسهم الأمريكية، و${R.fees.cx*100}% للعملات، وانزلاق سعري ${R.slip*100}% في كل تنفيذ.</p></div>
+      <div><h4>الحسابات</h4><p>كل أصل له حساب مستقل يبدأ بـ $${nf(B.per_asset_usd,0)} (الأسهم السعودية 11,250 ريال). المحاكاة بأموال افتراضية، والقرارات تُتخذ آليًا ولا تُعدَّل يدويًا.</p></div></div>`;}}
+  function drawCurve(cv,vals,base){if(!cv)return;const W=cv.parentElement.clientWidth,H=170,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+    const g=cv.getContext('2d');g.scale(dpr,dpr);const v=vals.length?vals:[base];const all=v.concat([base]);let lo=Math.min(...all),hi=Math.max(...all);const pd=(hi-lo)*.15||base*.002;lo-=pd;hi+=pd;
+    const X=i=>10+(W-20)*(v.length>1?i/(v.length-1):1),Y=y=>12+(H-30)*(1-(y-lo)/(hi-lo));const col=v[v.length-1]>=base?'#4CC285':'#F06A5C';
+    g.setLineDash([4,6]);g.strokeStyle='rgba(233,207,143,.45)';g.beginPath();g.moveTo(10,Y(base));g.lineTo(W-10,Y(base));g.stroke();g.setLineDash([]);
+    g.fillStyle='rgba(233,207,143,.7)';g.font='11px JetBrains Mono, monospace';g.textAlign='left';g.fillText('$'+nf(base,0),12,Y(base)-5);
+    if(v.length>1){const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,col+'55');gr.addColorStop(1,col+'00');g.beginPath();v.forEach((y,i)=>i?g.lineTo(X(i),Y(y)):g.moveTo(X(i),Y(y)));g.lineTo(X(v.length-1),H-16);g.lineTo(X(0),H-16);g.closePath();g.fillStyle=gr;g.fill();}
+    g.beginPath();v.forEach((y,i)=>i?g.lineTo(X(i),Y(y)):g.moveTo(X(i),Y(y)));g.strokeStyle=col;g.lineWidth=2.2;g.stroke();g.beginPath();g.arc(X(v.length-1),Y(v[v.length-1]),4,0,7);g.fillStyle=col;g.fill();
+    g.fillStyle='rgba(200,214,226,.7)';g.textAlign='center';g.fillText(v.length>1?'منحنى القيمة الإجمالية منذ البداية':'يبدأ المنحنى مع أول إغلاق بعد الإطلاق',W/2,H-3);}
+  function drawSpark(cv,v){const W=90,H=28,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';const g=cv.getContext('2d');g.scale(dpr,dpr);
+    if(!v||v.length<2){g.strokeStyle='rgba(200,214,226,.3)';g.beginPath();g.moveTo(2,H/2);g.lineTo(W-2,H/2);g.stroke();return;}
+    const lo=Math.min(...v),hi=Math.max(...v),X=i=>2+(W-4)*i/(v.length-1),Y=y=>2+(H-4)*(1-(y-lo)/((hi-lo)||1));g.beginPath();v.forEach((y,i)=>i?g.lineTo(X(i),Y(y)):g.moveTo(X(i),Y(y)));g.strokeStyle=v[v.length-1]>=v[0]?'#4CC285':'#F06A5C';g.lineWidth=1.5;g.stroke();}
+
+  function init(){const cube=$('vxCube'),o=$('vxo');if(!cube||!o)return;
+    cube.addEventListener('click',open);cube.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+    $('vxClose').addEventListener('click',close);o.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+    o.addEventListener('click',e=>{const k=e.target.closest('[data-k]');if(k&&!busy){if(k.dataset.k==='del')pin=pin.slice(0,-1);else if(pin.length<5)pin+=k.dataset.k;const i=$('vxIn');if(i)i.value=pin;cells();if(pin.length===5)submit();return;}
+      const t=e.target.closest('[data-vt]');if(t){tab=t.dataset.vt;shown=20;renderTab();return;}if(e.target.closest('[data-more]')){shown+=20;renderTab();}});
+    let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(BOOK&&!o.hidden&&$('vxCurve'))drawCurve($('vxCurve'),BOOK.curve.map(x=>x[1]),BOOK.totals.start_usd);},150);});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 
 </script>
@@ -1078,6 +1339,29 @@ html.locked .gate{display:flex}
     S.chart=ch;
   }
 
+  function missBox(x,w,a,rows){
+    const z=x.lab;if(!z||!w||!w.done||!(z.low>0))return'';
+    const inside=w.c>=z.low&&w.c<=z.high,mv=w.c/w.o-1,biasOk=z.bias==='flat'?Math.abs(mv)<0.02:(z.bias==='up')===(w.c>=w.o);
+    if(inside&&biasOk)return'';
+    const half=(z.high-z.low)/2,days=rows.filter(r=>wkKey(r.d)===x.week),i0=rows.findIndex(r=>r.d===(days[0]&&days[0].d)),prev=i0>0?rows[i0-1].c:null;
+    const out=[],pct=v=>(v>=0?'+':'')+(v*100).toFixed(2)+'%';
+    let sev='',off=0;
+    if(!inside){off=w.c>z.high?w.c-z.high:z.low-w.c;sev=off>.5*half?'فارق ملحوظ':'فارق بسيط';
+      out.push(`أغلق الأسبوع عند <b class="num">${money(w.c,a)}</b>، ${w.c>z.high?'أعلى':'أدنى'} من المنطقة بـ <b class="num">${money(off,a)}</b> (${(off/w.c*100).toFixed(2)}%).`);}
+    else{sev='الميل فقط';out.push(`أغلق السعر داخل المنطقة، لكن الميل المتوقع (${(biasTxt[z.bias]||'').replace(/[↑↓↔]/g,'').trim()}) لم يتحقق: تغيّر الأسبوع ${pct(mv)}.`);}
+    const rr=(w.h-w.l)/(z.high-z.low||1);
+    if(rr>1.3)out.push(`تحرك السعر خلال الأسبوع في مدى أوسع من المنطقة المتوقعة بـ <b class="num">${rr.toFixed(1)}</b> مرة، فالتذبذب الفعلي فاق ما توقعته الطريقة.`);
+    if(prev&&days.length){const gap=days[0].o/prev-1;if(Math.abs(days[0].o-prev)>.4*half)out.push(`افتتح الأسبوع بفجوة ${pct(gap)} عن إغلاق الأسبوع السابق، فبدأ بعيدًا عن مركز المنطقة.`);}
+    if(days.length>1&&i0>20){const moves=days.map((r,k)=>{const pc=k?days[k-1].c:prev;return{d:r.d,m:pc?r.c/pc-1:0};});
+      const ref=rows.slice(i0-20,i0).map((r,k,arr)=>k?Math.abs(r.c/arr[k-1].c-1):0).slice(1);const avg=ref.reduce((p,v)=>p+v,0)/(ref.length||1);
+      const big=moves.reduce((p,q)=>Math.abs(q.m)>Math.abs(p.m)?q:p,moves[0]);
+      if(avg>0&&Math.abs(big.m)>2.2*avg)out.push(`يوم ${arDay(big.d)} وحده تحرك ${pct(big.m)}، أي نحو ${(Math.abs(big.m)/avg).toFixed(1)} أضعاف متوسط الحركة اليومية، وصنع معظم الفارق.`);}
+    if(!inside&&((z.bias==='down'&&w.c>z.high)||(z.bias==='up'&&w.c<z.low)))out.push(`التحليل رجّح ${z.bias==='down'?'الهبوط':'الصعود'}، لكن السعر انعكس ${w.c>z.high?'صاعدًا':'هابطًا'} بقوة، فالمؤشرات المتأخرة لم تلتقط تغيّر الزخم.`);
+    const end=wkEnd(x.week),nw=((S.news[a]&&S.news[a].items)||[]).filter(n=>n.d&&n.d.length===10&&n.d>=addD(x.week,-1)&&n.d<=end).slice(0,3);
+    if(nw.length)out.push('أخبار صدرت خلال الأسبوع وقد تفسر الحركة:<ul class="ms-n">'+nw.map(n=>`<li><a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(n.t)}</a> <span class="muted">· ${esc(n.s)}</span></li>`).join('')+'</ul>');
+    if(out.length===1&&!inside)out.push('لم يظهر سبب واحد واضح: جاءت الحركة تدريجية عبر الأسبوع. المنطقة مصممة لتصدق في أغلب الأسابيع، لا في كلها.');
+    return `<div class="miss"><div class="ms-h"><b>لماذا لم يصب التوقع؟</b><span class="ms-sev ${sev==='فارق ملحوظ'?'hi':''}">${sev}</span></div>${z.miss?`<p class="ms-m">${esc(z.miss)}</p>`:''}<ul class="ms-l">${out.map(t=>`<li>${t}</li>`).join('')}</ul></div>`;
+  }
   function renderWeeks(){
     const {a,W,curWeek}=state();const el=$('weeksList');
     const dist=k=>Math.round((D0(k)-D0(curWeek||k))/864e5);
@@ -1105,6 +1389,7 @@ html.locked .gate{display:flex}
             <div class="res" style="margin-top:4px">${res(inZ(c),'المنطقة')} ${res(dirOk(c.bias),'الميل')}</div></div>
         </div>
         ${c.note?`<p class="note small" style="margin-top:8px">${esc(c.note)}</p>`:''}
+        ${missBox(x,w,a,S.daily[a]||[])}
       </article>`;}).join('');
     docs.forEach(x=>{const s=$('bs-'+x.week);if(s&&x.me&&x.me.bias)s.value=x.me.bias;});
   }
