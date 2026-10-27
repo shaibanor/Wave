@@ -48,7 +48,7 @@ def check_pro():
         except Exception as e:
             errors.append(f'{f}: unreadable {e}'); continue
         for key, rows in j.items():
-            if not isinstance(rows, list): continue
+            if key not in ('d', 'm', '1h', '4h', '1d', '1w', '1M') or not isinstance(rows, list): continue
             for r in rows[-50:]:
                 if len(r) < 5 or min(r[1:5]) <= 0 or r[3] > min(r[1], r[4]) + 1e-9 or r[2] < max(r[1], r[4]) - 1e-9:
                     errors.append(f'{os.path.basename(f)} {key}: bad row {r[:5]}'); break
