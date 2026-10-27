@@ -748,7 +748,7 @@ html.locked .gate{display:flex}
 
   function scenarios(ctx,lv,conf,auditN){const {b,I}=ctx,n=b.length-1,c=b[n].c,a=I.atr[n]||c*.02;const R=lv.R.p,S=lv.S.p;
     const bull={key:'bull',title:'السيناريو الصاعد',trig:R,t1:R+a,t2:R+2*a,inv:S};
-    const bear={key:'bear',title:'السيناريو الهابط / الظروف القاهرة',trig:S,t1:S-a,t2:S-2*a,inv:R,shock:c-3*a};
+    const bear={key:'bear',title:'السيناريو الهابط',trig:S,t1:S-a,t2:S-2*a,inv:R,shock:c-3*a};
     const side={key:'side',title:'سيناريو التذبذب الجانبي',lo:S,hi:R};
     let pick='side';const eff=Math.max(0,conf.pct-10*auditN);
     if(conf.dir==='up'&&eff>=45)pick='bull';else if(conf.dir==='down'&&eff>=45)pick='bear';
