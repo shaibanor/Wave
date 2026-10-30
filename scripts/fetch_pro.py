@@ -11,7 +11,9 @@ SA = ['8311', '1120', '4340', '2222', '1211', '1180', '7010', '2010', '2082', '4
 US = ['GOOGL', 'META', 'AVGO', 'TSM', 'JPM', 'LLY', 'V']
 SA_X = ['2280', '4190', '1060', '5110', '2050', '1050', '2020', '4280']
 US_X = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA', 'NFLX', 'AMD', 'COST', 'BRK-B', 'UNH', 'XOM', 'WMT', 'SPY', 'QQQ', 'GLD']
-STOCKS = [(c, f'{c}.SR', 'sa') for c in SA] + [(c, c, 'us') for c in US]
+IX = [('TASI', '^TASI.SR'), ('DJI', '^DJI'), ('SPX', '^GSPC'), ('NDX', '^NDX'), ('GOLD', 'GC=F'), ('SILVER', 'SI=F'),
+      ('BRENT', 'BZ=F'), ('US10Y', '^TNX'), ('DXY', 'DX-Y.NYB')]
+STOCKS = [(c, f'{c}.SR', 'sa') for c in SA] + [(c, c, 'us') for c in US] + [(c, sym, 'ix') for c, sym in IX]
 EXTRA = [(c, f'{c}.SR', 'sa') for c in SA_X] + [(c, c, 'us') for c in US_X]
 CX = {'BTC': 'BTCUSDT', 'ETH': 'ETHUSDT', 'BNB': 'BNBUSDT', 'XRP': 'XRPUSDT', 'SOL': 'SOLUSDT',
       'TRX': 'TRXUSDT', 'DOGE': 'DOGEUSDT', 'ZEC': 'ZECUSDT', 'LINK': 'LINKUSDT', 'ADA': 'ADAUSDT',
