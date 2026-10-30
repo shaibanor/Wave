@@ -185,6 +185,34 @@ def crypto(status):
             status['cx'][k] = {'ok': False, 'err': str(e)[:160]}
 
 
+def summary():
+    """pro/summary.json: last price and daily change per asset, used to colour the menu."""
+    out = {}
+    for kind in ('sa', 'us', 'ix', 'cx'):
+        folder = f'{ROOT}/{kind}'
+        if not os.path.isdir(folder):
+            continue
+        for fn in sorted(os.listdir(folder)):
+            if not fn.endswith('.json'):
+                continue
+            try:
+                o = json.load(open(f'{folder}/{fn}'))
+                d = o.get('d') or o.get('1d') or []
+                if len(d) < 2:
+                    continue
+                c, prev, t = d[-1][4], d[-2][4], d[-1][0]
+                lp = f'{ROOT}/live/{fn}'
+                if kind != 'cx' and os.path.exists(lp):
+                    lv = json.load(open(lp))
+                    day = dt.datetime.fromtimestamp(t, dt.timezone.utc).date().isoformat()
+                    if lv.get('bars') and lv.get('day', '') >= day:
+                        c, prev = lv['bars'][-1][1], lv.get('prev') or prev
+                out[fn[:-5]] = {'k': kind, 'c': round(c, 6), 'ch': round((c / prev - 1) * 100, 3) if prev else 0}
+            except Exception:
+                continue
+    write(f'{ROOT}/summary.json', {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'a': out})
+
+
 def main():
     live = '--intraday' in sys.argv
     status = {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'stocks': {}, 'live': {}, 'cx': {}}
@@ -196,13 +224,18 @@ def main():
     if live:
         stocks_live(status)
         write(f'{ROOT}/live_status.json', status)
+        summary()
     else:
         stocks_full(status)
         stocks_live(status)
         crypto(status)
         write(f'{ROOT}/status.json', status)
+        summary()
     print(json.dumps(status, ensure_ascii=False, indent=1))
 
 
 if __name__ == '__main__':
-    main()
+    if '--summary' in sys.argv:
+        summary()
+    else:
+        main()
