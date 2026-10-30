@@ -70,6 +70,29 @@ def to4h(rows1h):
     return out
 
 
+def daily_from(rows):
+    out = {}
+    for t, o, h, l, c, v, d in rows:
+        if d not in out:
+            y, mo, da = map(int, d.split('-'))
+            out[d] = [int(dt.datetime(y, mo, da, tzinfo=dt.timezone.utc).timestamp()), o, h, l, c, v, d]
+        else:
+            x = out[d]; x[2], x[3], x[4], x[5] = max(x[2], h), min(x[3], l), c, x[5] + v
+    return [out[k] for k in sorted(out)]
+
+
+def monthly_from(rows):
+    out = {}
+    for t, o, h, l, c, v, *_ in rows:
+        k = dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime('%Y-%m')
+        if k not in out:
+            y, mo = map(int, k.split('-'))
+            out[k] = [int(dt.datetime(y, mo, 1, tzinfo=dt.timezone.utc).timestamp()), o, h, l, c, v]
+        else:
+            x = out[k]; x[2], x[3], x[4], x[5] = max(x[2], h), min(x[3], l), c, x[5] + v
+    return [out[k] for k in sorted(out)]
+
+
 def stocks_full(status):
     import yfinance as yf
     for c, sym, kind in STOCKS + EXTRA:
@@ -77,7 +100,11 @@ def stocks_full(status):
         try:
             t = yf.Ticker(sym)
             d = frame_rows(t.history(period='2y', interval='1d', auto_adjust=False, actions=False), True)
+            if len(d) < 60:
+                start = (NOW - dt.timedelta(days=730)).date().isoformat()
+                d = frame_rows(t.history(start=start, interval='1d', auto_adjust=False, actions=False), True) or d
             m = frame_rows(t.history(period='max', interval='1mo', auto_adjust=False, actions=False), True)
+            h1 = []
             obj = {'id': c, 'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'd': [x[:6] for x in d], 'm': [x[:6] for x in m]}
             try:
                 if extra:
@@ -90,6 +117,11 @@ def stocks_full(status):
                 pass
             except Exception as e:
                 status.setdefault('notes', []).append(f'{c} 1h: {str(e)[:80]}')
+            if len(d) < 60 and len(obj.get('1h', [])) >= 60:
+                d = daily_from(h1)
+                obj['d'] = [x[:6] for x in d]
+            if len(obj['m']) < 12 and len(d) >= 60:
+                obj['m'] = monthly_from(d)
             if len(d) < 60:
                 raise RuntimeError(f'only {len(d)} daily rows')
             write(f'{ROOT}/{kind}/{c}.json', obj)
