@@ -467,6 +467,92 @@ ul.ll.warn li::before{background:var(--warn)}
 .rl h4{margin:0 0 4px;font:700 .95rem var(--f-display);color:#E9CF8F}
 .rl p{margin:0;font-size:.84rem;color:#C8D6E2;line-height:1.7}
 
+.bot-fab{direction:ltr;position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;display:flex;flex-direction:column;align-items:flex-start;gap:8px;pointer-events:none}
+.bot-fab>*{pointer-events:auto}
+.bot-tip{direction:rtl;background:#0A1724;color:#F7E7BC;border:1px solid rgba(233,207,143,.5);font:600 .82rem var(--f-body);padding:8px 12px;border-radius:12px 12px 12px 4px;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:btip .4s ease-out}
+@keyframes btip{from{opacity:0;transform:translateY(6px)}}
+.bot-btn{position:relative;width:76px;height:84px;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
+.bot-btn:focus-visible .bot-glow{box-shadow:0 0 0 3px #E9CF8F}
+.bot-glow{position:absolute;left:6px;top:6px;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 50% 45%,rgba(39,170,226,.35),rgba(201,165,92,.18) 55%,transparent 72%);filter:blur(2px);animation:bglow 3.2s ease-in-out infinite}
+@keyframes bglow{50%{transform:scale(1.12);opacity:.75}}
+.bot-st{position:absolute;left:13px;top:16px;width:50px;height:50px;perspective:460px}
+.bot-bob{position:absolute;inset:0;transform-style:preserve-3d;animation:bbob 3.2s ease-in-out infinite}
+@keyframes bbob{50%{transform:translateY(-5px)}}
+.bot-h{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-16deg) rotateY(-26deg);animation:bsw 6s ease-in-out infinite}
+.bot-btn:hover .bot-h,.bot-btn[aria-expanded="true"] .bot-h{animation-play-state:paused}
+@keyframes bsw{0%,100%{transform:rotateX(-16deg) rotateY(-28deg)}50%{transform:rotateX(-8deg) rotateY(28deg)}}
+.bf{position:absolute;inset:0;border-radius:11px;background:linear-gradient(145deg,#173250 0%,#0A1724 60%,#10243a 100%);border:1px solid rgba(233,207,143,.6);box-shadow:inset 0 0 14px rgba(201,165,92,.18);backface-visibility:hidden;display:flex;align-items:center;justify-content:center;font-style:normal}
+.bf.f{transform:translateZ(25px);flex-wrap:wrap;align-content:center;gap:5px 9px;padding-top:4px}
+.bf.k{transform:rotateY(180deg) translateZ(25px)}
+.bf.r{transform:rotateY(90deg) translateZ(25px)}
+.bf.l{transform:rotateY(-90deg) translateZ(25px)}
+.bf.t{transform:rotateX(90deg) translateZ(25px);transform-style:preserve-3d;background:linear-gradient(145deg,#214466,#10243a)}
+.bf.u{transform:rotateX(-90deg) translateZ(25px)}
+.bot-btn .eye,.bp-av .eye{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#E6F8FF,#5FD4FF 45%,#1E8FCB);box-shadow:0 0 8px 2px rgba(95,212,255,.75);animation:bblink 5s infinite}
+@keyframes bblink{0%,91%,97%,100%{transform:scaleY(1)}94%{transform:scaleY(.12)}}
+.bot-btn .mouth,.bp-av .mouth{flex-basis:100%;height:0;display:flex;justify-content:center}
+.bot-btn .mouth::before,.bp-av .mouth::before{content:"";width:14px;height:4px;border-radius:0 0 8px 8px;background:#E9CF8F;box-shadow:0 0 6px rgba(233,207,143,.6)}
+.ear{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F7E7BC,#C9A55C 60%,#8E6A2C);box-shadow:0 0 6px rgba(233,207,143,.5)}
+.ant{position:absolute;left:50%;top:50%;width:3px;height:15px;margin:-15px 0 0 -1.5px;background:linear-gradient(#E9CF8F,#8E6A2C);transform-origin:50% 100%;transform:rotateX(-90deg);border-radius:2px}
+.ant::after{content:"";position:absolute;left:50%;top:-6px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#E6F8FF,#5FD4FF 50%,#1E8FCB);box-shadow:0 0 10px 3px rgba(95,212,255,.7);animation:bant 1.6s ease-in-out infinite}
+@keyframes bant{50%{box-shadow:0 0 4px 1px rgba(95,212,255,.4)}}
+.bot-sh{position:absolute;left:22px;bottom:2px;width:32px;height:6px;border-radius:50%;background:rgba(0,0,0,.28);filter:blur(3px);animation:bsh 3.2s ease-in-out infinite}
+@keyframes bsh{50%{transform:scale(.8);opacity:.6}}
+html.bot-on .bot-tip{display:none}
+html:has(.vxo:not([hidden])) .bot-fab{display:none}
+@media (prefers-reduced-motion:reduce){.bot-h,.bot-bob,.bot-glow,.bot-sh,.eye,.ant::after{animation:none!important}}
+
+.bot-panel{position:fixed;z-index:71;left:0;right:0;bottom:0;height:min(82vh,660px);height:min(82dvh,660px);display:flex;flex-direction:column;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.28);animation:bpin .22s ease-out;padding-bottom:env(safe-area-inset-bottom)}
+@keyframes bpin{from{transform:translateY(24px);opacity:0}}
+@media (min-width:700px){.bot-panel{left:16px;right:auto;bottom:104px;width:400px;height:min(620px,calc(100vh - 130px));border-radius:20px;border-bottom:1px solid var(--line)}}
+.bp-h{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#0A1724,#14304a);color:#F7E7BC;border-radius:inherit;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.bp-av{width:38px;height:38px;flex:0 0 38px;border-radius:10px;background:linear-gradient(145deg,#173250,#0A1724);border:1px solid rgba(233,207,143,.6);display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:4px 8px;padding-top:3px;transform:perspective(200px) rotateY(-14deg);box-shadow:4px 4px 0 rgba(201,165,92,.35)}
+.bp-av .eye{width:7px;height:7px}.bp-av .mouth::before{width:11px;height:3px}
+.bp-t{flex:1;display:flex;flex-direction:column;line-height:1.3}.bp-t b{font:700 1rem var(--f-display)}
+.bp-t small{font:500 .74rem var(--f-body);color:rgba(247,231,188,.75);display:flex;align-items:center;gap:6px}
+.bp-dot{width:7px;height:7px;border-radius:50%;background:#2FB37A;box-shadow:0 0 0 3px rgba(47,179,122,.25)}
+.bp-x{width:34px;height:34px;border-radius:50%;border:1px solid rgba(233,207,143,.35);background:rgba(255,255,255,.06);color:#F7E7BC;cursor:pointer;font-size:.9rem}
+.bp-log{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.bmsg{max-width:92%;padding:10px 12px;border-radius:14px;font:400 .9rem/1.65 var(--f-body);word-wrap:break-word}
+.bmsg p{margin:0 0 6px}.bmsg p:last-child{margin-bottom:0}
+.bmsg.me{align-self:flex-start;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.bmsg.bot{align-self:flex-end;background:var(--panel2);border:1px solid var(--line);border-bottom-left-radius:4px;width:92%}
+.bmsg .num{font-family:var(--f-num);font-size:.92em}
+.bmsg .up{color:var(--up)}.bmsg .down{color:var(--down)}.bmsg .flat{color:var(--muted)}
+.bmsg .mut{color:var(--muted);font-size:.82rem}
+.bh2{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}.bh2 b{font:700 1rem var(--f-display)}.bh2 .tk{font:600 .72rem var(--f-num);color:var(--muted)}
+.bm{margin:8px 0}.bm-bar{height:8px;border-radius:99px;background:var(--grid2);overflow:hidden}.bm-bar i{display:block;height:100%;border-radius:inherit}
+.bm-bar i.up{background:var(--up)}.bm-bar i.down{background:var(--down)}.bm-bar i.flat{background:var(--muted)}
+.bm span{display:block;font-size:.8rem;color:var(--muted);margin-top:4px}.bm span b{color:var(--ink)}
+.bx{border-inline-start:3px solid var(--warn);padding:4px 10px;margin:8px 0;background:color-mix(in srgb,var(--warn) 8%,transparent);border-radius:6px}
+.bx span{font:600 .8rem var(--f-body);color:var(--warn)}.bx ul{margin:4px 0 0;padding-inline-start:18px;font-size:.84rem}
+.bw{display:flex;flex-direction:column;gap:2px;margin:8px 0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 45%,transparent)}
+.bw span{font-size:.78rem;color:var(--muted)}.bw b{font:700 .98rem var(--f-display)}.bw small{font-size:.78rem;color:var(--muted)}
+.bk{list-style:none;margin:8px 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.pv{white-space:nowrap}
+.bk li{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:8px;font-size:.86rem;flex-wrap:wrap}
+.bk li:nth-child(odd){background:var(--grid)}.bk li.now{background:color-mix(in srgb,var(--accent) 12%,transparent);font-weight:600}.bk li span{color:var(--muted)}
+.bt{overflow-x:auto;margin:6px 0}.bt table{width:100%;border-collapse:collapse;font-size:.84rem}
+.bt th,.bt td{padding:6px;border-bottom:1px solid var(--line);text-align:center}.bt th{font:700 .86rem var(--f-display)}.bt td:first-child{text-align:start;color:var(--muted);white-space:nowrap}
+.br{margin:8px 0}.br>span{font:600 .8rem var(--f-body);color:var(--muted)}.br ul{list-style:none;margin:4px 0 0;padding:0}
+.br li{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);font-size:.86rem}.br li .ba{flex:1;text-align:start}
+.bl{margin:8px 0}.bl>span{display:block;font:600 .8rem var(--f-body);color:var(--muted);margin-bottom:4px}.bl>div{display:flex;flex-wrap:wrap;gap:6px}
+.bn{margin:6px 0;padding-inline-start:18px}.bn li{margin-bottom:6px}.bn a{color:var(--accent);text-decoration:none}.bn small{display:block;color:var(--muted);font-size:.76rem}
+.bas{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ba{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 .8rem var(--f-body);cursor:pointer}
+.ba:hover{border-color:var(--accent);color:var(--accent)}
+.ba.pr{background:var(--accent);border-color:var(--accent);color:#fff}
+.ba.bq{border:0;background:none;padding:0;border-radius:0;color:var(--accent);font-size:.86rem}
+.bd{margin-top:10px!important;padding-top:8px;border-top:1px dashed var(--line);font-size:.74rem;color:var(--muted)}
+.dots{display:inline-flex;gap:4px;padding:4px 2px}.dots i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:bdot 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes bdot{0%,60%,100%{opacity:.25;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+.bp-in{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.bp-in input{flex:1;min-width:0;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:0 14px;font:500 16px var(--f-body)}
+.bp-in input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.bp-in button{width:44px;height:44px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.bp-in svg{width:20px;height:20px}
+
 html.locked body{overflow:hidden}
 html.locked .wrap{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#0A1724;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
@@ -637,6 +723,31 @@ html.locked .gate{display:flex}
     <button class="vxo-x" id="vxClose" aria-label="إغلاق">✕</button>
     <div class="vxo-in" id="vxBody"></div>
   </div>
+
+  <div class="bot-fab">
+    <span class="bot-tip" id="botTip" hidden>اسألني عن أي سهم أو عملة</span>
+    <button class="bot-btn" id="botBtn" type="button" aria-label="افتح مساعد التحليل" aria-expanded="false" aria-controls="botPanel">
+      <span class="bot-glow" aria-hidden="true"></span>
+      <span class="bot-st" aria-hidden="true"><span class="bot-bob"><span class="bot-h">
+        <i class="bf f"><b class="eye"></b><b class="eye"></b><b class="mouth"></b></i>
+        <i class="bf k"></i><i class="bf r"><b class="ear"></b></i><i class="bf l"><b class="ear"></b></i>
+        <i class="bf t"><b class="ant"></b></i><i class="bf u"></i>
+      </span></span></span>
+      <span class="bot-sh" aria-hidden="true"></span>
+    </button>
+  </div>
+  <section class="bot-panel" id="botPanel" role="dialog" aria-label="مساعد التحليل" hidden>
+    <header class="bp-h">
+      <span class="bp-av" aria-hidden="true"><b class="eye"></b><b class="eye"></b><b class="mouth"></b></span>
+      <div class="bp-t"><b>مساعد التحليل</b><small><span class="bp-dot"></span>يرد من بيانات الموقع مباشرة</small></div>
+      <button class="bp-x" id="botClose" type="button" aria-label="إغلاق">✕</button>
+    </header>
+    <div class="bp-log" id="botLog" aria-live="polite"></div>
+    <form class="bp-in" id="botForm" autocomplete="off">
+      <input id="botIn" type="text" maxlength="200" enterkeyhint="send" placeholder="مثال: وش توقعك للذهب هذا الأسبوع؟" aria-label="اكتب سؤالك">
+      <button type="submit" aria-label="إرسال"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12 4 4l3 8-3 8 16-8Z" fill="currentColor" transform="rotate(180 12 12)"/></svg></button>
+    </form>
+  </section>
 
   <section class="vault" aria-label="تحليلات خاصة">
     <div class="vbox" id="vault" tabindex="0" role="button" aria-label="تحليلات خاصة مقفلة">
@@ -954,6 +1065,10 @@ html.locked .gate{display:flex}
     let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(!S.charts||!S.active)return;const w=$('cMain').clientWidth;['main','rsi','macd'].forEach(k=>S.charts[k].applyOptions({width:w}));drawOverlay();},150);});
     S.timer=setInterval(refreshLive,60000);const st=LS.get('pro-tf');if(st&&TFS.includes(st))S.tf=st;}
   window.PRO={
+    async analyze(ref,tf){const r=await fetchData(ref.kind,ref.id);if(!r)return null;const keep={kind:S.kind,id:S.id,data:S.data,tf:S.tf};
+      S.kind=ref.kind;S.id=ref.id;S.data=r.data;S.tf=(tf&&r.data[tf]&&r.data[tf].length>=30)?tf:'1d';let A=null;
+      try{A=analyse();if(A){A.tf=S.tf;A.data=r.data;A.src=r.src;A.upd=r.upd;}}catch(e){console.error(e);}
+      S.kind=keep.kind;S.id=keep.id;S.data=keep.data;S.tf=keep.tf;return A;},
     show(ref){bind();const same=S.kind===ref.kind&&S.id===ref.id&&S.active;S.kind=ref.kind;S.id=ref.id;S.name=ref.name;S.unit=ref.unit||'';S.code=ref.code||'';S.active=true;if(!same||!S.charts)load();},
     hide(){S.active=false;if(S.charts){['main','rsi','macd'].forEach(k=>S.charts[k].remove());S.charts=null;}},
     async summary(ref,el){el.innerHTML='<div class="muted small">جارٍ حساب التحليل…</div>';const r=await fetchData(ref.kind,ref.id);if(!el.isConnected)return;
@@ -1465,6 +1580,14 @@ html.locked .gate{display:flex}
   try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);}catch(_){}
   new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
   render();
+  window.WAVE_API={assets:CFG.assets,current:()=>S.asset,loaded:()=>S.loaded,
+    weekly(a){if(!A[a]||!A[a].weekly)return null;const keep=S.asset;S.asset=a;
+      try{const {W,rows,last,curWeek,wk}=state();if(!last)return null;const f=wk(curWeek),nx=wk(addD(curWeek,7)),bt=backtest(rows);
+        return{last:last.c,lastDay:arDay(last.d),end:arDay(wkEnd(curWeek)),cur:f&&f.lab?Object.assign({},f.lab):null,next:nx&&nx.lab?Object.assign({},nx.lab):null,
+          nextEnd:arDay(wkEnd(addD(curWeek,7))),hits:bt.filter(Boolean).length,n:bt.length,fmt:v=>money(v,a,1)+cur(a)};}
+      finally{S.asset=keep;}},
+    news(a){return((S.news[a]&&S.news[a].items)||[]).slice(0,3).map(it=>({t:it.t,u:it.u,s:it.s,d:dShow(it.d)}));},
+    open(a,tab){if(!A[a])return;S.asset=a;S.tab=tab||'now';LS.set('wave-all',a);render();const t=document.querySelector('.tabs');if(t)window.scrollTo({top:t.offsetTop-8,behavior:'smooth'});}};
 
   if(CFG.mode==='json'){
     fetch('data.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(d=>{
@@ -1472,6 +1595,223 @@ html.locked .gate{display:flex}
     }).catch(()=>{S.loaded=true;$('hero').innerHTML='<div class="empty">تعذر تحميل البيانات. حدّث الصفحة.</div>';});
   }
   })();
+</script>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const API=()=>window.WAVE_API;
+  if(!$('botBtn')||!API())return;
+
+  /* ---------- language ---------- */
+  const norm=s=>String(s||'').toLowerCase()
+    .replace(/[ً-ٰٟـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+    .replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[؟?!.,،؛:()"'«»\-_/\\*]+/g,' ').replace(/\s+/g,' ').trim();
+  const ALIAS={
+    '2222':['ارامكو','أرامكو السعودية','aramco'],'1120':['الراجحي','مصرف الراجحي','بنك الراجحي','rajhi'],'4340':['الراجحي ريت','ريت الراجحي','صندوق الراجحي ريت'],
+    '8311':['عناية'],'1211':['معادن','maaden'],'1180':['الأهلي','البنك الأهلي','الأهلي السعودي','snb'],'7010':['stc','اس تي سي','الاتصالات','الاتصالات السعودية'],
+    '2010':['سابك','sabic'],'2082':['أكوا','أكوا باور','acwa'],'4013':['الحبيب','سليمان الحبيب'],'1010':['بنك الرياض','riyad bank'],'1150':['الإنماء','مصرف الإنماء','بنك الإنماء','alinma'],
+    'BTC':['بيتكوين','بتكوين','bitcoin','بيتكون'],'ETH':['إيثريوم','ايثيريوم','إيثيريوم','الإيثر','ايثر','ethereum'],'XRP':['ريبل','ripple'],'BNB':['بينانس','بي إن بي'],
+    'SOL':['سولانا','solana'],'TRX':['ترون','tron'],'DOGE':['دوج','دوجكوين','دوج كوين','dogecoin'],'ZEC':['زي كاش','زيكاش','zcash'],'LINK':['لينك','تشين لينك','chainlink'],
+    'ADA':['كاردانو','cardano'],'LTC':['لايتكوين','لايت كوين','ليتكوين','litecoin'],
+    'GOOGL':['قوقل','جوجل','google','ألفابت','alphabet'],'META':['ميتا','فيسبوك','facebook'],'AVGO':['برودكوم','broadcom'],'TSM':['تايوان','tsmc','تايوان للرقائق'],
+    'JPM':['جي بي مورقان','جي بي مورغان','jp morgan','jpmorgan','مورقان','مورغان'],'LLY':['إيلي ليلي','ليلي','eli lilly'],'V':['فيزا','visa'],
+    'TASI':['تاسي','المؤشر العام','مؤشر السوق','السوق السعودي','المؤشر السعودي'],'DJI':['داو جونز','داوجونز','الداو','dow jones','dow'],
+    'SPX':['اس اند بي','إس آند بي','اس آند بي','s&p','s&p 500','sp500','اس اند بي 500'],'NDX':['ناسداك','nasdaq'],'GOLD':['الذهب','ذهب','gold','الدهب'],
+    'SILVER':['الفضة','فضة','silver'],'BRENT':['برنت','النفط','نفط','البترول','brent','oil'],'US10Y':['السندات','عائد السندات','سندات','السندات الأمريكية','us10y'],'DXY':['مؤشر الدولار','dxy']};
+  const AS=API().assets.filter(a=>a.pro),BY=Object.fromEntries(AS.map(a=>[a.id,a]));
+  const PAT=[];
+  for(const a of AS){const set=new Set([a.name,a.btn,...(ALIAS[a.id]||[])]);if(a.id.length>1)set.add(a.id);
+    for(const raw of set){const n=norm(raw);if(!n||n.length<2)continue;const v=new Set([n]);if(n.startsWith('ال')&&n.length>4)v.add(n.slice(2));else if(!/^[a-z0-9&]/.test(n))v.add('ال'+n);
+      for(const x of v)PAT.push({id:a.id,x,re:new RegExp('(^| )(و|ف|ب|ك|ل|لل|وب|ول)?'+x.replace(/[.*+?^${}()|[\]\\&]/g,'\\$&')+'( |$)')});}}
+  PAT.sort((p,q)=>q.x.length-p.x.length);
+  function findAssets(t){const hits=[];for(const p of PAT){const m=p.re.exec(t);if(!m)continue;const s=m.index+m[1].length+(m[2]||'').length,e=s+p.x.length;
+      if(hits.some(h=>s<h.e&&e>h.s))continue;hits.push({id:p.id,s,e});}
+    const out=[];hits.sort((a,b)=>a.s-b.s).forEach(h=>{if(!out.includes(h.id))out.push(h.id);});return out;}
+  const TFR=[['4h',/(4 ?ساعات|اربع ساعات|4 ?h\b|اربع ساعه|4 ساعه)/],['1h',/(^| )(ال)?(ساعه|ساعي|1h)( |$)/],['1w',/(^| )(ال)?اسبوعي( |$)/],['1M',/(^| )(ال)?(شهري|شهر)( |$)/],['1d',/(^| )(ال)?(يومي|1d)( |$)/]];
+  const tfOf=t=>{for(const [k,r] of TFR)if(r.test(t))return k;return null;};
+  const has=(t,r)=>r.test(t);
+  const I={
+    greet:/^(السلام|سلام|مرحبا|هلا|اهلا|هاي|hi|hello|صباح|مساء)/,thanks:/(شكرا|يعطيك|مشكور|جزاك|تسلم)/,
+    help:/(وش تقدر|ماذا تستطيع|كيف استخدم|ساعدني|مساعده|ايش تسوي|وش تسوي|من انت|مين انت)/,
+    list:/(وش الاسهم|ايش الاسهم|الاصول المتاحه|المتاحه|القائمه|وش عندك|ايش عندك|ماذا تحلل|وش تحلل)/,
+    rank:/(اقوي|افضل|احسن|اضعف|اسوا|ترتيب|انسب)/,cmp:/(قارن|مقارنه|الفرق بين|افضل من|احسن من|ولا)/,
+    weekly:/(اغلاق|يغلق|تغلق|الاسبوع|هالاسبوع|نهايه الاسبوع|الاسبوع الجاي|الاسبوع القادم|الجمعه|الخميس)/,
+    levels:/(دعم|مقاوم|مستوي|مستويات)/,target:/(هدف|اهداف|يوصل|يصل|توصل|تصل|الي كم|لين كم|وين يروح|وين بيروح|سقف)/,
+    mom:/(rsi|زخم|تشبع|macd|ماكد|انحراف|دايفرجنس)/,act:/(اشتري|اشتر|شراء|ابيع|بيع|ادخل|دخول|اخرج|استثمر|يستاهل|اجمع|اعزز|اتعزز)/,
+    news:/(خبر|اخبار)/,define:/(ما هو|ما هي|ماهو|ماهي|وش يعني|ايش يعني|وش معني|معني|اشرح|شرح|عرف|تعريف|كيف اقرا|كيف تحسب|كيف يحسب)/};
+  const GLOSS=[
+    [/(^| )rsi|القوه النسبيه/,'RSI · مؤشر القوة النسبية','يقيس سرعة الحركة على مقياس من 0 إلى 100. فوق 70 يعني تشبع شراء وقد يتبعه تصحيح، وتحت 30 تشبع بيع وقد يتبعه ارتداد. يعتبره الموقع إيجابيًا فوق 55 وسلبيًا تحت 45، وما بينهما حياد.'],
+    [/macd|ماكد/,'MACD','الفرق بين متوسطين متحركين أسيين (12 و26) مع خط إشارة (9). عندما يكون الهيستوغرام موجبًا فالزخم يميل للصعود، وعندما يكون سالبًا يميل للهبوط.'],
+    [/(^| )atr|المدي الحقيقي|التذبذب/,'ATR · متوسط المدى الحقيقي','متوسط حجم الحركة في آخر 14 شمعة. يخبرك كم يتحرك السعر عادة، ويُستخدم لتحديد مسافة الوقف (1.5×ATR) والأهداف.'],
+    [/(^| )ema|متوسط|التقاطع الذهبي/,'المتوسطات المتحركة EMA','متوسط 50 يعكس الاتجاه المتوسط، ومتوسط 200 الاتجاه الطويل. السعر فوق متوسط 50 إشارة إيجابية، وصعود متوسط 50 فوق 200 يسمى التقاطع الذهبي.'],
+    [/poc|بروفايل|منطقه القيمه|السيوله/,'بروفايل الحجم و POC','يوزع الكميات المتداولة على مستويات السعر. POC هو السعر الذي تداولت عنده أكبر كمية، ومنطقة القيمة (VAH–VAL) تضم 70% من التداول، وغالبًا تعمل كمغناطيس للسعر.'],
+    [/fvg|فجوه/,'الفجوة السعرية FVG','فراغ بين شمعة وأخرى بعد اندفاع قوي لم يتداول فيه السعر. كثيرًا ما يعود السعر لملئها قبل أن يكمل.'],
+    [/(^| )ob( |$)|مناطق الاوامر|اوردر بلوك|order block/,'مناطق الأوامر OB','آخر شمعة معاكسة قبل اندفاع كسر آخر قمة أو قاع. يُفترض أن فيها أوامر كبيرة، وتعمل كدعم أو مقاومة عند العودة إليها. تحديدها في الموقع تقديري.'],
+    [/دعم|مقاومه/,'الدعم والمقاومة','الدعم مستوى يتوقف عنده الهبوط عادة لكثرة المشترين، والمقاومة مستوى يتوقف عنده الصعود لكثرة البائعين. الإغلاق الواضح خلف أي منهما يعني كسره.'],
+    [/مطرقه|شمعه|شموع|دوجي|ابتلاع/,'الشموع اليابانية','كل شمعة تلخص فترة: الافتتاح والإغلاق والأعلى والأدنى. المطرقة ذيلها السفلي طويل وتظهر بعد هبوط فتلمّح لانعكاس صاعد، والدوجي جسمها صغير ويعني تردد السوق. الشرح الكامل بالصور في تبويب «كيف أقرأ؟».'],
+    [/توافق|نسبه/,'نسبة التوافق','متوسط مرجّح لاتجاه المؤشرات في خمسة أطر: الشهري 25% والأسبوعي 25% واليومي 20% و4 ساعات 15% والساعة 15%. ثم يُخصم 10 نقاط عن كل دليل معاكس. هي تقيس اتفاق المؤشرات، وليست احتمال ربح.'],
+    [/انحراف|دايفرجنس|divergence/,'الانحراف','عندما يصنع السعر قمة أعلى بينما RSI يصنع قمة أدنى، فهذا انحراف سلبي يدل على ضعف الصعود. والعكس عند القيعان انحراف إيجابي.'],
+    [/المنطقه|المستطيل|التوقع الاسبوعي/,'منطقة إغلاق الأسبوع','نطاق يُقدَّر قبل بداية كل أسبوع من تذبذب السعر الأخير. إذا أغلق الأسبوع داخله يُحسب التوقع صحيحًا، ويعرض الموقع سجل الإصابة بشفافية.']];
+
+  /* ---------- formatting ---------- */
+  const dp=p=>p>=1000?0:p>=100?1:p>=10?2:p>=1?3:p>=.1?4:5;
+  const nf=(v,d)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const unit=a=>a.pro==='sa'?'ريال':a.pro==='ix'?(a.unit||''):'دولار';
+  const P=(v,a)=>{const s=`<b class="num">${nf(v,dp(Math.abs(v)))}${a&&unit(a)==='%'?'%':''}</b>`;return`<bdi class="pv">${a&&unit(a)&&unit(a)!=='%'?s+' '+unit(a):s}</bdi>`;};
+  const DIR={up:'صاعد',down:'هابط',flat:'محايد'},TFN={'1M':'الشهري','1w':'الأسبوعي','1d':'اليومي','4h':'4 ساعات','1h':'الساعة'};
+  const BIAS={up:'صعود',down:'هبوط',flat:'حياد'};
+  const refOf=a=>({kind:a.pro,id:a.id,name:a.name,unit:a.unit||'',code:a.code||''});
+  const meter=(conf,eff)=>{const c=conf.dir==='up'?'up':conf.dir==='down'?'down':'flat';
+    return`<div class="bm"><div class="bm-bar"><i class="${c}" style="width:${Math.max(4,eff)}%"></i></div><span>اتجاه <b>${DIR[conf.dir]}</b> · توافق <b class="num">${conf.pct}%</b> · بعد التدقيق <b class="num">${eff}%</b></span></div>`;};
+  const act=(label,q)=>`<button class="ba" data-q="${esc(q)}">${esc(label)}</button>`;
+  const openBtn=(a,tab,label)=>`<button class="ba pr" data-open="${a.id}:${tab}">${esc(label)}</button>`;
+  const DISC='<p class="bd">قراءة آلية للمؤشرات الفنية لغرض تعليمي، وليست توصية بالشراء أو البيع.</p>';
+  const cache=new Map();
+  async function an(a,tf){const k=a.id+':'+(tf||'1d'),c=cache.get(k);if(c&&Date.now()-c.t<5*60e3)return c.A;
+    const A=await PRO.analyze(refOf(a),tf||'1d');if(A)cache.set(k,{A,t:Date.now()});return A;}
+  const lastOf=A=>{const d=A.data['1d']||A.b,n=d.length-1;return{c:d[n].c,ch:n?(d[n].c/d[n-1].c-1)*100:0,t:d[n].t};};
+  const day=t=>{const d=new Date(t*1000),M=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return d.getUTCDate()+' '+M[d.getUTCMonth()];};
+
+  /* ---------- answers ---------- */
+  function head(a,A){const L=lastOf(A);
+    return`<div class="bh2"><b>${esc(a.name)}</b><span class="tk">${esc(a.pro==='sa'?a.id:a.pro==='cx'?a.id+'/USDT':(a.code||a.id).split(' · ')[0])}</span></div>
+      <p>آخر سعر ${P(L.c,a)} <span class="num ${L.ch>=0?'up':'down'}">${L.ch>=0?'+':''}${L.ch.toFixed(2)}%</span> <span class="mut">· ${day(L.t)}</span></p>`;}
+  function scenTxt(a,A){const {sc}=A;
+    if(sc.pick==='bull')return`<p><b>الأرجح حسب المؤشرات: الصعود.</b> يتأكد بإغلاق فوق ${P(sc.bull.trig,a)}، والهدف الأول ${P(sc.bull.t1,a)} ثم ${P(sc.bull.t2,a)}. تُلغى القراءة بإغلاق تحت ${P(sc.bull.inv,a)}.</p>`;
+    if(sc.pick==='bear')return`<p><b>الأرجح حسب المؤشرات: الهبوط.</b> يتأكد بكسر ${P(sc.bear.trig,a)}، والهدف الأول ${P(sc.bear.t1,a)} ثم ${P(sc.bear.t2,a)}. تُلغى القراءة بإغلاق فوق ${P(sc.bear.inv,a)}.</p>`;
+    return`<p><b>الأرجح حسب المؤشرات: تذبذب</b> بين ${P(sc.side.lo,a)} و ${P(sc.side.hi,a)} حتى يخرج السعر بإغلاق واضح. فوق ${P(sc.side.hi,a)} يفتح الطريق إلى ${P(sc.bull.t1,a)}، وتحت ${P(sc.side.lo,a)} إلى ${P(sc.bear.t1,a)}.</p>`;}
+  function btTxt(A){const b=A.bt;if(!b||A.conf.dir==='flat')return'';const x=A.conf.dir==='up'?b.up:b.dn,base=A.conf.dir==='up'?b.base.pct:b.baseDown;
+    if(!x||x.pct==null||x.n<15)return'';const edge=x.pct-base;
+    return`<p class="mut">تاريخيًا على الشموع اليومية: عندما كانت المؤشرات ${DIR[A.conf.dir]}ة بقوة، ${A.conf.dir==='up'?'ارتفع':'انخفض'} السعر بعد ${b.h} أيام في <b class="num">${x.pct}%</b> من ${x.n} حالة، مقابل ${base}% في الأيام العادية${edge<5?'، أي أن أفضلية الإشارة هنا ضعيفة':''}.</p>`;}
+  function weeklyTxt(a){const w=API().weekly(a.id);if(!w||!w.cur)return'';
+    return`<div class="bw"><span>توقع إغلاق الأسبوع (${esc(w.end)})</span><b>بين ${esc(w.cur.low!=null?w.fmt(w.cur.low):'—')} و ${esc(w.fmt(w.cur.high))}</b><small>الميل: ${BIAS[w.cur.bias]||'—'} · أصابت الطريقة ${w.hits} من ${w.n} أسبوعًا في الاختبار</small></div>`;}
+  async function brief(a,tf,mode){const A=await an(a,tf);if(!A)return fail(a);
+    const {conf,sc,au,scores}=A,cur=scores[A.tf];
+    let h=head(a,A)+meter(conf,sc.eff);
+    if(mode==='act')h=`<p>لا أقدّم توصيات شراء أو بيع، لكن هذا ما تقوله المؤشرات الآن عن <b>${esc(a.name)}</b>، والقرار لك:</p>`+h;
+    if(A.tf!=='1d')h+=`<p class="mut">القراءة على إطار ${TFN[A.tf]}.</p>`;
+    h+=scenTxt(a,A);
+    if(cur&&cur.rsi!=null)h+=`<p>RSI ${TFN[A.tf]} <b class="num">${cur.rsi.toFixed(0)}</b>${cur.rsi>70?' (تشبع شراء)':cur.rsi<30?' (تشبع بيع)':''} · MACD ${cur.hist>0?'موجب':'سالب'} · ${conf.agree} من ${conf.total} أطر تتفق على الاتجاه.</p>`;
+    if(au.length)h+=`<div class="bx"><span>ما يعاكس هذه القراءة</span><ul>${au.slice(0,3).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    h+=btTxt(A)+weeklyTxt(a);
+    h+=`<div class="bas">${openBtn(a,'pro','التحليل الكامل')}${act('الدعم والمقاومة','دعم ومقاومة '+a.name)}${a.weekly?act('إغلاق الأسبوع','إغلاق '+a.name+' هذا الأسبوع'):act('النطاق الأسبوعي','نطاق '+a.name+' الأسبوع')}${A.tf!=='4h'&&A.data['4h']?act('إطار 4 ساعات',a.name+' 4 ساعات'):''}</div>`;
+    return h+DISC;}
+  async function levels(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,vp,I,b}=A,n=b.length-1;
+    const row=(k,x)=>x?`<li><span>${k} · ${esc(x.src)}</span>${P(x.p,a)}</li>`:'';
+    let h=head(a,A)+`<ul class="bk">${row('مقاومة ثانية',lv.R2)}${row('المقاومة الأقرب',lv.R)}<li class="now"><span>السعر الآن</span>${P(lastOf(A).c,a)}</li>${row('الدعم الأقرب',lv.S)}${row('دعم ثانٍ',lv.S2)}</ul>`;
+    if(vp)h+=`<p>السيولة الأكبر (POC) عند ${P(vp.poc,a)}، ومنطقة القيمة بين ${P(vp.val,a)} و ${P(vp.vah,a)}.</p>`;
+    if(I.atr[n])h+=`<p class="mut">الحركة المعتادة لكل شمعة ${TFN[A.tf]} نحو ${P(I.atr[n],a)} (ATR).</p>`;
+    return h+`<div class="bas">${openBtn(a,'pro','افتح الشارت')}${act('الأهداف','أهداف '+a.name)}</div>`+DISC;}
+  async function targets(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {sc}=A;
+    return head(a,A)+`<ul class="bk"><li><span>إذا أغلق فوق ${nf(sc.bull.trig,dp(sc.bull.trig))}</span>${P(sc.bull.t1,a)} ثم ${P(sc.bull.t2,a)}</li>
+      <li><span>إذا كسر ${nf(sc.bear.trig,dp(sc.bear.trig))}</span>${P(sc.bear.t1,a)} ثم ${P(sc.bear.t2,a)}</li>
+      <li><span>صدمة مفاجئة (3×ATR)</span>${P(sc.bear.shock,a)}</li></ul>`+scenTxt(a,A)+`<p class="mut">الأهداف مسافات محسوبة بالتذبذب (ATR) من مستويات الدعم والمقاومة، وليست وعدًا بالوصول.</p>`+DISC;}
+  async function momentum(a){const A=await an(a,'1d');if(!A)return fail(a);const {scores,div}=A;
+    const rows=['1M','1w','1d','4h','1h'].filter(t=>scores[t]).map(t=>{const x=scores[t];return`<li><span>${TFN[t]}</span><b class="${x.dir}">${DIR[x.dir]}</b> · RSI <b class="num">${x.rsi!=null?x.rsi.toFixed(0):'—'}</b> · MACD ${x.hist>0?'موجب':'سالب'}</li>`;}).join('');
+    return head(a,A)+`<ul class="bk">${rows}</ul>`+(div.length?`<div class="bx"><span>انحرافات على اليومي</span><ul>${div.map(d=>`<li>${d.txt}</li>`).join('')}</ul></div>`:'<p class="mut">لا يوجد انحراف واضح على اليومي في آخر 80 شمعة.</p>')+DISC;}
+  async function weekly(a){const w=API().weekly(a.id);
+    if(w&&w.cur){let h=`<div class="bh2"><b>${esc(a.name)}</b><span class="tk">${esc(a.id)}</span></div>
+      <p>آخر إغلاق <b class="num">${esc(w.fmt(w.last))}</b> <span class="mut">· ${esc(w.lastDay)}</span></p>
+      <div class="bw"><span>المنطقة المتوقعة لإغلاق الأسبوع (${esc(w.end)})</span><b>بين ${esc(w.fmt(w.cur.low))} و ${esc(w.fmt(w.cur.high))}</b><small>الميل: ${BIAS[w.cur.bias]||'—'}</small></div>`;
+      const pos=w.last>w.cur.high?'فوق المنطقة، وليصدق التوقع يجب أن ينزل ويغلق داخلها':w.last<w.cur.low?'تحت المنطقة، وليصدق التوقع يجب أن يرتفع ويغلق داخلها':'داخل المنطقة الآن';
+      h+=`<p>السعر ${pos}.</p><p class="mut">طُبّقت الطريقة على آخر ${w.n} أسبوعًا فأغلق ${w.hits} منها داخل المنطقة (${w.n?Math.round(w.hits/w.n*10):0} من كل 10).</p>`;
+      if(w.next)h+=`<p class="mut">الأسبوع التالي (${esc(w.nextEnd)})${w.next.provisional?' · مبدئي':''}: بين ${esc(w.fmt(w.next.low))} و ${esc(w.fmt(w.next.high))}.</p>`;
+      return h+`<div class="bas">${openBtn(a,'now','افتح الرسم')}${act('الاتجاه العام','توقع '+a.name)}</div>`+DISC;}
+    const A=await an(a,'1w');if(!A)return fail(a);const wb=A.data['1w'],at=QE.atr(wb),n=wb.length-1,c=lastOf(A).c,x=at[n];
+    if(!x)return brief(a,'1w');
+    return head(a,A)+`<p>لا يوجد لهذا الأصل توقع أسبوعي رسمي في الموقع. تقدير من تذبذبه المعتاد: الحركة الأسبوعية المعتادة نحو ${P(x,a)}، أي أن نطاقًا معقولًا للأسبوع بين ${P(c-x,a)} و ${P(c+x,a)}.</p>`+meter(A.conf,A.sc.eff)+scenTxt(a,A)+`<p class="mut">هذا نطاق تقديري من ATR الأسبوعي وليس توقعًا مختبرًا.</p>`+DISC;}
+  async function news(a){const it=API().news(a.id);
+    if(!it.length)return`<p>لا توجد أخبار محفوظة عن <b>${esc(a.name)}</b> في الموقع حاليًا.</p><div class="bas">${act('التحليل الآن','توقع '+a.name)}</div>`;
+    return`<p>آخر أخبار <b>${esc(a.name)}</b>:</p><ul class="bn">${it.map(n=>`<li><a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(n.t)}</a><small>${esc(n.d)} · ${esc(n.s)}</small></li>`).join('')}</ul><div class="bas">${openBtn(a,'news','كل الأخبار')}</div>`;}
+  async function compare(ids){const L=ids.slice(0,3).map(i=>BY[i]),R=await Promise.all(L.map(a=>an(a,'1d')));
+    if(R.some(x=>!x))return'<p>تعذر جلب بيانات أحد الأصلين الآن. حاول بعد قليل.</p>';
+    const sg=A=>(A.conf.dir==='up'?1:A.conf.dir==='down'?-1:0)*A.sc.eff;
+    const pick={bull:'صعود',bear:'هبوط',side:'تذبذب'};
+    let h=`<div class="bt"><table><thead><tr><th></th>${L.map(a=>`<th>${esc(a.btn||a.name)}</th>`).join('')}</tr></thead><tbody>
+      <tr><td>التغير اليومي</td>${R.map(A=>{const x=lastOf(A).ch;return`<td class="num ${x>=0?'up':'down'}">${x>=0?'+':''}${x.toFixed(2)}%</td>`;}).join('')}</tr>
+      <tr><td>الاتجاه</td>${R.map(A=>`<td class="${A.conf.dir}">${DIR[A.conf.dir]}</td>`).join('')}</tr>
+      <tr><td>التوافق</td>${R.map(A=>`<td class="num">${A.conf.pct}%</td>`).join('')}</tr>
+      <tr><td>بعد التدقيق</td>${R.map(A=>`<td class="num">${A.sc.eff}%</td>`).join('')}</tr>
+      <tr><td>RSI اليومي</td>${R.map(A=>`<td class="num">${A.scores['1d']&&A.scores['1d'].rsi!=null?A.scores['1d'].rsi.toFixed(0):'—'}</td>`).join('')}</tr>
+      <tr><td>الأرجح</td>${R.map(A=>`<td>${pick[A.sc.pick]}</td>`).join('')}</tr>
+      <tr><td>أدلة معاكسة</td>${R.map(A=>`<td class="num">${A.au.length}</td>`).join('')}</tr></tbody></table></div>`;
+    const best=L.map((a,i)=>({a,s:sg(R[i])})).sort((x,y)=>y.s-x.s);
+    h+=best[0].s-best[best.length-1].s<10?'<p>القراءتان متقاربتان ولا تميّز المؤشرات أحدهما بوضوح.</p>':`<p>قراءة المؤشرات أفضل نسبيًا في <b>${esc(best[0].a.name)}</b>${best[0].s<0?' (ضغط هابط أخف)':''}، وأضعف في <b>${esc(best[best.length-1].a.name)}</b>.</p>`;
+    return h+`<div class="bas">${L.map(a=>act(a.btn||a.name,'توقع '+a.name)).join('')}</div>`+DISC;}
+  const CATW=[['sa',/(سعودي|السعوديه|تداول|الاسهم السعوديه)/],['cx',/(عمل|كريبتو|مشفر|رقمي)/],['us',/(امريك|الامريكيه|عالمي)/],['ix',/(مؤشر|سلع|معادن)/]];
+  async function rank(t,el){const cat=(CATW.find(([,r])=>r.test(t))||[])[0];const L=AS.filter(a=>!cat||a.pro===cat);
+    let done=0;const out=[];const tick=()=>{if(el)el.innerHTML=`<p class="mut">أفحص ${L.length} أصلًا… <b class="num">${done}</b> / ${L.length}</p>`;};tick();
+    const q=L.slice();await Promise.all([0,1,2,3,4].map(async()=>{while(q.length){const a=q.shift();const A=await an(a,'1d').catch(()=>null);done++;tick();if(A)out.push({a,A,s:(A.conf.dir==='up'?1:A.conf.dir==='down'?-1:0)*A.sc.eff});}}));
+    if(!out.length)return'<p>تعذر جلب البيانات الآن. حاول بعد قليل.</p>';
+    out.sort((x,y)=>y.s-x.s);const weak=/(اضعف|اسوا)/.test(t);
+    const li=x=>`<li><button class="ba bq" data-q="${esc('توقع '+x.a.name)}">${esc(x.a.name)}</button><span class="${x.A.conf.dir}">${DIR[x.A.conf.dir]}</span><b class="num">${x.A.sc.eff}%</b></li>`;
+    const top=out.filter(x=>x.s>0).slice(0,5),bot=out.filter(x=>x.s<0).reverse().slice(0,5);
+    let h=`<p>ترتيب ${cat?{sa:'الأسهم السعودية',cx:'العملات المشفرة',us:'الأسهم الأمريكية',ix:'المؤشرات والسلع'}[cat]:'كل الأصول'} حسب قوة المؤشرات بعد التدقيق المعاكس:</p>`;
+    const up=`<div class="br"><span>الأقوى صعودًا</span><ul>${top.map(li).join('')||'<li class="mut">لا يوجد أصل بتوافق صاعد الآن</li>'}</ul></div>`;
+    const dn=`<div class="br"><span>الأقوى هبوطًا</span><ul>${bot.map(li).join('')||'<li class="mut">لا يوجد أصل بتوافق هابط الآن</li>'}</ul></div>`;
+    h+=weak?dn+up:up+dn;
+    return h+`<p class="mut">الترتيب يقيس اتفاق المؤشرات فقط، ولا يعني أن الأصل الأول سيربح أكثر.</p>`+DISC;}
+  function listAll(){const g={sa:'السوق السعودي',cx:'العملات المشفرة',us:'الأسهم الأمريكية',ix:'المؤشرات والسلع'};
+    return'<p>أحلل كل الأصول الموجودة في الموقع:</p>'+Object.entries(g).map(([k,v])=>`<div class="bl"><span>${v}</span><div>${AS.filter(a=>a.pro===k).map(a=>`<button class="ba" data-q="${esc('توقع '+a.name)}">${esc(a.btn||a.name)}</button>`).join('')}</div></div>`).join('');}
+  const fail=a=>`<p>تعذر الوصول إلى بيانات <b>${esc(a.name)}</b> الآن. حاول بعد قليل.</p>`;
+  const WELCOME=()=>{const c=BY[API().current()];
+    return`<p>أهلًا بك 👋 أنا مساعد التحليل.</p><p>اسألني عن أي سهم أو عملة أو مؤشر في الموقع، وأرد فورًا من آخر البيانات: الاتجاه، والدعم والمقاومة، والأهداف، وإغلاق الأسبوع، والمقارنة بين أصلين.</p>
+      <div class="bas">${c?act('توقع '+(c.btn||c.name),'توقع '+c.name):''}${act('الذهب هذا الأسبوع','الذهب هذا الأسبوع')}${act('أقوى الأصول الآن','أقوى الأصول الآن')}${act('قارن البيتكوين والإيثريوم','قارن البيتكوين والإيثريوم')}${act('ما هو RSI؟','ما هو RSI؟')}</div>`;};
+  const NOTFOUND=()=>`<p>لم أتعرف على الأصل في سؤالك. أستطيع التحليل للأصول الموجودة في الموقع فقط.</p><div class="bas">${act('عرض الأصول المتاحة','وش الأصول المتاحة')}${act('أقوى الأصول الآن','أقوى الأصول الآن')}</div>`;
+
+  /* ---------- router ---------- */
+  const CTX={last:null};
+  async function answer(q,el){const t=norm(q);if(!t)return NOTFOUND();
+    const ids=findAssets(t),tf=tfOf(t);
+    const gl=GLOSS.find(([r])=>r.test(t));
+    if(!ids.length){
+      if(has(t,I.thanks))return'<p>العفو، في الخدمة دائمًا. اسأل متى شئت.</p>';
+      if(gl&&has(t,I.define))return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`;
+      const unk=t.match(/(?:^| )(?:في|عن|سهم|عمله|شركه|مؤشر)( (?!ال?(?:سهم|عمله|شركه|هذا|هذه|الحين|الان|السوق|الاسبوع|اليوم|الشهر)( |$))[^ ]{3,})/);
+      if(unk&&!gl&&!has(t,I.rank)&&!has(t,I.list))return`<p>لا يوجد «${esc(unk[1].trim())}» ضمن الأصول التي يحللها الموقع حاليًا.</p>`+NOTFOUND();
+      if(has(t,I.rank))return rank(t,el);
+      if(has(t,I.list))return listAll();
+      if(has(t,I.greet)||has(t,I.help))return WELCOME();
+      if(CTX.last&&(has(t,I.levels)||has(t,I.target)||has(t,I.mom)||has(t,I.weekly)||has(t,I.act)||has(t,I.news)||tf||/(وش رايك|طيب|وبعد|كمان|ايضا|و هو|وهو|له|لها)/.test(t)))ids.push(CTX.last);
+      else if(gl)return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`;
+      else return NOTFOUND();}
+    if(has(t,I.rank)&&ids.length===1&&ids[0]==='TASI'&&/(اسهم|سهم|شركات)/.test(t))return rank(t,el);
+    const a=BY[ids[0]];CTX.last=a.id;
+    if(ids.length>1)return compare(ids);
+    if(has(t,I.news))return news(a);
+    if(has(t,I.define)&&gl)return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`+await brief(a,tf);
+    if(has(t,I.levels))return levels(a,tf);
+    if(has(t,I.target))return targets(a,tf);
+    if(has(t,I.mom))return momentum(a);
+    if(has(t,I.weekly)&&!tf)return weekly(a);
+    if(has(t,I.act))return brief(a,tf,'act');
+    return brief(a,tf);}
+
+  /* ---------- ui ---------- */
+  const btn=$('botBtn'),panel=$('botPanel'),log=$('botLog'),form=$('botForm'),inp=$('botIn'),tip=$('botTip');
+  const LS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+  let busy=false;
+  function add(cls,html){const d=document.createElement('div');d.className='bmsg '+cls;d.innerHTML=html;log.appendChild(d);log.scrollTop=log.scrollHeight;return d;}
+  async function ask(q){q=String(q||'').trim().slice(0,200);if(!q||busy)return;busy=true;add('me',esc(q));
+    const d=add('bot','<span class="dots"><i></i><i></i><i></i></span>');const t0=Date.now();let h;
+    try{h=await answer(q,d);}catch(e){console.error(e);h='<p>حدث خطأ أثناء التحليل. حاول مرة أخرى.</p>';}
+    const w=350-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w));
+    d.innerHTML=h;log.scrollTop=Math.max(0,d.offsetTop-8);busy=false;}
+  function open(){panel.hidden=false;btn.setAttribute('aria-expanded','true');document.documentElement.classList.add('bot-on');tip.hidden=true;LS.set('bot-seen','1');
+    if(!log.children.length)add('bot',WELCOME());setTimeout(()=>{if(matchMedia('(min-width:700px)').matches)inp.focus();},60);}
+  function close(){panel.hidden=true;btn.setAttribute('aria-expanded','false');document.documentElement.classList.remove('bot-on');btn.focus();}
+  btn.addEventListener('click',()=>panel.hidden?open():close());
+  $('botClose').addEventListener('click',close);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)close();});
+  form.addEventListener('submit',e=>{e.preventDefault();const v=inp.value;inp.value='';ask(v);});
+  log.addEventListener('click',e=>{const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
+    const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
+  if(!LS.get('bot-seen'))setTimeout(()=>{if(panel.hidden&&!document.documentElement.classList.contains('locked'))tip.hidden=false;setTimeout(()=>{tip.hidden=true;},7000);},2500);
+  window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
+})();
+
 </script>
 <script>
 (function(){const v=document.getElementById('vault');if(!v)return;const f=()=>{v.classList.remove('shake');void v.offsetWidth;v.classList.add('shake');};v.addEventListener('click',f);v.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});})();
