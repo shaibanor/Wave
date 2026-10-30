@@ -453,6 +453,15 @@ ul.ll.warn li::before{background:var(--warn)}
 .ar-t{grid-area:t;font-size:.72rem;color:#8FA3B5}.ar-t .op{color:#E9CF8F}
 .ar .sp{grid-area:s}
 @media (max-width:520px){.ar{grid-template-columns:1fr auto;grid-template-areas:"n p" "e e" "t s"}}
+.al-h{margin:10px 0 2px;font:700 .95rem var(--f-display);color:#E9CF8F}
+.aw{display:grid;grid-template-columns:minmax(110px,1.2fr) 2fr auto auto;gap:10px;align-items:center;font-size:.82rem;padding:6px 10px;border-radius:10px;background:rgba(15,34,52,.6);border:1px solid rgba(233,207,143,.12)}
+.aw-n{color:#E8EEF4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aw-b{height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden}
+.aw-b i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#8E6A2C,#E9CF8F)}
+.aw.sw .aw-b i{background:linear-gradient(90deg,#1f6f4a,#4CC285)}.aw.cs .aw-b i{background:#5c6f80}
+.aw b{color:#F6EFE0}.aw small{color:#8FA3B5}
+.bm{color:#9FB1C2!important;font-weight:400}
+@media (max-width:520px){.aw{grid-template-columns:1fr auto auto;grid-template-areas:"n p u" "b b b"}.aw-n{grid-area:n}.aw-b{grid-area:b}.aw b{grid-area:p}.aw small{grid-area:u}}
 .rl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .rl>div{border-radius:14px;padding:12px 14px;background:rgba(15,34,52,.7);border:1px solid rgba(233,207,143,.2)}
 .rl h4{margin:0 0 4px;font:700 .95rem var(--f-display);color:#E9CF8F}
@@ -1088,7 +1097,7 @@ html.locked .gate{display:flex}
       <div class="tc-d"><span>تاريخ الدخول</span><b>${dS(t.opened)}</b>${closed?`<span>تاريخ الإغلاق</span><b>${dS(t.closed)}</b>`:''}</div>
       <div class="tc-g">
         <div><span>سعر الدخول</span><b class="num">${px(t.entry)}</b></div>
-        <div><span>الكمية · القيمة</span><b class="num">${qn(t.qty)} · ${nf(t.value)}${cur}</b></div>
+        <div><span>الكمية · القيمة</span><b class="num">${qn(t.qty)} · ${nf(t.value)}${cur}</b>${t.weight!=null?`<em class="num">${t.weight}% من المحفظة${t.kind==='sa'?' · $'+nf(t.value_usd,0):''}</em>`:''}</div>
         <div class="g1"><span>الهدف الأول · نصف الكمية</span><b class="num">${px(t.t1)}</b><em class="num">${sg(pc(t.t1,t.entry).toFixed(2))}% · ${qn(t.q1)}</em></div>
         <div class="g2"><span>الهدف الثاني · النصف الباقي</span><b class="num">${px(t.t2)}</b><em class="num">${sg(pc(t.t2,t.entry).toFixed(2))}% · ${qn(t.q2)}</em></div>
         <div class="gs"><span>وقف الخسارة</span><b class="num">${px(t.stop0)}</b><em class="num">${pc(t.stop0,t.entry).toFixed(2)}%</em></div>
@@ -1108,26 +1117,29 @@ html.locked .gate{display:flex}
     $('vxBody').innerHTML=`<div class="vb">
       <div class="vb-h"><div><h2>سجل الصفقات</h2><p>محاكاة تداول بقواعد ثابتة · بدأت ${dS(B.launch)} · آخر تحديث ${upd}</p></div></div>
       <div class="vb-k">
-        <div class="kc"><span>القيمة الإجمالية</span><b class="num">$${nf(T.equity_usd)}</b><em>من $${nf(T.start_usd,0)} · ${B.accounts.length} حسابًا × $${nf(B.per_asset_usd,0)}</em></div>
-        <div class="kc"><span>الربح / الخسارة</span><b class="num ${up?'up':'down'}">${sg(nf(T.pnl_usd))}$</b><em class="num ${up?'up':'down'}">${sg(T.pct.toFixed(2))}%</em></div>
-        <div class="kc"><span>نسبة النجاح</span><b class="num">${T.win_rate==null?'—':T.win_rate+'%'}</b><em>${T.closed_n} صفقة مغلقة</em></div>
-        <div class="kc"><span>صفقات مفتوحة</span><b class="num">${T.open_n}</b><em>تُدار تلقائيًا</em></div>
+        <div class="kc"><span>قيمة المحفظة</span><b class="num">$${nf(T.equity_usd)}</b><em>من $${nf(T.start_usd,0)} · ${B.universe} أصلًا متاحًا</em></div>
+        <div class="kc"><span>الربح / الخسارة</span><b class="num ${up?'up':'down'}">${sg(nf(T.pnl_usd))}$</b><em class="num ${up?'up':'down'}">${sg(T.pct.toFixed(2))}%${T.bench_pct!=null?` <span class="bm">· المؤشر ${sg(T.bench_pct.toFixed(2))}%</span>`:''}</em></div>
+        <div class="kc"><span>نسبة النجاح</span><b class="num">${T.win_rate==null?'—':T.win_rate+'%'}</b><em>${T.closed_n} صفقة مغلقة · ${T.open_n} مفتوحة</em></div>
+        <div class="kc"><span>استغلال المحفظة</span><b class="num">${T.util}%</b><em>صفقات $${nf(T.invested_usd,0)} · مؤشر $${nf(T.sweep_usd,0)}</em></div>
       </div>
       <div class="vb-c"><canvas id="vxCurve"></canvas></div>
-      <nav class="vb-t" role="tablist">${[['open','المفتوحة',T.open_n],['closed','المغلقة',T.closed_n],['acc','الحسابات',B.accounts.length],['rules','القواعد','']].map(([k,l,n])=>`<button role="tab" data-vt="${k}" aria-selected="${tab===k}">${l}${n!==''?` <small>${n}</small>`:''}</button>`).join('')}</nav>
+      <nav class="vb-t" role="tablist">${[['open','المفتوحة',T.open_n],['closed','المغلقة',T.closed_n],['alloc','التوزيع',''],['rules','القواعد','']].map(([k,l,n])=>`<button role="tab" data-vt="${k}" aria-selected="${tab===k}">${l}${n!==''?` <small>${n}</small>`:''}</button>`).join('')}</nav>
       <div id="vxTab"></div></div>`;
     drawCurve($('vxCurve'),B.curve.map(x=>x[1]),B.totals.start_usd);renderTab();}
   function renderTab(){const B=BOOK,el=$('vxTab');document.querySelectorAll('[data-vt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.vt===tab)));
     if(tab==='open')el.innerHTML=B.open.length?`<div class="tl">${B.open.map(t=>card(t,false)).join('')}</div>`:'<p class="vb-e">لا توجد صفقات مفتوحة الآن. يدخل البوت عند توافق صاعد قوي بين الأطر.</p>';
     if(tab==='closed')el.innerHTML=B.closed.length?`<div class="tl">${B.closed.slice(0,shown).map(t=>card(t,true)).join('')}</div>${B.closed.length>shown?`<button class="vb-more" data-more="1">عرض المزيد (${B.closed.length-shown})</button>`:''}`:'<p class="vb-e">لم تُغلق أي صفقة بعد.</p>';
-    if(tab==='acc'){el.innerHTML=`<div class="al">${B.accounts.map(accRow).join('')}</div>`;el.querySelectorAll('canvas.sp').forEach(c=>{try{drawSpark(c,JSON.parse(c.dataset.c));}catch(_){}});}
+    if(tab==='alloc'){const mx=Math.max(...B.alloc.map(a=>a.pct),1);
+      el.innerHTML=`<div class="al"><h4 class="al-h">توزيع المحفظة الآن</h4>${B.alloc.filter(a=>a.usd>=1).map(a=>`<div class="aw ${a.sweep?'sw':a.cash?'cs':''}"><span class="aw-n">${esc(a.label)}</span><span class="aw-b"><i style="width:${(a.pct/mx*100).toFixed(1)}%"></i></span><b class="num">${a.pct}%</b><small class="num">$${nf(a.usd,0)}</small></div>`).join('')}
+      <h4 class="al-h">النتيجة حسب الأصل</h4>${B.stats.length?B.stats.map(s=>`<div class="ar"><div class="ar-n"><b>${esc(s.name)}</b><span class="num">${esc(s.id)}</span></div><div class="ar-e">${s.n} صفقة · ${s.wins} رابحة</div><div class="ar-p num ${s.pnl_usd>=0?'up':'down'}">${sg(nf(s.pnl_usd))}$</div></div>`).join(''):'<p class="vb-e">تظهر النتائج بعد إغلاق أول صفقة.</p>'}</div>`;}
     if(tab==='rules'){const R=B.rules;el.innerHTML=`<div class="rl">
       <div><h4>متى يدخل</h4><p>عند إغلاق اليوم إذا كان التوافق بين الشهري والأسبوعي واليومي صاعدًا بنسبة ${'50%'} أو أكثر، واليومي صاعدًا، والسعر فوق متوسط 50 يومًا، وRSI أقل من 75.</p></div>
-      <div><h4>حجم الصفقة</h4><p>مخاطرة ${R.risk*100}% من رصيد الحساب: المسافة بين الدخول والوقف تساوي ${R.stop_atr}×ATR، والكمية تُحسب حتى تكون الخسارة عند الوقف ${R.risk*100}% فقط.</p></div>
+      <div><h4>حجم الصفقة</h4><p>مخاطرة ${R.risk*100}% من قيمة المحفظة: المسافة بين الدخول والوقف ${R.stop_atr}×ATR، والكمية تُحسب حتى تكون الخسارة عند الوقف ${R.risk*100}% فقط، وبحد أقصى ${R.max_w*100}% من المحفظة للمركز الواحد و${R.max_open} صفقات مفتوحة.</p></div>
+      <div><h4>استغلال المحفظة</h4><p>النقد الذي لا تستخدمه الصفقات يُستثمر تلقائيًا في صندوق ${R.sweep} عند إغلاق السوق الأمريكي، ويُسحب منه عند ظهور فرصة جديدة. وعند تزاحم الفرص في اللحظة نفسها يُقدَّم الأعلى توافقًا.</p></div>
       <div><h4>قسمة الصفقة</h4><p>نصف الكمية يُباع عند الهدف الأول (${R.t1_atr}×ATR فوق الدخول)، ثم يُنقل الوقف إلى سعر الدخول، والنصف الباقي عند الهدف الثاني (${R.t2_atr}×ATR).</p></div>
       <div><h4>الخروج</h4><p>عند الوقف، أو الهدفين، أو انعكاس التوافق إلى هابط، أو مرور ${R.max_hold} يومًا.</p></div>
       <div><h4>التكاليف</h4><p>عمولة ${R.fees.sa*100}% للسوق السعودي، و${R.fees.us*100}% للأسهم الأمريكية، و${R.fees.cx*100}% للعملات، وانزلاق سعري ${R.slip*100}% في كل تنفيذ.</p></div>
-      <div><h4>الحسابات</h4><p>كل أصل له حساب مستقل يبدأ بـ $${nf(B.per_asset_usd,0)} (الأسهم السعودية 11,250 ريال). المحاكاة بأموال افتراضية، والقرارات تُتخذ آليًا ولا تُعدَّل يدويًا.</p></div></div>`;}}
+      <div><h4>المحفظة</h4><p>محفظة واحدة تبدأ بـ $${nf(B.totals.start_usd,0)} وتتداول ${B.universe} أصلًا بين الأسهم السعودية والأمريكية والعملات المشفرة. الأسهم السعودية تُحسب بالريال وتُحوَّل للدولار بسعر 3.75. المحاكاة بأموال افتراضية، والقرارات آلية ولا تُعدَّل يدويًا.</p></div></div>`;}}
   function drawCurve(cv,vals,base){if(!cv)return;const W=cv.parentElement.clientWidth,H=170,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
     const g=cv.getContext('2d');g.scale(dpr,dpr);const v=vals.length?vals:[base];const all=v.concat([base]);let lo=Math.min(...all),hi=Math.max(...all);const pd=(hi-lo)*.15||base*.002;lo-=pd;hi+=pd;
     const X=i=>10+(W-20)*(v.length>1?i/(v.length-1):1),Y=y=>12+(H-30)*(1-(y-lo)/(hi-lo));const col=v[v.length-1]>=base?'#4CC285':'#F06A5C';
