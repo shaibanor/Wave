@@ -9,9 +9,13 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pro')
 UA = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'}
 SA = ['8311', '1120', '4340', '2222', '1211', '1180', '7010', '2010', '2082', '4013', '1010', '1150']
 US = ['GOOGL', 'META', 'AVGO', 'TSM', 'JPM', 'LLY', 'V']
+SA_X = ['2280', '4190', '1060', '5110', '2050', '1050', '2020', '4280']
+US_X = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA', 'NFLX', 'AMD', 'COST', 'BRK-B', 'UNH', 'XOM', 'WMT', 'SPY', 'QQQ', 'GLD']
 STOCKS = [(c, f'{c}.SR', 'sa') for c in SA] + [(c, c, 'us') for c in US]
+EXTRA = [(c, f'{c}.SR', 'sa') for c in SA_X] + [(c, c, 'us') for c in US_X]
 CX = {'BTC': 'BTCUSDT', 'ETH': 'ETHUSDT', 'BNB': 'BNBUSDT', 'XRP': 'XRPUSDT', 'SOL': 'SOLUSDT',
-      'TRX': 'TRXUSDT', 'DOGE': 'DOGEUSDT', 'ZEC': 'ZECUSDT', 'LINK': 'LINKUSDT', 'ADA': 'ADAUSDT'}
+      'TRX': 'TRXUSDT', 'DOGE': 'DOGEUSDT', 'ZEC': 'ZECUSDT', 'LINK': 'LINKUSDT', 'ADA': 'ADAUSDT',
+      'AVAX': 'AVAXUSDT', 'DOT': 'DOTUSDT', 'LTC': 'LTCUSDT', 'BCH': 'BCHUSDT', 'NEAR': 'NEARUSDT'}
 CX_TF = {'1h': 500, '4h': 500, '1d': 1000, '1w': 400, '1M': 150}
 NOW = dt.datetime.now(dt.timezone.utc)
 
@@ -66,17 +70,22 @@ def to4h(rows1h):
 
 def stocks_full(status):
     import yfinance as yf
-    for c, sym, kind in STOCKS:
+    for c, sym, kind in STOCKS + EXTRA:
+        extra = (c, sym, kind) in EXTRA
         try:
             t = yf.Ticker(sym)
             d = frame_rows(t.history(period='2y', interval='1d', auto_adjust=False, actions=False), True)
             m = frame_rows(t.history(period='max', interval='1mo', auto_adjust=False, actions=False), True)
             obj = {'id': c, 'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'd': [x[:6] for x in d], 'm': [x[:6] for x in m]}
             try:
+                if extra:
+                    raise StopIteration
                 h1 = frame_rows(t.history(period='730d', interval='1h', auto_adjust=False, actions=False), False)
                 if len(h1) >= 60:
                     obj['1h'] = [x[:6] for x in h1[-500:]]
                     obj['4h'] = to4h(h1)[-500:]
+            except StopIteration:
+                pass
             except Exception as e:
                 status.setdefault('notes', []).append(f'{c} 1h: {str(e)[:80]}')
             if len(d) < 60:
