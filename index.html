@@ -561,6 +561,37 @@ html:has(.vxo:not([hidden])) .bot-fab{display:none}
 .bp-in button{width:44px;height:44px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .bp-in svg{width:20px;height:20px}
 
+.hw{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px}
+.hw-3d{position:relative;width:min(190px,52vw);aspect-ratio:1;perspective:700px}
+.hw-case{width:100%;height:100%;border-radius:50%;transform:rotateX(14deg) rotateY(-10deg);transform-style:preserve-3d;animation:hwsw 9s ease-in-out infinite;
+  filter:drop-shadow(0 18px 18px rgba(0,0,0,.55)) drop-shadow(0 0 22px rgba(201,165,92,.25))}
+.hw-case svg{width:100%;height:100%;display:block}
+@keyframes hwsw{0%,100%{transform:rotateX(14deg) rotateY(-12deg)}50%{transform:rotateX(10deg) rotateY(12deg)}}
+.hw-crown{position:absolute;right:-7px;top:50%;width:12px;height:22px;margin-top:-11px;border-radius:3px;background:repeating-linear-gradient(0deg,#8E6A2C 0 2px,#E9CF8F 2px 4px);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.hw-leg{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;font-size:.8rem;color:#A9B7C4}
+.hw-leg span{display:inline-flex;align-items:center;gap:6px}.hw-leg b{color:#E9CF8F;font-size:.85rem}
+.hw-leg i{width:14px;height:3px;border-radius:2px;display:inline-block}.lg-g{background:#E9CF8F}.lg-r{background:#E0605A}
+.wz text{font-family:'JetBrains Mono',monospace;text-anchor:middle;dominant-baseline:middle}
+.wz-bn{fill:#F3E7CC;font-size:8.5px;font-weight:600}.wz-bd{fill:#E9CF8F}
+.wz-sun line{stroke:#7FB4DA;stroke-width:.5}
+.wz-min line{stroke:#C9D6E2;stroke-width:.9;opacity:.6}
+.wz-ix{fill:#E9CF8F;stroke:#8E6A2C;stroke-width:.4}
+.wz-dw{fill:#F4EFE4;stroke:#C9A55C;stroke-width:1}.wz-dt{fill:#0A1724;font-size:9px;font-weight:700;dominant-baseline:auto!important}
+.wz-t1{fill:#E9CF8F;font-size:7px;font-family:'IBM Plex Sans Arabic',sans-serif!important}.wz-t2{fill:#7FB4DA;font-size:5.5px;letter-spacing:1.6px}
+.wz-hh{fill:#E9CF8F;stroke:#8E6A2C;stroke-width:.6}.wz-lume{fill:#EAF6FF;opacity:.9}
+.wz-gmt{fill:#E0605A;stroke:#8E1F1A;stroke-width:.6}
+.wz-sec{stroke:#E0605A;stroke-width:1.2}.wz-secd{fill:#E0605A}
+.wz.mini .wz-ix{stroke-width:0}
+/* robot: mini watches on its sides and a standing label above its head */
+.bf.r,.bf.l{padding:3px}
+.bf.r .wz,.bf.l .wz{width:100%;height:100%}
+.bot-lab{direction:rtl;align-self:flex-start;background:rgba(10,23,36,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#F7E7BC;border:1px solid rgba(233,207,143,.45);
+  font:600 .76rem var(--f-body);padding:5px 11px;border-radius:12px 12px 12px 4px;box-shadow:0 6px 18px rgba(0,0,0,.22);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;animation:blab 3.2s ease-in-out infinite}
+.bot-lab i{width:6px;height:6px;border-radius:50%;background:#2FB37A;box-shadow:0 0 0 3px rgba(47,179,122,.25)}
+@keyframes blab{50%{transform:translateY(-3px)}}
+html.bot-on .bot-lab{display:none}
+@media (prefers-reduced-motion:reduce){.hw-case,.bot-lab{animation:none!important}}
+
 html.locked body{overflow:hidden}
 html.locked .wrap{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#0A1724;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
@@ -601,7 +632,10 @@ html.locked .gate{display:flex}
       <span class="rule" aria-hidden="true"></span>
       <h1>التحليل الخاص</h1>
       <p class="hb-sub">الأسهم السعودية والعالمية · العملات المشفرة · المؤشرات والسلع</p>
-      <p class="hb-q">أين سيغلق السعر هذا الأسبوع؟ منطقة متوقعة قبل بداية كل أسبوع، ثم نتحقق منها بعد الإغلاق.</p>
+      <p class="hb-q">أين سيغلق السعر هذا الأسبوع؟ منطقة متوقعة قبل بداية كل أسبوع، ثم نتحقق منها بعد الإغلاق.</p><div class="hw" aria-label="الساعة: توقيت الرياض وتوقيت غرينتش">
+      <div class="hw-3d"><div class="hw-case" data-watch="full"></div><span class="hw-crown" aria-hidden="true"></span></div>
+      <div class="hw-leg"><span><i class="lg-g"></i>العقارب الذهبية: الرياض <b class="num" id="wzR">--:--</b></span><span><i class="lg-r"></i>العقرب الأحمر: غرينتش <b class="num" id="wzG">--:--</b></span></div>
+    </div>
     </div>
   </header>
 
@@ -733,12 +767,13 @@ html.locked .gate{display:flex}
   </div>
 
   <div class="bot-fab">
+    <span class="bot-lab" aria-hidden="true"><i></i>مساعد التحليل الذكي</span>
     <span class="bot-tip" id="botTip" hidden>اسألني عن أي سهم أو عملة</span>
     <button class="bot-btn" id="botBtn" type="button" aria-label="افتح مساعد التحليل" aria-expanded="false" aria-controls="botPanel">
       <span class="bot-glow" aria-hidden="true"></span>
       <span class="bot-st" aria-hidden="true"><span class="bot-bob"><span class="bot-h">
         <i class="bf f"><b class="eye"></b><b class="eye"></b><b class="mouth"></b><b class="bsig"></b></i>
-        <i class="bf k"></i><i class="bf r"><b class="ear"></b></i><i class="bf l"><b class="ear"></b></i>
+        <i class="bf k"></i><i class="bf r"><b data-watch="mini"></b></i><i class="bf l"><b data-watch="mini"></b></i>
         <i class="bf t"><b class="ant"></b></i><i class="bf u"></i>
       </span></span></span>
       <span class="bot-sh" aria-hidden="true"></span>
@@ -1830,8 +1865,68 @@ html.locked .gate{display:flex}
   form.addEventListener('submit',e=>{e.preventDefault();const v=inp.value;inp.value='';ask(v);});
   log.addEventListener('click',e=>{const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
-  if(!LS.get('bot-seen'))setTimeout(()=>{if(panel.hidden&&!document.documentElement.classList.contains('locked'))tip.hidden=false;setTimeout(()=>{tip.hidden=true;},7000);},2500);
   window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
+})();
+
+</script>
+<script>
+(function(){
+  /* Original dual-time watch: hour/minute/seconds = Riyadh, red arrow hand on the 24h bezel = GMT */
+  const NS='http://www.w3.org/2000/svg';
+  let uid=0;
+  function face(mini){const u='w'+(++uid);
+    const P=(a,r)=>[100+r*Math.sin(a*Math.PI/180),100-r*Math.cos(a*Math.PI/180)];
+    let bez='',idx='',min='';
+    if(!mini){
+      for(let i=0;i<24;i++){const a=i*15,[x,y]=P(a,85.5);
+        bez+=i%2===0?`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" transform="rotate(${a>90&&a<270?a+180:a} ${x.toFixed(1)} ${y.toFixed(1)})" class="wz-bn">${i===0?24:i}</text>`
+          :`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.6" class="wz-bd"/>`;}
+      for(let i=0;i<60;i++){if(i%5===0)continue;const [x1,y1]=P(i*6,66),[x2,y2]=P(i*6,69.5);min+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;}}
+    for(let i=0;i<12;i++){const a=i*30;if(!mini&&i===3)continue;const w=i===0?(mini?4:4):(mini?3.2:3),l=i===0?(mini?16:15):(mini?13:12);
+      const r0=mini?78:68;if(i===0&&!mini){idx+=`<rect x="${100-6.2}" y="${100-r0}" width="${w}" height="${l}" rx="1" transform="rotate(0 100 100)" class="wz-ix"/><rect x="${100+2.2}" y="${100-r0}" width="${w}" height="${l}" rx="1" class="wz-ix"/>`;continue;}
+      idx+=`<rect x="${100-w/2}" y="${100-r0}" width="${w}" height="${l}" rx="1" transform="rotate(${a} 100 100)" class="wz-ix"/>`;}
+    return `<svg viewBox="0 0 200 200" class="wz${mini?' mini':''}" aria-hidden="true">
+<defs>
+ <radialGradient id="${u}d" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1E4466"/><stop offset=".55" stop-color="#0D2338"/><stop offset="1" stop-color="#050E18"/></radialGradient>
+ <linearGradient id="${u}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7E7BC"/><stop offset=".35" stop-color="#C9A55C"/><stop offset=".6" stop-color="#8E6A2C"/><stop offset="1" stop-color="#E9CF8F"/></linearGradient>
+ <linearGradient id="${u}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E2A44"/><stop offset=".5" stop-color="#0E2A44"/><stop offset=".5" stop-color="#7A1F1C"/><stop offset="1" stop-color="#5A1512"/></linearGradient>
+ <radialGradient id="${u}s" cx="50%" cy="50%" r="50%"><stop offset=".86" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient>
+ <linearGradient id="${u}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+</defs>
+<circle cx="100" cy="100" r="99" fill="url(#${u}g)"/>
+<circle cx="100" cy="100" r="95" fill="#2a1d08" opacity=".35"/>
+${mini?`<circle cx="100" cy="100" r="92" fill="url(#${u}d)"/>`:`<circle cx="100" cy="100" r="94" fill="url(#${u}b)"/><circle cx="100" cy="100" r="94" fill="none" stroke="url(#${u}g)" stroke-width="1.4"/>
+<g class="wz-bz">${bez}</g><circle cx="100" cy="100" r="77" fill="url(#${u}g)"/><circle cx="100" cy="100" r="74" fill="url(#${u}d)"/>`}
+<g class="wz-sun" opacity=".18">${Array.from({length:36},(_,i)=>`<line x1="100" y1="100" x2="${P(i*10,mini?92:74)[0].toFixed(1)}" y2="${P(i*10,mini?92:74)[1].toFixed(1)}"/>`).join('')}</g>
+${mini?'':`<g class="wz-min">${min}</g>`}
+<g>${idx}</g>
+${mini?'':`<rect x="146" y="93" width="17" height="14" rx="2" class="wz-dw"/><text x="154.5" y="104.2" class="wz-dt">--</text>
+<image href="" x="80" y="56" width="40" height="11" class="wz-sig" preserveAspectRatio="xMidYMid meet"/>
+<text x="100" y="138" class="wz-t1">GMT · الرياض</text><text x="100" y="149" class="wz-t2">DUAL TIME</text>`}
+<g class="wz-h-gmt"><path d="M99 104 L99 ${mini?28:34} L95.5 ${mini?34:40} L100 ${mini?18:24} L104.5 ${mini?34:40} L101 ${mini?28:34} L101 104Z" class="wz-gmt"/></g>
+<g class="wz-h-h"><path d="M100 112 L96 100 L97.5 ${mini?58:60} L100 ${mini?50:52} L102.5 ${mini?58:60} L104 100Z" class="wz-hh"/><path d="M100 98 L98.6 64 L100 58 L101.4 64Z" class="wz-lume"/></g>
+<g class="wz-h-m"><path d="M100 114 L96.8 100 L98.4 ${mini?20:32} L100 ${mini?12:26} L101.6 ${mini?20:32} L103.2 100Z" class="wz-hh"/><path d="M100 96 L99 40 L100 34 L101 40Z" class="wz-lume"/></g>
+${mini?'':`<g class="wz-h-s"><line x1="100" y1="122" x2="100" y2="30" class="wz-sec"/><circle cx="100" cy="42" r="3" class="wz-secd"/></g>`}
+<circle cx="100" cy="100" r="${mini?7:5}" fill="url(#${u}g)"/><circle cx="100" cy="100" r="1.8" fill="#3a2a0c"/>
+<circle cx="100" cy="100" r="${mini?92:74}" fill="url(#${u}s)"/>
+<path d="M30 70 A75 75 0 0 1 150 38 L140 52 A60 60 0 0 0 44 78Z" fill="url(#${u}r)"/>
+</svg>`;}
+  function mount(){
+    document.querySelectorAll('[data-watch]').forEach(el=>{if(el.dataset.done)return;el.dataset.done='1';el.innerHTML=face(el.dataset.watch==='mini');});
+    const sig=getComputedStyle(document.documentElement).getPropertyValue('--vsig').trim().replace(/^url\(["']?|["']?\)$/g,'');
+    if(sig)document.querySelectorAll('.wz-sig').forEach(i=>i.setAttribute('href',sig));}
+  const rot=(sel,a)=>document.querySelectorAll(sel).forEach(g=>g.setAttribute('transform',`rotate(${a.toFixed(2)} 100 100)`));
+  const pad=n=>String(n).padStart(2,'0');
+  function tick(){const now=Date.now(),g=new Date(now),r=new Date(now+3*3600e3);
+    const s=r.getUTCSeconds()+g.getUTCMilliseconds()/1000,m=r.getUTCMinutes()+s/60,h=(r.getUTCHours()%12)+m/60,gh=g.getUTCHours()+g.getUTCMinutes()/60;
+    rot('.wz-h-s',s*6);rot('.wz-h-m',m*6);rot('.wz-h-h',h*30);rot('.wz-h-gmt',gh*15);
+    document.querySelectorAll('.wz-dt').forEach(t=>{const d=String(r.getUTCDate());if(t.textContent!==d)t.textContent=d;});
+    const a=document.getElementById('wzR'),b=document.getElementById('wzG');
+    if(a)a.textContent=`${pad(r.getUTCHours())}:${pad(r.getUTCMinutes())}`;if(b)b.textContent=`${pad(g.getUTCHours())}:${pad(g.getUTCMinutes())}`;}
+  mount();tick();
+  const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setInterval(()=>{if(!document.hidden)tick();},reduce?1000:125);
+  window.WAVE_WATCH={mount};
 })();
 
 </script>
