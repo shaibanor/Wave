@@ -29,6 +29,9 @@ const H=process.env.GATE_HASH;const base='http://localhost:8099/';
   await p.screenshot({path:`qa/chart_sol_${tag}.png`,fullPage:true});
   for(const d of ['ai','news','sig','sum']){await p.evaluate(d=>document.querySelector(`[data-dt="${d}"]`).click(),d);await p.waitForTimeout(1500);}
   log.push(tag+' trade ai: '+(await p.evaluate(()=>document.getElementById('tvDet').textContent.replace(/\s+/g,' ').slice(0,120))));
+  await p.evaluate(()=>{document.getElementById('cxIndBtn').click();});await p.waitForTimeout(400);
+  for(const k of ['rsi','piv','hud']){await p.evaluate(k=>document.querySelector(`[data-cxs="${k}"]`).click(),k);await p.waitForTimeout(400);}
+  log.push(tag+' v19 chips: '+(await p.evaluate(()=>document.querySelectorAll('[data-cxs][aria-pressed="true"]').length))+' hud: '+(await p.evaluate(()=>!!document.getElementById('cxHud')))+' brush tool: '+(await p.evaluate(()=>!!document.querySelector('[data-cxt="brush"]')))+' gl: '+(await p.evaluate(()=>{const g=document.querySelector('.cx-gl');return g?(g.hidden?'hidden':'on'):'none';})));
   log.push(tag+' chart panes: '+(await p.evaluate(()=>document.querySelectorAll('#cxPanes .cx-pane').length)));
   await p.close();}
  fs.writeFileSync('qa/log.txt',log.join('\n')+'\n');console.log(log.join('\n'));await b.close();})();
