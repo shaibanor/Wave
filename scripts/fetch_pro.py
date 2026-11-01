@@ -209,6 +209,7 @@ def gnews(q, lang):
     for it in root.iter('item'):
         t = (it.findtext('title') or '').strip()
         src = (it.findtext('source') or '').strip()
+        sname = src.split(' : ')[0].strip()
         if src and t.endswith(' - ' + src):
             t = t[: -len(src) - 3]
         try:
@@ -216,7 +217,7 @@ def gnews(q, lang):
         except Exception:
             d = ''
         if t and it.findtext('link'):
-            out.append({'t': t[:220], 'u': it.findtext('link'), 's': src[:40], 'd': d, 'lang': lang})
+            out.append({'t': t[:220], 'u': it.findtext('link'), 's': sname[:40], 'd': d, 'lang': lang})
     return out
 
 
