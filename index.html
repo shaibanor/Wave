@@ -669,6 +669,127 @@ html:has(.vxo:not([hidden])) .bot-fab{display:none}
 .bp-in button{width:44px;height:44px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .bp-in svg{width:20px;height:20px}
 
+/* launcher above the cube */
+.tvl{margin:26px 0 0}
+.tvl-card{width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;border:1px solid #2A2E39;cursor:pointer;text-align:start;color:#D1D4DC;
+  background:radial-gradient(120% 140% at 0% 0%,rgba(41,98,255,.22),transparent 55%),linear-gradient(160deg,#1E222D,#131722);box-shadow:0 18px 40px -22px rgba(19,23,34,.9);transition:transform .2s,box-shadow .2s}
+.tvl-card:hover{transform:translateY(-2px);box-shadow:0 22px 44px -20px rgba(41,98,255,.55)}
+.tvl-ic{flex:0 0 64px;height:52px;border-radius:12px;background:#131722;border:1px solid #2A2E39;display:flex;align-items:center;justify-content:center}.tvl-ic svg{width:52px}
+.tvl-t{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}.tvl-t b{font:700 1.25rem var(--f-display);color:#fff}.tvl-t small{font-size:.8rem;color:#9598A1;line-height:1.5}
+.tvl-go{flex:0 0 auto;background:#2962FF;color:#fff;font:700 .82rem var(--f-body);padding:9px 14px;border-radius:10px}
+@media (max-width:520px){.tvl-card{flex-wrap:wrap}.tvl-go{width:100%;text-align:center}}
+
+/* the app */
+html.tv-open,html.tv-open body{overflow:hidden}
+html.tv-open .bot-fab{display:none}
+.tx-app{--b:#131722;--b2:#1E222D;--b3:#2A2E39;--t:#D1D4DC;--t2:#787B86;--bl:#2962FF;--g:#089981;--r:#F23645;
+  position:fixed;inset:0;z-index:95;background:var(--b);color:var(--t);display:flex;flex-direction:column;font-family:var(--f-body);
+  --panel:#131722;--panel2:#1E222D;--line:#2A2E39;--ink:#D1D4DC;--muted:#787B86;--grid:rgba(42,46,57,.6);--grid2:#2A2E39;--up:#089981;--down:#F23645;--accent:#2962FF;--e50:#2962FF;--e200:#FF9800;--gold:#F7C948}
+.tx-app[hidden]{display:none!important}
+.tv-top{flex:0 0 auto;display:flex;align-items:center;gap:6px;height:46px;padding:0 8px;border-bottom:1px solid var(--b3);background:var(--b);overflow-x:auto;scrollbar-width:none}
+.tv-top::-webkit-scrollbar{display:none}
+.tv-top>*{flex-shrink:0}
+.tv-brand svg{width:26px;height:26px;display:block}.tv-brand rect{fill:var(--bl)}.tv-brand path{stroke:#fff;stroke-width:2.6;stroke-linecap:round;fill:none}
+.tv-name{font:700 .95rem var(--f-display);color:#fff;margin-inline-end:6px;white-space:nowrap}
+.tv-sym{display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:6px;border:0;background:none;color:var(--t);cursor:pointer;white-space:nowrap}
+.tv-sym:hover,.tv-btn:hover,.tv-tf button:hover,.tv-ic:hover{background:var(--b3)}
+.tv-sym svg{width:16px;height:16px;fill:none;stroke:var(--t2);stroke-width:2}.tv-sym b{font:700 .92rem var(--f-num)}.tv-sym small{font-size:.74rem;color:var(--t2);max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.tv-sep{width:1px;height:24px;background:var(--b3);flex:0 0 auto}
+.tv-tf{display:flex;gap:2px}
+.tv-tf button,.tv-btn{height:32px;min-width:32px;padding:0 9px;border-radius:6px;border:0;background:none;color:var(--t);font:600 .82rem var(--f-body);cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.tv-tf button[aria-pressed="true"],.tv-btn[aria-pressed="true"]{color:var(--bl);background:rgba(41,98,255,.12)}
+.tv-tf button:disabled{opacity:.3;cursor:not-allowed}
+.tv-btn i{font:italic 700 .95rem Georgia,serif;color:var(--t)}
+.tx-app #cxType{height:32px;border-radius:6px;border:1px solid var(--b3);background:var(--b);color:var(--t);font:600 .8rem var(--f-body);padding:0 6px}
+.tv-grow{flex:1}
+.tv-ic{width:34px;height:34px;flex:0 0 34px;border-radius:6px;border:0;background:none;color:var(--t);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tv-ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tv-body{flex:1;display:flex;min-height:0}
+.tv-tools{flex:0 0 46px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-right:1px solid var(--b3);overflow-y:auto;scrollbar-width:none}
+.tv-tools::-webkit-scrollbar{display:none}
+.tv-tools button{width:36px;height:36px;flex:0 0 36px;border-radius:6px;border:0;background:none;color:var(--t);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tv-tools button:hover{background:var(--b3)}.tv-tools button[aria-pressed="true"]{color:var(--bl);background:rgba(41,98,255,.15)}.tv-tools button:disabled{opacity:.3}
+.tv-tools svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tv-tsep{width:24px;height:1px;background:var(--b3);margin:4px 0}
+.tv-center{flex:1;display:flex;flex-direction:column;min-width:0}
+.tv-wrap{flex:1;position:relative;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.tv-leg{position:absolute;top:6px;left:10px;right:80px;z-index:5;pointer-events:none}
+.tv-lt{display:flex;gap:8px;align-items:baseline;font-size:.86rem}.tv-lt b{color:var(--t);font-weight:700}.tv-lt span{color:var(--t2);font-size:.78rem}
+.tx-app .cx-leg{margin:2px 0 0;min-height:0;font-size:.72rem}
+.tx-app .cx-hint{position:absolute;top:56px;left:50%;transform:translateX(-50%);z-index:6;background:var(--bl);color:#fff;padding:4px 10px;border-radius:6px;font-size:.78rem;pointer-events:none}
+.tx-app .cx-main{border:0;border-radius:0;flex:0 0 auto}
+.tx-app .cx-pane{border:0;border-top:1px solid var(--b3);border-radius:0}
+.tx-app .cx-pt{color:var(--t2)}
+.tv-bot{flex:0 0 28px;display:flex;align-items:center;gap:8px;padding:0 10px;border-top:1px solid var(--b3);font-size:.72rem;color:var(--t2);white-space:nowrap;overflow:hidden}
+.tv-bot #cxStat{display:flex;align-items:center;gap:6px}
+.tv-side{flex:0 0 330px;display:flex;flex-direction:column;border-left:1px solid var(--b3);min-height:0;background:var(--b)}
+.tv-wl{flex:0 0 42%;display:flex;flex-direction:column;min-height:0;border-bottom:1px solid var(--b3)}
+.tv-wh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px 4px}.tv-wh b{font-size:.86rem}.tv-wh small{font-size:.66rem;color:var(--t2)}
+.tv-wcol,.tv-list button{display:grid;grid-template-columns:1.5fr 1fr .9fr;gap:6px;align-items:center;padding:4px 12px;text-align:right}
+.tv-wcol{font-size:.68rem;color:var(--t2);border-bottom:1px solid var(--b3)}.tv-wcol span:first-child,.tv-list .tv-s{text-align:left}
+.tv-list{overflow-y:auto;flex:1}
+.tv-list button{width:100%;border:0;background:none;color:var(--t);cursor:pointer;font-size:.78rem;border-left:2px solid transparent}
+.tv-list button:hover{background:var(--b2)}.tv-list button.on{background:rgba(41,98,255,.12);border-left-color:var(--bl)}
+.tv-s{display:flex;flex-direction:column;min-width:0}.tv-s b{font:700 .78rem var(--f-num)}.tv-s small{font-size:.66rem;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tv-list .up,.tx-app .up{color:var(--g)}.tv-list .down,.tx-app .down{color:var(--r)}
+.tv-grp{position:sticky;top:0;background:var(--b);font-size:.66rem;color:var(--t2);padding:6px 12px 2px;letter-spacing:.02em;z-index:1}
+.tv-det{flex:1;display:flex;flex-direction:column;min-height:0}
+.tv-tabs{display:flex;border-bottom:1px solid var(--b3)}.tv-tabs button{flex:1;height:34px;border:0;background:none;color:var(--t2);font:600 .76rem var(--f-body);cursor:pointer;border-bottom:2px solid transparent}
+.tv-tabs button[aria-selected="true"]{color:var(--t);border-bottom-color:var(--bl)}
+.tv-dbody{flex:1;overflow-y:auto;padding:12px;font-size:.84rem}
+.tv-px{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}.tv-px b{font-size:1.6rem;color:#fff}.tv-px span{font-size:.86rem}
+.tv-kv{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.tv-kv div{background:var(--b2);border-radius:6px;padding:6px 8px;display:flex;flex-direction:column}.tv-kv span{font-size:.68rem;color:var(--t2)}
+.tv-rng{margin:10px 0;direction:ltr;text-align:left}.tv-rng span{font-size:.7rem;color:var(--t2)}.tv-rng div{position:relative;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--r),var(--t2),var(--g));margin:8px 0 4px}
+.tv-rng i{position:absolute;top:-4px;width:3px;height:12px;background:#fff;border-radius:2px;transform:translateX(-50%)}.tv-rng p{display:flex;justify-content:space-between;margin:0;font-size:.74rem}
+.tv-tech{background:var(--b2);border-radius:8px;padding:10px;margin-top:10px;display:flex;flex-direction:column;gap:4px}.tv-tech>span{font-size:.7rem;color:var(--t2)}
+.tv-tech>b{font-size:1.15rem}.tv-tech>b.up{color:var(--g)}.tv-tech>b.down{color:var(--r)}.tv-tech>b.flat{color:var(--t2)}.tv-tech small{color:var(--t2)}
+.tv-dots{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.tv-dots span{font-size:.68rem;padding:2px 7px;border-radius:9px;background:var(--b3)}
+.tv-dots .up{background:rgba(8,153,129,.2);color:var(--g)}.tv-dots .down{background:rgba(242,54,69,.18);color:var(--r)}
+.tv-ai{display:flex;flex-direction:column;gap:8px}.tv-ai-h{display:flex;align-items:center;gap:8px}.tv-ai-h svg{width:18px;height:18px;fill:var(--bl)}.tv-ai-h b{font-size:.9rem}
+.tv-ai-s{background:var(--b2);border-radius:8px;padding:8px 10px;border-right:3px solid var(--b3)}.tv-ai-s>span{font-size:.68rem;color:var(--t2)}.tv-ai-s p{margin:2px 0 0;line-height:1.7}
+.tv-ai-s.v{border-right-color:var(--bl)}.tv-ai-s.v.agree{border-right-color:var(--g)}.tv-ai-s.v.conflict{border-right-color:var(--r)}
+.tv-ai-s b.up{color:var(--g)}.tv-ai-s b.down{color:var(--r)}
+.tx-app .cxs-live,.tx-app .cxs-g>div{background:var(--b2)}.tx-app .cxs-l li{background:var(--b2)}.tx-app .cxs-t{font-size:.74rem}
+.tv-modal{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding:60px 12px 12px}
+.tv-modal[hidden]{display:none}
+.tv-mbox{width:min(520px,100%);max-height:80vh;display:flex;flex-direction:column;background:var(--b2);border:1px solid var(--b3);border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.tv-mh{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--b3)}
+.tv-q{margin:10px 12px;height:38px;border-radius:6px;border:1px solid var(--b3);background:var(--b);color:var(--t);padding:0 12px;font:500 15px var(--f-body)}
+.tv-q:focus{outline:1px solid var(--bl)}
+.tv-ml{overflow-y:auto;padding:0 6px 10px}
+.tv-ml label,.tv-ml button{width:100%;display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:6px;border:0;background:none;color:var(--t);cursor:pointer;text-align:start;font-size:.86rem}
+.tv-ml label:hover,.tv-ml button:hover{background:var(--b3)}.tv-ml small{margin-inline-start:auto;color:var(--t2);font-size:.7rem}.tv-ml label[hidden]{display:none}
+.tv-ml button b{font:700 .84rem var(--f-num);min-width:64px}
+.tv-ml input{accent-color:var(--bl);width:16px;height:16px}
+@media (max-width:899px){
+  .tv-side{position:absolute;left:0;right:0;bottom:0;height:62%;z-index:15;border-left:0;border-top:1px solid var(--b3);transform:translateY(100%);transition:transform .25s;box-shadow:0 -16px 40px rgba(0,0,0,.5)}
+  .tx-app.side-on .tv-side{transform:none}
+  .tv-tools{flex-basis:40px}.tv-tools button{width:32px;height:32px;flex-basis:32px}
+  .tv-btn{padding:0 7px;font-size:.76rem}.tv-name{display:none}.tv-sym small{display:none}
+  .tv-leg{right:60px}.tx-app .cx-leg .cx-li{display:none}
+}
+/* news reading */
+.na{display:flex;flex-direction:column;gap:8px}
+.na-h{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}.na-h small{color:var(--muted);font-size:.74rem}
+.na-l.pos{color:var(--up)}.na-l.neg{color:var(--down)}.na-l.neu,.na-l.stale,.na-l.none{color:var(--muted)}
+.na-bar{position:relative;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--down),var(--muted),var(--up));opacity:.8}
+.na-bar i{position:absolute;top:-4px;width:4px;height:14px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--panel)}
+.na-bar,.na-sc{direction:ltr}
+.na-sc{display:flex;justify-content:space-between;font-size:.66rem;color:var(--muted)}
+.na-v{margin:0;padding:8px 10px;border-radius:8px;background:var(--panel2);border-inline-start:3px solid var(--accent);font-size:.86rem;line-height:1.7}
+.na-v.agree{border-color:var(--up)}.na-v.conflict{border-color:var(--down)}
+.na-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.na-list li{display:flex;flex-direction:column;gap:2px;padding:7px 9px;border-radius:8px;background:var(--panel2)}
+.na-list a{color:var(--ink);text-decoration:none;font-size:.84rem;line-height:1.5}.na-list a:hover{text-decoration:underline}.na-list small{color:var(--muted);font-size:.7rem}
+.na-t{align-self:flex-start;font-size:.64rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--grid2);color:var(--muted)}
+.na-t.pos{background:color-mix(in srgb,var(--up) 18%,transparent);color:var(--up)}.na-t.neg{background:color-mix(in srgb,var(--down) 18%,transparent);color:var(--down)}
+.na-n{margin:0;font-size:.7rem;color:var(--muted)}
+
+html.tv-open .wrap{transform:scale(.965);filter:blur(4px) brightness(.7);transition:transform .6s cubic-bezier(.2,.8,.2,1),filter .6s}
+.wrap{transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s}
+.tv-glint{position:absolute;inset:0;z-index:40;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(41,98,255,.35) 45%,rgba(255,255,255,.18) 50%,rgba(41,98,255,.25) 55%,transparent 70%);background-size:250% 100%;mix-blend-mode:screen}
+.tvl-card.pressed{transform:scale(.97);box-shadow:0 0 0 2px #2962FF,0 22px 44px -20px rgba(41,98,255,.7)}
+
 html.locked body{overflow:hidden}
 html.locked .wrap{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#0A1724;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
@@ -700,6 +821,7 @@ html.locked .gate{display:flex}
     <p class="gate-err" id="gateErr" aria-live="polite"></p>
   </div>
 </div>
+<div class="tx-app" id="txApp" hidden dir="ltr" role="dialog" aria-modal="true" aria-label="منصة تريدنج"></div>
 <div class="wrap">
   <header class="hero-band">
     <canvas id="waves" aria-hidden="true"></canvas>
@@ -718,7 +840,6 @@ html.locked .gate{display:flex}
   <nav class="tabs" role="tablist">
     <button id="t-now" role="tab" data-t="now" aria-selected="true">الآن</button>
     <button id="t-pro" role="tab" data-t="pro" aria-selected="false">التحليل المتقدم</button>
-    <button id="t-chart" role="tab" data-t="chart" aria-selected="false">الشارت</button>
     <button id="t-candles" role="tab" data-t="candles" aria-selected="false">الشموع</button>
     <button id="t-weeks" role="tab" data-t="weeks" aria-selected="false">الأسابيع</button>
     <button id="t-news" role="tab" data-t="news" aria-selected="false">الأخبار</button>
@@ -774,7 +895,6 @@ html.locked .gate{display:flex}
     <div class="panel pcard" id="pCard" aria-live="polite"></div>
   </section>
 
-  <section id="v-chart" class="view" hidden><div class="panel cx" id="cxRoot"></div></section>
   <section id="v-lock" class="view" hidden></section>
 
   <section id="v-how" class="view" hidden>
@@ -821,6 +941,13 @@ html.locked .gate{display:flex}
     </div>
   </section>
 
+  <section class="tvl" aria-label="منصة تريدنج">
+    <button class="tvl-card" id="tvOpen" type="button">
+      <span class="tvl-ic" aria-hidden="true"><svg viewBox="0 0 64 40"><path d="M2 32 L14 24 L22 28 L34 14 L44 20 L62 4" fill="none" stroke="#2962FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g fill="#089981"><rect x="10" y="18" width="4" height="10" rx="1"/><rect x="30" y="10" width="4" height="12" rx="1"/><rect x="50" y="6" width="4" height="10" rx="1"/></g><g fill="#F23645"><rect x="20" y="22" width="4" height="9" rx="1"/><rect x="40" y="16" width="4" height="8" rx="1"/></g></svg></span>
+      <span class="tvl-t"><b>تريدنج</b><small>منصة الشارت الكاملة: 19 مؤشرًا، أدوات رسم، قائمة متابعة، وتحليل ذكي يجمع الأرقام والأخبار</small></span>
+      <span class="tvl-go">افتح المنصة</span>
+    </button>
+  </section>
   <section class="vx" aria-label="سجل الصفقات">
     <div class="vx-stage">
       <div class="vx-halo" aria-hidden="true"></div>
@@ -1148,6 +1275,7 @@ html.locked .gate{display:flex}
       <section class="blk"><h3>التدقيق المعاكس</h3><p class="small">قبل اعتماد القراءة تُفحص الأدلة التي تعاكسها. كل دليل معاكس يخفض نسبة التوافق 10 نقاط.</p>
         <ul class="ll warn">${au.length?au.map(x=>`<li>${x}</li>`).join(''):'<li class="muted">لا توجد أدلة معاكسة قوية حاليًا</li>'}</ul></section>
       ${scenMap(A)}
+      <section class="blk"><h3>الأرقام والأخبار معًا</h3><div id="pNews" class="muted small">جارٍ قراءة الأخبار…</div></section>
       <section class="blk"><h3>اختبار تاريخي للمؤشرات</h3>${btTxt}</section>
       <p class="disc">تحليل تعليمي آلي من بيانات عامة، وليس توصية استثمارية ولا دعوة للشراء أو البيع.</p>`;}
 
@@ -1205,7 +1333,8 @@ html.locked .gate{display:flex}
     function renderAll(keep){if(!S.active)return;renderTF();renderHead();let A=null;try{A=analyse();}catch(e){console.error(e);}
     if(!A){$('pCard').innerHTML='<div class="blk muted">لا تكفي البيانات لهذا الإطار.</div>';return;}
     try{drawChart(A,keep);}catch(e){console.error(e);$('cMain').innerHTML='<div class="empty">تعذر رسم الشارت.</div>';}
-    try{renderCard(A);}catch(e){console.error(e);$('pCard').innerHTML='<div class="blk muted">تعذر إكمال التحليل لهذا الإطار.</div>';}}
+    try{renderCard(A);}catch(e){console.error(e);$('pCard').innerHTML='<div class="blk muted">تعذر إكمال التحليل لهذا الإطار.</div>';}
+    if(window.NEWSAI){const id=S.id;NEWSAI.forAsset(id).then(nw=>{const e=$('pNews');if(e&&S.id===id){e.classList.remove('muted','small');e.innerHTML=NEWSAI.html(nw,A.conf,{max:5});}}).catch(()=>{const e=$('pNews');if(e)e.textContent='تعذر قراءة الأخبار الآن.';});}}
 
   function summary(A){const {conf,scores,lv,sc,b,I}=A,n=b.length-1,a=I.atr[n];
     const chip=tf=>{const x=scores[tf];if(!x)return'';return`<span class="tfchip"><span class="dot ${DIRC[x.dir]}"></span>${TFN[tf]}</span>`;};
@@ -1315,8 +1444,49 @@ html.locked .gate{display:flex}
 })();
 
 (function(){
+  /* Keyword-based reading of headlines (Arabic + English), weighted by recency, then compared with the technical reading */
+  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const nz=s=>String(s||'').toLowerCase().replace(/[ً-ٟـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
+  const POS=['ارتفاع','يرتفع','ترتفع','ارتفعت','ارباح','ربح','نمو','توزيع','توزيعات','صفقه','اتفاقيه','موافقه','يوافق','ترقيه','قياسي','مكاسب','زياده','توسع','تفوق','ايجابي','شراكه','عقد','تحسن','صعود','يقفز','قفزه','تعافي','يتجاوز','اعلي مستوي',
+    'beat','beats','surge','surges','soar','soars','jump','jumps','rally','rallies','record','upgrade','upgraded','raises','raised','growth','profit','profits','gain','gains','strong','stronger','bullish','outperform','approval','approved','wins','expands','expansion','partnership','deal','dividend','buyback','rebound','rebounds','rise','rises','climbs','tops','boost','boosts','optimism','higher','inflows','all-time high'];
+  const NEG=['خساره','خسائر','تراجع','تراجعت','انخفاض','انخفضت','هبوط','يهبط','غرامه','تحقيق','استقاله','دعوي','مخالفه','ايقاف','تعليق','تحذير','ضعف','سلبي','تخفيض','شطب','افلاس','تاجيل','ازمه','عقوبات','ركود','تضخم',
+    'miss','misses','plunge','plunges','fall','falls','drop','drops','slump','slumps','cut','cuts','downgrade','downgraded','loss','losses','weak','weaker','bearish','underperform','lawsuit','probe','investigation','fine','fined','recall','layoffs','decline','declines','warns','warning','crash','hack','hacked','ban','delay','tumbles','sinks','slides','selloff','sell-off','outflows','lower','fears','concerns','tariff','tariffs'];
+  const NOT=/(^|\s)(لا|لم|لن|غير|not|no|without)\s/;
+  function one(it){const t=nz((it.t||'')+' '+(it.sum||''));let p=0,n=0;const hp=[],hn=[];
+    for(const w of POS)if(t.includes(w)){p++;hp.push(w);}for(const w of NEG)if(t.includes(w)){n++;hn.push(w);}
+    if(NOT.test(t)&&p+n===1){[p,n]=[n,p];}
+    const s=p+n?(p-n)/(p+n):0;return Object.assign({},it,{sc:s,lab:s>.2?'pos':s<-.2?'neg':'neu',hits:[...hp,...hn].slice(0,4)});}
+  const age=d=>{const t=Date.parse(d);return isFinite(t)?Math.max(0,(Date.now()-t)/864e5):30;};
+  function score(items){const L=(items||[]).map(one);if(!L.length)return{n:0,score:null,label:'none',items:[]};
+    let w=0,s=0,recent=0;L.forEach(x=>{const a=age(x.d),k=Math.exp(-a/7);if(a<=14)recent++;w+=k;s+=k*x.sc;});
+    const sc=w?s/w:0;return{n:L.length,recent,score:sc,label:recent===0?'stale':sc>.15?'pos':sc<-.15?'neg':'neu',items:L,pos:L.filter(x=>x.lab==='pos').length,neg:L.filter(x=>x.lab==='neg').length};}
+  let cache=null,ct=0;
+  async function yahoo(){if(cache&&Date.now()-ct<10*60e3)return cache;for(const b of [RAW,'']){try{const r=await fetch(b+'pro/news.json?v='+Date.now(),{cache:'no-store'});if(r.ok){cache=(await r.json()).a||{};ct=Date.now();return cache;}}catch(_){}}return cache||{};}
+  async function forAsset(id){const ar=(window.WAVE_API&&WAVE_API.newsAll?WAVE_API.newsAll(id):[])||[];const en=((await yahoo())[id])||[];
+    const seen=new Set(),all=[];[...ar.map(x=>Object.assign({lang:'ar'},x)),...en.map(x=>Object.assign({lang:'en'},x))].forEach(x=>{const k=(x.t||'').slice(0,60);if(!seen.has(k)){seen.add(k);all.push(x);}});
+    all.sort((a,b)=>String(b.d).localeCompare(String(a.d)));return score(all.slice(0,20));}
+  const LAB={pos:'إيجابية',neg:'سلبية',neu:'محايدة',stale:'قديمة (لا جديد خلال أسبوعين)',none:'لا توجد أخبار'};
+  function verdict(tech,nw){const td=tech&&tech.dir?tech.dir:'flat',ts=td==='up'?1:td==='down'?-1:0;
+    if(!nw||nw.label==='none'||nw.label==='stale')return{k:'only',txt:`لا توجد أخبار حديثة كافية، فالقراءة تعتمد على الأرقام فقط (${td==='up'?'صاعدة':td==='down'?'هابطة':'محايدة'}).`};
+    const ns=nw.label==='pos'?1:nw.label==='neg'?-1:0;
+    if(ts===0&&ns===0)return{k:'flat',txt:'الأرقام محايدة والأخبار محايدة: لا يوجد دافع واضح في أي اتجاه.'};
+    if(ts&&ns===ts)return{k:'agree',txt:`الأخبار ${LAB[nw.label]} وتدعم قراءة الأرقام ${ts>0?'الصاعدة':'الهابطة'}. التوافق بينهما يقوّي القراءة، لكنه لا يضمنها.`};
+    if(ts&&ns&&ns!==ts)return{k:'conflict',txt:`تعارض: الأرقام ${ts>0?'صاعدة':'هابطة'} بينما الأخبار ${LAB[nw.label]}. التعارض يرفع احتمال التذبذب والانعكاس، والحذر هنا أولى.`};
+    if(ts===0)return{k:'news',txt:`الأرقام محايدة والأخبار ${LAB[nw.label]}؛ قد تكون الأخبار أول محرك للاتجاه التالي إن تأكدت بالسعر.`};
+    return{k:'tech',txt:`الأخبار محايدة، والقراءة تعتمد على الأرقام (${ts>0?'صاعدة':'هابطة'}).`};}
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function html(nw,tech,opt={}){const v=verdict(tech,nw);const max=opt.max||6;
+    const bar=nw.score==null?'':`<div class="na-bar"><i style="left:${(50+nw.score*50).toFixed(0)}%"></i></div><div class="na-sc"><span>سلبية</span><span>محايدة</span><span>إيجابية</span></div>`;
+    return`<div class="na"><div class="na-h"><b>قراءة الأخبار: <span class="na-l ${nw.label}">${LAB[nw.label]}</span></b><small>${nw.n?`${nw.n} خبر · ${nw.pos||0} إيجابي · ${nw.neg||0} سلبي`:''}</small></div>${bar}
+      <p class="na-v ${v.k}">${v.txt}</p>
+      ${nw.items.length?`<ul class="na-list">${nw.items.slice(0,max).map(x=>`<li class="${x.lab}"><span class="na-t ${x.lab}">${x.lab==='pos'?'إيجابي':x.lab==='neg'?'سلبي':'محايد'}</span><a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer" dir="auto">${esc(x.t)}</a><small>${esc(x.d||'')}${x.s?' · '+esc(x.s):''}${x.lang==='en'?' · EN':''}</small></li>`).join('')}</ul>`:''}
+      <p class="na-n">تُقرأ الأخبار آليًا بالكلمات الدالة في العنوان والملخص، والأحدث له وزن أكبر. لم يُختبر أثر الأخبار تاريخيًا على السعر، فاعتبرها سياقًا لا إشارة.</p></div>`;}
+  window.NEWSAI={score,forAsset,verdict,html,LAB};
+})();
+
+(function(){
   const $=id=>document.getElementById(id);
-  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const css=n=>getComputedStyle(document.getElementById('txApp')||document.documentElement).getPropertyValue(n).trim();
   const LS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
   const dp=p=>p>=1000?0:p>=100?1:p>=10?2:p>=1?3:p>=.1?4:5;
   const nf=(v,d)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -1406,7 +1576,8 @@ html.locked .gate{display:flex}
     let range=null;if(keep&&S.charts){try{range=S.charts.main.timeScale().getVisibleLogicalRange();}catch(_){}}
     destroy();const box=$('cxMain');box.innerHTML='';$('cxPanes').innerHTML='';
     const I=S.I=calc(S.raw);const prec=dp(Math.abs(b[b.length-1].c)),pf={type:'price',precision:prec,minMove:Math.pow(10,-prec)};
-    const H=S.fs?Math.max(320,window.innerHeight-170-Object.keys(S.ind).filter(k=>S.ind[k]&&IND.find(x=>x.k===k).g==='p').length*110):(window.innerWidth<700?420:540);
+    const np=Object.keys(S.ind).filter(k=>S.ind[k]&&IND.find(x=>x.k===k).g==='p').length,wr=$('tvWrap'),avail=wr?wr.clientHeight-($('cxLeg').offsetHeight+18):500,ph=np?Math.max(70,Math.min(110,Math.floor(avail*.22))):0;
+    const H=Math.max(220,avail-np*ph);S.ph=ph;
     const main=mk(box,H);const up=css('--up'),dn=css('--down');let ser;
     const cd=b.map(x=>({time:x.t,open:x.o,high:x.h,low:x.l,close:x.c}));
     if(S.type==='candle'||S.type==='ha'){ser=main.addCandlestickSeries({upColor:up,downColor:dn,borderVisible:false,wickUpColor:up,wickDownColor:dn,priceFormat:pf});ser.setData(cd);}
@@ -1431,7 +1602,7 @@ html.locked .gate{display:flex}
       try{ser.setMarkers(S.sg.list.map(s=>({time:s.t,position:s.d>0?'belowBar':'aboveBar',color:col[s.k],shape:s.k[0]==='p'?(s.d>0?'arrowUp':'arrowDown'):'circle',size:1})));}catch(_){}}
     // panes
     const panes=[],mkPane=(title,fill)=>{const wrap=document.createElement('div');wrap.className='cx-pane';wrap.innerHTML=`<span class="cx-pt">${title}</span><div></div>`;$('cxPanes').appendChild(wrap);
-      const c=mk(wrap.lastChild,110,{timeScale:{visible:false}});c.priceScale('right').applyOptions({minimumWidth:main.priceScale('right').width()});fill(c);panes.push(c);return c;};
+      const c=mk(wrap.lastChild,S.ph||100,{timeScale:{visible:false}});c.priceScale('right').applyOptions({minimumWidth:main.priceScale('right').width()});fill(c);panes.push(c);return c;};
     const pl=(c,arr,col,w=1.4)=>{const s=c.addLineSeries({color:col,lineWidth:w,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false});if(!c.__s)c.__s=s;s.setData(b.map((x,i)=>arr[i]!=null?{time:x.t,value:arr[i]}:{time:x.t}));return s;};
     if(S.ind.rsi)mkPane('RSI 14',c=>{const s=pl(c,I.rsi,css('--e200'));[70,30].forEach(v=>s.createPriceLine({price:v,color:css('--line'),lineWidth:1,lineStyle:2,axisLabelVisible:false}));});
     if(S.ind.macd)mkPane('MACD 12،26،9',c=>{const h=c.addHistogramSeries({priceLineVisible:false,lastValueVisible:false});c.__s=h;h.setData(b.map((x,i)=>I.macd.hist[i]!=null?{time:x.t,value:I.macd.hist[i],color:I.macd.hist[i]>=0?'rgba(47,179,122,.6)':'rgba(224,96,90,.6)'}:{time:x.t}));pl(c,I.macd.line,css('--e50'));pl(c,I.macd.sig,css('--gold'),1.2);});
@@ -1541,23 +1712,38 @@ html.locked .gate{display:flex}
     h+='<p class="muted tiny">القواعد: الوقف 1.5×ATR، الهدف الأول بنفس المسافة، الثاني بضعفها، وبعد الهدف الأول يُرفع الوقف إلى الدخول. المدة القصوى 20 شمعة. لو لُمس الوقف والهدف في نفس الشمعة يُحسب وقفًا. النتائج تاريخية ولا تضمن المستقبل، والقرار لك.</p>';
     el.innerHTML=h;const btn=$('cxDrawSig');if(btn)btn.onclick=()=>{S.draw.push({type:live.d>0?'long':'short',a:{t:live.t,p:live.e},sl:live.stop,tp:live.t2,t2:live.t+barSec()*20});saveDraw();overlay();$('cxMain').scrollIntoView({behavior:'smooth',block:'center'});};}
 
-  /* ---------- shell ---------- */
-  function ui(){const root=$('cxRoot');if(root.dataset.ready)return;root.dataset.ready='1';
-    root.innerHTML=`<div class="cx-top"><div class="cx-tf" role="group" aria-label="الإطار الزمني">${TFS.map(([k,n])=>`<button data-cxf="${k}">${n}</button>`).join('')}</div>
-      <div class="cx-ctl"><select id="cxType" aria-label="نوع الشارت">${TYPES.map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>
-      <button class="cx-b" id="cxIndBtn" aria-expanded="false">المؤشرات</button><button class="cx-b" id="cxLog" aria-pressed="false">لوغاريتمي</button><button class="cx-b" id="cxSigBtn" aria-pressed="false">إشارات الدخول</button>
-      <button class="cx-b" id="cxShot" title="حفظ صورة">صورة</button><button class="cx-b" id="cxFs" title="ملء الشاشة">ملء الشاشة</button></div></div>
-      <div class="cx-ind" id="cxInd" hidden><div><b>على الشارت</b>${IND.filter(x=>x.g==='o').map(x=>`<label><input type="checkbox" data-cxi="${x.k}"> ${x.n}</label>`).join('')}</div><div><b>نوافذ أسفل الشارت</b>${IND.filter(x=>x.g==='p').map(x=>`<label><input type="checkbox" data-cxi="${x.k}"> ${x.n}</label>`).join('')}</div></div>
-      <div class="cx-tools" role="toolbar" aria-label="أدوات الرسم">${TOOLS.map(([k,n,p])=>`<button data-cxt="${k}" title="${n}" aria-label="${n}"><svg viewBox="0 0 24 24"><path d="${p}"/></svg><span>${n}</span></button>`).join('')}
-        <button id="cxMag" title="مغناطيس: يلتصق بأسعار الشمعة" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 4v8a6 6 0 0 0 12 0V4h-4v8a2 2 0 0 1-4 0V4z"/></svg><span>مغناطيس</span></button>
-        <button id="cxDel" title="حذف المحدد" disabled><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg><span>حذف</span></button>
-        <button id="cxClr" title="مسح كل الرسومات"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 16l9-9 3 3-9 9H7z"/></svg><span>مسح الكل</span></button></div>
-      <div class="cx-leg" id="cxLeg"></div><div class="cx-hint" id="cxHint"></div>
-      <div class="cx-main" id="cxMain"></div><div id="cxPanes"></div><div class="cx-st" id="cxStat"></div>
-      <section class="blk cx-sigp"><h3>إشارات الدخول المحتملة</h3><div id="cxSig"></div></section>`;
+  /* ---------- shell: «تريدنج» full-screen app ---------- */
+  const API=()=>window.WAVE_API;const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const MK={sa:'السوق السعودي',cx:'العملات المشفرة',us:'الأسهم الأمريكية',ix:'المؤشرات والسلع'};
+  const refOf=id=>{const a=(API().assets||[]).find(x=>x.id===id&&x.pro);return a?{kind:a.pro,id:a.id,name:a.name,unit:a.unit||'',code:a.code||'',weekly:!!a.weekly,btn:a.btn}:null;};
+  let SUM={},DT='sum';
+  function ui(){const root=$('txApp');if(root.dataset.ready)return;root.dataset.ready='1';
+    root.innerHTML=`<div class="tv-top">
+      <div class="tv-brand" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="1" y="1" width="26" height="26" rx="7"/><path d="M8 19V11M14 21V7M20 17V12"/></svg></div><b class="tv-name">تريدنج</b>
+      <button class="tv-sym" id="tvSym" title="بحث عن رمز"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><b id="tvSymT">—</b><small id="tvSymN"></small></button>
+      <span class="tv-sep"></span><div class="tv-tf">${TFS.map(([k,n])=>`<button data-cxf="${k}" title="${n}">${{'1h':'1س','4h':'4س','1d':'ي','1w':'أ','1M':'ش'}[k]}</button>`).join('')}</div>
+      <span class="tv-sep"></span><select id="cxType" aria-label="نوع الشارت">${TYPES.map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>
+      <button class="tv-btn" id="cxIndBtn"><i>ƒx</i>المؤشرات</button><button class="tv-btn" id="cxSigBtn">الإشارات</button><button class="tv-btn" id="cxLog">لوغاريتمي</button>
+      <span class="tv-grow"></span><button class="tv-ic" id="cxShot" title="حفظ صورة"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+      <button class="tv-ic" id="tvPanelBtn" title="القائمة والتفاصيل"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM14 5v14"/></svg></button>
+      <button class="tv-ic" id="tvClose" title="إغلاق"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="tv-body"><div class="tv-tools" role="toolbar" aria-label="أدوات الرسم">${TOOLS.map(([k,n,p])=>`<button data-cxt="${k}" title="${n}" aria-label="${n}"><svg viewBox="0 0 24 24"><path d="${p}"/></svg></button>`).join('')}
+        <span class="tv-tsep"></span><button id="cxMag" title="مغناطيس" aria-label="مغناطيس"><svg viewBox="0 0 24 24"><path d="M6 4v8a6 6 0 0 0 12 0V4h-4v8a2 2 0 0 1-4 0V4z"/></svg></button>
+        <button id="cxDel" title="حذف المحدد" aria-label="حذف المحدد" disabled><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button>
+        <button id="cxClr" title="مسح كل الرسومات" aria-label="مسح كل الرسومات"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 16l9-9 3 3-9 9H7z"/></svg></button></div>
+      <div class="tv-center"><div class="tv-wrap" id="tvWrap"><div class="tv-leg"><div class="tv-lt"><b id="tvLegSym"></b><span id="tvLegTf"></span></div><div class="cx-leg" id="cxLeg"></div></div><div class="cx-hint" id="cxHint"></div>
+          <div class="cx-main" id="cxMain"></div><div id="cxPanes"></div></div><div class="tv-bot"><span id="cxStat"></span><span class="tv-grow"></span><span id="tvClock"></span></div></div>
+      <aside class="tv-side" id="tvSide"><div class="tv-wl"><div class="tv-wh"><b>قائمة المتابعة</b><small id="tvUpd"></small></div><div class="tv-wcol"><span>الرمز</span><span>آخر سعر</span><span>التغير</span></div><div class="tv-list" id="tvList"></div></div>
+        <div class="tv-det"><div class="tv-tabs" role="tablist">${[['sum','الملخص'],['news','الأخبار'],['ai','التحليل الذكي'],['sig','الإشارات']].map(([k,n])=>`<button data-dt="${k}" role="tab">${n}</button>`).join('')}</div>
+          <div class="tv-dbody" dir="rtl"><div id="tvDet"></div><div id="cxSig" hidden></div></div></div></aside></div>
+    <div class="tv-modal" id="tvIndM" hidden><div class="tv-mbox" dir="rtl"><div class="tv-mh"><b>المؤشرات</b><button class="tv-ic" data-close="tvIndM"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <input class="tv-q" id="tvIndQ" placeholder="ابحث عن مؤشر"><div class="tv-ml">${IND.map(x=>`<label data-n="${x.n}"><input type="checkbox" data-cxi="${x.k}"><span>${x.n}</span><small>${x.g==='o'?'على الشارت':'نافذة مستقلة'}</small></label>`).join('')}</div></div></div>
+    <div class="tv-modal" id="tvSymM" hidden><div class="tv-mbox" dir="rtl"><div class="tv-mh"><b>بحث عن رمز</b><button class="tv-ic" data-close="tvSymM"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <input class="tv-q" id="tvSymQ" placeholder="اسم السهم أو الرمز"><div class="tv-ml" id="tvSymL"></div></div></div>`;
     root.querySelectorAll('[data-cxf]').forEach(b=>b.onclick=()=>{if(b.disabled)return;S.tf=b.dataset.cxf;save();S.sel=-1;sync();draw();});
     $('cxType').onchange=e=>{S.type=e.target.value;save();draw(true);};
-    $('cxIndBtn').onclick=()=>{const p=$('cxInd');p.hidden=!p.hidden;$('cxIndBtn').setAttribute('aria-expanded',String(!p.hidden));};
+    $('cxIndBtn').onclick=()=>{$('tvIndM').hidden=false;$('tvIndQ').value='';filt('tvIndM','');setTimeout(()=>$('tvIndQ').focus(),50);};
+    $('tvIndQ').oninput=e=>filt('tvIndM',e.target.value);
     root.querySelectorAll('[data-cxi]').forEach(c=>c.onchange=()=>{S.ind[c.dataset.cxi]=c.checked;save();draw(true);});
     $('cxLog').onclick=()=>{S.log=!S.log;save();sync();if(S.charts)S.charts.main.priceScale('right').applyOptions({mode:S.log?1:0});};
     $('cxSigBtn').onclick=()=>{S.sig=!S.sig;save();sync();draw(true);};
@@ -1565,24 +1751,98 @@ html.locked .gate{display:flex}
     root.querySelectorAll('[data-cxt]').forEach(b=>b.onclick=()=>setTool(S.tool===b.dataset.cxt?'cursor':b.dataset.cxt));
     $('cxDel').onclick=()=>{if(S.sel<0)return;S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();};
     $('cxClr').onclick=()=>{if(!S.draw.length)return;S.draw=[];S.sel=-1;saveDraw();overlay();tb();};
-    $('cxShot').onclick=shot;$('cxFs').onclick=()=>{S.fs=!S.fs;root.classList.toggle('fs',S.fs);document.documentElement.classList.toggle('cx-lock',S.fs);$('cxFs').textContent=S.fs?'إغلاق':'ملء الشاشة';draw(true);};
+    $('cxShot').onclick=shot;$('tvClose').onclick=()=>history.state&&history.state.tv?history.back():close();
+    $('tvPanelBtn').onclick=()=>{root.classList.toggle('side-on');setTimeout(()=>draw(true),60);};
+    $('tvSym').onclick=()=>{$('tvSymM').hidden=false;$('tvSymQ').value='';symList('');setTimeout(()=>$('tvSymQ').focus(),50);};
+    $('tvSymQ').oninput=e=>symList(e.target.value);
+    root.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{$(b.dataset.close).hidden=true;});
+    root.querySelectorAll('.tv-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.hidden=true;}));
+    root.querySelectorAll('[data-dt]').forEach(b=>b.onclick=()=>{DT=b.dataset.dt;details();});
+    $('tvList').addEventListener('click',e=>{const r=e.target.closest('[data-sym]');if(r){pick(r.dataset.sym);if(window.innerWidth<900)root.classList.remove('side-on');}});
+    $('tvSymL').addEventListener('click',e=>{const r=e.target.closest('[data-sym]');if(r){$('tvSymM').hidden=true;pick(r.dataset.sym);}});
     const m=$('cxMain');m.addEventListener('pointerdown',e=>{if(e.target.id==='cxOv')onDown(e);});m.addEventListener('pointermove',e=>{if(e.target.id==='cxOv')onMove(e);});
-    document.addEventListener('keydown',e=>{if(!S.active)return;if((e.key==='Delete'||e.key==='Backspace')&&S.sel>=0&&!/input|select|textarea/i.test(document.activeElement.tagName)){S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();}
-      if(e.key==='Escape'){if(S.fs)$('cxFs').click();else setTool('cursor');}});
-    let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(S.active&&S.charts)draw(true);},200);});}
+    document.addEventListener('keydown',e=>{if(!S.active)return;const tag=document.activeElement.tagName;
+      if((e.key==='Delete'||e.key==='Backspace')&&S.sel>=0&&!/input|select|textarea/i.test(tag)){S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();}
+      if(e.key==='Escape'){const mo=[...root.querySelectorAll('.tv-modal')].find(x=>!x.hidden);if(mo)mo.hidden=true;else if(S.tool!=='cursor')setTool('cursor');}});
+    let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(S.active&&S.charts)draw(true);},200);});
+    setInterval(()=>{const c=$('tvClock');if(c&&S.active){const d=new Date(Date.now()+3*36e5);c.textContent=`${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')} (UTC+3)`;}},1000);}
+  function filt(mid,q){const n=String(q||'').trim().toLowerCase();$(mid).querySelectorAll('label').forEach(l=>{l.hidden=!!n&&!l.dataset.n.toLowerCase().includes(n);});}
+  function symList(q){const n=String(q||'').trim().toLowerCase(),L=(API().assets||[]).filter(a=>a.pro&&(!n||[a.id,a.name,a.btn,a.code].join(' ').toLowerCase().includes(n)));
+    const g={};L.forEach(a=>{(g[a.pro]=g[a.pro]||[]).push(a);});
+    $('tvSymL').innerHTML=Object.keys(MK).filter(k=>g[k]).map(k=>`<div class="tv-grp">${MK[k]}</div>`+g[k].map(a=>`<button data-sym="${a.id}"><b dir="ltr">${a.id}</b><span>${esc(a.name)}</span><small>${MK[k]}</small></button>`).join('')).join('')||'<p class="muted small">لا نتائج.</p>';}
+  async function loadSum(){for(const b of [RAW,'']){try{const r=await fetch(b+'pro/summary.json?v='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();SUM=j.a||{};$('tvUpd').textContent=j.updated?String(j.updated).replace('T',' ').replace('Z',' UTC'):'';watch();return;}}catch(_){}}}
+  function watch(){const L=(API().assets||[]).filter(a=>a.pro);const g={};L.forEach(a=>{(g[a.pro]=g[a.pro]||[]).push(a);});
+    $('tvList').innerHTML=Object.keys(MK).filter(k=>g[k]).map(k=>`<div class="tv-grp">${MK[k]}</div>`+g[k].map(a=>{const x=SUM[a.id],ch=x?x.ch:null;
+      return`<button data-sym="${a.id}" class="${S.ref&&S.ref.id===a.id?'on':''}"><span class="tv-s"><b dir="ltr">${a.id}</b><small>${esc(a.btn&&/[؀-ۿ]/.test(a.btn)?a.btn:a.name)}</small></span><span class="num">${x?nf(x.c,dp(Math.abs(x.c))):'—'}</span><span class="num ${ch>0?'up':ch<0?'down':''}">${ch==null?'—':(ch>=0?'+':'')+ch.toFixed(2)+'%'}</span></button>`;}).join('')).join('');}
   function sync(){document.querySelectorAll('[data-cxf]').forEach(b=>{const na=!S.data||!S.data[b.dataset.cxf]||S.data[b.dataset.cxf].length<20;b.disabled=na;b.setAttribute('aria-pressed',String(b.dataset.cxf===S.tf));});
     $('cxType').value=S.type;document.querySelectorAll('[data-cxi]').forEach(c=>c.checked=!!S.ind[c.dataset.cxi]);
-    $('cxLog').setAttribute('aria-pressed',String(S.log));$('cxSigBtn').setAttribute('aria-pressed',String(S.sig));$('cxMag').setAttribute('aria-pressed',String(S.mag));tb();}
+    $('cxLog').setAttribute('aria-pressed',String(S.log));$('cxSigBtn').setAttribute('aria-pressed',String(S.sig));$('cxMag').setAttribute('aria-pressed',String(S.mag));tb();
+    if(S.ref){$('tvSymT').textContent=S.ref.id;$('tvSymN').textContent=S.ref.name;$('tvLegSym').textContent=S.ref.name+' · '+S.ref.id;$('tvLegTf').textContent=(TFS.find(x=>x[0]===S.tf)||[])[1]||'';}
+    document.querySelectorAll('[data-dt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.dt===DT)));}
   function shot(){if(!S.charts)return;try{const c=S.charts.main.takeScreenshot(),ov=$('cxOv'),out=document.createElement('canvas');out.width=c.width;out.height=c.height;const g=out.getContext('2d');g.drawImage(c,0,0);if(ov)g.drawImage(ov,0,0,c.width,c.height);
       const a=document.createElement('a');a.download=`${S.ref.id}-${S.tf}.png`;a.href=out.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();}catch(e){console.error(e);}}
-  function status(){const el=$('cxStat');if(!el||!S.data)return;const live=S.ref.kind==='cx';el.innerHTML=`<span class="pulse ${live?'live':'wait'}"></span>${live?'مباشر · يتحدث كل دقيقة':'آخر إغلاق متاح · يتحدث تلقائيًا'} · ${S.raw.length} شمعة`;}
+  function status(){const el=$('cxStat');if(!el||!S.data)return;const live=S.ref.kind==='cx';el.innerHTML=`<span class="pulse ${live?'live':'wait'}"></span>${live?'مباشر · يتحدث كل دقيقة':'آخر إغلاق متاح'} · ${S.raw.length} شمعة · ${S.ref.kind==='sa'?'تداول':S.ref.kind==='cx'?'Binance':S.ref.kind==='ix'?'مؤشرات وسلع':'الأسهم الأمريكية'}`;}
+
+  /* ---------- details panel ---------- */
+  async function details(){sync();const el=$('tvDet'),sg=$('cxSig');if(!el||!S.ref)return;const ref=S.ref,id=ref.id;
+    el.hidden=DT==='sig';sg.hidden=DT!=='sig';if(DT==='sig')return;
+    el.innerHTML='<p class="muted small">جارٍ التحليل…</p>';
+    let A=null;try{A=await PRO.analyze(ref,'1d');}catch(_){}
+    if(!S.ref||S.ref.id!==id)return;
+    const d=(S.data&&S.data['1d'])||[],n=d.length;
+    if(DT==='sum'){if(!n||!A){el.innerHTML='<p class="muted small">لا تتوفر بيانات.</p>';return;}
+      const L=d[n-1],P=d[n-2]||L,ch=(L.c/P.c-1)*100,yr=d.slice(-252),hi=Math.max(...yr.map(x=>x.h)),lo=Math.min(...yr.map(x=>x.l)),pc=d.length?((L.c-lo)/(hi-lo||1)*100):0,dd=dp(Math.abs(L.c));
+      const DIR={up:'صاعد',down:'هابط',flat:'محايد'},pick={bull:'صعود',bear:'هبوط',side:'تذبذب'}[A.sc.pick];
+      el.innerHTML=`<div class="tv-px"><b class="num">${nf(L.c,dd)}</b><span class="num ${ch>=0?'up':'down'}">${ch>=0?'+':''}${nf(L.c-P.c,dd)} (${ch>=0?'+':''}${ch.toFixed(2)}%)</span></div>
+        <div class="tv-kv"><div><span>افتتاح</span><b class="num">${nf(L.o,dd)}</b></div><div><span>أعلى اليوم</span><b class="num">${nf(L.h,dd)}</b></div><div><span>أدنى اليوم</span><b class="num">${nf(L.l,dd)}</b></div><div><span>الحجم</span><b class="num">${L.v?nf(L.v,0):'—'}</b></div></div>
+        <div class="tv-rng"><span>نطاق 52 أسبوعًا</span><div><i style="left:${pc.toFixed(0)}%"></i></div><p><b class="num">${nf(lo,dd)}</b><b class="num">${nf(hi,dd)}</b></p></div>
+        <div class="tv-tech"><span>الملخص الفني (يومي)</span><b class="${A.conf.dir}">${DIR[A.conf.dir]}</b><small>توافق ${A.conf.pct}% · بعد التدقيق ${A.sc.eff}% · الأرجح: ${pick}</small>
+          <div class="tv-dots">${['1M','1w','1d','4h','1h'].map(t=>A.scores[t]?`<span class="${A.scores[t].dir}">${QE.TFN[t]}</span>`:'').join('')}</div>
+          <div class="tv-kv"><div><span>مقاومة</span><b class="num">${nf(A.lv.R.p,dd)}</b></div><div><span>دعم</span><b class="num">${nf(A.lv.S.p,dd)}</b></div></div></div>`;return;}
+    const nw=window.NEWSAI?await NEWSAI.forAsset(id):{n:0,items:[],label:'none',score:null};if(!S.ref||S.ref.id!==id)return;
+    if(DT==='news'){el.innerHTML=window.NEWSAI?NEWSAI.html(nw,A?A.conf:null,{max:20}):'<p class="muted small">لا تتوفر أخبار.</p>';return;}
+    // smart analysis: numbers + news + history, combined
+    if(!A){el.innerHTML='<p class="muted small">لا تتوفر بيانات.</p>';return;}
+    const v=window.NEWSAI?NEWSAI.verdict(A.conf,nw):{txt:''},DIR={up:'صاعدة',down:'هابطة',flat:'محايدة'},sc=A.sc,dd=dp(Math.abs(sc.close));
+    const G=S.sg&&S.tf==='1d'?S.sg:null;const live=G?G.list.filter(s=>s.i>=S.raw.length-3).slice(-1)[0]:null;
+    const w=ref.weekly&&API().weekly?API().weekly(id):null;const bt=A.bt;
+    el.innerHTML=`<div class="tv-ai"><div class="tv-ai-h"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.2L20 9l-4.4 3.8L17 18.5 12 15.6 7 18.5l1.4-5.7L4 9l5.8-.8z"/></svg><b>التحليل الذكي: الأرقام مع الأخبار</b></div>
+      <div class="tv-ai-s"><span>الأرقام</span><p>المؤشرات <b class="${A.conf.dir}">${DIR[A.conf.dir]}</b> بتوافق ${A.conf.pct}% (${A.conf.agree} من ${A.conf.total} أطر)، وبعد التدقيق المعاكس ${sc.eff}%. ${sc.pick==='bull'?`الأرجح صعود يتأكد فوق <b class="num">${nf(sc.bull.trig,dd)}</b>`:sc.pick==='bear'?`الأرجح هبوط يتأكد تحت <b class="num">${nf(sc.bear.trig,dd)}</b>`:`الأرجح تذبذب بين <b class="num">${nf(sc.side.lo,dd)}</b> و <b class="num">${nf(sc.side.hi,dd)}</b>`}.</p></div>
+      <div class="tv-ai-s"><span>الأخبار</span><p>${nw.n?`${nw.n} خبر، القراءة <b class="na-l ${nw.label}">${NEWSAI.LAB[nw.label]}</b> (${nw.pos||0} إيجابي، ${nw.neg||0} سلبي).`:'لا توجد أخبار محفوظة لهذا الأصل.'}</p></div>
+      <div class="tv-ai-s v ${v.k||''}"><span>الحكم المشترك</span><p>${v.txt}</p></div>
+      ${w&&w.cur?`<div class="tv-ai-s"><span>منطقة الأسبوع</span><p>إغلاق متوقع بين <b class="num">${esc(w.fmt(w.cur.low))}</b> و <b class="num">${esc(w.fmt(w.cur.high))}</b>، وأصابت الطريقة ${w.hits} من ${w.n} أسبوعًا.</p></div>`:''}
+      ${live?`<div class="tv-ai-s"><span>إشارة الآن</span><p>${SETUP[live.k].n}: دخول <b class="num">${nf(live.e,dd)}</b>، وقف <b class="num">${nf(live.stop,dd)}</b>، هدف <b class="num">${nf(live.t1,dd)}</b>.</p></div>`:''}
+      <div class="tv-ai-s"><span>مدى الثقة</span><p>${bt&&bt.up.pct!=null?`تاريخيًا على هذا الأصل: حين كانت المؤشرات صاعدة بقوة ارتفع السعر بعد 10 أيام في ${bt.up.pct}% مقابل ${bt.base.pct}% في الأيام العادية. `:''}على مستوى كل أصول الموقع، أفضلية المؤشرات الفنية على العشوائي ضعيفة (نقطة إلى نقطتين)، والأخبار لم يُختبر أثرها، فهذه قراءة مساعدة لا توصية.</p></div></div>`;}
+  function pick(id){const r=refOf(id);if(!r)return;LS.set('tv-sym',id);show(r);}
   async function load(){const seq=++S.seq;$('cxMain').innerHTML='<div class="empty">جارٍ تحميل الشارت…</div>';const r=await PRO.data(S.ref);if(seq!==S.seq||!S.active)return;
     if(!r){$('cxMain').innerHTML='<div class="empty">تعذر الوصول إلى البيانات الآن.</div>';return;}S.data=r.data;
     if(!S.data[S.tf]||S.data[S.tf].length<20)S.tf=S.data['1d']&&S.data['1d'].length?'1d':Object.keys(S.data).find(k=>S.data[k].length>=20);
-    loadDraw();sync();draw();status();}
-  async function refresh(){if(!S.active||document.hidden||S.ref.kind!=='cx'||S.pending)return;const r=await PRO.data(S.ref);if(!r||!S.active)return;S.data=r.data;draw(true);status();}
-  window.CHARTX={show(ref){if(!ref)return;ui();const same=S.ref&&S.ref.id===ref.id&&S.active&&S.charts;S.ref=ref;S.active=true;if(!same)load();if(!S.timer)S.timer=setInterval(refresh,60000);},
-    hide(){S.active=false;if(S.fs)$('cxFs').click();destroy();}};
+    loadDraw();sync();draw();status();watch();details();}
+  async function refresh(){if(!S.active||document.hidden||S.pending)return;loadSum();if(S.ref.kind!=='cx')return;const r=await PRO.data(S.ref);if(!r||!S.active)return;S.data=r.data;draw(true);status();}
+  function show(ref){ui();const same=S.ref&&S.ref.id===ref.id&&S.charts;S.ref=ref;S.active=true;S.sel=-1;if(!same)load();else{draw(true);details();}if(!S.timer)S.timer=setInterval(refresh,60000);}
+  const RM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function cardClip(){const c=$('tvOpen');if(!c)return null;const r=c.getBoundingClientRect(),W=window.innerWidth,H=window.innerHeight;
+    return`inset(${Math.max(0,r.top)}px ${Math.max(0,W-r.right)}px ${Math.max(0,H-r.bottom)}px ${Math.max(0,r.left)}px round 18px)`;}
+  function enterFx(root){if(RM()||!root.animate)return;const from=cardClip();const card=$('tvOpen');if(card){card.classList.add('pressed');setTimeout(()=>card.classList.remove('pressed'),700);}
+    if(from)root.animate([{clipPath:from,opacity:.75},{clipPath:'inset(0px 0px 0px 0px round 0px)',opacity:1}],{duration:720,easing:'cubic-bezier(.22,.9,.24,1)'});
+    const st=(sel,kf,delay)=>{const e=root.querySelector(sel);if(e)e.animate(kf,{duration:560,delay,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});};
+    st('.tv-top',[{transform:'translateY(-18px)',opacity:0},{transform:'none',opacity:1}],260);
+    st('.tv-tools',[{transform:'translateX(-22px)',opacity:0},{transform:'none',opacity:1}],340);
+    st('.tv-wrap',[{transform:'perspective(1400px) rotateX(8deg) scale(.94)',opacity:0,filter:'blur(6px)'},{transform:'none',opacity:1,filter:'blur(0)'}],380);
+    if(window.innerWidth>=900)st('.tv-side',[{transform:'translateX(28px)',opacity:0},{transform:'none',opacity:1}],460);
+    st('.tv-bot',[{opacity:0},{opacity:1}],560);
+    const g=document.createElement('div');g.className='tv-glint';root.appendChild(g);
+    g.animate([{backgroundPosition:'120% 0',opacity:1},{backgroundPosition:'-30% 0',opacity:0}],{duration:1100,delay:200,easing:'ease-out',fill:'both'}).onfinish=()=>g.remove();}
+  function open(id){const root=$('txApp');if(!root||!root.hidden)return;ui();root.hidden=false;document.documentElement.classList.add('tv-open');enterFx(root);
+    if(!(history.state&&history.state.tv))history.pushState({tv:1},'');
+    const pickId=id||LS.get('tv-sym')||(API().current&&API().current())||'BTC';const r=refOf(pickId)||refOf('BTC');loadSum();show(r);}
+  function close(){const root=$('txApp');if(!root||root.hidden||root.dataset.closing)return;const done=()=>{delete root.dataset.closing;root.hidden=true;S.active=false;destroy();};
+    document.documentElement.classList.remove('tv-open');const to=cardClip();
+    if(RM()||!root.animate||!to){done();return;}root.dataset.closing='1';
+    root.animate([{clipPath:'inset(0px 0px 0px 0px round 0px)',opacity:1},{clipPath:to,opacity:.4}],{duration:480,easing:'cubic-bezier(.55,0,.4,1)'}).onfinish=done;}
+  window.addEventListener('popstate',()=>{if(!(history.state&&history.state.tv))close();});
+  window.CHARTX={open,close,show:r=>show(r),hide:close};
+  const ob=$('tvOpen');if(ob)ob.addEventListener('click',()=>open());
 })();
 
 </script>
@@ -1735,7 +1995,7 @@ html.locked .gate{display:flex}
   const SIG='شيبان';
   const JSONM=CFG.mode==='json';
   const proRef=a=>A[a]&&A[a].pro?{kind:A[a].pro,id:a,name:A[a].name,unit:A[a].unit||'',code:A[a].code||''}:null;
-  const avail=a=>({now:true,candles:!!A[a].weekly,weeks:!!A[a].weekly,news:!!(S.news[a]&&S.news[a].items&&S.news[a].items.length),pro:JSONM&&!!A[a].pro,chart:JSONM&&!!A[a].pro,how:true});
+  const avail=a=>({now:true,candles:!!A[a].weekly,weeks:!!A[a].weekly,news:!!(S.news[a]&&S.news[a].items&&S.news[a].items.length),pro:JSONM&&!!A[a].pro,how:true});
   const nW=n=>n===1?'أسبوع واحد':n===2?'أسبوعين':(n>=3&&n<=10)?n+' أسابيع':n+' أسبوعًا';
   const LK=CFG.locks||{};
   const isLocked=a=>!!LK[a]&&LS.get('wave-lk-'+a)!==LK[a];
@@ -1846,8 +2106,9 @@ html.locked .gate{display:flex}
     if(!it.length){el.innerHTML=`<div class="panel empty">${S.loaded?'لا توجد أخبار مسجلة بعد لهذا الأصل.':'جارٍ تحميل الأخبار…'}</div>`;return;}
     const srt=it.slice().sort((p,q)=>p.d<q.d?1:-1);
     el.innerHTML=`<div class="panel"><div class="zc-head"><h2 style="margin:0">أخبار ${esc(A[a].name)}</h2>${n.updated?`<span class="muted small">آخر تحديث ${esc(dShow(n.updated))}</span>`:''}</div>
-      <ul class="news">${srt.map(newsLi).join('')}</ul>
+      <div id="newsAi"></div><ul class="news">${srt.map(newsLi).join('')}</ul>
       <p class="muted small" style="margin-top:10px">العناوين مختصرة بالعربية، والخبر كاملًا في مصدره. تُحدَّث القائمة يوميًا.</p></div>`;
+    if(window.NEWSAI&&JSONM)(async()=>{const nw=await NEWSAI.forAsset(a);let tech=null;try{const A2=proRef(a)&&window.PRO?await PRO.analyze(proRef(a),'1d'):null;tech=A2?A2.conf:null;}catch(_){}const e=$('newsAi');if(e&&S.asset===a)e.innerHTML=NEWSAI.html(nw,tech,{max:0});})();
   }
   function renderLock(){
     const a=S.asset;$('v-lock').innerHTML=`<div class="panel lockp"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 28v-8a12 12 0 0 1 24 0v8" fill="none" stroke="var(--warn)" stroke-width="5" stroke-linecap="round"/><rect x="12" y="27" width="40" height="30" rx="7" fill="var(--warn)"/><circle cx="32" cy="40" r="4" fill="var(--panel)"/></svg>
@@ -1976,15 +2237,13 @@ html.locked .gate{display:flex}
     document.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===S.tab)));
     document.querySelectorAll('[data-a]').forEach(b=>b.classList.toggle('lk',isLocked(b.dataset.a)));
     const locked=isLocked(S.asset)&&S.tab!=='how';
-    ['now','candles','weeks','news','how','pro','chart'].forEach(t=>{const e=$('v-'+t);if(e)e.hidden=locked||t!==S.tab;});
+    ['now','candles','weeks','news','how','pro'].forEach(t=>{const e=$('v-'+t);if(e)e.hidden=locked||t!==S.tab;});
     $('v-lock').hidden=!locked;
     if(window.PRO&&(locked||S.tab!=='pro'))PRO.hide();
-    if(window.CHARTX&&(locked||S.tab!=='chart'))CHARTX.hide();
     if(window.LIVE&&(locked||S.tab!=='now'||!JSONM))LIVE.stop();
     if(locked){if(S.chart){S.chart.remove();S.chart=null;}renderLock();return;}
     if(S.tab==='now'&&JSONM&&window.LIVE&&proRef(S.asset))LIVE.show(proRef(S.asset));
     if(S.tab==='pro'&&window.PRO)PRO.show(proRef(S.asset));
-    if(S.tab==='chart'&&window.CHARTX)CHARTX.show(proRef(S.asset));
     if(S.tab==='now')renderHero();
     if(S.tab==='candles')renderCandles();
     if(S.tab==='weeks')renderWeeks();
@@ -2022,6 +2281,7 @@ html.locked .gate{display:flex}
           nextEnd:arDay(wkEnd(addD(curWeek,7))),hits:bt.filter(Boolean).length,n:bt.length,fmt:v=>money(v,a,1)+cur(a)};}
       finally{S.asset=keep;}},
     news(a){return((S.news[a]&&S.news[a].items)||[]).slice(0,3).map(it=>({t:it.t,u:it.u,s:it.s,d:dShow(it.d)}));},
+    newsAll(a){return((S.news[a]&&S.news[a].items)||[]).map(it=>({t:it.t,u:it.u,s:it.s,d:it.d}));},
     open(a,tab){if(!A[a])return;S.asset=a;S.tab=tab||'now';LS.set('wave-all',a);render();const t=document.querySelector('.tabs');if(t)window.scrollTo({top:t.offsetTop-8,behavior:'smooth'});}};
 
   if(CFG.mode==='json'){
@@ -2131,6 +2391,7 @@ html.locked .gate{display:flex}
     if(cur&&cur.rsi!=null)h+=`<p>RSI ${TFN[A.tf]} <b class="num">${cur.rsi.toFixed(0)}</b>${cur.rsi>70?' (تشبع شراء)':cur.rsi<30?' (تشبع بيع)':''} · MACD ${cur.hist>0?'موجب':'سالب'} · ${conf.agree} من ${conf.total} أطر تتفق على الاتجاه.</p>`;
     if(au.length)h+=`<div class="bx"><span>ما يعاكس هذه القراءة</span><ul>${au.slice(0,3).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
     h+=btTxt(A)+weeklyTxt(a);
+    if(window.NEWSAI){try{const nw=await NEWSAI.forAsset(a.id);if(nw.n){const v=NEWSAI.verdict(A.conf,nw);h+=`<div class="bw"><span>قراءة الأخبار: ${NEWSAI.LAB[nw.label]} (${nw.n} خبر)</span><small>${v.txt}</small></div>`;}}catch(_){}}
     h+=`<div class="bas">${openBtn(a,'pro','التحليل الكامل')}${act('الدعم والمقاومة','دعم ومقاومة '+a.name)}${a.weekly?act('إغلاق الأسبوع','إغلاق '+a.name+' هذا الأسبوع'):act('النطاق الأسبوعي','نطاق '+a.name+' الأسبوع')}${A.tf!=='4h'&&A.data['4h']?act('إطار 4 ساعات',a.name+' 4 ساعات'):''}</div>`;
     return h+DISC;}
   async function levels(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,vp,I,b}=A,n=b.length-1;
@@ -2157,7 +2418,8 @@ html.locked .gate{display:flex}
     const A=await an(a,'1w');if(!A)return fail(a);const wb=A.data['1w'],at=QE.atr(wb),n=wb.length-1,c=lastOf(A).c,x=at[n];
     if(!x)return brief(a,'1w');
     return head(a,A)+`<p>لا يوجد لهذا الأصل توقع أسبوعي رسمي في الموقع. تقدير من تذبذبه المعتاد: الحركة الأسبوعية المعتادة نحو ${P(x,a)}، أي أن نطاقًا معقولًا للأسبوع بين ${P(c-x,a)} و ${P(c+x,a)}.</p>`+meter(A.conf,A.sc.eff)+scenTxt(a,A)+`<p class="mut">هذا نطاق تقديري من ATR الأسبوعي وليس توقعًا مختبرًا.</p>`+DISC;}
-  async function news(a){const it=API().news(a.id);
+  async function news(a){if(window.NEWSAI){try{const nw=await NEWSAI.forAsset(a.id);if(nw.n){const A=await an(a,'1d');return`<div class="bh2"><b>${esc(a.name)}</b></div>`+NEWSAI.html(nw,A?A.conf:null,{max:5})+`<div class="bas">${openBtn(a,'news','كل الأخبار')}${act('التحليل الآن','توقع '+a.name)}</div>`;}}catch(_){}}
+    const it=API().news(a.id);
     if(!it.length)return`<p>لا توجد أخبار محفوظة عن <b>${esc(a.name)}</b> في الموقع حاليًا.</p><div class="bas">${act('التحليل الآن','توقع '+a.name)}</div>`;
     return`<p>آخر أخبار <b>${esc(a.name)}</b>:</p><ul class="bn">${it.map(n=>`<li><a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(n.t)}</a><small>${esc(n.d)} · ${esc(n.s)}</small></li>`).join('')}</ul><div class="bas">${openBtn(a,'news','كل الأخبار')}</div>`;}
   async function compare(ids){const L=ids.slice(0,3).map(i=>BY[i]),R=await Promise.all(L.map(a=>an(a,'1d')));

@@ -185,6 +185,32 @@ def crypto(status):
             status['cx'][k] = {'ok': False, 'err': str(e)[:160]}
 
 
+def news(status):
+    """pro/news.json: latest Yahoo headlines per asset (title, link, source, date)."""
+    import yfinance as yf
+    out, syms = {}, [(c, s) for c, s, k in STOCKS] + [(k, f'{k}-USD') for k in CX]
+    for c, sym in syms:
+        try:
+            items = []
+            for n in (yf.Ticker(sym).news or [])[:12]:
+                ct = n.get('content') or n
+                title = ct.get('title') or n.get('title')
+                url = ((ct.get('canonicalUrl') or {}).get('url') or (ct.get('clickThroughUrl') or {}).get('url') or n.get('link'))
+                src = ((ct.get('provider') or {}).get('displayName') or n.get('publisher') or '')
+                when = ct.get('pubDate') or ct.get('displayTime')
+                if not when and n.get('providerPublishTime'):
+                    when = dt.datetime.fromtimestamp(n['providerPublishTime'], dt.timezone.utc).isoformat()
+                if title and url:
+                    items.append({'t': title[:220], 'u': url, 's': src[:40], 'd': (when or '')[:10], 'sum': (ct.get('summary') or '')[:300]})
+            if items:
+                out[c] = items
+        except Exception as e:
+            status.setdefault('notes', []).append(f'{c} news: {str(e)[:60]}')
+        time.sleep(0.3)
+    write(f'{ROOT}/news.json', {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'a': out})
+    status['news'] = len(out)
+
+
 def summary():
     """pro/summary.json: last price and daily change per asset, used to colour the menu."""
     out = {}
@@ -229,6 +255,10 @@ def main():
         stocks_full(status)
         stocks_live(status)
         crypto(status)
+        try:
+            news(status)
+        except Exception as e:
+            status['news_err'] = str(e)[:120]
         write(f'{ROOT}/status.json', status)
         summary()
     print(json.dumps(status, ensure_ascii=False, indent=1))
