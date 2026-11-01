@@ -99,9 +99,9 @@ def stocks_full(status):
         extra = (c, sym, kind) in EXTRA
         try:
             t = yf.Ticker(sym)
-            d = frame_rows(t.history(period='2y', interval='1d', auto_adjust=False, actions=False), True)
+            d = frame_rows(t.history(period='5y', interval='1d', auto_adjust=False, actions=False), True)
             if len(d) < 60:
-                start = (NOW - dt.timedelta(days=730)).date().isoformat()
+                start = (NOW - dt.timedelta(days=1826)).date().isoformat()
                 d = frame_rows(t.history(start=start, interval='1d', auto_adjust=False, actions=False), True) or d
             m = frame_rows(t.history(period='max', interval='1mo', auto_adjust=False, actions=False), True)
             h1 = []

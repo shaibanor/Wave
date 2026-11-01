@@ -401,6 +401,52 @@ html[dir="rtl"] .tx-rb{border-radius:0 0 0 12px}
 @keyframes view3d{from{opacity:0;transform:perspective(1200px) rotateX(-14deg) rotateY(6deg) translateZ(-60px) translateY(16px)}to{opacity:1;transform:none}}
 .cat-h:active{transform:perspective(700px) rotateX(12deg)}
 @media (prefers-reduced-motion:reduce){.cat-p .cat-g button,.view.enter3d,.sm-p.on,.sm-c2{animation:none!important}}
+
+/* full chart */
+.cx{padding:12px!important}
+.cx-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cx-tf,.cx-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cx-tf button,.cx-b,#cxType{font:600 .8rem var(--f-body);border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;padding:6px 11px;cursor:pointer}
+.cx-tf button[aria-pressed="true"],.cx-b[aria-pressed="true"],.cx-b[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.cx-tf button:disabled{opacity:.35;cursor:not-allowed}
+.cx-ind{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.cx-ind b{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.cx-ind label{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;margin:3px 10px 3px 0;cursor:pointer}
+.cx-tools{display:flex;gap:4px;overflow-x:auto;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;scrollbar-width:thin}
+.cx-tools button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;border:1px solid transparent;background:none;color:var(--ink);border-radius:9px;padding:5px 4px;cursor:pointer;font:500 .66rem var(--f-body)}
+.cx-tools button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cx-tools button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.cx-tools button:disabled{opacity:.35}
+.cx-leg{display:flex;flex-direction:column;gap:2px;font:500 .74rem var(--f-num);color:var(--muted);direction:ltr;text-align:left;min-height:34px;margin:4px 2px}
+.cx-leg b{font-weight:600;color:var(--ink)}.cx-leg b.up{color:var(--up)}.cx-leg b.down{color:var(--down)}
+.cx-hint{font-size:.78rem;color:var(--accent);min-height:0}.cx-hint:empty{display:none}
+.cx-main{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+#cxOv{position:absolute;inset:0;z-index:3;pointer-events:none}#cxOv.on{pointer-events:auto;cursor:crosshair;touch-action:none}
+.cx-pane{position:relative;border:1px solid var(--line);border-top:0;border-radius:0 0 10px 10px;overflow:hidden}
+.cx-pane+.cx-pane{border-radius:0 0 10px 10px}
+.cx-pt{position:absolute;top:4px;left:8px;z-index:2;font:600 .7rem var(--f-num);color:var(--muted);direction:ltr}
+.cx-tin{position:absolute;z-index:4;width:170px;padding:5px 8px;border-radius:7px;border:1px solid var(--accent);background:var(--panel);color:var(--ink);font:500 14px var(--f-body)}
+.cx-st{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--muted);margin:8px 2px}
+.cx.fs{position:fixed;inset:0;z-index:90;border-radius:0!important;overflow:auto;margin:0}
+html.cx-lock body{overflow:hidden}
+.cx-sigp{margin-top:12px}
+.cxs-live{border-radius:14px;padding:12px;margin-bottom:12px;border:1px solid var(--line)}
+.cxs-live.l{background:color-mix(in srgb,var(--up) 10%,var(--panel));border-color:color-mix(in srgb,var(--up) 45%,var(--line))}
+.cxs-live.s{background:color-mix(in srgb,var(--down) 10%,var(--panel));border-color:color-mix(in srgb,var(--down) 45%,var(--line))}
+.cxs-h{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px}.cxs-h span{font-size:.8rem;color:var(--muted)}
+.cxs-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:8px}
+.cxs-g>div{background:var(--panel);border-radius:9px;padding:6px 8px;display:flex;flex-direction:column}.cxs-g span{font-size:.7rem;color:var(--muted)}
+@media (max-width:520px){.cxs-g{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.warnt{color:var(--warn)}
+.cxs-t{width:100%;border-collapse:collapse;font-size:.82rem}.cxs-t th,.cxs-t td{padding:6px;border-bottom:1px solid var(--line);text-align:center}.cxs-t th{color:var(--muted);font-weight:600}.cxs-t td:first-child{text-align:start}
+.cxs-t .up{color:var(--up)}.cxs-t .down{color:var(--down)}.cxs-t tr.base td{color:var(--muted)}
+.cxm{display:inline-block;width:0;height:0;vertical-align:middle}
+.cxm.pbL{border:6px solid transparent;border-bottom:9px solid var(--up);border-top:0}.cxm.pbS{border:6px solid transparent;border-top:9px solid var(--down);border-bottom:0}
+.cxm.boL,.cxm.boS{width:10px;height:10px;border-radius:50%;background:#1F7FC0}.cxm.boS{background:#E3A44B}
+.cxs-l{list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.cxs-l li{display:grid;grid-template-columns:auto 1fr 1.6fr auto auto;gap:8px;align-items:center;font-size:.8rem;padding:5px 6px;border-radius:8px;background:var(--panel2)}
+.cxs-l em{font-style:normal;font-weight:600}.cxs-l em.up{color:var(--up)}.cxs-l em.down{color:var(--down)}.cxs-l em.muted{color:var(--muted)}
+@media (max-width:520px){.cxs-l li{grid-template-columns:auto 1fr auto;}.cxs-l li span:nth-of-type(2){display:none}.cxs-l li b{display:none}}
 :root{--vsig:url(data:image/png;base64,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)}
 .vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
 .vx-stage{position:relative;width:220px;height:250px;perspective:900px}
@@ -672,6 +718,7 @@ html.locked .gate{display:flex}
   <nav class="tabs" role="tablist">
     <button id="t-now" role="tab" data-t="now" aria-selected="true">الآن</button>
     <button id="t-pro" role="tab" data-t="pro" aria-selected="false">التحليل المتقدم</button>
+    <button id="t-chart" role="tab" data-t="chart" aria-selected="false">الشارت</button>
     <button id="t-candles" role="tab" data-t="candles" aria-selected="false">الشموع</button>
     <button id="t-weeks" role="tab" data-t="weeks" aria-selected="false">الأسابيع</button>
     <button id="t-news" role="tab" data-t="news" aria-selected="false">الأخبار</button>
@@ -727,6 +774,7 @@ html.locked .gate{display:flex}
     <div class="panel pcard" id="pCard" aria-live="polite"></div>
   </section>
 
+  <section id="v-chart" class="view" hidden><div class="panel cx" id="cxRoot"></div></section>
   <section id="v-lock" class="view" hidden></section>
 
   <section id="v-how" class="view" hidden>
@@ -1174,6 +1222,7 @@ html.locked .gate{display:flex}
     let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(!S.charts||!S.active)return;const w=$('cMain').clientWidth;['main','rsi','macd'].forEach(k=>S.charts[k].applyOptions({width:w}));drawOverlay();},150);});
     S.timer=setInterval(refreshLive,60000);const st=LS.get('pro-tf');if(st&&TFS.includes(st))S.tf=st;}
   window.PRO={
+    data(ref){return fetchData(ref.kind,ref.id);},
     async analyze(ref,tf){const r=await fetchData(ref.kind,ref.id);if(!r)return null;const keep={kind:S.kind,id:S.id,data:S.data,tf:S.tf};
       S.kind=ref.kind;S.id=ref.id;S.data=r.data;S.tf=(tf&&r.data[tf]&&r.data[tf].length>=30)?tf:'1d';let A=null;
       try{A=analyse();if(A){A.tf=S.tf;A.data=r.data;A.src=r.src;A.upd=r.upd;}}catch(e){console.error(e);}
@@ -1263,6 +1312,277 @@ html.locked .gate{display:flex}
     stop(){clearInterval(L.timer);cancelAnimationFrame(L.raf);if(typeof L.unsub==='function')try{L.unsub()}catch(_){};L.unsub=null;L.ref=null;}
   };
   let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(L.ref)draw(1);},150);});
+})();
+
+(function(){
+  const $=id=>document.getElementById(id);
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const LS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+  const dp=p=>p>=1000?0:p>=100?1:p>=10?2:p>=1?3:p>=.1?4:5;
+  const nf=(v,d)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const TFS=[['1h','ساعة'],['4h','4 ساعات'],['1d','يومي'],['1w','أسبوعي'],['1M','شهري']];
+  const TYPES=[['candle','شموع'],['ha','هايكن آشي'],['bar','أعمدة'],['line','خط'],['area','مساحة']];
+  const IND=[
+    {k:'ema20',n:'EMA 20',g:'o'},{k:'ema50',n:'EMA 50',g:'o',on:1},{k:'ema200',n:'EMA 200',g:'o',on:1},{k:'sma20',n:'SMA 20',g:'o'},{k:'sma50',n:'SMA 50',g:'o'},
+    {k:'bb',n:'بولينجر 20،2',g:'o'},{k:'kc',n:'كيلتنر 20',g:'o'},{k:'don',n:'دونشيان 20',g:'o'},{k:'ichi',n:'إيشيموكو',g:'o'},{k:'st',n:'سوبرترند 10،3',g:'o'},
+    {k:'psar',n:'بارابوليك SAR',g:'o'},{k:'vp',n:'بروفايل الحجم',g:'o'},{k:'vol',n:'الحجم',g:'o',on:1},
+    {k:'rsi',n:'RSI 14',g:'p',on:1},{k:'macd',n:'MACD',g:'p'},{k:'stoch',n:'ستوكاستيك 14،3',g:'p'},{k:'atr',n:'ATR 14',g:'p'},{k:'obv',n:'OBV',g:'p'},{k:'cci',n:'CCI 20',g:'p'}];
+  const TOOLS=[['cursor','مؤشر','M5 3l14 8-6 2-2 6z'],['trend','خط اتجاه','M4 20L20 4'],['ray','شعاع','M4 18L20 6M18 4l3 2-2 3'],['hline','خط أفقي','M3 12h18'],
+    ['vline','خط عمودي','M12 3v18'],['rect','مستطيل','M4 6h16v12H4z'],['fib','فيبوناتشي','M3 5h18M3 10h18M3 14h18M3 19h18'],['long','صفقة شراء','M4 14h16M4 14V6h16v8M4 14v5h16v-5'],
+    ['short','صفقة بيع','M4 10h16M4 10v8h16v-8M4 10V5h16v5'],['measure','قياس','M4 20h16M4 20V4M8 16l8-8'],['text','نص','M5 5h14M12 5v14']];
+  const S={ref:null,tf:'1d',type:'candle',log:false,sig:true,mag:true,ind:{},data:null,bars:[],raw:[],I:null,charts:null,tool:'cursor',draw:[],sel:-1,pending:null,hover:null,timer:null,active:false,seq:0,fs:false};
+  IND.forEach(x=>S.ind[x.k]=!!x.on);
+  try{const p=JSON.parse(LS.get('cx-prefs')||'{}');Object.assign(S.ind,p.ind||{});['tf','type','log','sig','mag'].forEach(k=>{if(p[k]!=null)S[k]=p[k];});}catch(_){}
+  const save=()=>LS.set('cx-prefs',JSON.stringify({ind:S.ind,tf:S.tf,type:S.type,log:S.log,sig:S.sig,mag:S.mag}));
+
+  /* ---------- math ---------- */
+  const sma=(v,n)=>{const o=new Array(v.length).fill(null);let s=0;for(let i=0;i<v.length;i++){s+=v[i];if(i>=n)s-=v[i-n];if(i>=n-1)o[i]=s/n;}return o;};
+  const std=(v,n,m)=>v.map((_,i)=>{if(m[i]==null)return null;let s=0;for(let j=i-n+1;j<=i;j++)s+=(v[j]-m[i])**2;return Math.sqrt(s/n);});
+  const hh=(b,n,i,k)=>{let x=-Infinity;for(let j=Math.max(0,i-n+1);j<=i;j++)x=Math.max(x,b[j][k]);return x;};
+  const ll=(b,n,i,k)=>{let x=Infinity;for(let j=Math.max(0,i-n+1);j<=i;j++)x=Math.min(x,b[j][k]);return x;};
+  function heikin(b){const o=[];b.forEach((x,i)=>{const c=(x.o+x.h+x.l+x.c)/4,op=i?(o[i-1].o+o[i-1].c)/2:(x.o+x.c)/2;o.push({t:x.t,o:op,h:Math.max(x.h,op,c),l:Math.min(x.l,op,c),c,v:x.v});});return o;}
+  function calc(b){const c=b.map(x=>x.c),n=b.length,I={c};
+    I.ema20=QE.ema(c,20);I.ema50=QE.ema(c,50);I.ema200=QE.ema(c,200);I.ema21=QE.ema(c,21);I.sma20=sma(c,20);I.sma50=sma(c,50);
+    const sd=std(c,20,I.sma20);I.bbU=I.sma20.map((m,i)=>m==null?null:m+2*sd[i]);I.bbL=I.sma20.map((m,i)=>m==null?null:m-2*sd[i]);
+    I.atr=QE.atr(b);I.kcU=I.ema20.map((m,i)=>m==null||I.atr[i]==null?null:m+2*I.atr[i]);I.kcL=I.ema20.map((m,i)=>m==null||I.atr[i]==null?null:m-2*I.atr[i]);
+    I.donU=b.map((_,i)=>i<19?null:hh(b,20,i,'h'));I.donL=b.map((_,i)=>i<19?null:ll(b,20,i,'l'));
+    const mid=(p,i)=>i<p-1?null:(hh(b,p,i,'h')+ll(b,p,i,'l'))/2;
+    I.tenkan=b.map((_,i)=>mid(9,i));I.kijun=b.map((_,i)=>mid(26,i));I.spanA=b.map((_,i)=>I.tenkan[i]!=null&&I.kijun[i]!=null?(I.tenkan[i]+I.kijun[i])/2:null);I.spanB=b.map((_,i)=>mid(52,i));
+    I.rsi=QE.rsi(c);I.macd=QE.macd(c);
+    const k=b.map((x,i)=>{if(i<13)return null;const H=hh(b,14,i,'h'),L=ll(b,14,i,'l');return H>L?(x.c-L)/(H-L)*100:50;});I.stK=sma(k.map(x=>x==null?0:x),3).map((x,i)=>i<15?null:x);I.stD=sma(I.stK.map(x=>x==null?0:x),3).map((x,i)=>i<17?null:x);
+    let ob=0;I.obv=b.map((x,i)=>{if(i)ob+=x.c>b[i-1].c?x.v:x.c<b[i-1].c?-x.v:0;return ob;});
+    const tp=b.map(x=>(x.h+x.l+x.c)/3),tpm=sma(tp,20);I.cci=tp.map((v,i)=>{if(tpm[i]==null)return null;let md=0;for(let j=i-19;j<=i;j++)md+=Math.abs(tp[j]-tpm[i]);md/=20;return md?(v-tpm[i])/(.015*md):0;});
+    // supertrend 10,3
+    const a10=QE.atr(b,10);I.st=new Array(n).fill(null);I.stDir=new Array(n).fill(0);let up=0,dn=0,dir=1;
+    for(let i=0;i<n;i++){if(a10[i]==null)continue;const m=(b[i].h+b[i].l)/2;let bu=m+3*a10[i],bl=m-3*a10[i];
+      if(I.st[i-1]!=null){bu=(bu<up||b[i-1].c>up)?bu:up;bl=(bl>dn||b[i-1].c<dn)?bl:dn;if(dir===1&&b[i].c<bl)dir=-1;else if(dir===-1&&b[i].c>bu)dir=1;}
+      up=bu;dn=bl;I.st[i]=dir===1?bl:bu;I.stDir[i]=dir;}
+    // parabolic SAR
+    I.psar=new Array(n).fill(null);if(n>2){let bull=b[1].c>=b[0].c,af=.02,ep=bull?b[0].h:b[0].l,sar=bull?b[0].l:b[0].h;
+      for(let i=1;i<n;i++){sar=sar+af*(ep-sar);if(bull){sar=Math.min(sar,b[i-1].l,i>1?b[i-2].l:b[i-1].l);if(b[i].l<sar){bull=false;sar=ep;ep=b[i].l;af=.02;}else if(b[i].h>ep){ep=b[i].h;af=Math.min(.2,af+.02);}}
+        else{sar=Math.max(sar,b[i-1].h,i>1?b[i-2].h:b[i-1].h);if(b[i].h>sar){bull=true;sar=ep;ep=b[i].h;af=.02;}else if(b[i].l<ep){ep=b[i].l;af=Math.min(.2,af+.02);}}I.psar[i]=sar;}}
+    return I;}
+
+  /* ---------- entry signals with honest stats ---------- */
+  const SETUP={pbL:{n:'ارتداد في اتجاه صاعد',d:1},boL:{n:'اختراق قمة 20 شمعة بزخم',d:1},pbS:{n:'ارتداد في اتجاه هابط',d:-1},boS:{n:'كسر قاع 20 شمعة بزخم',d:-1}};
+  function outcome(b,i,d,R,H=20){const e=b[i].c,st=e-d*R,t1=e+d*R,t2=e+2*d*R;let hit1=false;
+    for(let j=i+1;j<=Math.min(b.length-1,i+H);j++){const x=b[j],lo=d>0?x.l:-x.h,hi=d>0?x.h:-x.c;
+      const stopHit=d>0?x.l<=(hit1?e:st):x.h>=(hit1?e:st),t1Hit=d>0?x.h>=t1:x.l<=t1,t2Hit=d>0?x.h>=t2:x.l<=t2;
+      if(!hit1){if(stopHit)return{r:-1,res:'stop',j};if(t1Hit){hit1=true;if(t2Hit)return{r:1.5,res:'t2',j};}}
+      else{if(stopHit)return{r:.5,res:'be',j};if(t2Hit)return{r:1.5,res:'t2',j};}}
+    const last=Math.min(b.length-1,i+H);if(last-i<H)return{r:null,res:'open',j:last};
+    const m=(b[last].c-e)*d/R;return{r:hit1?.5+.5*m:m,res:hit1?'t1':'time',j:last};}
+  function signals(b,I){const out=[],n=b.length,av=sma(b.map(x=>x.v||0),20);let lastL=-99,lastS=-99;
+    for(let i=210;i<n;i++){const x=b[i],p=b[i-1],a=I.atr[i];if(!a)continue;const e21=I.ema21[i],e50=I.ema50[i],e200=I.ema200[i],r=I.rsi[i];if(e50==null||e200==null||r==null)continue;
+      let k=null;
+      if(i-lastL>5){
+        if(x.c>e200&&e50>e200&&p.l<=e21+.3*a&&x.c>p.h&&x.c>e21&&r>40&&r<68)k='pbL';
+        else if(x.c>hh(b,20,i-1,'h')&&x.c>e50&&(!av[i]||x.v>1.3*av[i])&&r<75)k='boL';}
+      if(!k&&i-lastS>5){
+        if(x.c<e200&&e50<e200&&p.h>=e21-.3*a&&x.c<p.l&&x.c<e21&&r<60&&r>32)k='pbS';
+        else if(x.c<ll(b,20,i-1,'l')&&x.c<e50&&(!av[i]||x.v>1.3*av[i])&&r>25)k='boS';}
+      if(!k)continue;const d=SETUP[k].d,R=1.5*a,o=outcome(b,i,d,R);
+      out.push({i,t:x.t,k,d,e:x.c,stop:x.c-d*R,t1:x.c+d*R,t2:x.c+2*d*R,R,...o});if(d>0)lastL=i;else lastS=i;}
+    // baseline: entering every bar in the same direction
+    const base={};[1,-1].forEach(d=>{let w=0,c=0,sr=0;for(let i=210;i<n-20;i+=2){const a=I.atr[i];if(!a)continue;const o=outcome(b,i,d,1.5*a);if(o.r==null)continue;c++;sr+=o.r;if(o.res!=='stop'&&o.r>0)w++;}base[d]={n:c,win:c?w/c*100:null,avg:c?sr/c:null};});
+    const st={};Object.keys(SETUP).forEach(k=>{const L=out.filter(s=>s.k===k&&s.r!=null);const w=L.filter(s=>s.res!=='stop'&&s.r>0).length;st[k]={n:L.length,win:L.length?w/L.length*100:null,avg:L.length?L.reduce((p,s)=>p+s.r,0)/L.length:null};});
+    return{list:out,st,base};}
+
+  /* ---------- data ---------- */
+  function bars(){const raw=(S.data&&S.data[S.tf])||[];S.raw=raw;return S.type==='ha'?heikin(raw):raw;}
+  const barSec=()=>{const b=S.raw,n=b.length;if(n<3)return 86400;const d=[];for(let i=Math.max(1,n-30);i<n;i++)d.push(b[i].t-b[i-1].t);d.sort((a,z)=>a-z);return d[Math.floor(d.length/2)]||86400;};
+  function toPt(logical,price){const b=S.raw,n=b.length;const i=Math.round(logical);const t=i<n?b[Math.max(0,i)].t:b[n-1].t+(i-(n-1))*barSec();return{t,p:price};}
+  function toLogical(t){const b=S.raw,n=b.length;if(!n)return null;if(t>=b[n-1].t)return n-1+(t-b[n-1].t)/barSec();if(t<=b[0].t)return 0;let lo=0,hi=n-1;while(hi-lo>1){const m=(lo+hi)>>1;if(b[m].t<=t)lo=m;else hi=m;}return lo+(t-b[lo].t)/Math.max(1,b[hi].t-b[lo].t);}
+
+  /* ---------- chart ---------- */
+  function mk(el,h,opt){return LightweightCharts.createChart(el,Object.assign({width:el.clientWidth,height:h,
+    layout:{background:{type:'solid',color:css('--panel')},textColor:css('--muted'),fontFamily:'JetBrains Mono, monospace',fontSize:11},
+    grid:{vertLines:{color:css('--grid')},horzLines:{color:css('--grid')}},rightPriceScale:{borderColor:css('--line')},
+    timeScale:{borderColor:css('--line'),rightOffset:8,timeVisible:S.tf==='1h'||S.tf==='4h',secondsVisible:false},crosshair:{mode:0},localization:{locale:'en-US'},
+    handleScroll:{vertTouchDrag:false}},opt||{}));}
+  function destroy(){if(!S.charts)return;S.charts.all.forEach(c=>{try{c.remove()}catch(_){}});S.charts=null;}
+  function draw(keep){if(!S.active||!window.LightweightCharts)return;const b=bars();if(!b.length){$('cxMain').innerHTML='<div class="empty">لا تتوفر بيانات لهذا الإطار.</div>';return;}
+    let range=null;if(keep&&S.charts){try{range=S.charts.main.timeScale().getVisibleLogicalRange();}catch(_){}}
+    destroy();const box=$('cxMain');box.innerHTML='';$('cxPanes').innerHTML='';
+    const I=S.I=calc(S.raw);const prec=dp(Math.abs(b[b.length-1].c)),pf={type:'price',precision:prec,minMove:Math.pow(10,-prec)};
+    const H=S.fs?Math.max(320,window.innerHeight-170-Object.keys(S.ind).filter(k=>S.ind[k]&&IND.find(x=>x.k===k).g==='p').length*110):(window.innerWidth<700?420:540);
+    const main=mk(box,H);const up=css('--up'),dn=css('--down');let ser;
+    const cd=b.map(x=>({time:x.t,open:x.o,high:x.h,low:x.l,close:x.c}));
+    if(S.type==='candle'||S.type==='ha'){ser=main.addCandlestickSeries({upColor:up,downColor:dn,borderVisible:false,wickUpColor:up,wickDownColor:dn,priceFormat:pf});ser.setData(cd);}
+    else if(S.type==='bar'){ser=main.addBarSeries({upColor:up,downColor:dn,priceFormat:pf});ser.setData(cd);}
+    else if(S.type==='line'){ser=main.addLineSeries({color:css('--accent'),lineWidth:2,priceFormat:pf});ser.setData(b.map(x=>({time:x.t,value:x.c})));}
+    else{ser=main.addAreaSeries({lineColor:css('--accent'),topColor:'rgba(31,127,192,.35)',bottomColor:'rgba(31,127,192,0)',lineWidth:2,priceFormat:pf});ser.setData(b.map(x=>({time:x.t,value:x.c})));}
+    main.priceScale('right').applyOptions({mode:S.log?1:0,scaleMargins:{top:.08,bottom:S.ind.vol?.2:.06}});
+    const ln=(arr,col,w=1.5,style=0)=>{const s=main.addLineSeries({color:col,lineWidth:w,lineStyle:style,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,priceFormat:pf});s.setData(b.map((x,i)=>arr[i]!=null?{time:x.t,value:arr[i]}:{time:x.t}));return s;};
+    if(S.ind.ema20)ln(I.ema20,'#E3A44B');if(S.ind.ema50)ln(I.ema50,css('--e50'));if(S.ind.ema200)ln(I.ema200,css('--e200'),2);
+    if(S.ind.sma20)ln(I.sma20,'#9FB1C2',1.2,2);if(S.ind.sma50)ln(I.sma50,'#6FB3E0',1.2,2);
+    if(S.ind.bb){ln(I.bbU,'rgba(122,90,224,.8)',1);ln(I.sma20,'rgba(122,90,224,.5)',1,2);ln(I.bbL,'rgba(122,90,224,.8)',1);}
+    if(S.ind.kc){ln(I.kcU,'rgba(31,127,192,.8)',1);ln(I.kcL,'rgba(31,127,192,.8)',1);}
+    if(S.ind.don){ln(I.donU,'rgba(47,179,122,.8)',1);ln(I.donL,'rgba(224,96,90,.8)',1);}
+    if(S.ind.ichi){ln(I.tenkan,'#1F7FC0',1);ln(I.kijun,'#C8382B',1);}
+    if(S.ind.st){const s=main.addLineSeries({lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,priceFormat:pf});s.setData(b.map((x,i)=>I.st[i]!=null?{time:x.t,value:I.st[i],color:I.stDir[i]>0?up:dn}:{time:x.t}));}
+    if(S.ind.psar){const s=main.addLineSeries({color:css('--gold'),lineWidth:1,lineVisible:false,pointMarkersVisible:true,pointMarkersRadius:1.6,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,priceFormat:pf});s.setData(b.map((x,i)=>I.psar[i]!=null?{time:x.t,value:I.psar[i]}:{time:x.t}));}
+    if(S.ind.vol&&b.some(x=>x.v)){const v=main.addHistogramSeries({priceScaleId:'vol',priceFormat:{type:'volume'},lastValueVisible:false,priceLineVisible:false});main.priceScale('vol').applyOptions({scaleMargins:{top:.84,bottom:0}});
+      v.setData(b.map(x=>({time:x.t,value:x.v,color:x.c>=x.o?'rgba(47,179,122,.35)':'rgba(224,96,90,.35)'})));}
+    // signals
+    S.sg=S.raw.length>230?signals(S.raw,I):{list:[],st:{},base:{}};
+    if(S.sig){const col={pbL:up,boL:'#1F7FC0',pbS:dn,boS:'#E3A44B'};
+      try{ser.setMarkers(S.sg.list.map(s=>({time:s.t,position:s.d>0?'belowBar':'aboveBar',color:col[s.k],shape:s.k[0]==='p'?(s.d>0?'arrowUp':'arrowDown'):'circle',size:1})));}catch(_){}}
+    // panes
+    const panes=[],mkPane=(title,fill)=>{const wrap=document.createElement('div');wrap.className='cx-pane';wrap.innerHTML=`<span class="cx-pt">${title}</span><div></div>`;$('cxPanes').appendChild(wrap);
+      const c=mk(wrap.lastChild,110,{timeScale:{visible:false}});c.priceScale('right').applyOptions({minimumWidth:main.priceScale('right').width()});fill(c);panes.push(c);return c;};
+    const pl=(c,arr,col,w=1.4)=>{const s=c.addLineSeries({color:col,lineWidth:w,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false});if(!c.__s)c.__s=s;s.setData(b.map((x,i)=>arr[i]!=null?{time:x.t,value:arr[i]}:{time:x.t}));return s;};
+    if(S.ind.rsi)mkPane('RSI 14',c=>{const s=pl(c,I.rsi,css('--e200'));[70,30].forEach(v=>s.createPriceLine({price:v,color:css('--line'),lineWidth:1,lineStyle:2,axisLabelVisible:false}));});
+    if(S.ind.macd)mkPane('MACD 12،26،9',c=>{const h=c.addHistogramSeries({priceLineVisible:false,lastValueVisible:false});c.__s=h;h.setData(b.map((x,i)=>I.macd.hist[i]!=null?{time:x.t,value:I.macd.hist[i],color:I.macd.hist[i]>=0?'rgba(47,179,122,.6)':'rgba(224,96,90,.6)'}:{time:x.t}));pl(c,I.macd.line,css('--e50'));pl(c,I.macd.sig,css('--gold'),1.2);});
+    if(S.ind.stoch)mkPane('ستوكاستيك 14،3',c=>{const s=pl(c,I.stK,css('--e50'));pl(c,I.stD,css('--gold'),1.2);[80,20].forEach(v=>s.createPriceLine({price:v,color:css('--line'),lineWidth:1,lineStyle:2,axisLabelVisible:false}));});
+    if(S.ind.atr)mkPane('ATR 14',c=>pl(c,I.atr,'#E3A44B'));
+    if(S.ind.obv&&b.some(x=>x.v))mkPane('OBV',c=>pl(c,I.obv,'#6FB3E0'));
+    if(S.ind.cci)mkPane('CCI 20',c=>{const s=pl(c,I.cci,'#A993F2');[100,-100].forEach(v=>s.createPriceLine({price:v,color:css('--line'),lineWidth:1,lineStyle:2,axisLabelVisible:false}));});
+    S.charts={main,ser,panes,all:[main,...panes]};
+    const ov=document.createElement('canvas');ov.id='cxOv';box.appendChild(ov);
+    main.timeScale().subscribeVisibleLogicalRangeChange(r=>{if(!r)return;panes.forEach(c=>{try{c.timeScale().setVisibleLogicalRange(r)}catch(_){}});overlay();});
+    panes.forEach(c=>c.timeScale().subscribeVisibleLogicalRangeChange(r=>{if(!r||S._sync)return;S._sync=1;try{main.timeScale().setVisibleLogicalRange(r)}catch(_){}S._sync=0;}));
+    main.subscribeCrosshairMove(p=>{legend(p&&p.logical!=null?Math.round(p.logical):null);if(S.pending&&p&&p.point){S.hover=pt(p.point.x,p.point.y);overlay();}
+      panes.forEach(c=>{try{p&&p.time&&c.__s?c.setCrosshairPosition(0,p.time,c.__s):c.clearCrosshairPosition();}catch(_){}});});
+    main.subscribeClick(p=>{if(S.tool!=='cursor'||!p||!p.point)return;S.sel=hit(p.point.x,p.point.y);overlay();tb();});
+    const span={'1h':160,'4h':150,'1d':140,'1w':110,'1M':70}[S.tf];
+    main.timeScale().setVisibleLogicalRange(range||{from:Math.max(0,b.length-span),to:b.length+8});
+    legend(null);overlay();sigPanel();}
+
+  /* ---------- legend ---------- */
+  function legend(i){const b=bars(),el=$('cxLeg');if(!b.length||!el)return;const k=i==null||i<0||i>=b.length?b.length-1:i,x=b[k],pv=b[k-1],I=S.I,d=dp(Math.abs(x.c));
+    const ch=pv?(x.c/pv.c-1)*100:0,cls=x.c>=x.o?'up':'down',v=(a,dd=d)=>a&&a[k]!=null?nf(a[k],dd):'—';
+    let h=`<span class="cx-lo">O <b class="${cls}">${nf(x.o,d)}</b> H <b class="${cls}">${nf(x.h,d)}</b> L <b class="${cls}">${nf(x.l,d)}</b> C <b class="${cls}">${nf(x.c,d)}</b> <b class="${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch.toFixed(2)}%</b>${x.v?` <span>Vol ${nf(x.v,0)}</span>`:''}</span>`;
+    const iv=[];if(S.ind.ema50)iv.push(['EMA50',v(I.ema50)]);if(S.ind.ema200)iv.push(['EMA200',v(I.ema200)]);if(S.ind.ema20)iv.push(['EMA20',v(I.ema20)]);if(S.ind.bb)iv.push(['BB',v(I.bbU)+' / '+v(I.bbL)]);
+    if(S.ind.st)iv.push(['ST',v(I.st)]);if(S.ind.rsi)iv.push(['RSI',v(I.rsi,1)]);if(S.ind.macd)iv.push(['MACD',v(I.macd.hist,d+1)]);if(S.ind.stoch)iv.push(['%K',v(I.stK,1)]);if(S.ind.atr)iv.push(['ATR',v(I.atr)]);
+    h+=`<span class="cx-li">${iv.map(([a,b])=>`${a} <b>${b}</b>`).join(' · ')}</span>`;el.innerHTML=h;}
+
+  /* ---------- drawings ---------- */
+  const key=()=>'cx-draw-'+(S.ref&&S.ref.id);
+  const loadDraw=()=>{try{S.draw=JSON.parse(LS.get(key())||'[]')}catch(_){S.draw=[]}};
+  const saveDraw=()=>LS.set(key(),JSON.stringify(S.draw.slice(-80)));
+  function pt(x,y){const C=S.charts;let lg=C.main.timeScale().coordinateToLogical(x),pr=C.ser.coordinateToPrice(y);if(lg==null||pr==null)return null;
+    if(S.mag){const i=Math.round(lg),b=S.raw[i];if(b){const c=[b.o,b.h,b.l,b.c].map(v=>({v,y:C.ser.priceToCoordinate(v)})).filter(o=>o.y!=null).sort((a,z)=>Math.abs(a.y-y)-Math.abs(z.y-y))[0];if(c&&Math.abs(c.y-y)<14){pr=c.v;lg=i;}}}
+    return toPt(lg,pr);}
+  function xy(p){const C=S.charts;const lg=toLogical(p.t);const x=lg==null?null:C.main.timeScale().logicalToCoordinate(lg),y=C.ser.priceToCoordinate(p.p);return x==null||y==null?null:[x,y];}
+  const FIB=[0,.236,.382,.5,.618,.786,1,1.618];
+  function overlay(){const C=S.charts,cv=$('cxOv');if(!C||!cv)return;const box=$('cxMain'),W=box.clientWidth,H=box.clientHeight,dpr=window.devicePixelRatio||1;
+    cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';cv.classList.toggle('on',S.tool!=='cursor');const g=cv.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,W,H);
+    const plotW=W-C.main.priceScale('right').width();g.save();g.beginPath();g.rect(0,0,plotW,H-28);g.clip();
+    const b=bars();
+    if(S.ind.ichi&&S.I){const I=S.I;const pts=[];for(let i=0;i<b.length+26;i++){const j=i-26;if(j<0||I.spanA[j]==null||I.spanB[j]==null)continue;const lg=i,x=C.main.timeScale().logicalToCoordinate(lg);if(x==null)continue;pts.push([x,C.ser.priceToCoordinate(I.spanA[j]),C.ser.priceToCoordinate(I.spanB[j]),I.spanA[j]>=I.spanB[j]]);}
+      for(let i=1;i<pts.length;i++){const a=pts[i-1],c=pts[i];if(a[1]==null||c[1]==null)continue;g.fillStyle=c[3]?'rgba(47,179,122,.13)':'rgba(224,96,90,.13)';g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(c[0],c[1]);g.lineTo(c[0],c[2]);g.lineTo(a[0],a[2]);g.closePath();g.fill();}}
+    if(S.ind.vp){const r=C.main.timeScale().getVisibleLogicalRange();if(r){const from=Math.max(0,Math.floor(r.from)),to=Math.min(b.length-1,Math.ceil(r.to));const vp=to-from>10?QE.volumeProfile(b.slice(0,to+1),to-from+1,40):null;
+      if(vp){const mw=plotW*.22;vp.V.forEach((v,i)=>{const y1=C.ser.priceToCoordinate(vp.lo+(i+1)*vp.step),y2=C.ser.priceToCoordinate(vp.lo+i*vp.step);if(y1==null||y2==null)return;const w=v/vp.max*mw,p1=vp.lo+i*vp.step;
+        g.fillStyle=Math.abs(p1+vp.step/2-vp.poc)<vp.step/2?'rgba(201,165,92,.75)':(p1>=vp.val&&p1+vp.step<=vp.vah?'rgba(201,165,92,.3)':'rgba(159,177,194,.2)');g.fillRect(plotW-w,y1+1,w,Math.max(1,y2-y1-1));});}}}
+    const all=S.draw.map((d,i)=>({d,i}));if(S.pending&&S.hover)all.push({d:Object.assign({},S.pending,{b:S.hover}),i:-2});
+    all.forEach(({d,i})=>drawOne(g,d,i===S.sel,plotW,H));g.restore();}
+  function lbl(g,x,y,t,bg,fg='#fff'){g.font='600 11px JetBrains Mono, IBM Plex Sans Arabic, sans-serif';const w=g.measureText(t).width+10;g.fillStyle=bg;g.beginPath();g.roundRect?g.roundRect(x,y-9,w,18,4):g.rect(x,y-9,w,18);g.fill();g.fillStyle=fg;g.textAlign='left';g.textBaseline='middle';g.fillText(t,x+5,y);}
+  function drawOne(g,d,sel,W,H){const A=xy(d.a),B=d.b?xy(d.b):null;if(!A)return;const col=d.c||css('--accent'),dd=dp(Math.abs(d.a.p));g.lineWidth=sel?2.6:1.6;g.strokeStyle=col;g.setLineDash([]);
+    const line=(x1,y1,x2,y2)=>{g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();};
+    if(d.type==='hline'){line(0,A[1],W,A[1]);lbl(g,W-70,A[1],nf(d.a.p,dd),col);}
+    else if(d.type==='vline'){line(A[0],0,A[0],H);}
+    else if(d.type==='text'){g.font='600 13px IBM Plex Sans Arabic, sans-serif';g.fillStyle=col;g.textAlign='left';g.textBaseline='bottom';g.fillText(d.txt||'',A[0]+4,A[1]-2);if(sel){g.strokeRect(A[0],A[1]-18,g.measureText(d.txt||'').width+8,18);}}
+    else if(d.type==='long'||d.type==='short'){const s=d.type==='long'?1:-1,x2=xy({t:d.t2,p:d.a.p}),X2=x2?x2[0]:A[0]+120,yT=S.charts.ser.priceToCoordinate(d.tp),yS=S.charts.ser.priceToCoordinate(d.sl);if(yT==null||yS==null)return;
+      g.fillStyle='rgba(47,179,122,.18)';g.fillRect(A[0],Math.min(A[1],yT),X2-A[0],Math.abs(yT-A[1]));g.fillStyle='rgba(224,96,90,.18)';g.fillRect(A[0],Math.min(A[1],yS),X2-A[0],Math.abs(yS-A[1]));
+      g.strokeStyle=sel?css('--ink'):'rgba(120,130,140,.8)';line(A[0],A[1],X2,A[1]);const rr=Math.abs(d.tp-d.a.p)/Math.abs(d.a.p-d.sl);
+      lbl(g,A[0]+4,yT+(s>0?10:-10),`الهدف ${nf(d.tp,dd)} (${((d.tp/d.a.p-1)*100).toFixed(2)}%)`,'rgba(47,179,122,.9)');lbl(g,A[0]+4,yS+(s>0?-10:10),`الوقف ${nf(d.sl,dd)} (${((d.sl/d.a.p-1)*100).toFixed(2)}%)`,'rgba(224,96,90,.9)');
+      lbl(g,A[0]+4,A[1],`${s>0?'شراء':'بيع'} ${nf(d.a.p,dd)} · R:R ${rr.toFixed(2)}`,'rgba(30,40,50,.85)');}
+    else if(B){const[x1,y1]=A,[x2,y2]=B;
+      if(d.type==='trend')line(x1,y1,x2,y2);
+      else if(d.type==='ray'){const k=(x2-x1)||1e-6,m=(y2-y1)/k,xe=x2>=x1?W:0;line(x1,y1,xe,y1+m*(xe-x1));}
+      else if(d.type==='rect'){g.fillStyle='rgba(31,127,192,.12)';g.fillRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));g.strokeRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));}
+      else if(d.type==='fib'){const p0=d.a.p,p1=d.b.p,xl=Math.min(x1,x2),xr=W;FIB.forEach((f,k)=>{const p=p1+(p0-p1)*f,y=S.charts.ser.priceToCoordinate(p);if(y==null)return;g.strokeStyle=['#9FB1C2','#E0605A','#E3A44B','#2FB37A','#1F7FC0','#7A5AE0','#9FB1C2','#C9A55C'][k];g.globalAlpha=.85;line(xl,y,xr,y);g.globalAlpha=1;lbl(g,xl+2,y-10,`${f} (${nf(p,dd)})`,'rgba(30,40,50,.75)');});}
+      else if(d.type==='measure'){const up=d.b.p>=d.a.p;g.fillStyle=up?'rgba(47,179,122,.15)':'rgba(224,96,90,.15)';g.fillRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));const bars_=Math.round(Math.abs(toLogical(d.b.t)-toLogical(d.a.t)));
+        lbl(g,(x1+x2)/2-60,Math.min(y1,y2)-12,`${nf(d.b.p-d.a.p,dd)} (${((d.b.p/d.a.p-1)*100).toFixed(2)}%) · ${bars_} شمعة`,up?'rgba(47,179,122,.95)':'rgba(224,96,90,.95)');}
+      if(sel){g.fillStyle=col;[A,B].forEach(([x,y])=>{g.beginPath();g.arc(x,y,4,0,7);g.fill();});}}}
+  function hit(x,y){let best=-1,bd=9;S.draw.forEach((d,i)=>{const A=xy(d.a),B=d.b?xy(d.b):null;if(!A)return;let dist=99;
+      if(d.type==='hline')dist=Math.abs(y-A[1]);else if(d.type==='vline')dist=Math.abs(x-A[0]);else if(d.type==='text'||d.type==='long'||d.type==='short')dist=Math.hypot(x-A[0],y-A[1])/3;
+      else if(B){if(d.type==='rect'||d.type==='fib'||d.type==='measure'){const inX=x>=Math.min(A[0],B[0])-6&&x<=Math.max(A[0],B[0])+6,inY=y>=Math.min(A[1],B[1])-6&&y<=Math.max(A[1],B[1])+6;dist=inX&&inY?2:99;}
+        else{const[x1,y1]=A,[x2,y2]=B,L=(x2-x1)**2+(y2-y1)**2;let t=L?((x-x1)*(x2-x1)+(y-y1)*(y2-y1))/L:0;if(d.type!=='ray')t=Math.max(0,Math.min(1,t));else t=Math.max(0,t);dist=Math.hypot(x-(x1+t*(x2-x1)),y-(y1+t*(y2-y1)));}}
+      if(dist<bd){bd=dist;best=i;}});return best;}
+  function onDown(e){if(S.tool==='cursor')return;e.preventDefault();const r=e.currentTarget.getBoundingClientRect(),p=pt(e.clientX-r.left,e.clientY-r.top);if(!p)return;
+    const one=['hline','vline','text','long','short'];
+    if(one.includes(S.tool)){if(S.tool==='text'){textInput(e.clientX-r.left,e.clientY-r.top,p);return;}
+      const d={type:S.tool,a:p};if(S.tool==='long'||S.tool==='short'){const a=(S.I.atr[S.raw.length-1]||p.p*.02),s=S.tool==='long'?1:-1;d.sl=p.p-s*1.5*a;d.tp=p.p+s*3*a;d.t2=p.t+barSec()*25;}
+      commit(d);return;}
+    if(!S.pending){S.pending={type:S.tool,a:p};S.hover=p;overlay();return;}
+    const d=Object.assign({},S.pending,{b:p});S.pending=null;S.hover=null;commit(d);}
+  function onMove(e){if(!S.pending)return;const r=e.currentTarget.getBoundingClientRect();S.hover=pt(e.clientX-r.left,e.clientY-r.top);overlay();}
+  function commit(d){if(d.type==='measure'){S.draw.push(d);S.sel=S.draw.length-1;overlay();setTimeout(()=>{const i=S.draw.indexOf(d);if(i>=0){S.draw.splice(i,1);S.sel=-1;overlay();}},8000);setTool('cursor');return;}
+    S.draw.push(d);S.sel=S.draw.length-1;saveDraw();setTool('cursor');overlay();tb();}
+  function textInput(x,y,p){const box=$('cxMain'),inp=document.createElement('input');inp.className='cx-tin';inp.maxLength=60;inp.placeholder='اكتب ملاحظة';inp.style.left=x+'px';inp.style.top=(y-16)+'px';box.appendChild(inp);inp.focus();
+    let fin=false;const done=ok=>{if(fin||!inp.isConnected)return;fin=true;const v=inp.value.trim();inp.remove();if(ok&&v)commit({type:'text',a:p,txt:v});else setTool('cursor');};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')done(true);if(e.key==='Escape')done(false);});inp.addEventListener('blur',()=>done(true));}
+  function setTool(t){S.tool=t;S.pending=null;S.hover=null;document.querySelectorAll('[data-cxt]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cxt===t)));const cv=$('cxOv');if(cv)cv.classList.toggle('on',t!=='cursor');
+    const h=$('cxHint');if(h)h.textContent=t==='cursor'?'':({hline:'المس الشارت لوضع الخط',vline:'المس الشارت لوضع الخط',text:'المس مكان الملاحظة',long:'المس سعر الدخول',short:'المس سعر الدخول'}[t]||'المس النقطة الأولى ثم الثانية');}
+  function tb(){const d=$('cxDel');if(d)d.disabled=S.sel<0;}
+
+  /* ---------- signals panel ---------- */
+  function sigPanel(){const el=$('cxSig');if(!el)return;const G=S.sg;if(!G||!S.raw.length){el.innerHTML='';return;}const b=S.raw,n=b.length,d=dp(Math.abs(b[n-1].c));
+    if(n<230){el.innerHTML='<p class="muted small">تحتاج الإشارات أكثر من 230 شمعة على هذا الإطار. جرّب الإطار اليومي أو الساعة.</p>';return;}
+    const fd=t=>{const x=new Date(t*1000),M=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return x.getUTCDate()+' '+M[x.getUTCMonth()]+' '+x.getUTCFullYear();};
+    const RES={stop:['وقف','down'],t2:['الهدف الثاني','up'],be:['الهدف الأول ثم التعادل','up'],t1:['الهدف الأول','up'],time:['انتهت المدة','muted'],open:['مفتوحة','muted']};
+    const live=G.list.filter(s=>s.i>=n-3).slice(-1)[0];
+    let h='';
+    if(live){const st=G.st[live.k],bs=G.base[live.d];
+      h+=`<div class="cxs-live ${live.d>0?'l':'s'}"><div class="cxs-h"><b>إشارة دخول محتملة الآن</b><span>${SETUP[live.k].n} · ${fd(live.t)}</span></div>
+        <div class="cxs-g"><div><span>الدخول</span><b class="num">${nf(live.e,d)}</b></div><div><span>الوقف</span><b class="num">${nf(live.stop,d)}</b></div><div><span>الهدف الأول</span><b class="num">${nf(live.t1,d)}</b></div><div><span>الهدف الثاني</span><b class="num">${nf(live.t2,d)}</b></div></div>
+        <p class="small">تاريخيًا على هذا الأصل والإطار: هذه الإشارة تكررت <b class="num">${st.n}</b> مرة، ووصلت للهدف الأول قبل الوقف في <b class="num">${st.win!=null?st.win.toFixed(0):'—'}%</b>، بمتوسط نتيجة <b class="num">${st.avg!=null?st.avg.toFixed(2):'—'}R</b>. أي دخول عشوائي بنفس الاتجاه: <b class="num">${bs.win!=null?bs.win.toFixed(0):'—'}%</b> ومتوسط <b class="num">${bs.avg!=null?bs.avg.toFixed(2):'—'}R</b>.</p>
+        ${st.n<10?'<p class="small warnt">عدد الحالات قليل، فالنسبة غير موثوقة.</p>':st.avg!=null&&bs.avg!=null&&st.avg<=bs.avg?'<p class="small warnt">هذه الإشارة لم تتفوق على الدخول العشوائي تاريخيًا على هذا الأصل.</p>':''}
+        <button class="btn" id="cxDrawSig">ارسمها على الشارت</button></div>`;}
+    else h+='<p class="small muted">لا توجد إشارة دخول جديدة في آخر 3 شموع على هذا الإطار.</p>';
+    h+=`<div class="tw"><table class="cxs-t"><thead><tr><th>الإعداد</th><th>العلامة</th><th>عدد الحالات</th><th>وصل للهدف الأول</th><th>متوسط النتيجة</th></tr></thead><tbody>
+      ${Object.keys(SETUP).map(k=>{const s=G.st[k];return`<tr><td>${SETUP[k].n}</td><td><i class="cxm ${k}"></i></td><td class="num">${s.n}</td><td class="num">${s.win!=null?s.win.toFixed(0)+'%':'—'}</td><td class="num ${s.avg>0?'up':s.avg<0?'down':''}">${s.avg!=null?s.avg.toFixed(2)+'R':'—'}</td></tr>`;}).join('')}
+      <tr class="base"><td>دخول عشوائي (للمقارنة)</td><td></td><td class="num">${G.base[1].n} / ${G.base[-1].n}</td><td class="num">${G.base[1].win!=null?G.base[1].win.toFixed(0):'—'}% / ${G.base[-1].win!=null?G.base[-1].win.toFixed(0):'—'}%</td><td class="num">${G.base[1].avg!=null?G.base[1].avg.toFixed(2):'—'} / ${G.base[-1].avg!=null?G.base[-1].avg.toFixed(2):'—'}R</td></tr></tbody></table></div>`;
+    const last=G.list.slice(-8).reverse();
+    if(last.length)h+=`<ul class="cxs-l">${last.map(s=>`<li><i class="cxm ${s.k}"></i><span>${fd(s.t)}</span><span>${SETUP[s.k].n}</span><b class="num">${nf(s.e,d)}</b><em class="${RES[s.res][1]}">${RES[s.res][0]}${s.r!=null?` (${s.r>0?'+':''}${s.r.toFixed(1)}R)`:''}</em></li>`).join('')}</ul>`;
+    h+='<p class="muted tiny">القواعد: الوقف 1.5×ATR، الهدف الأول بنفس المسافة، الثاني بضعفها، وبعد الهدف الأول يُرفع الوقف إلى الدخول. المدة القصوى 20 شمعة. لو لُمس الوقف والهدف في نفس الشمعة يُحسب وقفًا. النتائج تاريخية ولا تضمن المستقبل، والقرار لك.</p>';
+    el.innerHTML=h;const btn=$('cxDrawSig');if(btn)btn.onclick=()=>{S.draw.push({type:live.d>0?'long':'short',a:{t:live.t,p:live.e},sl:live.stop,tp:live.t2,t2:live.t+barSec()*20});saveDraw();overlay();$('cxMain').scrollIntoView({behavior:'smooth',block:'center'});};}
+
+  /* ---------- shell ---------- */
+  function ui(){const root=$('cxRoot');if(root.dataset.ready)return;root.dataset.ready='1';
+    root.innerHTML=`<div class="cx-top"><div class="cx-tf" role="group" aria-label="الإطار الزمني">${TFS.map(([k,n])=>`<button data-cxf="${k}">${n}</button>`).join('')}</div>
+      <div class="cx-ctl"><select id="cxType" aria-label="نوع الشارت">${TYPES.map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>
+      <button class="cx-b" id="cxIndBtn" aria-expanded="false">المؤشرات</button><button class="cx-b" id="cxLog" aria-pressed="false">لوغاريتمي</button><button class="cx-b" id="cxSigBtn" aria-pressed="false">إشارات الدخول</button>
+      <button class="cx-b" id="cxShot" title="حفظ صورة">صورة</button><button class="cx-b" id="cxFs" title="ملء الشاشة">ملء الشاشة</button></div></div>
+      <div class="cx-ind" id="cxInd" hidden><div><b>على الشارت</b>${IND.filter(x=>x.g==='o').map(x=>`<label><input type="checkbox" data-cxi="${x.k}"> ${x.n}</label>`).join('')}</div><div><b>نوافذ أسفل الشارت</b>${IND.filter(x=>x.g==='p').map(x=>`<label><input type="checkbox" data-cxi="${x.k}"> ${x.n}</label>`).join('')}</div></div>
+      <div class="cx-tools" role="toolbar" aria-label="أدوات الرسم">${TOOLS.map(([k,n,p])=>`<button data-cxt="${k}" title="${n}" aria-label="${n}"><svg viewBox="0 0 24 24"><path d="${p}"/></svg><span>${n}</span></button>`).join('')}
+        <button id="cxMag" title="مغناطيس: يلتصق بأسعار الشمعة" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 4v8a6 6 0 0 0 12 0V4h-4v8a2 2 0 0 1-4 0V4z"/></svg><span>مغناطيس</span></button>
+        <button id="cxDel" title="حذف المحدد" disabled><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg><span>حذف</span></button>
+        <button id="cxClr" title="مسح كل الرسومات"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 16l9-9 3 3-9 9H7z"/></svg><span>مسح الكل</span></button></div>
+      <div class="cx-leg" id="cxLeg"></div><div class="cx-hint" id="cxHint"></div>
+      <div class="cx-main" id="cxMain"></div><div id="cxPanes"></div><div class="cx-st" id="cxStat"></div>
+      <section class="blk cx-sigp"><h3>إشارات الدخول المحتملة</h3><div id="cxSig"></div></section>`;
+    root.querySelectorAll('[data-cxf]').forEach(b=>b.onclick=()=>{if(b.disabled)return;S.tf=b.dataset.cxf;save();S.sel=-1;sync();draw();});
+    $('cxType').onchange=e=>{S.type=e.target.value;save();draw(true);};
+    $('cxIndBtn').onclick=()=>{const p=$('cxInd');p.hidden=!p.hidden;$('cxIndBtn').setAttribute('aria-expanded',String(!p.hidden));};
+    root.querySelectorAll('[data-cxi]').forEach(c=>c.onchange=()=>{S.ind[c.dataset.cxi]=c.checked;save();draw(true);});
+    $('cxLog').onclick=()=>{S.log=!S.log;save();sync();if(S.charts)S.charts.main.priceScale('right').applyOptions({mode:S.log?1:0});};
+    $('cxSigBtn').onclick=()=>{S.sig=!S.sig;save();sync();draw(true);};
+    $('cxMag').onclick=()=>{S.mag=!S.mag;save();sync();};
+    root.querySelectorAll('[data-cxt]').forEach(b=>b.onclick=()=>setTool(S.tool===b.dataset.cxt?'cursor':b.dataset.cxt));
+    $('cxDel').onclick=()=>{if(S.sel<0)return;S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();};
+    $('cxClr').onclick=()=>{if(!S.draw.length)return;S.draw=[];S.sel=-1;saveDraw();overlay();tb();};
+    $('cxShot').onclick=shot;$('cxFs').onclick=()=>{S.fs=!S.fs;root.classList.toggle('fs',S.fs);document.documentElement.classList.toggle('cx-lock',S.fs);$('cxFs').textContent=S.fs?'إغلاق':'ملء الشاشة';draw(true);};
+    const m=$('cxMain');m.addEventListener('pointerdown',e=>{if(e.target.id==='cxOv')onDown(e);});m.addEventListener('pointermove',e=>{if(e.target.id==='cxOv')onMove(e);});
+    document.addEventListener('keydown',e=>{if(!S.active)return;if((e.key==='Delete'||e.key==='Backspace')&&S.sel>=0&&!/input|select|textarea/i.test(document.activeElement.tagName)){S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();}
+      if(e.key==='Escape'){if(S.fs)$('cxFs').click();else setTool('cursor');}});
+    let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(S.active&&S.charts)draw(true);},200);});}
+  function sync(){document.querySelectorAll('[data-cxf]').forEach(b=>{const na=!S.data||!S.data[b.dataset.cxf]||S.data[b.dataset.cxf].length<20;b.disabled=na;b.setAttribute('aria-pressed',String(b.dataset.cxf===S.tf));});
+    $('cxType').value=S.type;document.querySelectorAll('[data-cxi]').forEach(c=>c.checked=!!S.ind[c.dataset.cxi]);
+    $('cxLog').setAttribute('aria-pressed',String(S.log));$('cxSigBtn').setAttribute('aria-pressed',String(S.sig));$('cxMag').setAttribute('aria-pressed',String(S.mag));tb();}
+  function shot(){if(!S.charts)return;try{const c=S.charts.main.takeScreenshot(),ov=$('cxOv'),out=document.createElement('canvas');out.width=c.width;out.height=c.height;const g=out.getContext('2d');g.drawImage(c,0,0);if(ov)g.drawImage(ov,0,0,c.width,c.height);
+      const a=document.createElement('a');a.download=`${S.ref.id}-${S.tf}.png`;a.href=out.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();}catch(e){console.error(e);}}
+  function status(){const el=$('cxStat');if(!el||!S.data)return;const live=S.ref.kind==='cx';el.innerHTML=`<span class="pulse ${live?'live':'wait'}"></span>${live?'مباشر · يتحدث كل دقيقة':'آخر إغلاق متاح · يتحدث تلقائيًا'} · ${S.raw.length} شمعة`;}
+  async function load(){const seq=++S.seq;$('cxMain').innerHTML='<div class="empty">جارٍ تحميل الشارت…</div>';const r=await PRO.data(S.ref);if(seq!==S.seq||!S.active)return;
+    if(!r){$('cxMain').innerHTML='<div class="empty">تعذر الوصول إلى البيانات الآن.</div>';return;}S.data=r.data;
+    if(!S.data[S.tf]||S.data[S.tf].length<20)S.tf=S.data['1d']&&S.data['1d'].length?'1d':Object.keys(S.data).find(k=>S.data[k].length>=20);
+    loadDraw();sync();draw();status();}
+  async function refresh(){if(!S.active||document.hidden||S.ref.kind!=='cx'||S.pending)return;const r=await PRO.data(S.ref);if(!r||!S.active)return;S.data=r.data;draw(true);status();}
+  window.CHARTX={show(ref){if(!ref)return;ui();const same=S.ref&&S.ref.id===ref.id&&S.active&&S.charts;S.ref=ref;S.active=true;if(!same)load();if(!S.timer)S.timer=setInterval(refresh,60000);},
+    hide(){S.active=false;if(S.fs)$('cxFs').click();destroy();}};
 })();
 
 </script>
@@ -1415,7 +1735,7 @@ html.locked .gate{display:flex}
   const SIG='شيبان';
   const JSONM=CFG.mode==='json';
   const proRef=a=>A[a]&&A[a].pro?{kind:A[a].pro,id:a,name:A[a].name,unit:A[a].unit||'',code:A[a].code||''}:null;
-  const avail=a=>({now:true,candles:!!A[a].weekly,weeks:!!A[a].weekly,news:!!(S.news[a]&&S.news[a].items&&S.news[a].items.length),pro:JSONM&&!!A[a].pro,how:true});
+  const avail=a=>({now:true,candles:!!A[a].weekly,weeks:!!A[a].weekly,news:!!(S.news[a]&&S.news[a].items&&S.news[a].items.length),pro:JSONM&&!!A[a].pro,chart:JSONM&&!!A[a].pro,how:true});
   const nW=n=>n===1?'أسبوع واحد':n===2?'أسبوعين':(n>=3&&n<=10)?n+' أسابيع':n+' أسبوعًا';
   const LK=CFG.locks||{};
   const isLocked=a=>!!LK[a]&&LS.get('wave-lk-'+a)!==LK[a];
@@ -1656,13 +1976,15 @@ html.locked .gate{display:flex}
     document.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===S.tab)));
     document.querySelectorAll('[data-a]').forEach(b=>b.classList.toggle('lk',isLocked(b.dataset.a)));
     const locked=isLocked(S.asset)&&S.tab!=='how';
-    ['now','candles','weeks','news','how','pro'].forEach(t=>{const e=$('v-'+t);if(e)e.hidden=locked||t!==S.tab;});
+    ['now','candles','weeks','news','how','pro','chart'].forEach(t=>{const e=$('v-'+t);if(e)e.hidden=locked||t!==S.tab;});
     $('v-lock').hidden=!locked;
     if(window.PRO&&(locked||S.tab!=='pro'))PRO.hide();
+    if(window.CHARTX&&(locked||S.tab!=='chart'))CHARTX.hide();
     if(window.LIVE&&(locked||S.tab!=='now'||!JSONM))LIVE.stop();
     if(locked){if(S.chart){S.chart.remove();S.chart=null;}renderLock();return;}
     if(S.tab==='now'&&JSONM&&window.LIVE&&proRef(S.asset))LIVE.show(proRef(S.asset));
     if(S.tab==='pro'&&window.PRO)PRO.show(proRef(S.asset));
+    if(S.tab==='chart'&&window.CHARTX)CHARTX.show(proRef(S.asset));
     if(S.tab==='now')renderHero();
     if(S.tab==='candles')renderCandles();
     if(S.tab==='weeks')renderWeeks();
