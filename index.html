@@ -819,6 +819,10 @@ html.tv-open .wrap{transform:scale(.965);filter:blur(4px) brightness(.7);transit
 .tx-app .tv-inds button{flex:0 0 auto;height:26px;padding:0 11px;border-radius:13px;border:1px solid #2A2E39;background:#1E222D;color:#9598A1;font:500 .74rem/1 inherit;cursor:pointer;transition:all .18s}
 .tx-app .tv-inds button[aria-pressed="true"]{color:#fff;background:rgba(41,98,255,.22);border-color:#2962FF;box-shadow:0 0 10px rgba(41,98,255,.55),inset 0 0 6px rgba(41,98,255,.35);text-shadow:0 0 6px rgba(120,160,255,.8)}
 
+.tx-app .cx-hud{position:absolute;bottom:40px;z-index:5;pointer-events:none;background:rgba(19,23,34,.88);border:1px solid #2A2E39;border-radius:6px;padding:5px 9px;font:500 10.5px/1.6 -apple-system,Roboto,'IBM Plex Sans Arabic',sans-serif;color:#B2B5BE;direction:rtl;min-width:150px}
+.tx-app .cx-hud div{display:flex;justify-content:space-between;gap:12px}.tx-app .cx-hud b{color:#D1D4DC;font-weight:600;direction:ltr}
+.tx-app .cx-hud b.u{color:#089981}.tx-app .cx-hud b.d{color:#F23645}.tx-app .cx-hud b.n{color:#FF9800}
+
 html.locked body{overflow:hidden}
 html.locked .wrap{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#0A1724;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
@@ -1526,7 +1530,7 @@ html.locked .gate{display:flex}
   const IND=[
     {k:'ema20',n:'EMA 20',g:'o'},{k:'ema50',n:'EMA 50',g:'o'},{k:'ema200',n:'EMA 200',g:'o'},{k:'sma20',n:'SMA 20',g:'o'},{k:'sma50',n:'SMA 50',g:'o'},
     {k:'bb',n:'بولينجر 20،2',g:'o'},{k:'kc',n:'كيلتنر 20',g:'o'},{k:'don',n:'دونشيان 20',g:'o'},{k:'ichi',n:'إيشيموكو',g:'o'},{k:'st',n:'سوبرترند 10،3',g:'o'},
-    {k:'psar',n:'بارابوليك SAR',g:'o'},{k:'vp',n:'بروفايل الحجم',g:'o'},{k:'vol',n:'الحجم',g:'o',on:1},
+    {k:'psar',n:'بارابوليك SAR',g:'o'},{k:'vp',n:'بروفايل الحجم',g:'o'},{k:'vol',n:'الحجم',g:'o',on:1},{k:'piv',n:'محاور 5/5',g:'o'},{k:'hud',n:'لوحة الحالة',g:'o'},
     {k:'rsi',n:'RSI 14',g:'p'},{k:'macd',n:'MACD',g:'p'},{k:'stoch',n:'ستوكاستيك 14،3',g:'p'},{k:'atr',n:'ATR 14',g:'p'},{k:'obv',n:'OBV',g:'p'},{k:'cci',n:'CCI 20',g:'p'}];
   const TOOLS=[['cursor','مؤشر','M5 3l14 8-6 2-2 6z'],['trend','خط اتجاه','M4 20L20 4'],['ray','شعاع','M4 18L20 6M18 4l3 2-2 3'],['hline','خط دعم / مقاومة','M3 12h18'],
     ['vline','خط عمودي','M12 3v18'],['rect','مستطيل','M4 6h16v12H4z'],['fib','فيبوناتشي','M3 5h18M3 10h18M3 14h18M3 19h18'],['long','صفقة شراء','M4 14h16M4 14V6h16v8M4 14v5h16v-5'],
@@ -1676,12 +1680,22 @@ html.locked .gate{display:flex}
     return toPt(lg,pr);}
   function xy(p){const C=S.charts;const lg=toLogical(p.t);const x=lg==null?null:C.main.timeScale().logicalToCoordinate(lg),y=C.ser.priceToCoordinate(p.p);return x==null||y==null?null:[x,y];}
   const FIB=[0,.236,.382,.5,.618,.786,1,1.618];
+  function hud(on,b){let el=$('cxHud');const box=$('cxMain');if(!on||!b.length||b.length<60){if(el)el.remove();return;}
+    if(!el){el=document.createElement('div');el.id='cxHud';el.className='cx-hud';box.appendChild(el);}
+    const c=b.map(x=>x.c),k=2/51;let e=c[0];for(const v of c)e=v*k+e*(1-k);let ag=0,al=0;for(let i=1;i<c.length;i++){const d=c[i]-c[i-1],g=Math.max(d,0),l=Math.max(-d,0);if(i<=14){ag+=g/14;al+=l/14;}else{ag=(ag*13+g)/14;al=(al*13+l)/14;}}
+    const rsi=al?100-100/(1+ag/al):100,last=c[c.length-1],up=last>e,dd=dp(Math.abs(last));
+    el.innerHTML=`<div><span>السعر</span><b>${nf(last,dd)}</b></div><div><span>الاتجاه (EMA 50)</span><b class="${up?'u':'d'}">${up?'صاعد':'هابط'}</b></div><div><span>RSI 14</span><b class="${rsi>70?'d':rsi<30?'u':'n'}">${rsi.toFixed(1)}${rsi>70?' · تشبع شرائي':rsi<30?' · تشبع بيعي':''}</b></div>`;
+    el.style.right=(S.charts.main.priceScale('right').width()+8)+'px';}
   function overlay(){const C=S.charts,cv=$('cxOv');if(!C||!cv)return;const box=$('cxMain'),W=box.clientWidth,H=box.clientHeight,dpr=window.devicePixelRatio||1;
     cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';cv.classList.toggle('on',S.tool!=='cursor');const g=cv.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,W,H);
     const plotW=W-C.main.priceScale('right').width();S.tags=[];g.save();g.beginPath();g.rect(0,0,plotW,H-28);g.clip();
     const b=bars();
     const IN=S.clean?{}:S.ind;if(IN.ichi&&S.I){const I=S.I;const pts=[];for(let i=0;i<b.length+26;i++){const j=i-26;if(j<0||I.spanA[j]==null||I.spanB[j]==null)continue;const lg=i,x=C.main.timeScale().logicalToCoordinate(lg);if(x==null)continue;pts.push([x,C.ser.priceToCoordinate(I.spanA[j]),C.ser.priceToCoordinate(I.spanB[j]),I.spanA[j]>=I.spanB[j]]);}
       for(let i=1;i<pts.length;i++){const a=pts[i-1],c=pts[i];if(a[1]==null||c[1]==null)continue;g.fillStyle=c[3]?'rgba(47,179,122,.13)':'rgba(224,96,90,.13)';g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(c[0],c[1]);g.lineTo(c[0],c[2]);g.lineTo(a[0],a[2]);g.closePath();g.fill();}}
+    if(IN.piv){const r=C.main.timeScale().getVisibleLogicalRange();if(r){const ts=C.main.timeScale(),a=Math.max(5,Math.floor(r.from)-5),z=Math.min(b.length-6,Math.ceil(r.to));g.lineWidth=1;g.setLineDash([]);
+      for(let i=a;i<=z;i++){let ph=true,pl=true;for(let k=i-5;k<=i+5;k++){if(k===i)continue;if(b[k].h>=b[i].h)ph=false;if(b[k].l<=b[i].l)pl=false;if(!ph&&!pl)break;}
+        [[ph,b[i].h,'#F23645'],[pl,b[i].l,'#089981']].forEach(([ok,pv,c])=>{if(!ok)return;const y=C.ser.priceToCoordinate(pv),x1=ts.logicalToCoordinate(i-5),x2=ts.logicalToCoordinate(i+5);if(y==null||x1==null||x2==null)return;g.strokeStyle=c;g.beginPath();g.moveTo(x1,y);g.lineTo(x2,y);g.stroke();});}}}
+    hud(IN.hud,b);
     if(IN.vp){const r=C.main.timeScale().getVisibleLogicalRange();if(r){const from=Math.max(0,Math.floor(r.from)),to=Math.min(b.length-1,Math.ceil(r.to));const vp=to-from>10?QE.volumeProfile(b.slice(0,to+1),to-from+1,40):null;
       if(vp){const mw=plotW*.22;vp.V.forEach((v,i)=>{const y1=C.ser.priceToCoordinate(vp.lo+(i+1)*vp.step),y2=C.ser.priceToCoordinate(vp.lo+i*vp.step);if(y1==null||y2==null)return;const w=v/vp.max*mw,p1=vp.lo+i*vp.step;
         g.fillStyle=Math.abs(p1+vp.step/2-vp.poc)<vp.step/2?'rgba(201,165,92,.75)':(p1>=vp.val&&p1+vp.step<=vp.vah?'rgba(201,165,92,.3)':'rgba(159,177,194,.2)');g.fillRect(plotW-w,y1+1,w,Math.max(1,y2-y1-1));});}}}
