@@ -185,28 +185,59 @@ def crypto(status):
             status['cx'][k] = {'ok': False, 'err': str(e)[:160]}
 
 
-def news(status):
-    """pro/news.json: latest Yahoo headlines per asset (title, link, source, date)."""
-    import yfinance as yf
-    out, syms = {}, [(c, s) for c, s, k in STOCKS] + [(k, f'{k}-USD') for k in CX]
-    for c, sym in syms:
+NEWS_Q = {
+    '8311': ('عناية للتأمين', None), '1120': ('مصرف الراجحي', None), '4340': ('الراجحي ريت', None), '2222': ('أرامكو السعودية سهم', None),
+    '1211': ('معادن السعودية', None), '1180': ('البنك الأهلي السعودي', None), '7010': ('اس تي سي السعودية سهم', None), '2010': ('سابك', None),
+    '2082': ('أكوا باور', None), '4013': ('سليمان الحبيب الطبية', None), '1010': ('بنك الرياض', None), '1150': ('مصرف الإنماء', None),
+    'GOOGL': ('سهم ألفابت جوجل', 'Alphabet stock'), 'META': ('سهم ميتا', 'Meta Platforms stock'), 'AVGO': ('سهم برودكوم', 'Broadcom stock'),
+    'TSM': ('سهم تايوان لأشباه الموصلات', 'TSMC stock'), 'JPM': ('جي بي مورغان', 'JPMorgan stock'), 'LLY': ('إيلي ليلي', 'Eli Lilly stock'), 'V': ('فيزا سهم', 'Visa stock'),
+    'TASI': ('مؤشر تاسي السوق السعودية', None), 'DJI': ('مؤشر داو جونز', 'Dow Jones'), 'SPX': ('مؤشر اس اند بي 500', 'S&P 500'), 'NDX': ('مؤشر ناسداك', 'Nasdaq 100'),
+    'GOLD': ('أسعار الذهب', 'gold price'), 'SILVER': ('أسعار الفضة', 'silver price'), 'BRENT': ('نفط برنت', 'Brent crude'), 'US10Y': ('عائد السندات الأمريكية', 'Treasury yields'),
+    'DXY': ('مؤشر الدولار', 'dollar index'), 'BTC': ('بيتكوين', 'Bitcoin'), 'ETH': ('إيثريوم', 'Ethereum'), 'XRP': ('ريبل XRP', 'XRP Ripple'), 'BNB': ('عملة بينانس BNB', 'BNB coin'),
+    'SOL': ('سولانا', 'Solana crypto'), 'TRX': ('ترون TRX', 'TRON TRX'), 'DOGE': ('دوجكوين', 'Dogecoin'), 'ZEC': ('زي كاش', 'Zcash'), 'LINK': ('تشين لينك', 'Chainlink LINK'),
+    'ADA': ('كاردانو', 'Cardano ADA'), 'LTC': ('لايتكوين', 'Litecoin'),
+}
+
+
+def gnews(q, lang):
+    import xml.etree.ElementTree as ET, urllib.parse, email.utils
+    loc = 'hl=ar&gl=SA&ceid=SA:ar' if lang == 'ar' else 'hl=en-US&gl=US&ceid=US:en'
+    url = f'https://news.google.com/rss/search?q={urllib.parse.quote(q + " when:30d")}&{loc}'
+    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=20) as r:
+        root = ET.fromstring(r.read())
+    out = []
+    for it in root.iter('item'):
+        t = (it.findtext('title') or '').strip()
+        src = (it.findtext('source') or '').strip()
+        if src and t.endswith(' - ' + src):
+            t = t[: -len(src) - 3]
         try:
-            items = []
-            for n in (yf.Ticker(sym).news or [])[:12]:
-                ct = n.get('content') or n
-                title = ct.get('title') or n.get('title')
-                url = ((ct.get('canonicalUrl') or {}).get('url') or (ct.get('clickThroughUrl') or {}).get('url') or n.get('link'))
-                src = ((ct.get('provider') or {}).get('displayName') or n.get('publisher') or '')
-                when = ct.get('pubDate') or ct.get('displayTime')
-                if not when and n.get('providerPublishTime'):
-                    when = dt.datetime.fromtimestamp(n['providerPublishTime'], dt.timezone.utc).isoformat()
-                if title and url:
-                    items.append({'t': title[:220], 'u': url, 's': src[:40], 'd': (when or '')[:10], 'sum': (ct.get('summary') or '')[:300]})
-            if items:
-                out[c] = items
-        except Exception as e:
-            status.setdefault('notes', []).append(f'{c} news: {str(e)[:60]}')
-        time.sleep(0.3)
+            d = email.utils.parsedate_to_datetime(it.findtext('pubDate')).date().isoformat()
+        except Exception:
+            d = ''
+        if t and it.findtext('link'):
+            out.append({'t': t[:220], 'u': it.findtext('link'), 's': src[:40], 'd': d, 'lang': lang})
+    return out
+
+
+def news(status):
+    """pro/news.json: recent headlines per asset from Google News (Arabic, plus English for global assets)."""
+    out, errs = {}, 0
+    for c, (qa, qe) in NEWS_Q.items():
+        items = []
+        for q, lang, n in ((qa, 'ar', 8), (qe, 'en', 6)):
+            if not q:
+                continue
+            try:
+                items += gnews(q, lang)[:n]
+            except Exception as e:
+                errs += 1
+                if errs < 4:
+                    status.setdefault('notes', []).append(f'{c} news: {str(e)[:60]}')
+            time.sleep(0.6)
+        items.sort(key=lambda x: x['d'], reverse=True)
+        if items:
+            out[c] = items[:14]
     write(f'{ROOT}/news.json', {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'a': out})
     status['news'] = len(out)
 
