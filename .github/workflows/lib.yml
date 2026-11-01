@@ -1,0 +1,18 @@
+name: lib
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/lib.yml']
+permissions:
+  contents: write
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          mkdir out && cd out && npm init -y >/dev/null && npm i lightweight-charts@4.2.0 >/dev/null
+          cp node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.js lw.js
+          cp node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.js lw.dev.js
+          rm -rf node_modules package*.json
+          git init -q && git checkout -q -b lib && git config user.name shaibanor && git config user.email shaibanor@users.noreply.github.com
+          git add . && git commit -qm lib && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" lib
