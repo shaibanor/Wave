@@ -2382,7 +2382,7 @@ html.locked .gate{display:flex}
     'ADA':['كاردانو','cardano'],'LTC':['لايتكوين','لايت كوين','ليتكوين','litecoin'],
     'GOOGL':['قوقل','جوجل','google','ألفابت','alphabet'],'META':['ميتا','فيسبوك','facebook'],'AVGO':['برودكوم','broadcom'],'TSM':['تايوان','tsmc','تايوان للرقائق'],
     'JPM':['جي بي مورقان','جي بي مورغان','jp morgan','jpmorgan','مورقان','مورغان'],'LLY':['إيلي ليلي','ليلي','eli lilly'],'V':['فيزا','visa'],
-    'TASI':['تاسي','المؤشر العام','مؤشر السوق','السوق السعودي','المؤشر السعودي'],'DJI':['داو جونز','داوجونز','الداو','dow jones','dow'],
+    'TASI':['تاسي','المؤشر العام','مؤشر السوق','السوق السعودي','المؤشر السعودي','السوق'],'DJI':['داو جونز','داوجونز','الداو','dow jones','dow'],
     'SPX':['اس اند بي','إس آند بي','اس آند بي','s&p','s&p 500','sp500','اس اند بي 500'],'NDX':['ناسداك','nasdaq'],'GOLD':['الذهب','ذهب','gold','الدهب'],
     'SILVER':['الفضة','فضة','silver'],'BRENT':['برنت','النفط','نفط','البترول','brent','oil'],'US10Y':['السندات','عائد السندات','سندات','السندات الأمريكية','us10y'],'DXY':['مؤشر الدولار','dxy']};
   const AS=API().assets.filter(a=>a.pro),BY=Object.fromEntries(AS.map(a=>[a.id,a]));
@@ -2391,7 +2391,17 @@ html.locked .gate{display:flex}
     for(const raw of set){const n=norm(raw);if(!n||n.length<2)continue;const v=new Set([n]);if(n.startsWith('ال')&&n.length>4)v.add(n.slice(2));else if(!/^[a-z0-9&]/.test(n))v.add('ال'+n);
       for(const x of v)PAT.push({id:a.id,x,re:new RegExp('(^| )(و|ف|ب|ك|ل|لل|وب|ول)?'+x.replace(/[.*+?^${}()|[\]\\&]/g,'\\$&')+'( |$)')});}}
   PAT.sort((p,q)=>q.x.length-p.x.length);
-  function findAssets(t){const hits=[];for(const p of PAT){const m=p.re.exec(t);if(!m)continue;const s=m.index+m[1].length+(m[2]||'').length,e=s+p.x.length;
+  const skel=w=>w.replace(/[اويىءئؤ]/g,'');
+  const lev=(a,b)=>{if(Math.abs(a.length-b.length)>2)return 9;const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;
+    for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length];};
+  function fuzzy(t){let best=null;const skip=typeof STOP!=='undefined'?STOP:new Set();
+    for(const raw of t.split(' ')){const w=raw.replace(/^(و|ف|ب|ل|ك)?(ال)?/,'');if(w.length<4||skip.has(raw)||skip.has(w))continue;const sw=skel(w);
+      for(const p of PAT){if(p.x.includes(' '))continue;const x=p.x.replace(/^ال/,'');if(x.length<4)continue;let sc=99;
+        if(sw.length>=3&&skel(x)===sw)sc=.5;else{const d=lev(w,x),lim=w.length>=7?2:1;if(d<=lim)sc=d;}
+        if(sc<99&&(!best||sc<best.sc))best={id:p.id,sc};}}
+    return best?[best.id]:[];}
+  function findAssets(t){const r=findExact(t);return r.length?r:fuzzy(t);}
+  function findExact(t){const hits=[];for(const p of PAT){const m=p.re.exec(t);if(!m)continue;const s=m.index+m[1].length+(m[2]||'').length,e=s+p.x.length;
       if(hits.some(h=>s<h.e&&e>h.s))continue;hits.push({id:p.id,s,e});}
     const out=[];hits.sort((a,b)=>a.s-b.s).forEach(h=>{if(!out.includes(h.id))out.push(h.id);});return out;}
   const TFR=[['4h',/(4 ?ساعات|اربع ساعات|4 ?h\b|اربع ساعه|4 ساعه)/],['1h',/(^| )(ال)?(ساعه|ساعي|1h)( |$)/],['1w',/(^| )(ال)?اسبوعي( |$)/],['1M',/(^| )(ال)?(شهري|شهر)( |$)/],['1d',/(^| )(ال)?(يومي|1d)( |$)/]];
@@ -2532,7 +2542,7 @@ html.locked .gate{display:flex}
   const OUTSCOPE=()=>`<p>نعتذر، هذا الطلب خارج نطاق خدمة المساعد.</p><p>صُمّم المساعد للإجابة عن تحليلات الأسهم والعملات والمؤشرات المنشورة في المنصة فقط، ولا يقدّم معلومات عامة أو محتوى من خارجها، التزامًا بسياسة الاستخدام.</p>`+MORE();
   const NOTFOUND=()=>UNAVAIL('');
   const ABOUT=()=>`<p>أنا مساعد التحليل، جزء من منصة <b>التحليل الخاص · شيبان</b>. أجيب من بيانات المنصة وتحليلاتها مباشرة.</p><p class="bpol">التفاصيل التقنية للمنصة ومصادرها الداخلية محمية بحقوق الملكية ولا يُفصح عنها.</p>`+MORE();
-  const STOP=new Set('وش ايش شو ما ماذا هل كم كيف متي وين اين ليش لماذا في عن من الي علي مع او ثم هو هي له لها فيه فيها هذا هذه ذا الحين الان اليوم بكره غدا رايك رايكم توقعك توقعاتك توقع تتوقع تحليل حلل اتجاه سعر اسعار سهم اسهم عمله عملات عملة شركه مؤشر اسبوع شهر يا انت ابي ابغي اريد عطني اعطني ممكن لو سمحت طيب يطلع ينزل يرتفع ينخفض صعود هبوط حركه السوق قيمه كوين حالي قادم جاي بعد قبل شراء بيع اشتري ابيع ادخل هدف اهداف دعم مقاومه وضع الوضع كذا زين يستاهل تنصح تنصحني نصيحه اخبار خبر مستقبل ايضا كمان بس'.split(' '));
+  const STOP=new Set('اكتب قصيده قصيدة شعر نكته طقس ترجم اغنيه وصفه قصه وش ايش شو ما ماذا هل كم كيف متي وين اين ليش لماذا في عن من الي علي مع او ثم هو هي له لها فيه فيها هذا هذه ذا الحين الان اليوم بكره غدا رايك رايكم توقعك توقعاتك توقع تتوقع تحليل حلل اتجاه سعر اسعار سهم اسهم عمله عملات عملة شركه مؤشر اسبوع شهر يا انت ابي ابغي اريد عطني اعطني ممكن لو سمحت طيب يطلع ينزل يرتفع ينخفض صعود هبوط حركه السوق قيمه كوين حالي قادم جاي بعد قبل شراء بيع اشتري ابيع ادخل هدف اهداف دعم مقاومه وضع الوضع كذا زين يستاهل تنصح تنصحني نصيحه اخبار خبر مستقبل ايضا كمان بس'.split(' '));
   const MK=/(توقع|سهم|اسهم|عمله|عملات|كوين|سعر|اسعار|اتجاه|تحليل|حلل|شراء|بيع|اشتري|ابيع|يطلع|ينزل|صعود|هبوط|مقاوم|هدف|تداول|استثمار|شارت|chart|token|توكن)/;
   const WHO=/(من صنعك|من برمجك|من سواك|من طورك|وش النموذج|ايش النموذج|اي نموذج|من انت|مين انت|هل انت|ذكاء اصطناعي|الذكاء الاصطناعي|بوت مين|انت بوت|كيف برمجت|كيف تشتغل|مصدر بياناتك|من وين تجيب)/;
   function candidate(q,t){const toks=t.split(' ').filter(w=>{if(w.length<2)return false;const b=w.replace(/^(و|ف|ب|ل|ك)?(ال)?/,'');return !STOP.has(w)&&!STOP.has(b)&&!STOP.has(w.replace(/^ال/,''))&&!/^\d+$/.test(w)&&!Object.values(I).some(r=>r.test(w))&&!TFR.some(([,r])=>r.test(w));});
