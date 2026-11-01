@@ -111,8 +111,8 @@ def stocks_full(status):
                     raise StopIteration
                 h1 = frame_rows(t.history(period='730d', interval='1h', auto_adjust=False, actions=False), False)
                 if len(h1) >= 60:
-                    obj['1h'] = [x[:6] for x in h1[-500:]]
-                    obj['4h'] = to4h(h1)[-500:]
+                    obj['1h'] = [x[:6] for x in h1[-1500:]]
+                    obj['4h'] = to4h(h1)[-800:]
             except StopIteration:
                 pass
             except Exception as e:

@@ -20,6 +20,10 @@ const H=process.env.GATE_HASH;const base='http://localhost:8099/';
   for(const t of ['ha','bar','line','area','candle']){await p.selectOption('#cxType',t);await p.waitForTimeout(300);}
   for(const f of ['1h','4h','1w','1M','1d']){await p.click(`[data-cxf="${f}"]`).catch(()=>{});await p.waitForTimeout(400);}
   await p.click('[data-cxt="trend"]');await p.waitForTimeout(300);const bx=await p.locator('#cxMain').boundingBox();await p.mouse.click(bx.x+80,bx.y+200);await p.mouse.click(bx.x+220,bx.y+120);
+  await p.click('[data-cxt="hline"]');await p.mouse.move(bx.x+120,bx.y+160);await p.mouse.down();await p.mouse.move(bx.x+130,bx.y+140,{steps:4});await p.mouse.up();
+  await p.click('#cxSR');await p.click('#cxClean');await p.waitForTimeout(400);await p.click('#cxClean');
+  const ax=await p.locator('.cx-ax').boundingBox();if(ax){await p.mouse.move(ax.x+5,ax.y+150);await p.mouse.down();await p.mouse.move(ax.x+5,ax.y+250,{steps:5});await p.mouse.up();}
+  log.push(tag+' chart auto btn: '+(await p.isVisible('.cx-auto')));
   await p.click('[data-cxt="long"]');await p.waitForTimeout(300);const by=await p.locator('#cxMain').boundingBox();await p.mouse.click(by.x+180,by.y+220);
   log.push(tag+' chart drawings: '+(await p.evaluate(()=>Object.keys(localStorage).filter(k=>k.startsWith('cx-draw')).map(k=>localStorage.getItem(k).length).join(','))));
   await p.screenshot({path:`qa/chart_sol_${tag}.png`,fullPage:true});
