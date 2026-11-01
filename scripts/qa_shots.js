@@ -19,8 +19,8 @@ const H=process.env.GATE_HASH;const base='http://localhost:8099/';
   for(const k of ['bb','macd','ichi','st','psar','vp','stoch','obv','cci']){await p.evaluate(k=>{const c=document.querySelector(`[data-cxi="${k}"]`);c.checked=true;c.dispatchEvent(new Event('change'));},k);await p.waitForTimeout(300);}
   for(const t of ['ha','bar','line','area','candle']){await p.selectOption('#cxType',t);await p.waitForTimeout(300);}
   for(const f of ['1h','4h','1w','1M','1d']){await p.click(`[data-cxf="${f}"]`).catch(()=>{});await p.waitForTimeout(400);}
-  await p.click('[data-cxt="trend"]');const bx=await p.locator('#cxMain').boundingBox();await p.mouse.click(bx.x+80,bx.y+200);await p.mouse.click(bx.x+220,bx.y+120);
-  await p.click('[data-cxt="long"]');await p.mouse.click(bx.x+180,bx.y+220);
+  await p.click('[data-cxt="trend"]');await p.evaluate(()=>document.getElementById('cxMain').scrollIntoView({block:'center'}));await p.waitForTimeout(300);const bx=await p.locator('#cxMain').boundingBox();await p.mouse.click(bx.x+80,bx.y+200);await p.mouse.click(bx.x+220,bx.y+120);
+  await p.click('[data-cxt="long"]');await p.evaluate(()=>document.getElementById('cxMain').scrollIntoView({block:'center'}));await p.waitForTimeout(300);const by=await p.locator('#cxMain').boundingBox();await p.mouse.click(by.x+180,by.y+220);
   log.push(tag+' chart drawings: '+(await p.evaluate(()=>Object.keys(localStorage).filter(k=>k.startsWith('cx-draw')).map(k=>localStorage.getItem(k).length).join(','))));
   await p.screenshot({path:`qa/chart_sol_${tag}.png`,fullPage:true});
   log.push(tag+' chart panes: '+(await p.evaluate(()=>document.querySelectorAll('#cxPanes .cx-pane').length)));
