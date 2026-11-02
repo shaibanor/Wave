@@ -850,6 +850,8 @@ html.tv-open .wrap{transform:scale(.965);filter:blur(4px) brightness(.7);transit
 
 .tx-app .cx-ftb{top:auto;bottom:40px}
 
+.tx-app #cxUndo:disabled{opacity:.35}
+
 html.locked body{overflow:hidden}
 html.locked .wrap{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#0A1724;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
@@ -1729,8 +1731,11 @@ html.locked .gate{display:flex}
 
   /* ---------- drawings ---------- */
   const key=()=>'cx-draw-'+(S.ref&&S.ref.id);
-  const loadDraw=()=>{try{S.draw=JSON.parse(LS.get(key())||'[]')}catch(_){S.draw=[]}};
-  const saveDraw=()=>LS.set(key(),JSON.stringify(S.draw.slice(-80)));
+  const loadDraw=()=>{try{S.draw=JSON.parse(LS.get(key())||'[]')}catch(_){S.draw=[]}S.hist=[];undoUi();};
+  const saveDraw=()=>{LS.set(key(),JSON.stringify(S.draw.slice(-80)));undoUi();};
+  S.hist=[];const snap=()=>{S.hist.push(JSON.stringify(S.draw));if(S.hist.length>60)S.hist.shift();undoUi();};
+  function undoUi(){const b=document.getElementById('cxUndo');if(b)b.disabled=!S.hist.length;}
+  function undo(){if(!S.hist.length)return;try{S.draw=JSON.parse(S.hist.pop());}catch(_){return;}S.sel=-1;S.drag=null;LS.set(key(),JSON.stringify(S.draw.slice(-80)));undoUi();overlay();tb();ftb();}
   function pt(x,y,nomag){const C=S.charts;let lg=C.main.timeScale().coordinateToLogical(x),pr=C.ser.coordinateToPrice(y);if(lg==null||pr==null)return null;
     if(S.mag&&!nomag){const i=Math.round(lg),b=S.raw[i];if(b){const c=[b.o,b.h,b.l,b.c].map(v=>({v,y:C.ser.priceToCoordinate(v)})).filter(o=>o.y!=null).sort((a,z)=>Math.abs(a.y-y)-Math.abs(z.y-y))[0];if(c&&Math.abs(c.y-y)<14){pr=c.v;lg=i;}}}
     return toPt(lg,pr);}
@@ -1796,16 +1801,18 @@ html.locked .gate{display:flex}
       if(d.type==='trend')line(x1,y1,x2,y2);
       else if(d.type==='ray'){const k=(x2-x1)||1e-6,m=(y2-y1)/k,xe=x2>=x1?W:0;line(x1,y1,xe,y1+m*(xe-x1));}
       else if(d.type==='rect'){g.fillStyle='rgba(41,98,255,.08)';g.fillRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));g.strokeRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));}
-      else if(d.type==='fib'){const p0=d.a.p,p1=d.b.p,xl=Math.min(x1,x2),xr=W,FC=['#787B86','#F23645','#FF9800','#4CAF50','#089981','#00BCD4','#787B86','#2962FF'];let py=null;g.setLineDash([]);g.lineWidth=1;g.strokeStyle=col;g.globalAlpha=.5;g.setLineDash([4,4]);line(x1,y1,x2,y2);g.setLineDash([]);g.globalAlpha=1;
+      else if(d.type==='fib'){const p0=d.a.p,p1=d.b.p,xl=Math.min(x1,x2),xr=W,FC=['#787B86','#F23645','#FF9800','#4CAF50','#089981','#00BCD4','#787B86','#2962FF'];let py=null;g.setLineDash([]);g.lineWidth=1;g.strokeStyle=col;g.globalAlpha=.9;g.lineWidth=1.2;g.setLineDash([5,4]);line(x1,y1,x2,y2);g.setLineDash([]);g.globalAlpha=1;g.lineWidth=1;[[x1,y1],[x2,y2]].forEach(([px,py])=>{g.fillStyle=col;g.beginPath();g.arc(px,py,sel?4.5:2.5,0,7);g.fill();});
+        if(sel){const ya=S.charts.ser.priceToCoordinate(p0),yb=S.charts.ser.priceToCoordinate(p1);if(ya!=null&&yb!=null){g.strokeStyle='#2962FF';g.setLineDash([2,3]);g.strokeRect(Math.max(xl,0)+.5,Math.min(ya,yb)+.5,xr-Math.max(xl,0)-1,Math.abs(yb-ya));g.setLineDash([]);}}
         FIB.forEach((f,k)=>{const p=p1+(p0-p1)*f,y=S.charts.ser.priceToCoordinate(p);if(y==null)return;if(py!=null){g.fillStyle=FC[k];g.globalAlpha=.07;g.fillRect(xl,Math.min(py,y),xr-xl,Math.abs(y-py));g.globalAlpha=1;}py=y;g.strokeStyle=FC[k];line(xl,y,xr,y);
-          g.font='500 10px -apple-system, Roboto, sans-serif';g.fillStyle=FC[k];g.textAlign='left';g.textBaseline='bottom';g.fillText(`${f} (${nf(p,dd)})`,xl+3,y-2);});}
+          g.font='500 10px -apple-system, Roboto, sans-serif';g.fillStyle=FC[k];g.textAlign='left';g.textBaseline='bottom';g.fillText(`${f} (${nf(p,dd)})`,Math.max(xl,0)+3,y-2);});}
       else if(d.type==='measure'){const up=d.b.p>=d.a.p;g.fillStyle=up?'rgba(47,179,122,.15)':'rgba(224,96,90,.15)';g.fillRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));const bars_=Math.round(Math.abs(toLogical(d.b.t)-toLogical(d.a.t)));
         lbl(g,(x1+x2)/2-60,Math.min(y1,y2)-12,`${nf(d.b.p-d.a.p,dd)} (${((d.b.p/d.a.p-1)*100).toFixed(2)}%) · ${bars_} شمعة`,up?'rgba(47,179,122,.95)':'rgba(224,96,90,.95)');}
       if(sel){[A,B].forEach(([x,y])=>handle(g,x,y,col));}}}
   function hit(x,y,tol){let best=-1,bd=tol||9;S.draw.forEach((d0,i)=>{const d=fibView(d0);const A=xy(d.a),B=d.b?xy(d.b):null;if(!A)return;let dist=99;
       if(d.type==='brush'){(d.pts||[]).map(xy).filter(Boolean).forEach((q,k,P)=>{if(!k)return;const a=P[k-1],L=(q[0]-a[0])**2+(q[1]-a[1])**2;let t=L?((x-a[0])*(q[0]-a[0])+(y-a[1])*(q[1]-a[1]))/L:0;t=Math.max(0,Math.min(1,t));dist=Math.min(dist,Math.hypot(x-(a[0]+t*(q[0]-a[0])),y-(a[1]+t*(q[1]-a[1]))));});}
       else if(d.type==='hline')dist=Math.abs(y-A[1]);else if(d.type==='vline')dist=Math.abs(x-A[0]);else if(d.type==='text'||d.type==='long'||d.type==='short')dist=Math.hypot(x-A[0],y-A[1])/3;
-      else if(B){if(d.type==='rect'||d.type==='fib'||d.type==='measure'){const inX=x>=Math.min(A[0],B[0])-6&&x<=Math.max(A[0],B[0])+6,inY=y>=Math.min(A[1],B[1])-6&&y<=Math.max(A[1],B[1])+6;dist=inX&&inY?2:99;}
+      else if(B){if(d.type==='fib'){const inX=x>=Math.min(A[0],B[0])-14,inY=y>=Math.min(A[1],B[1])-10&&y<=Math.max(A[1],B[1])+10;dist=inX&&inY?1:99;}
+        else if(d.type==='rect'||d.type==='measure'){const inX=x>=Math.min(A[0],B[0])-6&&x<=Math.max(A[0],B[0])+6,inY=y>=Math.min(A[1],B[1])-6&&y<=Math.max(A[1],B[1])+6;dist=inX&&inY?2:99;}
         else{const[x1,y1]=A,[x2,y2]=B,L=(x2-x1)**2+(y2-y1)**2;let t=L?((x-x1)*(x2-x1)+(y-y1)*(y2-y1))/L:0;if(d.type!=='ray')t=Math.max(0,Math.min(1,t));else t=Math.max(0,t);dist=Math.hypot(x-(x1+t*(x2-x1)),y-(y1+t*(y2-y1)));}}
       if(dist<bd){bd=dist;best=i;}});return best;}
   const ONE=['hline','vline','text','long','short'];
@@ -1823,7 +1830,7 @@ html.locked .gate{display:flex}
     if(!S.pending){S.pending={type:S.tool,a:p};S.aim=null;overlay();const h=$('cxHint');if(h)h.textContent=S.tool==='fib'?'الآن اضغط على النقطة المقابلة':'اضغط واسحب لتحديد النقطة الثانية ثم ارفع إصبعك';return;}
     const d=Object.assign({},S.pending,{b:p});S.pending=null;S.hover=null;S.aim=null;commit(d);}
   function srStyle(d){const last=S.raw.length?S.raw[S.raw.length-1].c:d.a.p,res=d.a.p>=last;d.c=d.c||(res?'#F23645':'#089981');d.lab=d.lab||(res?'مقاومة':'دعم');return d;}
-  function commit(d){if(d.type==='hline')srStyle(d);if(d.type==='fib')d.tf0=S.tf;setTimeout(ftb,0);if(d.type==='measure'){S.draw.push(d);S.sel=S.draw.length-1;overlay();setTimeout(()=>{const i=S.draw.indexOf(d);if(i>=0){S.draw.splice(i,1);S.sel=-1;overlay();}},8000);setTool('cursor');return;}
+  function commit(d){if(d.type!=='measure')snap();if(d.type==='hline')srStyle(d);if(d.type==='fib')d.tf0=S.tf;setTimeout(ftb,0);if(d.type==='measure'){S.draw.push(d);S.sel=S.draw.length-1;overlay();setTimeout(()=>{const i=S.draw.indexOf(d);if(i>=0){S.draw.splice(i,1);S.sel=-1;overlay();}},8000);setTool('cursor');return;}
     S.draw.push(d);S.sel=S.draw.length-1;saveDraw();setTool('cursor');overlay();tb();}
   function textInput(x,y,p){const box=$('cxMain'),inp=document.createElement('input');inp.className='cx-tin';inp.maxLength=60;inp.placeholder='اكتب ملاحظة';inp.style.left=x+'px';inp.style.top=(y-16)+'px';box.appendChild(inp);inp.focus();
     let fin=false;const done=ok=>{if(fin||!inp.isConnected)return;fin=true;const v=inp.value.trim();inp.remove();if(ok&&v)commit({type:'text',a:p,txt:v});else setTool('cursor');};
@@ -1838,7 +1845,7 @@ html.locked .gate{display:flex}
       (d.type==='hline'?`<button data-fa class="${d.an?'on':''}" title="تحليل أدوار الخط">↺ أدوار</button>`:'')+`<span class="sep"></span><button data-fd title="حذف"><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></button>`;}
   function bindFtb(){const el=$('cxFtb');el.addEventListener('pointerdown',e=>e.stopPropagation());
     el.addEventListener('click',e=>{const b=e.target.closest('button');const d=S.draw[S.sel];if(!b||!d)return;
-      if(b.dataset.fc){d.c=b.dataset.fc;}else if(b.hasAttribute('data-fw')){const w=[1,1.5,2,3,4],k=w.indexOf(d.w||(d.type==='brush'?2:1.5));d.w=w[(k+1)%w.length];}
+      snap();if(b.dataset.fc){d.c=b.dataset.fc;}else if(b.hasAttribute('data-fw')){const w=[1,1.5,2,3,4],k=w.indexOf(d.w||(d.type==='brush'?2:1.5));d.w=w[(k+1)%w.length];}
       else if(b.hasAttribute('data-fs')){d.st=((d.st||0)+1)%3;}else if(b.hasAttribute('data-fa')){d.an=!d.an;}
       else if(b.hasAttribute('data-fd')){S.draw.splice(S.sel,1);S.sel=-1;}
       saveDraw();overlay();tb();ftb();});}
@@ -1929,14 +1936,14 @@ html.locked .gate{display:flex}
   function plusAt(y){const b=S.plus;if(!b)return;if(y==null||S.tool!=='cursor'){b.hidden=true;return;}b.hidden=false;b.dataset.y=y;b.style.top=(y-11)+'px';}
   function quickLine(x,y){const p=pt(x,y);if(!p)return;commit({type:'hline',a:p});}
   function endHit(d,x,y){for(const k of ['a','b']){if(!d[k])continue;const q=xy(d[k]);if(q&&Math.hypot(q[0]-x,q[1]-y)<14)return k;}return null;}
-  function dragStart(i,x,y){const d=S.draw[i];if(d&&d.type==='fib'&&d.tf0&&d.tf0!==S.tf){const v=fibView(d);d.a=v.a;d.b=v.b;d.tf0=S.tf;}S.drag={i,x,y,lg:S.charts.main.timeScale().coordinateToLogical(x),pr:S.charts.ser.coordinateToPrice(y),o:JSON.parse(JSON.stringify(d)),end:endHit(d,x,y),moved:false};}
+  function dragStart(i,x,y){const pre=JSON.stringify(S.draw);const d=S.draw[i];if(d&&d.type==='fib'&&d.tf0&&d.tf0!==S.tf){const v=fibView(d);d.a=v.a;d.b=v.b;d.tf0=S.tf;}S.drag={pre,i,x,y,lg:S.charts.main.timeScale().coordinateToLogical(x),pr:S.charts.ser.coordinateToPrice(y),o:JSON.parse(JSON.stringify(d)),end:endHit(d,x,y),moved:false};}
   function dragMove(x,y){const D=S.drag,C=S.charts;if(!D||!C)return;const lg=C.main.timeScale().coordinateToLogical(x),pr=C.ser.coordinateToPrice(y);if(lg==null||pr==null)return;
     const dl=lg-D.lg,dp=pr-D.pr,d=S.draw[D.i];if(!d)return;D.moved=true;const sh=p=>toPt(toLogical(p.t)+dl,p.p+dp);
     if(D.end&&d.type!=='hline'){d[D.end]=toPt(lg,pr);}
     else{if(D.o.a)d.a=d.type==='hline'?{t:D.o.a.t,p:D.o.a.p+dp}:sh(D.o.a);if(D.o.b)d.b=sh(D.o.b);if(D.o.pts)d.pts=D.o.pts.map(sh);
       if(D.o.sl!=null){d.sl=D.o.sl+dp;d.tp=D.o.tp+dp;d.t2=sh({t:D.o.t2,p:0}).t;}}
     overlay();}
-  function dragEnd(){if(S.drag&&S.drag.moved)saveDraw();S.drag=null;}
+  function dragEnd(){if(S.drag&&S.drag.moved){S.hist.push(S.drag.pre);if(S.hist.length>60)S.hist.shift();saveDraw();}S.drag=null;}
   function bindEdit(m){
     m.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||S.tool!=='cursor'||e.button>0||!S.charts||e.target.closest('.cx-ax,.cx-plus,.cx-auto,.cx-tin,.cx-ftb'))return;
       const r=m.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,i=hit(x,y,9);
@@ -1961,7 +1968,7 @@ html.locked .gate{display:flex}
       if(!t.moved&&Date.now()-t.t<280&&!t.tr){const now=Date.now();
         if(lastTap&&now-lastTap.t<320&&Math.hypot(lastTap.x-t.x,lastTap.y-t.y)<30){lastTap=null;quickLine(t.x,t.y);return;}
         lastTap={t:now,x:t.x,y:t.y};if(t.i!==S.sel){S.sel=t.i;overlay();tb();ftb();}}},{capture:true});}
-  function autoSR(){if(!S.raw.length)return;const had=S.draw.some(d=>d.auto);S.draw=S.draw.filter(d=>!d.auto);
+  function autoSR(){if(!S.raw.length)return;snap();const had=S.draw.some(d=>d.auto);S.draw=S.draw.filter(d=>!d.auto);
     if(!had){const lg=Math.max(0,S.raw.length-150);deepLevels().forEach(x=>S.draw.push(srStyle({type:'hline',auto:true,a:toPt(lg,x.p)})));}
     saveDraw();overlay();const bt=$('cxSR');if(bt)bt.setAttribute('aria-pressed',String(!had));}
 
@@ -1997,8 +2004,8 @@ html.locked .gate{display:flex}
       <div class="tv-brand" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="1" y="1" width="26" height="26" rx="7"/><path d="M8 19V11M14 21V7M20 17V12"/></svg></div><b class="tv-name">تريدنج</b>
       <button class="tv-sym" id="tvSym" title="بحث عن رمز"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><b id="tvSymT">—</b><small id="tvSymN"></small></button>
       <span class="tv-sep"></span><div class="tv-tf">${TFS.map(([k,n])=>`<button data-cxf="${k}" title="${n}">${{'1h':'1س','4h':'4س','1d':'ي','1w':'أ','1M':'ش'}[k]}</button>`).join('')}</div>
-      <span class="tv-sep"></span><select id="cxType" aria-label="نوع الشارت">${TYPES.map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>
-      <button class="tv-ic" id="tvToolsBtn" title="إظهار أو إخفاء أدوات الرسم" aria-label="أدوات الرسم"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg></button><button class="tv-btn" id="cxIndBtn"><i>ƒx</i>المؤشرات</button><button class="tv-btn" id="cxClean" title="إخفاء كل المؤشرات">شارت صافٍ</button><button class="tv-btn" id="cxSigBtn">الإشارات</button><button class="tv-btn" id="cxLog">لوغاريتمي</button>
+      <span class="tv-sep"></span><button class="tv-ic" id="cxUndo" title="تراجع" aria-label="تراجع" disabled><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button><button class="tv-ic" id="tvToolsBtn" title="إظهار أو إخفاء أدوات الرسم" aria-label="أدوات الرسم"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg></button><select id="cxType" aria-label="نوع الشارت">${TYPES.map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>
+      <button class="tv-btn" id="cxIndBtn"><i>ƒx</i>المؤشرات</button><button class="tv-btn" id="cxClean" title="إخفاء كل المؤشرات">شارت صافٍ</button><button class="tv-btn" id="cxSigBtn">الإشارات</button><button class="tv-btn" id="cxLog">لوغاريتمي</button>
       <span class="tv-grow"></span><button class="tv-ic" id="cxShot" title="حفظ صورة"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
       <button class="tv-ic" id="tvPanelBtn" title="القائمة والتفاصيل"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM14 5v14"/></svg></button>
       <button class="tv-ic" id="tvClose" title="إغلاق"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -2021,6 +2028,7 @@ html.locked .gate{display:flex}
     {const p=$('tvInds'),v=LS.get('cx-inds');p.hidden=v==='0';$('cxIndBtn').setAttribute('aria-pressed',String(!p.hidden));
       const tv=LS.get('cx-tools');root.classList.toggle('tools-off',tv?tv==='0':innerWidth<700);$('tvToolsBtn').setAttribute('aria-pressed',String(!root.classList.contains('tools-off')));}
     $('cxIndBtn').onclick=()=>{const p=$('tvInds');p.hidden=!p.hidden;LS.set('cx-inds',p.hidden?'0':'1');$('cxIndBtn').setAttribute('aria-pressed',String(!p.hidden));setTimeout(()=>draw(true),30);};
+    $('cxUndo').onclick=undo;document.addEventListener('keydown',e=>{if(!S.active)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}else if((e.key==='Delete'||e.key==='Backspace')&&S.sel>=0&&!/INPUT|TEXTAREA/.test((e.target||{}).tagName||'')){snap();S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();ftb();}});
     $('tvToolsBtn').onclick=()=>{const off=!root.classList.contains('tools-off');root.classList.toggle('tools-off',off);LS.set('cx-tools',off?'0':'1');$('tvToolsBtn').setAttribute('aria-pressed',String(!off));setTimeout(()=>draw(true),30);};
     root.querySelectorAll('[data-cxs]').forEach(b=>b.onclick=()=>{const k=b.dataset.cxs;S.ind[k]=!S.ind[k];if(S.ind[k])S.clean=false;save();sync();draw(true);});
     $('tvIndQ').oninput=e=>filt('tvIndM',e.target.value);
@@ -2030,8 +2038,8 @@ html.locked .gate{display:flex}
     $('cxClean').onclick=()=>{S.clean=!S.clean;save();sync();draw(true);};
     $('cxMag').onclick=()=>{S.mag=!S.mag;save();sync();};$('cxSR').onclick=autoSR;
     root.querySelectorAll('[data-cxt]').forEach(b=>b.onclick=()=>setTool(S.tool===b.dataset.cxt?'cursor':b.dataset.cxt));
-    $('cxDel').onclick=()=>{if(S.sel<0)return;S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();ftb();};bindFtb();
-    $('cxClr').onclick=()=>{if(!S.draw.length)return;S.draw=[];S.sel=-1;saveDraw();overlay();tb();};
+    $('cxDel').onclick=()=>{if(S.sel<0)return;snap();S.draw.splice(S.sel,1);S.sel=-1;saveDraw();overlay();tb();ftb();};bindFtb();
+    $('cxClr').onclick=()=>{if(!S.draw.length)return;snap();S.draw=[];S.sel=-1;saveDraw();overlay();tb();};
     $('cxShot').onclick=shot;$('tvClose').onclick=()=>history.state&&history.state.tv?history.back():close();
     $('tvPanelBtn').onclick=()=>{root.classList.toggle('side-on');setTimeout(()=>draw(true),60);};
     $('tvSym').onclick=()=>{$('tvSymM').hidden=false;$('tvSymQ').value='';symList('');setTimeout(()=>$('tvSymQ').focus(),50);};
@@ -2098,7 +2106,12 @@ html.locked .gate{display:flex}
   async function load(){const seq=++S.seq;$('cxMain').innerHTML='<div class="empty">جارٍ تحميل الشارت…</div>';const r=await PRO.data(S.ref);if(seq!==S.seq||!S.active)return;
     if(!r){$('cxMain').innerHTML='<div class="empty">تعذر الوصول إلى البيانات الآن.</div>';return;}S.data=r.data;
     if(!S.data[S.tf]||S.data[S.tf].length<20)S.tf=S.data['1d']&&S.data['1d'].length?'1d':Object.keys(S.data).find(k=>S.data[k].length>=20);
-    loadDraw();sync();draw();status();watch();details();}
+    loadDraw();sync();draw();baseLevels();status();watch();details();}
+  function baseLevels(){const id=S.ref&&S.ref.id,fk='cx-base-'+id,M=S.data&&S.data['1M'];if(!id||LS.get(fk)||!M||M.length<24)return;
+    const keep={raw:S.raw,I:S.I,tf:S.tf};let L=[];try{S.tf='1M';S.raw=M;S.I=calc(M);L=deepLevels();}catch(_){}S.raw=keep.raw;S.I=keep.I;S.tf=keep.tf;LS.set(fk,'1');
+    if(!L.length||!S.raw.length)return;const last=S.raw[S.raw.length-1],tol=last.c*.012;let add=0;
+    L.forEach(x=>{if(S.draw.some(d=>d.type==='hline'&&Math.abs(d.a.p-x.p)<tol))return;S.draw.push(srStyle({type:'hline',base:1,a:{t:last.t,p:x.p}}));add++;});
+    if(add){saveDraw();overlay();}}
   async function refresh(){if(!S.active||document.hidden||S.pending)return;loadSum();if(S.ref.kind!=='cx')return;const r=await PRO.data(S.ref);if(!r||!S.active)return;S.data=r.data;draw(true);status();}
   function show(ref){ui();const same=S.ref&&S.ref.id===ref.id&&S.charts;if(!same)S.pr=null;S.ref=ref;S.active=true;S.sel=-1;if(!same)load();else{draw(true);details();}if(!S.timer)S.timer=setInterval(refresh,60000);}
   const RM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2833,5 +2846,5 @@ html.locked .gate{display:flex}
   });
 })();
 </script>
-<script>(function(){var B='64f5da1874';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+<script>(function(){var B='62599e10a3';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
