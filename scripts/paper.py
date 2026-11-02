@@ -15,7 +15,8 @@ RISK = 0.01
 MAX_W = 0.12
 MAX_OPEN = 12
 MAX_HOLD = 30
-BUFFER = 0.01
+BUFFER = 0.0
+TARGET_ATR = 2.0
 SWEEP = 'SPY'
 ASSETS = [
     ('8311', 'عناية', 'sa'), ('1120', 'مصرف الراجحي', 'sa'), ('4340', 'الراجحي ريت', 'sa'), ('2222', 'أرامكو السعودية', 'sa'),
@@ -222,6 +223,7 @@ def run(now):
             errs.append(f'{aid}: {str(e)[:100]}')
     events.sort(key=lambda e: (e['T'], e['aid']))
     cash, sweep_q, pos, closed, curve, n = START_USD, 0.0, {}, [], {}, 0
+    nonlocal_profit = [0.0]; sw_cost = [0.0]
     px = {}
     spy0 = None
     def mark(aid): return px.get(aid)
@@ -235,6 +237,7 @@ def run(now):
         sp = px.get(SWEEP)
         if need_usd <= cash or not sp or sweep_q <= 0: return
         q = min(sweep_q, (need_usd - cash) / (sp * (1 - SLIP)) * (1 + FEE['us']))
+        if sweep_q > 0: sw_cost[0] *= (1 - q / sweep_q)
         val = q * sp * (1 - SLIP); cash += val - val * FEE['us']; sweep_q -= q
     groups = {}
     for e in events: groups.setdefault(e['T'], []).append(e)
@@ -253,14 +256,8 @@ def run(now):
                 cash += (val - fee) * fx(p['kind']); p['fees'] += fee; p['left'] -= q
                 p['exits'].append({'d': ds, 'price': round(price, 6), 'qty': q, 'why': why})
             o, h, l, c = x['o'], x['h'], x['l'], x['c']
-            if not p['t1_hit']:
-                if l <= p['stop']: fill(p['left'], min(o, p['stop']), 'وقف الخسارة')
-                elif h >= p['t1']:
-                    fill(p['q1'], max(o, p['t1']), 'الهدف الأول'); p['t1_hit'] = True; p['stop'] = p['entry']
-                    if h >= p['t2'] and p['left'] > 1e-12: fill(p['left'], max(o, p['t2']), 'الهدف الثاني')
-            else:
-                if l <= p['stop']: fill(p['left'], min(o, p['stop']), 'وقف عند سعر الدخول')
-                elif h >= p['t2']: fill(p['left'], max(o, p['t2']), 'الهدف الثاني')
+            if l <= p['stop']: fill(p['left'], min(o, p['stop']), 'وقف الخسارة')
+            elif h >= p['target']: fill(p['left'], max(o, p['target']), 'تحقق الهدف')
             p['bars'] += 1
             if p['left'] > 1e-12:
                 if e['dir'] == 'down' and e['pct'] >= 40: fill(p['left'], c, 'انعكاس التوافق')
@@ -269,6 +266,9 @@ def run(now):
                 got = sum(z['qty'] * z['price'] for z in p['exits'])
                 p['pnl'] = round(got - p['qty'] * p['entry'] - p['fees'], 4); p['pnl_usd'] = round(p['pnl'] * fx(p['kind']), 2)
                 p['pnl_pct'] = round(p['pnl'] / (p['qty'] * p['entry']) * 100, 2); p['status'] = 'closed'; p['closed'] = ds
+                p['exit'] = round(got / p['qty'], 6); p['win'] = p['pnl'] > 0
+                if p['pnl_usd'] > 0:
+                    nonlocal_profit[0] += p['pnl_usd']; cash -= p['pnl_usd']
                 for k in ('opened_T', 'left', 'bars'): p.pop(k, None)
                 closed.append(p); del pos[a]
         # entries, strongest confluence first
@@ -287,21 +287,20 @@ def run(now):
             qty = min(qty, max(0.0, cash - BUFFER * eq) / (entry * k * (1 + f)))
             qty = math.floor(qty) if kind == 'sa' else math.floor(qty * 1e6) / 1e6
             if qty * entry * k < 100 or (kind == 'sa' and qty < 2): continue
-            q1 = qty // 2 if kind == 'sa' else qty / 2
             n += 1; fee = qty * entry * f; cash -= (qty * entry + fee) * k
             sc = e['sc']
             why = f"توافق صاعد {e['pct']}% (" + '، '.join(f"{TFN[z]} {DIRN[sc[z]['dir']]}" for z in ('M', 'W', 'D') if sc[z]) + f")، السعر فوق متوسط 50 يومًا، RSI {e['rsi']:.0f}"
             pos[a] = {'id': f'P-{n}', 'asset': a, 'name': names[a][0], 'kind': kind, 'cur': 'ريال' if kind == 'sa' else 'دولار', 'opened': e['d'], 'opened_T': T,
                       'entry': round(entry, 6), 'qty': qty, 'value': round(qty * entry, 2), 'value_usd': round(qty * entry * k, 2), 'weight': round(qty * entry * k / eq * 100, 1),
-                      'stop0': round(stop, 6), 'stop': stop, 't1': round(entry + 1.5 * atrv, 6), 't2': round(entry + 3 * atrv, 6), 'q1': q1, 'q2': qty - q1,
-                      'atr': round(atrv, 6), 'conf': e['pct'], 'tf': {z: sc[z]['dir'] for z in sc if sc[z]}, 'why': why, 't1_hit': False, 'left': qty, 'bars': 0,
+                      'stop0': round(stop, 6), 'stop': stop, 'target': round(entry + TARGET_ATR * atrv, 6),
+                      'atr': round(atrv, 6), 'conf': e['pct'], 'tf': {z: sc[z]['dir'] for z in sc if sc[z]}, 'why': why, 'left': qty, 'bars': 0,
                       'exits': [], 'fees': fee, 'status': 'open'}
         # sweep idle cash into the index at its close
         if any(e['aid'] == SWEEP for e in G) and px.get(SWEEP):
             eq = equity(); idle = cash - BUFFER * eq
-            if idle > 50:
-                sp = px[SWEEP] * (1 + SLIP); q = idle / (sp * (1 + FEE['us'])); sweep_q += q; cash -= q * sp * (1 + FEE['us'])
-        curve[max(e['d'] for e in G)] = round(equity(), 2)
+            if idle > 1:
+                sp = px[SWEEP] * (1 + SLIP); q = idle / (sp * (1 + FEE['us'])); sweep_q += q; cash -= q * sp * (1 + FEE['us']); sw_cost[0] += q * sp * (1 + FEE['us'])
+        curve[max(e['d'] for e in G)] = round(equity() + nonlocal_profit[0], 2)
     # final marks with the latest known prices
     for a, v in last.items(): px[a] = v
     eq = equity()
@@ -323,14 +322,18 @@ def run(now):
         s = stats.setdefault(t['asset'], {'id': t['asset'], 'name': t['name'], 'kind': t['kind'], 'n': 0, 'wins': 0, 'pnl_usd': 0.0})
         s['n'] += 1; s['wins'] += t['pnl'] > 0; s['pnl_usd'] = round(s['pnl_usd'] + t['pnl_usd'], 2)
     wins = sum(1 for t in closed if t['pnl'] > 0)
+    gw = round(sum(t['pnl_usd'] for t in closed if t['pnl_usd'] > 0), 2); gl = round(sum(t['pnl_usd'] for t in closed if t['pnl_usd'] <= 0), 2)
+    pw = round(nonlocal_profit[0], 2)
     spy_now = px.get(SWEEP)
     return {
-        'totals': {'start_usd': START_USD, 'equity_usd': round(eq, 2), 'pnl_usd': round(eq - START_USD, 2), 'pct': round((eq / START_USD - 1) * 100, 3),
+        'totals': {'start_usd': START_USD, 'capital_usd': round(eq, 2), 'profit_wallet_usd': pw, 'equity_usd': round(eq + pw, 2), 'pnl_usd': round(eq + pw - START_USD, 2), 'pct': round((eq + pw) / START_USD * 100 - 100, 3),
+                   'wins': wins, 'losses': len(closed) - wins, 'gross_win_usd': gw, 'gross_loss_usd': gl,
                    'open_n': len(opens), 'closed_n': len(closed), 'win_rate': round(wins / len(closed) * 100, 1) if closed else None,
                    'cash_usd': round(cash, 2), 'sweep_usd': round(sweep_usd, 2), 'invested_usd': round(inv, 2),
                    'util': round((inv + sweep_usd) / eq * 100, 1) if eq else 0,
                    'bench_pct': round((spy_now / spy0 - 1) * 100, 3) if spy0 and spy_now else None},
         'open': sorted(opens, key=lambda o: o['opened'], reverse=True), 'closed': sorted(closed, key=lambda t: t['closed'], reverse=True),
+        'sweep': {'asset': SWEEP, 'name': 'صندوق إس آند بي 500', 'qty': round(sweep_q, 6), 'avg': round(sw_cost[0] / sweep_q, 4) if sweep_q else None, 'now': px.get(SWEEP), 'cost_usd': round(sw_cost[0], 2), 'value_usd': round(sweep_usd, 2), 'pnl_usd': round(sweep_usd - sw_cost[0], 2)},
         'curve': sorted(curve.items()), 'alloc': alloc, 'stats': sorted(stats.values(), key=lambda s: -s['pnl_usd']),
         'universe': len(ASSETS), 'errors': errs}
 
@@ -351,7 +354,7 @@ def main():
     now = dt.datetime.now(dt.timezone.utc)
     r = run(now)
     book = {'updated': now.strftime('%Y-%m-%dT%H:%MZ'), 'launch': LAUNCH, 'mode': 'portfolio',
-            'rules': {'risk': RISK, 'max_w': MAX_W, 'max_open': MAX_OPEN, 'stop_atr': 1.5, 't1_atr': 1.5, 't2_atr': 3, 'max_hold': MAX_HOLD,
+            'rules': {'risk': RISK, 'max_w': MAX_W, 'max_open': MAX_OPEN, 'stop_atr': 1.5, 'target_atr': TARGET_ATR, 'max_hold': MAX_HOLD,
                       'fees': FEE, 'slip': SLIP, 'sweep': SWEEP}, **r}
     os.makedirs(os.path.join(ROOT, 'vault'), exist_ok=True)
     json.dump(encrypt(book), open(os.path.join(ROOT, 'vault', 'book.json'), 'w'), separators=(',', ':'))
