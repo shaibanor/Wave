@@ -455,6 +455,11 @@ html.cx-lock body{overflow:hidden}
 .howto{margin:6px 0 8px;font-size:.8rem;line-height:1.7}.howto summary{cursor:pointer;font-weight:700;color:var(--gold,#C9A55C);list-style:none}.howto summary::before{content:"؟ ";}
 .howto ol{margin:6px 0 0;padding-inline-start:18px}.howto li{margin:3px 0}
 .tx-app .wz{border-color:#2A2E39;background:#1E222D}.tx-app .howto summary{color:#2962FF}
+.wz-rt{margin:8px 0 2px;font-size:.8rem}.wz-rt summary{cursor:pointer;font-weight:600;line-height:1.6}
+.wz-tw{max-height:320px;overflow:auto;margin-top:6px;border-radius:8px;border:1px solid color-mix(in srgb,var(--gold,#C9A55C) 30%,transparent)}
+.wz-t{width:100%;border-collapse:collapse;font-size:.76rem}.wz-t th,.wz-t td{padding:5px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid color-mix(in srgb,currentColor 10%,transparent)}
+.wz-t thead th{position:sticky;top:0;background:var(--panel,#0E151B)}.wz-t .up{color:var(--up)}.wz-t .down{color:var(--down)}
+.tx-app .wz-t thead th{background:#1E222D}
 :root{--vsig:url(data:image/png;base64,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)}
 .vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
 .vx-stage{position:relative;width:220px;height:250px;perspective:900px}
@@ -581,6 +586,37 @@ html.cx-lock body{overflow:hidden}
 .rl>div{border-radius:14px;padding:12px 14px;background:rgba(15,34,52,.7);border:1px solid rgba(233,207,143,.2)}
 .rl h4{margin:0 0 4px;font:700 .95rem var(--f-display);color:#E9CF8F}
 .rl p{margin:0;font-size:.84rem;color:#C8D6E2;line-height:1.7}
+
+.vb-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.vb-dl{flex:0 0 auto;border:1px solid rgba(233,207,143,.5);background:rgba(233,207,143,.08);color:#F1DCA0;border-radius:10px;padding:8px 12px;font:600 .8rem var(--f-display);cursor:pointer}
+.vb-dl:hover{background:rgba(233,207,143,.18)}
+.wl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:720px){.wl{grid-template-columns:1fr 1fr}.wl .tot{grid-column:1/-1}}
+.wc{position:relative;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:3px;min-width:0;background:linear-gradient(160deg,rgba(25,48,70,.95),rgba(10,23,36,.95));border:1px solid rgba(233,207,143,.35)}
+.wc span{font-size:.8rem;color:#C8D6E2;font-weight:600}.wc b{font-size:1.4rem;font-weight:700;color:#F6EFE0}.wc em{font-style:normal;font-size:.72rem;color:#8FA3B5;line-height:1.5}
+.wc i{position:absolute;top:12px;left:12px;font-style:normal;font-size:.74rem}
+.wc.pro{border-color:rgba(76,194,133,.55);background:linear-gradient(160deg,rgba(20,60,48,.9),rgba(10,23,36,.95))}
+.wc.tot{border-color:rgba(233,207,143,.7)}
+.vb .up{color:#4CC285}.vb .down{color:#F06A5C}
+.sh{border-radius:16px;padding:12px 14px;background:rgba(10,23,36,.7);border:1px solid rgba(233,207,143,.25)}
+.sh h3{margin:0 0 8px;font:700 1rem var(--f-display);color:#E9CF8F}
+.sh-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:720px){.sh-g{grid-template-columns:1fr 1fr}}
+.sh-c{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
+.sh-c span{font-size:.76rem;color:#9FB1C2}.sh-c b{font-size:.98rem;color:#F6EFE0}
+.vt-w{overflow-x:auto;border-radius:14px;border:1px solid rgba(233,207,143,.25);-webkit-overflow-scrolling:touch}
+.vt{width:100%;border-collapse:collapse;font-size:.82rem;min-width:720px}
+.vt thead th{position:sticky;top:0;background:#132a40;color:#E9CF8F;font-weight:700;font-size:.76rem;padding:9px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid rgba(233,207,143,.35)}
+.vt td,.vt tbody th{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);color:#E3ECF2;white-space:nowrap;text-align:right;vertical-align:middle}
+.vt tbody th{position:sticky;right:0;background:#0d1e2e;font-weight:400;z-index:1}
+.vt tbody th b{display:block;font-size:.86rem;color:#F6EFE0}.vt tbody th small,.vt td small{display:block;font-size:.68rem;color:#8FA3B5}
+.vt tbody tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.vt .c-n{color:#8FA3B5;width:28px}.vt .tg{color:#4CC285}.vt .st{color:#F06A5C}
+.vt tr.sw td,.vt tr.sw th{background:rgba(233,207,143,.06)}
+.rs{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.74rem;font-weight:700}.rs.w{background:rgba(76,194,133,.16);color:#4CC285}.rs.l{background:rgba(240,106,92,.16);color:#F06A5C}
+.vt small.why{margin-top:2px}
+
+.sh-c b{white-space:nowrap;direction:ltr;unicode-bidi:isolate}
 
 .bot-lab{direction:rtl;align-self:flex-start;background:rgba(10,23,36,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#F7E7BC;border:1px solid rgba(233,207,143,.45);font:600 .76rem var(--f-body);padding:5px 11px;border-radius:12px 12px 12px 4px;box-shadow:0 6px 18px rgba(0,0,0,.22);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;animation:blab 3.2s ease-in-out infinite}
 .bot-lab i{width:6px;height:6px;border-radius:50%;background:#2FB37A;box-shadow:0 0 0 3px rgba(47,179,122,.25)}
@@ -1410,15 +1446,21 @@ html.locked .gate{display:flex}
     const q=(arr,p)=>{const z=arr.map(x=>x.r).sort((a,b)=>a-b);return z[Math.min(z.length-1,Math.floor(p*z.length))];};
     const cut=Math.floor(R.length*.6),kc=q(R.slice(0,cut),.7),test=R.slice(cut),hit=test.filter(x=>x.r<=kc).length;
     const k=q(R,.7),bi=full.length,base=full[bi-1].c,a=watr(bi),half=k*a,wkStart=done?lw.t+7*86400:lw.t;
+    const t0=Date.UTC(2025,2,1)/1000,hist=[];
+    for(let j=0;j<R.length;j++){const i=R[j].i;if(full[i].t<t0)continue;const past=R.slice(0,j);if(past.length<30)continue;const kk=q(past,.7),a3=watr(i),b3=full[i-1].c,lo=b3-kk*a3,hi=b3+kk*a3,c=full[i].c;hist.push({wk:full[i].t,lo,hi,c,in:c>=lo&&c<=hi});}
     let prev=null;if(bi>=13){const a2=watr(bi-1),h2=k*a2,b2=full[bi-2].c,c=full[bi-1].c;prev={lo:b2-h2,hi:b2+h2,c,in:c>=b2-h2&&c<=b2+h2};}
     const cur=done?null:lw.c;
-    return{lo:Math.max(0,base-half),hi:base+half,base,wk:wkStart,end:wkStart+(kind==='sa'?4:kind==='cx'?6:4)*86400,hit:test.length?Math.round(hit/test.length*100):null,n:test.length,prev,cur,inNow:cur!=null?(cur>=base-half&&cur<=base+half):null};}
+    return{hist,lo:Math.max(0,base-half),hi:base+half,base,wk:wkStart,end:wkStart+(kind==='sa'?4:kind==='cx'?6:4)*86400,hit:test.length?Math.round(hit/test.length*100):null,n:test.length,prev,cur,inNow:cur!=null?(cur>=base-half&&cur<=base+half):null};}
   const dAr=t=>{const d=new Date(t*1000),M=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return d.getUTCDate()+' '+M[d.getUTCMonth()];};
+  function retro(z){const H=z.hist||[];if(!H.length)return'';const n=H.filter(x=>x.in).length;
+    return`<details class="wz-rt"><summary>اختبار رجعي منذ مارس 2025: أصاب <b class="num">${n}</b> من <b class="num">${H.length}</b> أسبوعًا (<b class="num">${Math.round(n/H.length*100)}%</b>)</summary>
+      <p class="wz-n">محسوب بأثر رجعي: لكل أسبوع طُبّقت الطريقة نفسها باستخدام البيانات المتاحة قبل بدايته فقط، ثم قورن النطاق بالإغلاق الفعلي. هذه ليست توقعات نُشرت في وقتها.</p>
+      <div class="wz-tw"><table class="wz-t"><thead><tr><th>الأسبوع</th><th>النطاق المحسوب</th><th>الإغلاق الفعلي</th><th>النتيجة</th></tr></thead><tbody>${H.slice().reverse().map(x=>`<tr><td>${dAr(x.wk)} ${new Date(x.wk*1000).getUTCFullYear()}</td><td class="num">${px(x.lo)} – ${px(x.hi)}</td><td class="num">${px(x.c)}</td><td class="${x.in?'up':'down'}">${x.in?'✓ داخل':'✗ خارج'}</td></tr>`).join('')}</tbody></table></div></details>`;}
   function zoneHtml(z,dir){if(!z)return'';const D={up:'صاعد',down:'هابط',flat:'محايد'};
     return`<div class="wz"><div class="wz-h"><b>توقع إغلاق الأسبوع</b><small>${dAr(z.wk)} – ${dAr(z.end)}</small></div>
       <div class="wz-r"><span>بين</span><b class="num">${px(z.lo)}</b><span>و</span><b class="num">${px(z.hi)}</b></div>
       <div class="wz-m"><span>ميل المؤشرات: <b class="${DIRC[dir]||'flat'}">${D[dir]||'محايد'}</b></span>${z.cur!=null?`<span>السعر الآن ${z.inNow?'<b class="up">داخل النطاق</b>':'<b class="down">خارج النطاق</b>'}</span>`:''}${z.prev?`<span>الأسبوع الماضي: ${z.prev.in?'<b class="up">أغلق داخل نطاقه</b>':'<b class="down">أغلق خارج نطاقه</b>'}</span>`:''}</div>
-      ${z.hit!=null?`<p class="wz-n">دقة هذه الطريقة على هذا الأصل: أغلق السعر داخل النطاق في <b class="num">${z.hit}%</b> من آخر ${z.n} أسبوعًا (اختبار على أسابيع لم تُستخدم في الضبط). النطاق محسوب آليًا من تذبذب الأصل نفسه، وليس توصية.</p>`:''}</div>`;}
+      ${retro(z)}${z.hit!=null?`<p class="wz-n">دقة هذه الطريقة على هذا الأصل: أغلق السعر داخل النطاق في <b class="num">${z.hit}%</b> من آخر ${z.n} أسبوعًا (اختبار على أسابيع لم تُستخدم في الضبط). النطاق محسوب آليًا من تذبذب الأصل نفسه، وليس توصية.</p>`:''}</div>`;}
   const HOW=`<details class="howto"><summary>كيف أقرأ التحليل؟</summary><ol>
     <li><b>المؤشر الدائري:</b> نسبة توافق المؤشرات على الاتجاه. فوق 60% يعني اتجاهًا واضحًا، وقرب 50% يعني حيرة وتذبذبًا.</li>
     <li><b>نقاط الأطر الزمنية:</b> كل نقطة تمثل إطارًا (شهري، أسبوعي، يومي…). الأخضر صاعد، والأحمر هابط، والرمادي محايد. كلما اتفقت الأطر زادت قوة القراءة.</li>
@@ -1441,7 +1483,7 @@ html.locked .gate{display:flex}
     ['tgVp','tgFvg','tgOb'].forEach(id=>$(id).addEventListener('change',drawOverlay));
     let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(!S.charts||!S.active)return;const w=$('cMain').clientWidth;['main','rsi','macd'].forEach(k=>S.charts[k].applyOptions({width:w}));drawOverlay();},150);});
     S.timer=setInterval(refreshLive,60000);const st=LS.get('pro-tf');if(st&&TFS.includes(st))S.tf=st;}
-  window.PRO={weekZone,zoneHtml,HOW:()=>HOW,
+  window.PRO={weekZone,zoneHtml,retro,HOW:()=>HOW,
     data(ref){return fetchData(ref.kind,ref.id);},
     async analyze(ref,tf){const r=await fetchData(ref.kind,ref.id);if(!r)return null;const keep={kind:S.kind,id:S.id,data:S.data,tf:S.tf};
       S.kind=ref.kind;S.id=ref.id;S.data=r.data;S.tf=(tf&&r.data[tf]&&r.data[tf].length>=30)?tf:'1d';let A=null;
@@ -2187,60 +2229,51 @@ html.locked .gate{display:flex}
     finally{busy=false;}}
 
   /* ---------- book ---------- */
-  const tfDots=tf=>['M','W','D'].filter(k=>tf&&tf[k]).map(k=>`<span class="tfd ${tf[k]}">${({M:'شهري',W:'أسبوعي',D:'يومي'})[k]}</span>`).join('');
-  function bar(t,now){const lo=Math.min(t.stop0,now,t.entry),hi=Math.max(t.t2,now),P=v=>((v-lo)/(hi-lo)*100).toFixed(1);
-    return `<div class="tb"><div class="tb-r"></div><i class="mk st" style="right:${P(t.stop0)}%"></i><i class="mk en" style="right:${P(t.entry)}%"></i><i class="mk t1" style="right:${P(t.t1)}%"></i><i class="mk t2" style="right:${P(t.t2)}%"></i><b class="now" style="right:${P(now)}%"></b></div>
-      <div class="tb-l"><span>الوقف</span><span>الدخول</span><span>الهدف 1</span><span>الهدف 2</span></div>`;}
-  function card(t,closed){const cur=t.cur==='ريال'?' ريال':' $';const v=closed?t.pnl:t.upnl;const vp=closed?t.pnl_pct:(t.upnl/(t.qty*t.entry)*100);
-    const ex=(t.exits||[]).map(e=>`<li><span>${dS(e.d)}</span><span>${esc(e.why)}</span><span class="num">${qn(e.qty)} × ${px(e.price)}</span></li>`).join('');
-    return `<article class="tc ${closed?(t.pnl>0?'win':'loss'):'live'}">
-      <header><div><h4>${esc(t.name)}</h4><span class="tid">${esc(t.id)} · ${KN[t.kind]}</span></div><span class="side">شراء</span></header>
-      <div class="tc-d"><span>تاريخ الدخول</span><b>${dS(t.opened)}</b>${closed?`<span>تاريخ الإغلاق</span><b>${dS(t.closed)}</b>`:''}</div>
-      <div class="tc-g">
-        <div><span>سعر الدخول</span><b class="num">${px(t.entry)}</b></div>
-        <div><span>الكمية · القيمة</span><b class="num">${qn(t.qty)} · ${nf(t.value)}${cur}</b>${t.weight!=null?`<em class="num">${t.weight}% من المحفظة${t.kind==='sa'?' · $'+nf(t.value_usd,0):''}</em>`:''}</div>
-        <div class="g1"><span>الهدف الأول · نصف الكمية</span><b class="num">${px(t.t1)}</b><em class="num">${sg(pc(t.t1,t.entry).toFixed(2))}% · ${qn(t.q1)}</em></div>
-        <div class="g2"><span>الهدف الثاني · النصف الباقي</span><b class="num">${px(t.t2)}</b><em class="num">${sg(pc(t.t2,t.entry).toFixed(2))}% · ${qn(t.q2)}</em></div>
-        <div class="gs"><span>وقف الخسارة</span><b class="num">${px(t.stop0)}</b><em class="num">${pc(t.stop0,t.entry).toFixed(2)}%</em></div>
-        <div><span>التوافق عند الدخول</span><b class="num">${t.conf}%</b><em>${tfDots(t.tf)}</em></div>
-      </div>
-      ${closed?'':bar(t,t.now)}
-      <div class="tc-f"><span>${closed?'النتيجة':'السعر الآن '+`<b class="num">${px(t.now)}</b>`}</span><b class="num ${v>=0?'up':'down'}">${sg(nf(v))}${cur} (${sg(vp.toFixed(2))}%)</b></div>
-      ${t.t1_hit&&!closed?'<p class="tc-n">تحقق الهدف الأول ونُقل الوقف إلى سعر الدخول.</p>':''}
-      <p class="tc-w">${esc(t.why)}</p>
-      ${ex?`<ul class="tc-x">${ex}</ul>`:''}
-    </article>`;}
-  function accRow(a){const usd=a.kind==='sa'?` <small class="num">≈ $${nf(a.equity_usd)}</small>`:'';
-    return `<div class="ar"><div class="ar-n"><b>${esc(a.name)}</b><span class="num">${esc(a.id)}</span></div><div class="ar-e"><b class="num">${nf(a.equity)}</b> ${a.cur}${usd}</div>
-      <div class="ar-p num ${a.pnl>=0?'up':'down'}">${sg(a.pnl_pct.toFixed(2))}%</div><div class="ar-t">${a.closed_n} مغلقة${a.closed_n?' · '+a.wins+' رابحة':''}${a.open?' · <span class="op">صفقة مفتوحة</span>':''}</div><canvas class="sp" data-c='${JSON.stringify((a.curve||[]).map(x=>x[1]))}'></canvas></div>`;}
-  function renderBook(){const B=BOOK,T=B.totals,up=T.pnl_usd>=0;
-    const upd=new Date(B.updated).toLocaleString('ar-SA-u-ca-gregory-nu-latn',{timeZone:'Asia/Riyadh',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+  const usd=v=>'$'+nf(v,2),sgu=v=>(v>0?'+':v<0?'−':'')+'$'+nf(Math.abs(v),2);
+  const unit=t=>t.kind==='sa'?' <small>ر.س</small>':'';
+  function rowsOpen(B){const r=B.open.map((t,k)=>{const pl=t.upnl_usd,cls=pl>=0?'up':'down';
+      return`<tr><td class="c-n">${k+1}</td><th scope="row"><b>${esc(t.name)}</b><small>${esc(t.asset)}</small></th><td class="num">${usd(t.value_usd)}</td><td class="num">${qn(t.qty)}</td><td class="num">${px(t.entry)}${unit(t)}</td><td class="num tg">${px(t.target)}${unit(t)}</td><td class="num st">${px(t.stop0)}${unit(t)}</td><td class="num">${px(t.now)}${unit(t)}</td><td class="num ${cls}">${sgu(pl)}</td></tr>`;});
+    const w=B.sweep;if(w&&w.qty>0)r.push(`<tr class="sw"><td class="c-n">${B.open.length+1}</td><th scope="row"><b>صندوق المؤشر</b><small>${esc(w.asset)} · تشغيل باقي المبلغ</small></th><td class="num">${usd(w.cost_usd)}</td><td class="num">${qn(w.qty)}</td><td class="num">${px(w.avg)}</td><td class="num">—</td><td class="num">—</td><td class="num">${px(w.now)}</td><td class="num ${w.pnl_usd>=0?'up':'down'}">${sgu(w.pnl_usd)}</td></tr>`);
+    return r.length?`<div class="vt-w"><table class="vt"><thead><tr><th>#</th><th>الأصل</th><th>المبلغ</th><th>العدد</th><th>سعر الشراء</th><th>سعر البيع المستهدف</th><th>وقف الخسارة</th><th>السعر الآن</th><th>الربح / الخسارة</th></tr></thead><tbody>${r.join('')}</tbody></table></div>`:'<p class="vb-e">لا توجد صفقات مفتوحة الآن.</p>';}
+  function rowsClosed(B){const L=B.closed.slice(0,shown);if(!L.length)return'<p class="vb-e">لم تُغلق أي صفقة بعد.</p>';
+    return`<div class="vt-w"><table class="vt"><thead><tr><th>#</th><th>الأصل</th><th>المبلغ</th><th>العدد</th><th>سعر الشراء</th><th>سعر البيع</th><th>النتيجة</th><th>الربح / الخسارة</th></tr></thead><tbody>${L.map((t,k)=>`<tr><td class="c-n">${B.closed.length-k}</td><th scope="row"><b>${esc(t.name)}</b><small>${esc(t.asset)}</small></th><td class="num">${usd(t.value_usd)}</td><td class="num">${qn(t.qty)}</td><td class="num">${px(t.entry)}${unit(t)}</td><td class="num">${px(t.exit)}${unit(t)}</td><td><span class="rs ${t.win?'w':'l'}">${t.win?'✓ ناجحة':'✗ خاسرة'}</span><small class="why">${esc((t.exits&&t.exits[0]&&t.exits[0].why)||'')}</small></td><td class="num ${t.pnl_usd>=0?'up':'down'}">${sgu(t.pnl_usd)}<small class="num">${sg(t.pnl_pct.toFixed(2))}%</small></td></tr>`).join('')}</tbody></table></div>${B.closed.length>shown?`<button class="vb-more" data-more="1">عرض المزيد (${B.closed.length-shown})</button>`:''}`;}
+  function sheet(B){const T=B.totals,net=T.gross_win_usd+T.gross_loss_usd,un=B.open.reduce((s,t)=>s+(t.upnl_usd||0),0)+((B.sweep&&B.sweep.pnl_usd)||0);
+    const c=(k,v,cl)=>`<div class="sh-c"><span>${k}</span><b class="num ${cl||''}">${v}</b></div>`;
+    return`<section class="sh"><h3>كشف الحساب</h3><div class="sh-g">${c('الصفقات المغلقة',T.closed_n)}${c('الناجحة',T.wins,'up')}${c('الخاسرة',T.losses,'down')}${c('نسبة النجاح',T.win_rate==null?'—':T.win_rate+'%')}
+      ${c('مجموع الأرباح',sgu(T.gross_win_usd),'up')}${c('مجموع الخسائر',sgu(T.gross_loss_usd),'down')}${c('الحصيلة المحققة',sgu(net),net>=0?'up':'down')}${c('غير محقق (المفتوحة)',sgu(un),un>=0?'up':'down')}</div></section>`;}
+  function csv(){const B=BOOK,q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"',L=[['الحالة','الأصل','الرمز','المبلغ بالدولار','العدد','سعر الشراء','سعر البيع','وقف الخسارة','النتيجة','الربح/الخسارة بالدولار','النسبة %']];
+    B.open.forEach(t=>L.push(['مفتوحة',t.name,t.asset,t.value_usd,t.qty,t.entry,t.target,t.stop0,'',t.upnl_usd,(t.upnl/(t.qty*t.entry)*100).toFixed(2)]));
+    if(B.sweep&&B.sweep.qty>0){const w=B.sweep;L.push(['مفتوحة',w.name,w.asset,w.cost_usd,w.qty,w.avg,'','','',w.pnl_usd,'']);}
+    B.closed.forEach(t=>L.push(['مغلقة',t.name,t.asset,t.value_usd,t.qty,t.entry,t.exit,t.stop0,t.win?'ناجحة':'خاسرة',t.pnl_usd,t.pnl_pct]));
+    const T=B.totals;L.push([]);L.push(['محفظة رأس المال',T.capital_usd]);L.push(['محفظة الأرباح',T.profit_wallet_usd]);L.push(['الإجمالي',T.equity_usd]);L.push(['الناجحة',T.wins]);L.push(['الخاسرة',T.losses]);L.push(['مجموع الأرباح',T.gross_win_usd]);L.push(['مجموع الخسائر',T.gross_loss_usd]);
+    const blob=new Blob(['﻿'+L.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='سجل-الصفقات.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+  function renderBook(){const B=BOOK,T=B.totals,up=T.pnl_usd>=0,capChg=T.capital_usd-T.start_usd;
     $('vxBody').innerHTML=`<div class="vb">
-      <div class="vb-h"><div><h2>سجل الصفقات</h2><p>محاكاة تداول بقواعد ثابتة · بدأت ${dS(B.launch)} · آخر تحديث ${upd}</p></div></div>
-      <div class="vb-k">
-        <div class="kc"><span>قيمة المحفظة</span><b class="num">$${nf(T.equity_usd)}</b><em>من $${nf(T.start_usd,0)} · ${B.universe} أصلًا متاحًا</em></div>
-        <div class="kc"><span>الربح / الخسارة</span><b class="num ${up?'up':'down'}">${sg(nf(T.pnl_usd))}$</b><em class="num ${up?'up':'down'}">${sg(T.pct.toFixed(2))}%${T.bench_pct!=null?` <span class="bm">· المؤشر ${sg(T.bench_pct.toFixed(2))}%</span>`:''}</em></div>
-        <div class="kc"><span>نسبة النجاح</span><b class="num">${T.win_rate==null?'—':T.win_rate+'%'}</b><em>${T.closed_n} صفقة مغلقة · ${T.open_n} مفتوحة</em></div>
-        <div class="kc"><span>استغلال المحفظة</span><b class="num">${T.util}%</b><em>صفقات $${nf(T.invested_usd,0)} · مؤشر $${nf(T.sweep_usd,0)}</em></div>
+      <div class="vb-h"><div><h2>سجل الصفقات</h2><p>محاكاة بأموال افتراضية وقواعد ثابتة · يتحدث تلقائيًا</p></div><button class="vb-dl" data-csv="1">⤓ تنزيل الشيت</button></div>
+      <div class="wl">
+        <div class="wc cap"><span>محفظة رأس المال</span><b class="num">${usd(T.capital_usd)}</b><em>بدأت بـ <bdi>$${nf(T.start_usd,0)}</bdi> · <bdi class="num ${capChg>=0?'up':'down'}" dir="ltr">${sgu(capChg)}</bdi><br>مستثمرة بالكامل (${T.util}%)</em></div>
+        <div class="wc pro"><span>محفظة الأرباح</span><b class="num up">${usd(T.profit_wallet_usd)}</b><em>أرباح الصفقات الناجحة تُفرز هنا ولا يُعاد تدويرها</em></div>
+        <div class="wc tot"><span>الإجمالي</span><b class="num">${usd(T.equity_usd)}</b><em><bdi class="num ${up?'up':'down'}" dir="ltr">${sgu(T.pnl_usd)} (${sg(T.pct.toFixed(2))}%)</bdi>${T.bench_pct!=null?` <span class="bm">· مؤشر S&amp;P 500 في نفس الفترة <bdi dir="ltr">${sg(T.bench_pct.toFixed(2))}%</bdi></span>`:''}</em></div>
       </div>
+      ${sheet(B)}
       <div class="vb-c"><canvas id="vxCurve"></canvas></div>
-      <nav class="vb-t" role="tablist">${[['open','المفتوحة',T.open_n],['closed','المغلقة',T.closed_n],['alloc','التوزيع',''],['rules','القواعد','']].map(([k,l,n])=>`<button role="tab" data-vt="${k}" aria-selected="${tab===k}">${l}${n!==''?` <small>${n}</small>`:''}</button>`).join('')}</nav>
+      <nav class="vb-t" role="tablist">${[['open','المفتوحة',T.open_n+(B.sweep&&B.sweep.qty>0?1:0)],['closed','المغلقة',T.closed_n],['alloc','التوزيع',''],['rules','القواعد','']].map(([k,l,n])=>`<button role="tab" data-vt="${k}" aria-selected="${tab===k}">${l}${n!==''?` <small>${n}</small>`:''}</button>`).join('')}</nav>
       <div id="vxTab"></div></div>`;
     drawCurve($('vxCurve'),B.curve.map(x=>x[1]),B.totals.start_usd);renderTab();}
   function renderTab(){const B=BOOK,el=$('vxTab');document.querySelectorAll('[data-vt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.vt===tab)));
-    if(tab==='open')el.innerHTML=B.open.length?`<div class="tl">${B.open.map(t=>card(t,false)).join('')}</div>`:'<p class="vb-e">لا توجد صفقات مفتوحة الآن. يدخل البوت عند توافق صاعد قوي بين الأطر.</p>';
-    if(tab==='closed')el.innerHTML=B.closed.length?`<div class="tl">${B.closed.slice(0,shown).map(t=>card(t,true)).join('')}</div>${B.closed.length>shown?`<button class="vb-more" data-more="1">عرض المزيد (${B.closed.length-shown})</button>`:''}`:'<p class="vb-e">لم تُغلق أي صفقة بعد.</p>';
+    if(tab==='open')el.innerHTML=rowsOpen(B);
+    if(tab==='closed')el.innerHTML=rowsClosed(B);
     if(tab==='alloc'){const mx=Math.max(...B.alloc.map(a=>a.pct),1);
-      el.innerHTML=`<div class="al"><h4 class="al-h">توزيع المحفظة الآن</h4>${B.alloc.filter(a=>a.usd>=1).map(a=>`<div class="aw ${a.sweep?'sw':a.cash?'cs':''}"><span class="aw-n">${esc(a.label)}</span><span class="aw-b"><i style="width:${(a.pct/mx*100).toFixed(1)}%"></i></span><b class="num">${a.pct}%</b><small class="num">$${nf(a.usd,0)}</small></div>`).join('')}
-      <h4 class="al-h">النتيجة حسب الأصل</h4>${B.stats.length?B.stats.map(s=>`<div class="ar"><div class="ar-n"><b>${esc(s.name)}</b><span class="num">${esc(s.id)}</span></div><div class="ar-e">${s.n} صفقة · ${s.wins} رابحة</div><div class="ar-p num ${s.pnl_usd>=0?'up':'down'}">${sg(nf(s.pnl_usd))}$</div></div>`).join(''):'<p class="vb-e">تظهر النتائج بعد إغلاق أول صفقة.</p>'}</div>`;}
+      el.innerHTML=`<div class="al"><h4 class="al-h">توزيع محفظة رأس المال الآن</h4>${B.alloc.filter(a=>a.usd>=1).map(a=>`<div class="aw ${a.sweep?'sw':a.cash?'cs':''}"><span class="aw-n">${esc(a.label)}</span><span class="aw-b"><i style="width:${(a.pct/mx*100).toFixed(1)}%"></i></span><b class="num">${a.pct}%</b><small class="num">$${nf(a.usd,0)}</small></div>`).join('')}
+      <h4 class="al-h">النتيجة حسب الأصل</h4>${B.stats.length?B.stats.map(s=>`<div class="ar"><div class="ar-n"><b>${esc(s.name)}</b><span class="num">${esc(s.id)}</span></div><div class="ar-e">${s.n} صفقة · ${s.wins} ناجحة</div><div class="ar-p num ${s.pnl_usd>=0?'up':'down'}">${sgu(s.pnl_usd)}</div></div>`).join(''):'<p class="vb-e">تظهر النتائج بعد إغلاق أول صفقة.</p>'}</div>`;}
     if(tab==='rules'){const R=B.rules;el.innerHTML=`<div class="rl">
-      <div><h4>متى يدخل</h4><p>عند إغلاق اليوم إذا كان التوافق بين الشهري والأسبوعي واليومي صاعدًا بنسبة ${'50%'} أو أكثر، واليومي صاعدًا، والسعر فوق متوسط 50 يومًا، وRSI أقل من 75.</p></div>
-      <div><h4>حجم الصفقة</h4><p>مخاطرة ${R.risk*100}% من قيمة المحفظة: المسافة بين الدخول والوقف ${R.stop_atr}×ATR، والكمية تُحسب حتى تكون الخسارة عند الوقف ${R.risk*100}% فقط، وبحد أقصى ${R.max_w*100}% من المحفظة للمركز الواحد و${R.max_open} صفقات مفتوحة.</p></div>
-      <div><h4>استغلال المحفظة</h4><p>النقد الذي لا تستخدمه الصفقات يُستثمر تلقائيًا في صندوق ${R.sweep} عند إغلاق السوق الأمريكي، ويُسحب منه عند ظهور فرصة جديدة. وعند تزاحم الفرص في اللحظة نفسها يُقدَّم الأعلى توافقًا.</p></div>
-      <div><h4>قسمة الصفقة</h4><p>نصف الكمية يُباع عند الهدف الأول (${R.t1_atr}×ATR فوق الدخول)، ثم يُنقل الوقف إلى سعر الدخول، والنصف الباقي عند الهدف الثاني (${R.t2_atr}×ATR).</p></div>
-      <div><h4>الخروج</h4><p>عند الوقف، أو الهدفين، أو انعكاس التوافق إلى هابط، أو مرور ${R.max_hold} يومًا.</p></div>
-      <div><h4>التكاليف</h4><p>عمولة ${R.fees.sa*100}% للسوق السعودي، و${R.fees.us*100}% للأسهم الأمريكية، و${R.fees.cx*100}% للعملات، وانزلاق سعري ${R.slip*100}% في كل تنفيذ.</p></div>
-      <div><h4>المحفظة</h4><p>محفظة واحدة تبدأ بـ $${nf(B.totals.start_usd,0)} وتتداول ${B.universe} أصلًا بين الأسهم السعودية والأمريكية والعملات المشفرة. الأسهم السعودية تُحسب بالريال وتُحوَّل للدولار بسعر 3.75. المحاكاة بأموال افتراضية، والقرارات آلية ولا تُعدَّل يدويًا.</p></div></div>`;}}
+      <div><h4>متى يشتري</h4><p>عند إغلاق اليوم إذا اتفقت الأطر الشهري والأسبوعي واليومي على الصعود بنسبة 50% أو أكثر، والسعر فوق متوسط 50 يومًا، وRSI أقل من 75.</p></div>
+      <div><h4>سعر البيع</h4><p>هدف واحد واضح: سعر الشراء + ${R.target_atr}×ATR. ووقف الخسارة: سعر الشراء − ${R.stop_atr}×ATR. تُغلق الصفقة كاملة عند أيهما أولًا، أو عند انعكاس التوافق إلى هابط، أو بعد ${R.max_hold} يومًا.</p></div>
+      <div><h4>ناجحة أم خاسرة</h4><p>الصفقة ناجحة إذا كان صافي نتيجتها بعد العمولات موجبًا، وخاسرة إذا كان سالبًا.</p></div>
+      <div><h4>تشغيل كل المبلغ</h4><p>كل دولار في محفظة رأس المال مستثمر: ما لا تستخدمه الصفقات يُشغَّل في صندوق ${R.sweep}، ويُسحب منه عند ظهور صفقة جديدة.</p></div>
+      <div><h4>المحفظتان</h4><p>عند إغلاق صفقة ناجحة يُنقل ربحها إلى محفظة الأرباح ويبقى هناك، ويعود أصل المبلغ لمحفظة رأس المال. الخسائر تُخصم من محفظة رأس المال.</p></div>
+      <div><h4>حجم الصفقة</h4><p>الخسارة عند الوقف لا تتجاوز ${R.risk*100}% من محفظة رأس المال، وبحد أقصى ${R.max_w*100}% للصفقة الواحدة و${R.max_open} صفقة مفتوحة.</p></div>
+      <div><h4>التكاليف</h4><p>عمولة ${R.fees.sa*100}% للسعودي، و${R.fees.us*100}% للأمريكي، و${R.fees.cx*100}% للعملات، وانزلاق ${R.slip*100}%. أسعار الأسهم السعودية بالريال والمبالغ بالدولار (3.75).</p></div></div>`;}}
   function drawCurve(cv,vals,base){if(!cv)return;const W=cv.parentElement.clientWidth,H=170,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
     const g=cv.getContext('2d');g.scale(dpr,dpr);const v=vals.length?vals:[base];const all=v.concat([base]);let lo=Math.min(...all),hi=Math.max(...all);const pd=(hi-lo)*.15||base*.002;lo-=pd;hi+=pd;
     const X=i=>10+(W-20)*(v.length>1?i/(v.length-1):1),Y=y=>12+(H-30)*(1-(y-lo)/(hi-lo));const col=v[v.length-1]>=base?'#4CC285':'#F06A5C';
@@ -2248,7 +2281,7 @@ html.locked .gate{display:flex}
     g.fillStyle='rgba(233,207,143,.7)';g.font='11px JetBrains Mono, monospace';g.textAlign='left';g.fillText('$'+nf(base,0),12,Y(base)-5);
     if(v.length>1){const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,col+'55');gr.addColorStop(1,col+'00');g.beginPath();v.forEach((y,i)=>i?g.lineTo(X(i),Y(y)):g.moveTo(X(i),Y(y)));g.lineTo(X(v.length-1),H-16);g.lineTo(X(0),H-16);g.closePath();g.fillStyle=gr;g.fill();}
     g.beginPath();v.forEach((y,i)=>i?g.lineTo(X(i),Y(y)):g.moveTo(X(i),Y(y)));g.strokeStyle=col;g.lineWidth=2.2;g.stroke();g.beginPath();g.arc(X(v.length-1),Y(v[v.length-1]),4,0,7);g.fillStyle=col;g.fill();
-    g.fillStyle='rgba(200,214,226,.7)';g.textAlign='center';g.fillText(v.length>1?'منحنى القيمة الإجمالية منذ البداية':'يبدأ المنحنى مع أول إغلاق بعد الإطلاق',W/2,H-3);}
+    g.fillStyle='rgba(200,214,226,.7)';g.textAlign='center';g.fillText(v.length>1?'منحنى القيمة الإجمالية منذ البداية':'يبدأ المنحنى مع أول إغلاق',W/2,H-3);}
   function drawSpark(cv,v){const W=90,H=28,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';const g=cv.getContext('2d');g.scale(dpr,dpr);
     if(!v||v.length<2){g.strokeStyle='rgba(200,214,226,.3)';g.beginPath();g.moveTo(2,H/2);g.lineTo(W-2,H/2);g.stroke();return;}
     const lo=Math.min(...v),hi=Math.max(...v),X=i=>2+(W-4)*i/(v.length-1),Y=y=>2+(H-4)*(1-(y-lo)/((hi-lo)||1));g.beginPath();v.forEach((y,i)=>i?g.lineTo(X(i),Y(y)):g.moveTo(X(i),Y(y)));g.strokeStyle=v[v.length-1]>=v[0]?'#4CC285':'#F06A5C';g.lineWidth=1.5;g.stroke();}
@@ -2257,8 +2290,9 @@ html.locked .gate{display:flex}
     cube.addEventListener('click',open);cube.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
     $('vxClose').addEventListener('click',close);o.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
     o.addEventListener('click',e=>{const k=e.target.closest('[data-k]');if(k&&!busy){if(k.dataset.k==='del')pin=pin.slice(0,-1);else if(pin.length<5)pin+=k.dataset.k;const i=$('vxIn');if(i)i.value=pin;cells();if(pin.length===5)submit();return;}
-      const t=e.target.closest('[data-vt]');if(t){tab=t.dataset.vt;shown=20;renderTab();return;}if(e.target.closest('[data-more]')){shown+=20;renderTab();}});
+      const t=e.target.closest('[data-vt]');if(t){tab=t.dataset.vt;shown=20;renderTab();return;}if(e.target.closest('[data-more]')){shown+=20;renderTab();}if(e.target.closest('[data-csv]'))csv();});
     let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(BOOK&&!o.hidden&&$('vxCurve'))drawCurve($('vxCurve'),BOOK.curve.map(x=>x[1]),BOOK.totals.start_usd);},150);});}
+  if(/^(localhost|127\.)/.test(location.hostname))window.__vxTest=b=>{BOOK=b;const o=$('vxo');o.hidden=false;o.classList.add('on');renderBook();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 
@@ -2511,6 +2545,8 @@ html.locked .gate{display:flex}
         ${missBox(x,w,a,S.daily[a]||[])}
       </article>`;}).join('');
     docs.forEach(x=>{const s=$('bs-'+x.week);if(s&&x.me&&x.me.bias)s.value=x.me.bias;});
+    if(JSONM&&window.PRO&&proRef(a)){const box=document.createElement('div');box.className='panel wz-retro';box.innerHTML='<p class="small muted">جارٍ حساب الاختبار الرجعي…</p>';el.prepend(box);const ref=proRef(a);
+      PRO.data(ref).then(r=>{if(!box.isConnected)return;const z=r&&r.data&&r.data['1d']?PRO.weekZone(r.data['1d'],ref.kind):null;box.innerHTML=z&&z.hist&&z.hist.length?'<h3 style="margin:0 0 4px;font-size:1rem">مقارنة أسبوعية منذ مارس 2025</h3>'+PRO.retro(z):'<p class="small muted">لا تكفي البيانات للاختبار الرجعي.</p>';const d=box.querySelector('details');if(d)d.open=true;}).catch(()=>{box.remove();});}
   }
 
   async function saveMine(week){
@@ -2846,5 +2882,5 @@ html.locked .gate{display:flex}
   });
 })();
 </script>
-<script>(function(){var B='62599e10a3';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+<script>(function(){var B='b77691399d';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
