@@ -713,6 +713,10 @@ html:has(.vxo:not([hidden])) .bot-fab{display:none}
 .bp-in button{width:44px;height:44px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .bp-in svg{width:20px;height:20px}
 
+.bpl{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.bpl-r{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;font-size:.82rem;background:color-mix(in srgb,var(--ink,#fff) 4%,transparent)}
+.bpl-r span{opacity:.85}.bpl-r.buy{border-inline-start:3px solid var(--up)}.bpl-r.sell{border-inline-start:3px solid var(--gold,#C9A55C)}.bpl-r.stop{border-inline-start:3px solid var(--down)}.bpl-r.rr{font-size:.78rem}
+
 /* launcher above the cube */
 .tvl{margin:26px 0 0}
 .tvl-card{width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;border:1px solid #2A2E39;cursor:pointer;text-align:start;color:#D1D4DC;
@@ -2677,7 +2681,12 @@ html.locked .gate{display:flex}
     weekly:/(اغلاق|يغلق|تغلق|الاسبوع|هالاسبوع|نهايه الاسبوع|الاسبوع الجاي|الاسبوع القادم|الجمعه|الخميس)/,
     levels:/(دعم|مقاوم|مستوي|مستويات)/,target:/(هدف|اهداف|يوصل|يصل|توصل|تصل|الي كم|لين كم|وين يروح|وين بيروح|سقف)/,
     mom:/(rsi|زخم|تشبع|macd|ماكد|انحراف|دايفرجنس)/,act:/(اشتري|اشتر|شراء|ابيع|بيع|ادخل|دخول|اخرج|استثمر|يستاهل|اجمع|اعزز|اتعزز)/,
-    news:/(خبر|اخبار)/,define:/(ما هو|ما هي|ماهو|ماهي|وش يعني|ايش يعني|وش معني|معني|اشرح|شرح|عرف|تعريف|كيف اقرا|كيف تحسب|كيف يحسب)/};
+    news:/(خبر|اخبار)/,plan:/(وين اشتري|متي اشتري|وين ابيع|متي ابيع|نقطه دخول|نقاط دخول|نقطه الدخول|منطقه شراء|منطقه الشراء|منطقه بيع|وقف الخساره|ستوب|خطه|خطة|كيف اتداول|كيف ادخل|وش اسوي|ايش اسوي|ماذا افعل|افضل سعر|سعر الشراء|سعر البيع|اين اشتري|اين ابيع)/,
+    why:/^(ليش|لماذا|ليه|علي ايش|علي اي اساس|كيف عرفت|وش السبب|السبب|ايش السبب)/,
+    bull:/(لو طلع|اذا طلع|لو ارتفع|اذا ارتفع|لو اخترق|اذا اخترق|لو كسر المقاومه|سيناريو الصعود|لو صعد|اذا صعد)/,
+    bear:/(لو نزل|اذا نزل|لو كسر|اذا كسر|لو هبط|اذا هبط|لو طاح|اذا طاح|سيناريو الهبوط)/,
+    sit:/(وش يصير|ايش يصير|ماذا يحدث|وش الوضع|ايش الوضع|كيف الوضع|وضعه|وضعها|فهمني|اشرح لي وضع|وش قاعد يصير|ايش قاعد يصير|الصوره|ملخص)/,
+    yes:/^(نعم|ايوه|ايه|اكيد|تمام|اوكي|ok|يب|طيب|زين|ياليت|كمل|اكمل|المزيد|زيدني|وبعد)( |$)/,define:/(ما هو|ما هي|ماهو|ماهي|وش يعني|ايش يعني|وش معني|معني|اشرح|شرح|عرف|تعريف|كيف اقرا|كيف تحسب|كيف يحسب)/};
   const GLOSS=[
     [/(^| )rsi|القوه النسبيه/,'RSI · مؤشر القوة النسبية','يقيس سرعة الحركة على مقياس من 0 إلى 100. فوق 70 يعني تشبع شراء وقد يتبعه تصحيح، وتحت 30 تشبع بيع وقد يتبعه ارتداد. يعتبره الموقع إيجابيًا فوق 55 وسلبيًا تحت 45، وما بينهما حياد.'],
     [/macd|ماكد/,'MACD','الفرق بين متوسطين متحركين أسيين (12 و26) مع خط إشارة (9). عندما يكون الهيستوغرام موجبًا فالزخم يميل للصعود، وعندما يكون سالبًا يميل للهبوط.'],
@@ -2722,7 +2731,7 @@ html.locked .gate{display:flex}
   function btTxt(A){const b=A.bt;if(!b||A.conf.dir==='flat')return'';const x=A.conf.dir==='up'?b.up:b.dn,base=A.conf.dir==='up'?b.base.pct:b.baseDown;
     if(!x||x.pct==null||x.n<15)return'';const edge=x.pct-base;
     return`<p class="mut">تاريخيًا على الشموع اليومية: عندما كانت المؤشرات ${DIR[A.conf.dir]}ة بقوة، ${A.conf.dir==='up'?'ارتفع':'انخفض'} السعر بعد ${b.h} أيام في <b class="num">${x.pct}%</b> من ${x.n} حالة، مقابل ${base}% في الأيام العادية${edge<5?'، أي أن أفضلية الإشارة هنا ضعيفة':''}.</p>`;}
-  function weeklyTxt(a){const w=API().weekly(a.id);if(!w||!w.cur)return'';
+  function weeklyTxt(a,A){const w=API().weekly(a.id);if(!w||!w.cur){let z=null;try{z=A&&PRO.weekZone(A.data['1d'],a.pro);}catch(_){}return z?`<div class="bw"><span>توقع إغلاق الأسبوع</span><b>بين ${nf(z.lo,dp(z.lo))} و ${nf(z.hi,dp(z.hi))}</b><small>${z.hit!=null?`أصابت الطريقة ${z.hit}% من الأسابيع على هذا الأصل`:''}</small></div>`:'';}
     return`<div class="bw"><span>توقع إغلاق الأسبوع (${esc(w.end)})</span><b>بين ${esc(w.cur.low!=null?w.fmt(w.cur.low):'—')} و ${esc(w.fmt(w.cur.high))}</b><small>الميل: ${BIAS[w.cur.bias]||'—'} · أصابت الطريقة ${w.hits} من ${w.n} أسبوعًا في الاختبار</small></div>`;}
   async function brief(a,tf,mode){const A=await an(a,tf);if(!A)return fail(a);
     const {conf,sc,au,scores}=A,cur=scores[A.tf];
@@ -2732,9 +2741,9 @@ html.locked .gate{display:flex}
     h+=scenTxt(a,A);
     if(cur&&cur.rsi!=null)h+=`<p>RSI ${TFN[A.tf]} <b class="num">${cur.rsi.toFixed(0)}</b>${cur.rsi>70?' (تشبع شراء)':cur.rsi<30?' (تشبع بيع)':''} · MACD ${cur.hist>0?'موجب':'سالب'} · ${conf.agree} من ${conf.total} أطر تتفق على الاتجاه.</p>`;
     if(au.length)h+=`<div class="bx"><span>ما يعاكس هذه القراءة</span><ul>${au.slice(0,3).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
-    h+=btTxt(A)+weeklyTxt(a);
+    h+=btTxt(A)+weeklyTxt(a,A);
     if(window.NEWSAI){try{const nw=await NEWSAI.forAsset(a.id);if(nw.n){const v=NEWSAI.verdict(A.conf,nw);h+=`<div class="bw"><span>قراءة الأخبار: ${NEWSAI.LAB[nw.label]} (${nw.n} خبر)</span><small>${v.txt}</small></div>`;}}catch(_){}}
-    h+=`<div class="bas">${openBtn(a,'pro','التحليل الكامل')}${act('الدعم والمقاومة','دعم ومقاومة '+a.name)}${a.weekly?act('إغلاق الأسبوع','إغلاق '+a.name+' هذا الأسبوع'):act('النطاق الأسبوعي','نطاق '+a.name+' الأسبوع')}${A.tf!=='4h'&&A.data['4h']?act('إطار 4 ساعات',a.name+' 4 ساعات'):''}</div>`;
+    h+=`<div class="bas">${act('وين أشتري ووين أبيع؟','وين اشتري ووين ابيع '+a.name)}${act('فهّمني الوضع','وش الوضع '+a.name)}${openBtn(a,'pro','التحليل الكامل')}${act('الدعم والمقاومة','دعم ومقاومة '+a.name)}${a.weekly?act('إغلاق الأسبوع','إغلاق '+a.name+' هذا الأسبوع'):act('النطاق الأسبوعي','نطاق '+a.name+' الأسبوع')}${A.tf!=='4h'&&A.data['4h']?act('إطار 4 ساعات',a.name+' 4 ساعات'):''}</div>`;
     return h+DISC;}
   async function levels(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,vp,I,b}=A,n=b.length-1;
     const row=(k,x)=>x?`<li><span>${k} · ${esc(x.src)}</span>${P(x.p,a)}</li>`:'';
@@ -2796,7 +2805,7 @@ html.locked .gate{display:flex}
     return'<p>أحلل كل الأصول الموجودة في الموقع:</p>'+Object.entries(g).map(([k,v])=>`<div class="bl"><span>${v}</span><div>${AS.filter(a=>a.pro===k).map(a=>`<button class="ba" data-q="${esc('توقع '+a.name)}">${esc(a.btn||a.name)}</button>`).join('')}</div></div>`).join('');}
   const fail=a=>`<p>تعذر الوصول إلى بيانات <b>${esc(a.name)}</b> الآن. حاول بعد قليل.</p>`;
   const WELCOME=()=>{const c=BY[API().current()];
-    return`<p>أهلًا بك 👋 أنا مساعد التحليل.</p><p>اسألني عن أي سهم أو عملة أو مؤشر في الموقع، وأرد فورًا من آخر البيانات: الاتجاه، والدعم والمقاومة، والأهداف، وإغلاق الأسبوع، والمقارنة بين أصلين.</p>
+    return`<p>أهلًا بك 👋 أنا مساعد التحليل. تكلّم معي بطريقتك: «وش وضع أرامكو؟»، «وين أشتري البيتكوين؟»، «ليش؟»، «ولو نزل؟»، أو «وين ألقى المكعب؟».</p><p>اسألني عن أي سهم أو عملة أو مؤشر في الموقع، وأرد فورًا من آخر البيانات: الاتجاه، والدعم والمقاومة، والأهداف، وإغلاق الأسبوع، والمقارنة بين أصلين.</p>
       <div class="bas">${c?act('توقع '+(c.btn||c.name),'توقع '+c.name):''}${act('الذهب هذا الأسبوع','الذهب هذا الأسبوع')}${act('أقوى الأصول الآن','أقوى الأصول الآن')}${act('قارن البيتكوين والإيثريوم','قارن البيتكوين والإيثريوم')}${act('ما هو RSI؟','ما هو RSI؟')}</div>`;};
   const MORE=()=>`<div class="bas">${act('عرض الأصول المتاحة','وش الأصول المتاحة')}${act('أقوى الأصول الآن','أقوى الأصول الآن')}</div>`;
   const POLICY='<p class="bpol">حفاظًا على دقة المعلومات وحماية حقوق المحتوى، يقتصر نطاق المساعد على الأصول والتحليلات المنشورة في المنصة، ولا يصل إلى أي مصادر خارجية.</p>';
@@ -2810,10 +2819,72 @@ html.locked .gate{display:flex}
   function candidate(q,t){const toks=t.split(' ').filter(w=>{if(w.length<2)return false;const b=w.replace(/^(و|ف|ب|ل|ك)?(ال)?/,'');return !STOP.has(w)&&!STOP.has(b)&&!STOP.has(w.replace(/^ال/,''))&&!/^\d+$/.test(w)&&!Object.values(I).some(r=>r.test(w))&&!TFR.some(([,r])=>r.test(w));});
     if(!toks.length)return'';const c=toks[0];const orig=String(q).split(/\s+/).find(w=>norm(w)===c);return(orig||c).replace(/[؟?!.,،]+$/,'');}
 
+  /* ---------- site guide: answers questions about where things are in the site ---------- */
+  const SITE=[
+    [/(المكعب|سجل الصفقات|الصفقات|المحفظه|محفظه الارباح|راس المال)/,'سجل الصفقات (المكعب)','المكعب الذهبي أسفل الصفحة الرئيسية. اضغطه واكتب الرمز السري لترى محفظة رأس المال ومحفظة الأرباح وجدول الصفقات المفتوحة والمغلقة، ويمكنك تنزيل الشيت منه.','cube'],
+    [/(تريدنج|المنصه|الشارت الكامل|شارت متقدم|منصه التداول|ارسم|الرسم|ادوات الرسم)/,'منصة تريدنج','الصندوق فوق المكعب يفتح منصة «تريدنج» بملء الشاشة. فيها الفريمات من الساعة إلى الشهري، وأدوات الرسم (خط الدعم والمقاومة، فيبوناتشي، الفرشاة…)، وأزرار المؤشرات المضيئة، وزر التراجع ↶.','tv'],
+    [/(فيبو|فايبو|فيبوناتشي|فايبوناتشي)/,'فيبوناتشي','في تريدنج: اضغط زر القلم لإظهار الأدوات، اختر فيبوناتشي، ثم اضغط على القاع واسحب إلى القمة. تظهر القمم والقيعان مرقّمة لتلتصق بها. لحذفه: المسه مرة ثم اضغط سلة المهملات، والتراجع ↶ يعيده.','tv'],
+    [/(تراجع|الغاء|undo|حذف الخط|احذف|امسح)/,'التراجع والحذف','زر ↶ في الشريط العلوي لتريدنج يرجع آخر خطوة. لحذف أي رسم: المسه مرة لتحديده ثم اضغط سلة المهملات في الشريط السفلي.','tv'],
+    [/(المؤشرات|مؤشر rsi|ازرار|اظهر rsi|اخفي|شارت صافي)/,'إظهار المؤشرات','في تريدنج شريط أزرار مضيئة تحت الشريط العلوي: اضغط RSI أو MACD أو غيرها لتظهر فورًا، واضغط مرة ثانية لإخفائها. زر «شارت صافٍ» يخفي الكل.','tv'],
+    [/(التوقع الاسبوعي|اغلاق الاسبوع|التوقعات الاسبوعيه|الاختبار الرجعي|دقه التوقع|نسبه الصواب|دقه)/,'التوقعات الأسبوعية','لكل أصل توقع لإغلاق الأسبوع في صفحته ضمن «التحليل المتقدم»، ومعه نسبة إصابته الفعلية، وجدول اختبار رجعي منذ مارس 2025 يقارن كل أسبوع بالإغلاق الحقيقي.',null],
+    [/(كيف اقرا|كيف افهم|المؤشر الدائري|الاطر|نقاط الاطر|بعد التدقيق|التوافق)/,'كيف تقرأ التحليل','المؤشر الدائري = نسبة اتفاق المؤشرات على الاتجاه (فوق 60% واضح، قرب 50% حيرة). نقاط الأطر: أخضر صاعد وأحمر هابط. «بعد التدقيق» = النسبة بعد خصم الأدلة المعاكسة، وكلما قلّت ضعفت الثقة.',null],
+    [/(الاخبار|وين الاخبار|قراءه الاخبار)/,'الأخبار','في صفحة كل أصل تبويب «الأخبار» مع قراءة آلية: إيجابية أو سلبية أو محايدة، ومقارنتها بقراءة الأرقام. وفي تريدنج تبويب «الأخبار» في اللوحة الجانبية.',null],
+    [/(كيف استخدم الموقع|وش في الموقع|ايش في الموقع|اقسام الموقع|الموقع فيه|وين القوائم)/,'أقسام الموقع','اختر الأصل من القائمة أعلى الصفحة، ثم تنقّل بين التبويبات: الآن، التحليل المتقدم، الأسابيع، الأخبار. تحتها منصة «تريدنج» للشارت الكامل، ثم المكعب لسجل الصفقات، وأنا هنا في الزاوية للأسئلة.',null]];
+  const siteHit=t=>SITE.find(([r])=>r.test(t));
+  const siteAns=x=>`<div class="bh2"><b>${x[1]}</b></div><p>${x[2]}</p><div class="bas">${x[3]==='cube'?'<button class="ba pr" data-go="cube">افتح المكعب</button>':x[3]==='tv'?`<button class="ba pr" data-go="tv">افتح تريدنج</button>`:''}${act('كيف أقرأ التحليل','كيف اقرا التحليل')}</div>`;
+
+  /* ---------- educational trade plan: where a technical trader would look to buy / sell ---------- */
+  async function plan(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,I,b,sc,conf}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
+    if(!lv||!lv.S||!lv.R||!atr)return brief(a,tf);
+    const S1=lv.S.p,R1=lv.R.p,R2=(lv.R2&&lv.R2.p)||sc.bull.t1,S2=(lv.S2&&lv.S2.p)||sc.bear.t1;
+    const zLo=S1,zHi=Math.min(S1+.5*atr,c),stop=S1-1*atr,t1=R1,t2=Math.max(R2,R1+atr);
+    const mid=(zLo+zHi)/2,rr=(t1-mid)/Math.max(1e-9,mid-stop),rr2=(t2-mid)/Math.max(1e-9,mid-stop);
+    const brk=sc.bull.trig,bStop=brk-1.2*atr,bT=sc.bull.t1;
+    let h=head(a,A)+`<p>هذه طريقة تعليمية يفكّر بها المحلل الفني، وليست توصية. الفكرة: <b>الشراء قرب الدعم، والبيع قرب المقاومة، ووقف خسارة تحت الدعم</b>.</p>`;
+    h+=`<div class="bpl"><div class="bpl-r buy"><span>منطقة شراء تعليمية (قرب الدعم)</span>${P(zLo,a)} – ${P(zHi,a)}</div>
+      <div class="bpl-r stop"><span>وقف الخسارة (تحت الدعم بمسافة ATR)</span>${P(stop,a)}</div>
+      <div class="bpl-r sell"><span>بيع أول (المقاومة الأقرب)</span>${P(t1,a)}</div>
+      <div class="bpl-r sell"><span>بيع ثانٍ (المقاومة التالية)</span>${P(t2,a)}</div>
+      <div class="bpl-r rr"><span>العائد مقابل المخاطرة</span><b class="num">${rr.toFixed(1)} : 1</b> للهدف الأول · <b class="num">${rr2.toFixed(1)} : 1</b> للثاني</div></div>`;
+    h+=rr<1.5?`<p class="mut">⚠️ العائد للهدف الأول أقل من 1.5 ضعف المخاطرة، والمحترفون عادةً لا يدخلون بهذه النسبة وينتظرون سعرًا أقرب من الدعم.</p>`:`<p class="mut">النسبة مقبولة تعليميًا (المحترفون يفضّلون 1.5 : 1 فأكثر).</p>`;
+    if(conf.dir==='down')h+=`<p>⚠️ <b>الاتجاه العام هابط الآن</b>، والشراء عكس الاتجاه أخطر لأن الدعم قد يُكسر. البديل الأسلم تعليميًا: الانتظار حتى يغلق السعر فوق ${P(brk,a)} (تأكيد اختراق)، مع وقف تحت ${P(bStop,a)} وهدف ${P(bT,a)}.</p>`;
+    else if(c>R1-.25*atr)h+=`<p>السعر الآن قريب من المقاومة، والشراء هنا يعني هدفًا قريبًا ووقفًا بعيدًا. الأفضل تعليميًا انتظار ارتداد للدعم، أو إغلاق واضح فوق ${P(R1,a)} ثم الدخول عند إعادة اختبارها.</p>`;
+    else if(c-S1<.6*atr)h+=`<p>السعر الآن داخل منطقة الدعم تقريبًا، وهي المنطقة التي يراقبها المحللون للشراء بشرط ظهور ارتداد (شمعة إغلاق خضراء فوق الدعم).</p>`;
+    else h+=`<p>السعر الآن بين الدعم والمقاومة؛ المحلل الصبور ينتظر عودته لمنطقة الشراء بدل الدخول في المنتصف.</p>`;
+    h+=`<p class="mut">إذا كُسر ${P(stop,a)} بإغلاق، تُلغى الفكرة، والدعم التالي ${P(S2,a)}.</p>`;
+    CTX.topic='plan';
+    return h+`<div class="bas">${act('ليش هذي المستويات؟','ليش')}${act('ولو نزل؟','ولو نزل')}${act('ولو طلع؟','ولو طلع')}${openBtn(a,'pro','افتح الشارت')}</div>`+DISC;}
+  async function situation(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,I,b,conf,sc,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
+    const tr=conf.dir==='up'?'صاعد':conf.dir==='down'?'هابط':'متذبذب بلا اتجاه واضح';
+    const agree=['1M','1w','1d'].filter(t=>scores[t]).map(t=>`${TFN[t]} ${DIR[scores[t].dir]}`).join('، ');
+    let pos='';if(lv&&lv.S&&lv.R){const span=lv.R.p-lv.S.p,f=span>0?(c-lv.S.p)/span:.5;pos=f<.25?'قريب من الدعم':f>.75?'قريب من المقاومة':'في منتصف المسافة بين الدعم والمقاومة';}
+    let h=head(a,A)+`<p>باختصار: <b>${esc(a.name)}</b> في اتجاه <b>${tr}</b> (${agree}).</p>`;
+    if(pos)h+=`<p>السعر الآن ${pos}: الدعم ${P(lv.S.p,a)} والمقاومة ${P(lv.R.p,a)}.</p>`;
+    if(atr)h+=`<p>يتحرك عادةً نحو ${P(atr,a)} في اليوم، فلا تستغرب حركة بهذا الحجم.</p>`;
+    let z=null;try{z=PRO.weekZone(A.data['1d'],a.pro);}catch(_){}
+    if(z)h+=`<p>والتوقع لإغلاق هذا الأسبوع بين ${P(z.lo,a)} و ${P(z.hi,a)}${z.hit!=null?` (أصابت هذه الطريقة ${z.hit}% من الأسابيع على هذا الأصل)`:''}.</p>`;
+    h+=scenTxt(a,A);CTX.topic='sit';
+    return h+`<div class="bas">${act('وين أشتري ووين أبيع؟','وين اشتري ووين ابيع')}${act('ليش؟','ليش')}${act('الدعم والمقاومة','دعم ومقاومة')}</div>`+DISC;}
+  async function why(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {scores,au,conf,lv}=A;
+    const rows=['1M','1w','1d','4h'].filter(t=>scores[t]).map(t=>{const x=scores[t];return`<li><span>${TFN[t]}</span><b class="${x.dir}">${DIR[x.dir]}</b>${x.rsi!=null?` · RSI ${x.rsi.toFixed(0)}`:''} · MACD ${x.hist>0?'موجب':'سالب'}</li>`;}).join('');
+    let h=`<p>أبني القراءة على اتفاق المؤشرات في عدة أطر زمنية. هذه أسباب قراءة <b>${esc(a.name)}</b>:</p><ul class="bk">${rows}</ul>`;
+    h+=`<p>النتيجة: ${conf.agree} من ${conf.total} أطر تتفق، والتوافق ${conf.pct}%.</p>`;
+    if(lv&&lv.S)h+=`<p>المستويات تأتي من أماكن ارتد منها السعر سابقًا: الدعم ${P(lv.S.p,a)} (${esc(lv.S.src)})، والمقاومة ${P(lv.R.p,a)} (${esc(lv.R.src)}). ووقف الخسارة يوضع تحت الدعم بمسافة تذبذب يومي (ATR) حتى لا تخرجك حركة عادية.</p>`;
+    if(au.length)h+=`<div class="bx"><span>وما يعاكس القراءة</span><ul>${au.slice(0,3).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    return h+`<div class="bas">${act('وش يعني RSI؟','وش يعني rsi')}${act('وش يعني ATR؟','وش يعني atr')}${act('وين أشتري؟','وين اشتري')}</div>`;}
+  async function ifMove(a,tf,up){const A=await an(a,tf);if(!A)return fail(a);const {sc}=A;
+    const h=up?`<p><b>لو طلع ${esc(a.name)}:</b> الإشارة المهمة إغلاق فوق ${P(sc.bull.trig,a)}. عندها يُتوقع الوصول إلى ${P(sc.bull.t1,a)} ثم ${P(sc.bull.t2,a)}، وتفشل الفكرة إذا رجع وأغلق تحت ${P(sc.bull.inv,a)}.</p><p class="mut">نصيحة تعليمية: الاختراق الحقيقي يكون بإغلاق شمعة كاملة فوق المستوى، لا بلمسه فقط.</p>`
+      :`<p><b>لو نزل ${esc(a.name)}:</b> المستوى الحاسم ${P(sc.bear.trig,a)}. كسره بإغلاق يفتح الطريق إلى ${P(sc.bear.t1,a)} ثم ${P(sc.bear.t2,a)}، وفي صدمة مفاجئة قد يصل ${P(sc.bear.shock,a)}. يعود الأمل إذا أغلق فوق ${P(sc.bear.inv,a)}.</p><p class="mut">نصيحة تعليمية: هنا يفيد وقف الخسارة، فهو يحميك من الاستمرار في الهبوط.</p>`;
+    return h+`<div class="bas">${act(up?'ولو نزل؟':'ولو طلع؟',up?'ولو نزل':'ولو طلع')}${act('وين أشتري؟','وين اشتري')}</div>`+DISC;}
+
   /* ---------- router ---------- */
   const CTX={last:null};
   async function answer(q,el){const t=norm(q);if(!t)return OUTSCOPE();
     const ids=findAssets(t),tf=tfOf(t);
+    const follow=has(t,I.plan)||has(t,I.why)||has(t,I.bull)||has(t,I.bear)||has(t,I.sit)||(has(t,I.yes)&&t.split(' ').length<=3);
+    if(!ids.length&&!follow){const sh=siteHit(t);if(sh&&!MK.test(t.replace(/(تحليل|شارت)/g,'')))return siteAns(sh);}
+    if(!ids.length&&CTX.last&&follow){ids.push(CTX.last);}
+    if(!ids.length&&follow&&!CTX.last)return`<p>عن أي أصل تقصد؟ اكتب اسمه، مثل: «وين أشتري أرامكو» أو «وش وضع البيتكوين».</p>`+MORE();
     const gl=GLOSS.find(([r])=>r.test(t));
     if(!ids.length){
       if(has(t,I.thanks))return'<p>العفو، في الخدمة دائمًا. اسأل متى شئت.</p>';
@@ -2830,16 +2901,22 @@ html.locked .gate{display:flex}
       else if(MK.test(t))return UNAVAIL('');
       else return OUTSCOPE();}
     if(has(t,I.rank)&&ids.length===1&&ids[0]==='TASI'&&/(اسهم|سهم|شركات)/.test(t))return rank(t,el);
-    const a=BY[ids[0]];CTX.last=a.id;
+    const a=BY[ids[0]];const same=CTX.last===a.id;CTX.last=a.id;
     if(ids.length>1)return compare(ids);
+    if(has(t,I.why))return why(a,tf);
+    if(has(t,I.bear))return ifMove(a,tf,false);
+    if(has(t,I.bull))return ifMove(a,tf,true);
+    if(has(t,I.plan))return plan(a,tf);
+    if(has(t,I.sit))return situation(a,tf);
+    if(has(t,I.yes)&&same&&t.split(' ').length<=3)return CTX.topic==='plan'?why(a,tf):plan(a,tf);
     if(has(t,I.news))return news(a);
     if(has(t,I.define)&&gl)return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`+await brief(a,tf);
     if(has(t,I.levels))return levels(a,tf);
     if(has(t,I.target))return targets(a,tf);
     if(has(t,I.mom))return momentum(a);
     if(has(t,I.weekly)&&!tf)return weekly(a);
-    if(has(t,I.act))return brief(a,tf,'act');
-    return brief(a,tf);}
+    if(has(t,I.act))return plan(a,tf);
+    CTX.topic='brief';return brief(a,tf);}
 
   /* ---------- ui ---------- */
   const btn=$('botBtn'),panel=$('botPanel'),log=$('botLog'),form=$('botForm'),inp=$('botIn'),tip=$('botTip');
@@ -2859,6 +2936,7 @@ html.locked .gate{display:flex}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)close();});
   form.addEventListener('submit',e=>{e.preventDefault();const v=inp.value;inp.value='';ask(v);});
   log.addEventListener('click',e=>{const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
+    const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='cube'){const c=$('vxCube');if(c){close();c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.click(),500);}}else if(g.dataset.go==='tv'&&window.CHARTX){close();CHARTX.open(CTX.last||API().current());}return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
   window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
 })();
@@ -2882,5 +2960,5 @@ html.locked .gate{display:flex}
   });
 })();
 </script>
-<script>(function(){var B='b77691399d';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+<script>(function(){var B='d58c1449dc';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
