@@ -23,6 +23,7 @@ jobs:
           python-version: '3.12'
       - run: pip install --quiet --upgrade yfinance
       - run: python scripts/fetch_pro.py
+      - run: python scripts/sync_candles.py
       - run: pip install --quiet cryptography
       - run: python scripts/paper.py
       - name: Commit
@@ -31,7 +32,7 @@ jobs:
           git config user.email "shaibanor@users.noreply.github.com"
           for i in 1 2 3; do
             git fetch -q origin main && git reset -q --mixed origin/main
-            git add pro vault
+            git add pro vault data.json
             if git diff --cached --quiet; then echo "no changes"; exit 0; fi
             git commit -qm "تحديث بيانات المنصة المتقدمة"
             git push origin HEAD:main && exit 0
