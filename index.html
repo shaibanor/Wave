@@ -3,24 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="صفحة خاصة. الدخول برمز.">
-<meta name="robots" content="noindex">
+<meta name="description" content="قراءة يومية وأسبوعية للأسهم السعودية والأمريكية والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته، ومنصة شارت وأدوات تحليل.">
+<meta name="robots" content="index,follow">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://raw.githubusercontent.com https://api.binance.com https://api1.binance.com https://data-api.binance.vision; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>التحليل الخاص · شيبان</title>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="التحليل الخاص">
 <meta property="og:title" content="التحليل الخاص">
-<meta property="og:description" content="صفحة خاصة. الدخول برمز.">
+<meta property="og:description" content="قراءة يومية وأسبوعية للأسهم والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته.">
 <meta property="og:url" content="https://shaibanor.github.io/Wave/">
-<meta property="og:image" content="https://shaibanor.github.io/Wave/og.jpg">
+<meta property="og:image" content="https://shaibanor.github.io/Wave/og.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="التحليل الخاص · wavehub.shaibanor">
+<meta property="og:image:alt" content="التحليل الخاص · الأسهم والعملات والسلع">
 <meta property="og:locale" content="ar_SA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="التحليل الخاص">
-<meta name="twitter:image" content="https://shaibanor.github.io/Wave/og.jpg">
+<meta name="twitter:image" content="https://shaibanor.github.io/Wave/og.jpg?v=2">
 <meta name="theme-color" content="#0A1724">
 <link rel="apple-touch-icon" href="og.jpg">
 <script>(function(){var H='4e9fc5dd39ea8ec9973762ec73157ade42898890cb7c4c1cb00649d0a97217dd';try{if(localStorage.getItem('wave-gate')===H)return;}catch(e){}document.documentElement.classList.add('locked');})();</script>
@@ -980,18 +980,36 @@ html.tv-open .wrap{transform:scale(.965);filter:blur(4px) brightness(.7);transit
 .tx-app #cxUndo:disabled{opacity:.35}
 
 html.locked body{overflow:hidden}
-html.locked .wrap{visibility:hidden}
-.gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#0A1724;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
+html.locked .wrap,html.locked .bot-fab,html.locked #bgTog{visibility:hidden}
+html.locked #bg3d{display:block!important;filter:saturate(1.25) brightness(1.25)}
+.gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:radial-gradient(70% 60% at 50% 45%,rgba(10,23,36,.25),rgba(10,23,36,.78));overflow:hidden;padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px))}
 html.locked .gate{display:flex}
 .gate::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 20%,rgba(201,165,92,.16),transparent 60%);pointer-events:none}
-.gate-box{position:relative;z-index:1;width:min(380px,100%);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.gate-box{position:relative;z-index:1;width:min(400px,100%);transform:perspective(900px) rotateY(var(--tx,0deg)) rotateX(var(--ty,0deg));transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .gate-box .sig{width:min(300px,80%)}
-.gate-box h1{margin:4px 0 0;font-family:var(--f-display);font-weight:700;font-size:1.8rem;color:#F6EFE0}
+.gate-box h1{margin:4px 0 0;font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,7vw,2.6rem);color:#F6EFE0;text-shadow:0 0 30px rgba(233,207,143,.45),0 2px 0 rgba(0,0,0,.4);background:linear-gradient(100deg,#F6EFE0 20%,#E9CF8F 45%,#fff 50%,#E9CF8F 55%,#F6EFE0 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gShine 5s linear infinite}
+@keyframes gShine{from{background-position:120% 0}to{background-position:-130% 0}}
+.gate-sub{letter-spacing:.18em;color:#E9CF8F!important;opacity:.85}
+.gcubes{position:fixed;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;perspective:1000px;pointer-events:none;z-index:-1;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.gc{position:absolute;left:var(--x);top:var(--y);width:0;height:0;transform-style:preserve-3d;animation:gFloat 7s ease-in-out infinite;animation-delay:var(--dl)}
+.gcr{position:absolute;width:calc(92px*var(--s));height:calc(92px*var(--s));margin:calc(-46px*var(--s)) 0 0 calc(-46px*var(--s));transform-style:preserve-3d;animation:gSpin var(--d) linear infinite;animation-delay:var(--dl)}
+.gcr i{position:absolute;inset:0;display:grid;place-items:center;border:1px solid rgba(233,207,143,.55);border-radius:10%;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(201,165,92,.05) 45%,rgba(111,179,224,.08));box-shadow:inset 0 0 18px rgba(233,207,143,.25),0 0 22px rgba(201,165,92,.18);backface-visibility:visible}
+.gcr i img{width:58%;height:58%;opacity:.92;filter:drop-shadow(0 4px 10px rgba(0,0,0,.45))}
+.gcr i.f{transform:translateZ(calc(46px*var(--s)))}.gcr i.b{transform:rotateY(180deg) translateZ(calc(46px*var(--s)))}.gcr i.r{transform:rotateY(90deg) translateZ(calc(46px*var(--s)))}
+.gcr i.l{transform:rotateY(-90deg) translateZ(calc(46px*var(--s)))}.gcr i.t{transform:rotateX(90deg) translateZ(calc(46px*var(--s)))}.gcr i.d{transform:rotateX(-90deg) translateZ(calc(46px*var(--s)))}
+@keyframes gSpin{from{transform:rotateX(0) rotateY(0) rotateZ(0)}to{transform:rotateX(360deg) rotateY(720deg) rotateZ(360deg)}}
+@keyframes gFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-14px,40px)}}
+.gate-form{position:relative;padding:3px;border-radius:18px;isolation:isolate}
+.g-ring{position:absolute;inset:0;border-radius:18px;background:conic-gradient(from var(--ga,0deg),#C9A55C,#6FB3E0,#F7931A,#4CC285,#E9CF8F,#C9A55C);z-index:-1;animation:gRing 4s linear infinite;filter:drop-shadow(0 0 12px rgba(233,207,143,.55))}
+@property --ga{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes gRing{to{--ga:360deg}}
+@media (prefers-reduced-motion:reduce){.gcr,.gc,.g-ring,.gate-box h1{animation:none!important}}
 .gate-box p{margin:0;color:#A9B7C4;font-size:.9rem}
-.gate-form{display:flex;gap:8px;width:100%;margin-top:10px}
-.gate-form input{flex:1;min-width:0;font:500 1rem var(--f-num);padding:11px 14px;border-radius:12px;border:1px solid rgba(201,165,92,.45);background:rgba(255,255,255,.05);color:#F6EFE0;direction:ltr;text-align:center;letter-spacing:.12em}
+.gate-form{display:flex;gap:6px;width:100%;margin-top:14px}
+.gate-form input{flex:1;min-width:0;font:600 1.15rem var(--f-num);padding:14px 16px;border-radius:15px;border:0;background:rgba(8,18,28,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#F6EFE0;direction:ltr;text-align:center;letter-spacing:.12em}
 .gate-form input:focus{outline:2px solid #C9A55C;outline-offset:2px}
-.gate-form button{font:700 .95rem var(--f-body);padding:0 20px;border:0;border-radius:12px;background:linear-gradient(100deg,#B8903F,#E9CF8F,#C9A55C);color:#0A1724;cursor:pointer}
+.gate-form button{display:grid;place-items:center;width:54px;padding:0;border:0;border-radius:15px;background:linear-gradient(100deg,#B8903F,#E9CF8F,#C9A55C);color:#0A1724;cursor:pointer}
+.gate-form button svg{width:22px;height:22px;fill:none;stroke:#0A1724;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .gate-err{min-height:1.2em;color:#F08A7E!important;font-size:.85rem!important}
 .gate-box.bad{animation:lockshake .45s}
 </style>
@@ -999,13 +1017,13 @@ html.locked .gate{display:flex}
 <body>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-t">
   <div class="gate-box" id="gateBox">
-    <div class="sig" role="img" aria-label="شيبان"></div>
-    <p class="handle">wavehub.shaibanor</p>
+    <div class="gcubes" id="gCubes" aria-hidden="true"></div>
     <h1 id="gate-t">التحليل الخاص</h1>
-    <p>اكتب رمز الدخول للمتابعة</p>
+    <p class="gate-sub">الأسهم · العملات · السلع</p>
     <form class="gate-form" id="gateForm" autocomplete="off">
-      <input id="gateIn" type="password" inputmode="text" autocapitalize="off" spellcheck="false" aria-label="رمز الدخول" placeholder="••••••">
-      <button type="submit">دخول</button>
+      <span class="g-ring" aria-hidden="true"></span>
+      <input id="gateIn" type="password" inputmode="text" autocapitalize="off" spellcheck="false" aria-label="الرمز" placeholder="• • • • •">
+      <button type="submit" aria-label="دخول"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
     </form>
     <p class="gate-err" id="gateErr" aria-live="polite"></p>
   </div>
@@ -3149,12 +3167,18 @@ html.locked .gate{display:flex}
   if(!root.classList.contains('locked'))return;
   const f=document.getElementById('gateForm'),i=document.getElementById('gateIn'),e=document.getElementById('gateErr'),box=document.getElementById('gateBox');
   setTimeout(()=>i.focus(),50);
+  const IDS=['BTC','ETH','GOLD','2222','XRP','SOL','GOOGL','1120','SILVER','BNB','META','BRENT','LTC','7010','ADA','AVGO','TASI','DOGE','V','2010','LINK','SPX','4013','TRX'];
+  (function cubes(){const c=document.getElementById('gCubes');if(!c||!window.EMB)return;const N=innerWidth<600?7:9,P=[[-46,-34],[44,-38],[-58,6],[56,8],[-40,40],[40,44],[0,-52],[-70,-18],[70,-20]];let k=0;
+    c.innerHTML=P.slice(0,N).map((p,n)=>{const f=['f','b','r','l','t','d'].map(x=>`<i class="${x}">${EMB.tag(IDS[(k++)%IDS.length],64)}</i>`).join('');const s=n===6?1.15:.7+(n%3)*.18;
+      return`<div class="gc" style="--x:${p[0]}vmin;--y:${p[1]}vmin;--s:${s};--d:${14+n*3}s;--dl:${-n*1.7}s"><div class="gcr">${f}</div></div>`;}).join('');
+    const box=document.getElementById('gateBox');addEventListener('pointermove',ev=>{if(!root.classList.contains('locked'))return;const x=ev.clientX/innerWidth-.5,y=ev.clientY/innerHeight-.5;c.style.transform=`rotateY(${x*18}deg) rotateX(${-y*14}deg)`;box.style.setProperty('--tx',x*8+'deg');box.style.setProperty('--ty',-y*8+'deg');},{passive:true});})();
+  let ci=0;const cyc=setInterval(()=>{if(!root.classList.contains('locked')){clearInterval(cyc);return;}if(window.EMB)EMB.theme(IDS[ci++%IDS.length]);},2600);setTimeout(()=>{if(window.EMB)EMB.theme(IDS[0]);},300);
   async function sha(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}
   f.addEventListener('submit',async ev=>{ev.preventDefault();
-    const v=i.value.trim().toLowerCase();if(!v){e.textContent='اكتب الرمز.';return;}
+    const v=i.value.trim().toLowerCase();if(!v){box.classList.remove('bad');void box.offsetWidth;box.classList.add('bad');return;}
     let h='';try{h=await sha(v);}catch(_){e.textContent='المتصفح لا يدعم الدخول. جرّب متصفحًا آخر.';return;}
-    if(h===H){try{localStorage.setItem('wave-gate',H);}catch(_){}root.classList.remove('locked');window.dispatchEvent(new Event('resize'));}
-    else{e.textContent='الرمز غير صحيح.';i.value='';box.classList.remove('bad');void box.offsetWidth;box.classList.add('bad');}
+    if(h===H){try{localStorage.setItem('wave-gate',H);}catch(_){}root.classList.remove('locked');window.dispatchEvent(new Event('resize'));try{const a=document.querySelector('.cat-g button[aria-pressed="true"]');if(a&&window.EMB)EMB.theme(a.dataset.a);}catch(_){}}
+    else{e.textContent='حاول مرة أخرى';i.value='';box.classList.remove('bad');void box.offsetWidth;box.classList.add('bad');}
   });
 })();
 </script>
@@ -3341,5 +3365,5 @@ html.locked .gate{display:flex}
   window.ADSLOTS={fill};
 })();
 
-</script><script>(function(){var B='7c5ab9d612';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='5ac9ad3c60';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
