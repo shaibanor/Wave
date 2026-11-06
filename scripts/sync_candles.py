@@ -10,7 +10,11 @@ for k in ('sa', 'us', 'cx', 'ix'):
             if f.endswith('.json'): KIND.setdefault(f[:-5], k)
 def main():
     path = os.path.join(ROOT, 'data.json'); D = json.load(open(path)); C = D['candles']
-    assets = sorted({k.split('_')[0] for k in C}); now = dt.datetime.now(dt.timezone.utc); today = now.date().isoformat(); added = 0
+    assets = {k.split('_')[0] for k in C}
+    ap = os.path.join(ROOT, 'assets.json')
+    if os.path.exists(ap):
+        assets |= set(json.load(open(ap)))
+    assets = sorted(assets); now = dt.datetime.now(dt.timezone.utc); today = now.date().isoformat(); added = 0
     closed = {'cx': False, 'sa': now.hour >= 13, 'us': now.hour >= 21, 'ix': now.hour >= 21}
     for a in assets:
         kind = KIND.get(a)
@@ -21,7 +25,7 @@ def main():
         have = set(); 
         for k, v in C.items():
             if k.startswith(a + '_'): have |= set(v['days'])
-        last = max(have) if have else '0000'
+        last = max(have) if have else (now - dt.timedelta(days=200)).date().replace(day=1).isoformat()
         for r in rows:
             d = dt.datetime.fromtimestamp(int(r[0]), dt.timezone.utc).date().isoformat()
             if d <= last or (d >= today and not closed[kind]) or not r[4]: continue

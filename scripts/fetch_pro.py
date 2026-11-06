@@ -7,7 +7,7 @@ import json, os, sys, time, urllib.request, datetime as dt
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pro')
 UA = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'}
-SA = ['8311', '1120', '4340', '2222', '1211', '1180', '7010', '2010', '2082', '4013', '1010', '1150']
+SA = ['8311', '1120', '4340', '2222', '1211', '1180', '7010', '2010', '2082', '4013', '1010', '1150', '1325']
 US = ['GOOGL', 'META', 'AVGO', 'TSM', 'JPM', 'LLY', 'V']
 SA_X = ['2280', '4190', '1060', '5110', '2050', '1050', '2020', '4280']
 US_X = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA', 'NFLX', 'AMD', 'COST', 'BRK-B', 'UNH', 'XOM', 'WMT', 'SPY', 'QQQ', 'GLD']
@@ -188,7 +188,7 @@ def crypto(status):
 NEWS_Q = {
     '8311': ('عناية للتأمين', None), '1120': ('مصرف الراجحي', None), '4340': ('الراجحي ريت', None), '2222': ('أرامكو السعودية سهم', None),
     '1211': ('معادن السعودية', None), '1180': ('البنك الأهلي السعودي', None), '7010': ('اس تي سي السعودية سهم', None), '2010': ('سابك', None),
-    '2082': ('أكوا باور', None), '4013': ('سليمان الحبيب الطبية', None), '1010': ('بنك الرياض', None), '1150': ('مصرف الإنماء', None),
+    '2082': ('أكوا باور', None), '4013': ('سليمان الحبيب الطبية', None), '1010': ('بنك الرياض', None), '1150': ('مصرف الإنماء', None), '1325': ('حديد وطني', None),
     'GOOGL': ('سهم ألفابت جوجل', 'Alphabet stock'), 'META': ('سهم ميتا', 'Meta Platforms stock'), 'AVGO': ('سهم برودكوم', 'Broadcom stock'),
     'TSM': ('سهم تايوان لأشباه الموصلات', 'TSMC stock'), 'JPM': ('جي بي مورغان', 'JPMorgan stock'), 'LLY': ('إيلي ليلي', 'Eli Lilly stock'), 'V': ('فيزا سهم', 'Visa stock'),
     'TASI': ('مؤشر تاسي السوق السعودية', None), 'DJI': ('مؤشر داو جونز', 'Dow Jones'), 'SPX': ('مؤشر اس اند بي 500', 'S&P 500'), 'NDX': ('مؤشر ناسداك', 'Nasdaq 100'),
@@ -243,6 +243,35 @@ def news(status):
     status['news'] = len(out)
 
 
+MNEWS_Q = {
+    'sa': [('اكتتاب تداول السوق السعودية', 'ar'), ('إدراج أسهم السوق الرئيسية تداول', 'ar'), ('السوق الموازية نمو إدراج', 'ar'),
+           ('توزيعات أرباح الشركات السعودية', 'ar'), ('نتائج أرباح الشركات السعودية الربع', 'ar'), ('هيئة السوق المالية السعودية', 'ar'), ('مؤشر تاسي اليوم', 'ar')],
+    'us': [('الأسهم الأمريكية وول ستريت', 'ar'), ('IPO Nasdaq NYSE debut', 'en'), ('S&P 500 stocks earnings', 'en'), ('Federal Reserve stocks', 'en')],
+    'cx': [('العملات الرقمية بيتكوين', 'ar'), ('crypto exchange listing token', 'en'), ('crypto ETF SEC', 'en'), ('crypto regulation', 'en')],
+    'ix': [('أسعار الذهب والنفط', 'ar'), ('OPEC oil prices', 'en'), ('gold price record', 'en'), ('dollar index Treasury yields', 'en')],
+}
+
+
+def mnews(status):
+    """pro/mnews.json: market-wide headlines (listings, IPOs, results, dividends, regulation) for each market."""
+    out = {}
+    for mk, qs in MNEWS_Q.items():
+        items, seen = [], set()
+        for q, lang in qs:
+            try:
+                for it in gnews(q, lang)[:10]:
+                    k = it['t'][:70]
+                    if k not in seen:
+                        seen.add(k); items.append(it)
+            except Exception as e:
+                status.setdefault('notes', []).append(f'{mk} mnews: {str(e)[:50]}')
+            time.sleep(0.6)
+        items.sort(key=lambda x: x['d'], reverse=True)
+        out[mk] = items[:45]
+    write(f'{ROOT}/mnews.json', {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'm': out})
+    status['mnews'] = {k: len(v) for k, v in out.items()}
+
+
 def summary():
     """pro/summary.json: last price and daily change per asset, used to colour the menu."""
     out = {}
@@ -291,6 +320,10 @@ def main():
             news(status)
         except Exception as e:
             status['news_err'] = str(e)[:120]
+        try:
+            mnews(status)
+        except Exception as e:
+            status['mnews_err'] = str(e)[:120]
         write(f'{ROOT}/status.json', status)
         summary()
     print(json.dumps(status, ensure_ascii=False, indent=1))
