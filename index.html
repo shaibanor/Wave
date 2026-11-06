@@ -804,6 +804,13 @@ html:has(.vxo:not([hidden])) .bot-fab{display:none}
 .bpl-r{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;font-size:.82rem;background:color-mix(in srgb,var(--ink,#fff) 4%,transparent)}
 .bpl-r span{opacity:.85}.bpl-r.buy{border-inline-start:3px solid var(--up)}.bpl-r.sell{border-inline-start:3px solid var(--gold,#C9A55C)}.bpl-r.stop{border-inline-start:3px solid var(--down)}.bpl-r.rr{font-size:.78rem}
 
+.bot-btn .tt-cv{position:absolute;left:-4px;top:-2px;width:84px;height:84px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.bot-btn .bot-sh{display:none}
+.bot-btn .tt-sig{position:absolute;left:50%;bottom:0;width:30px;height:8px;margin-left:-15px;background:var(--vsig) center/contain no-repeat;opacity:.9;filter:drop-shadow(0 0 2px rgba(233,207,143,.6))}
+.bot-glow{background:radial-gradient(circle at 50% 50%,rgba(255,140,42,.32),rgba(31,154,99,.18) 55%,transparent 72%)!important}
+.bp-av.tt-av{background:radial-gradient(circle at 50% 40%,rgba(255,140,42,.18),transparent 70%);border-color:rgba(255,154,60,.55);padding:0;display:grid;place-items:center;overflow:hidden}
+.bp-av.tt-av canvas{display:block}
+
 /* launcher above the cube */
 .tvl{margin:26px 0 0}
 .tvl-card{width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;border:1px solid #2A2E39;cursor:pointer;text-align:start;color:#D1D4DC;
@@ -1198,9 +1205,9 @@ html.locked .gate{display:flex}
   </div>
 
   <div class="bot-fab">
-    <span class="bot-lab" aria-hidden="true"><i></i>مساعد التحليل الذكي</span>
+    <span class="bot-lab" aria-hidden="true"><i></i>السلحفاة الذكية</span>
     <span class="bot-tip" id="botTip" hidden>اسألني عن أي سهم أو عملة</span>
-    <button class="bot-btn" id="botBtn" type="button" aria-label="افتح مساعد التحليل" aria-expanded="false" aria-controls="botPanel">
+    <button class="bot-btn" id="botBtn" type="button" aria-label="افتح السلحفاة الذكية" aria-expanded="false" aria-controls="botPanel">
       <span class="bot-glow" aria-hidden="true"></span>
       <span class="bot-st" aria-hidden="true"><span class="bot-bob"><span class="bot-h">
         <i class="bf f"><b class="eye"></b><b class="eye"></b><b class="mouth"></b><b class="bsig"></b></i>
@@ -1210,10 +1217,10 @@ html.locked .gate{display:flex}
       <span class="bot-sh" aria-hidden="true"></span>
     </button>
   </div>
-  <section class="bot-panel" id="botPanel" role="dialog" aria-label="مساعد التحليل" hidden>
+  <section class="bot-panel" id="botPanel" role="dialog" aria-label="السلحفاة الذكية" hidden>
     <header class="bp-h">
       <span class="bp-av" aria-hidden="true"><b class="eye"></b><b class="eye"></b><b class="mouth"></b></span>
-      <div class="bp-t"><b>مساعد التحليل</b><small><span class="bp-dot"></span>يرد من بيانات الموقع مباشرة</small></div>
+      <div class="bp-t"><b>السلحفاة الذكية</b><small><span class="bp-dot"></span>يرد من بيانات الموقع مباشرة</small></div>
       <button class="bp-x" id="botClose" type="button" aria-label="إغلاق">✕</button>
     </header>
     <div class="bp-log" id="botLog" aria-live="polite"></div>
@@ -3021,14 +3028,14 @@ html.locked .gate{display:flex}
     return'<p>أحلل كل الأصول الموجودة في الموقع:</p>'+Object.entries(g).map(([k,v])=>`<div class="bl"><span>${v}</span><div>${AS.filter(a=>a.pro===k).map(a=>`<button class="ba" data-q="${esc('توقع '+a.name)}">${esc(a.btn||a.name)}</button>`).join('')}</div></div>`).join('');}
   const fail=a=>`<p>تعذر الوصول إلى بيانات <b>${esc(a.name)}</b> الآن. حاول بعد قليل.</p>`;
   const WELCOME=()=>{const c=BY[API().current()];
-    return`<p>أهلًا بك 👋 أنا مساعد التحليل. تكلّم معي بطريقتك: «وش وضع أرامكو؟»، «وين أشتري البيتكوين؟»، «ليش؟»، «ولو نزل؟»، أو «وين ألقى المكعب؟».</p><p>اسألني عن أي سهم أو عملة أو مؤشر في الموقع، وأرد فورًا من آخر البيانات: الاتجاه، والدعم والمقاومة، والأهداف، وإغلاق الأسبوع، والمقارنة بين أصلين.</p>
+    return`<p>أهلًا بك 👋 أنا السلحفاة الذكية، مساعدك في التحليل. تكلّم معي بطريقتك: «وش وضع أرامكو؟»، «وين أشتري البيتكوين؟»، «ليش؟»، «ولو نزل؟»، أو «وين ألقى المكعب؟».</p><p>اسألني عن أي سهم أو عملة أو مؤشر في الموقع، وأرد فورًا من آخر البيانات: الاتجاه، والدعم والمقاومة، والأهداف، وإغلاق الأسبوع، والمقارنة بين أصلين.</p>
       <div class="bas">${c?act('توقع '+(c.btn||c.name),'توقع '+c.name):''}${act('الذهب هذا الأسبوع','الذهب هذا الأسبوع')}${act('أقوى الأصول الآن','أقوى الأصول الآن')}${act('قارن البيتكوين والإيثريوم','قارن البيتكوين والإيثريوم')}${act('ما هو RSI؟','ما هو RSI؟')}</div>`;};
   const MORE=()=>`<div class="bas">${act('عرض الأصول المتاحة','وش الأصول المتاحة')}${act('أقوى الأصول الآن','أقوى الأصول الآن')}</div>`;
   const POLICY='<p class="bpol">حفاظًا على دقة المعلومات وحماية حقوق المحتوى، يقتصر نطاق المساعد على الأصول والتحليلات المنشورة في المنصة، ولا يصل إلى أي مصادر خارجية.</p>';
   const UNAVAIL=n=>`<p>نعتذر، ${n?`«<b>${esc(n)}</b>»`:'الأصل المطلوب'} غير متوفر حاليًا ضمن الأصول المغطاة في منصة التحليل الخاص.</p>`+POLICY+MORE();
   const OUTSCOPE=()=>`<p>نعتذر، هذا الطلب خارج نطاق خدمة المساعد.</p><p>صُمّم المساعد للإجابة عن تحليلات الأسهم والعملات والمؤشرات المنشورة في المنصة فقط، ولا يقدّم معلومات عامة أو محتوى من خارجها، التزامًا بسياسة الاستخدام.</p>`+MORE();
   const NOTFOUND=()=>UNAVAIL('');
-  const ABOUT=()=>`<p>أنا مساعد التحليل، جزء من منصة <b>التحليل الخاص · شيبان</b>. أجيب من بيانات المنصة وتحليلاتها مباشرة.</p><p class="bpol">التفاصيل التقنية للمنصة ومصادرها الداخلية محمية بحقوق الملكية ولا يُفصح عنها.</p>`+MORE();
+  const ABOUT=()=>`<p>أنا السلحفاة الذكية، مساعدك في التحليل، جزء من منصة <b>التحليل الخاص · شيبان</b>. أجيب من بيانات المنصة وتحليلاتها مباشرة.</p><p class="bpol">التفاصيل التقنية للمنصة ومصادرها الداخلية محمية بحقوق الملكية ولا يُفصح عنها.</p>`+MORE();
   const STOP=new Set('اكتب قصيده قصيدة شعر نكته طقس ترجم اغنيه وصفه قصه وش ايش شو ما ماذا هل كم كيف متي وين اين ليش لماذا في عن من الي علي مع او ثم هو هي له لها فيه فيها هذا هذه ذا الحين الان اليوم بكره غدا رايك رايكم توقعك توقعاتك توقع تتوقع تحليل حلل اتجاه سعر اسعار سهم اسهم عمله عملات عملة شركه مؤشر اسبوع شهر يا انت ابي ابغي اريد عطني اعطني ممكن لو سمحت طيب يطلع ينزل يرتفع ينخفض صعود هبوط حركه السوق قيمه كوين حالي قادم جاي بعد قبل شراء بيع اشتري ابيع ادخل هدف اهداف دعم مقاومه وضع الوضع كذا زين يستاهل تنصح تنصحني نصيحه اخبار خبر مستقبل ايضا كمان بس'.split(' '));
   const MK=/(توقع|سهم|اسهم|عمله|عملات|كوين|سعر|اسعار|اتجاه|تحليل|حلل|شراء|بيع|اشتري|ابيع|يطلع|ينزل|صعود|هبوط|مقاوم|هدف|تداول|استثمار|شارت|chart|token|توكن)/;
   const WHO=/(من صنعك|من برمجك|من سواك|من طورك|وش النموذج|ايش النموذج|اي نموذج|من انت|مين انت|هل انت|ذكاء اصطناعي|الذكاء الاصطناعي|بوت مين|انت بوت|كيف برمجت|كيف تشتغل|مصدر بياناتك|من وين تجيب)/;
@@ -3155,6 +3162,68 @@ html.locked .gate{display:flex}
     const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='cube'){const c=$('vxCube');if(c){close();c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.click(),500);}}else if(g.dataset.go==='tv'&&window.CHARTX){close();CHARTX.open(CTX.last||API().current());}return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
   window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
+})();
+
+(function(){
+  /* «السلحفاة الذكية»: a shaded, animated 3D-looking turtle drawn on canvas for the assistant button and its panel avatar. */
+  const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const look={x:0,y:0,tx:0,ty:0};let blinkAt=0,happy=0;
+  function el(g,x,y,rx,ry,rot){g.beginPath();g.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),rot||0,0,Math.PI*2);}
+  function draw(g,S,t,o){o=o||{};const k=S/100;g.save();g.scale(k,k);
+    const bob=RM?0:Math.sin(t*2.1)*2.2,pad=RM?0:Math.sin(t*3.2),hx=look.x*3,hy=look.y*2;
+    /* shadow */
+    g.fillStyle='rgba(0,0,0,.28)';el(g,54,92,30-bob*.8,4.5);g.fill();
+    g.translate(0,bob);
+    /* back flipper */
+    g.save();g.translate(70,74);g.rotate(.5+pad*.12);const fb=g.createLinearGradient(-8,-4,12,8);fb.addColorStop(0,'#A9D6C6');fb.addColorStop(1,'#6FA796');g.fillStyle=fb;el(g,6,4,13,6,.2);g.fill();g.restore();
+    /* body under shell */
+    const bd=g.createLinearGradient(0,60,0,84);bd.addColorStop(0,'#BFE5D6');bd.addColorStop(1,'#7FB3A2');g.fillStyle=bd;el(g,58,74,30,10);g.fill();
+    /* shell */
+    const sx=60,sy=58,sr=31;
+    g.save();g.beginPath();g.ellipse(sx,sy+6,sr,sr*.92,0,Math.PI,0);g.lineTo(sx+sr,sy+8);g.quadraticCurveTo(sx,sy+18,sx-sr,sy+8);g.closePath();
+    const sh=g.createRadialGradient(sx-12,sy-22,4,sx,sy,sr*1.25);sh.addColorStop(0,'#FFC07A');sh.addColorStop(.35,'#FF8C2A');sh.addColorStop(1,'#C4500A');g.fillStyle=sh;g.fill();g.clip();
+    /* green scutes with a dotted texture */
+    const scute=(x,y,rx,ry,rot)=>{g.save();el(g,x,y,rx,ry,rot);const sg=g.createRadialGradient(x-rx*.3,y-ry*.4,1,x,y,Math.max(rx,ry));sg.addColorStop(0,'#7FE3B2');sg.addColorStop(1,'#1F9A63');g.fillStyle=sg;g.fill();g.clip();
+      g.fillStyle='rgba(220,255,236,.55)';for(let a=x-rx;a<x+rx;a+=2.6)for(let b=y-ry;b<y+ry;b+=2.6){g.beginPath();g.arc(a+((b|0)%2?1.3:0),b,.65,0,7);g.fill();}g.restore();};
+    scute(sx+1,sy-14,12,8,0);scute(sx-17,sy-1,7,8,.5);scute(sx+19,sy-1,7,8,-.5);scute(sx+1,sy+4,9,5,0);
+    g.restore();
+    /* shell rim */
+    g.strokeStyle='#B84A08';g.lineWidth=2.2;g.beginPath();g.moveTo(sx-sr,sy+8);g.quadraticCurveTo(sx,sy+18,sx+sr,sy+8);g.stroke();
+    const rim=g.createLinearGradient(0,sy+4,0,sy+16);rim.addColorStop(0,'#FF9A3C');rim.addColorStop(1,'#D3600F');g.fillStyle=rim;g.beginPath();g.moveTo(sx-sr-2,sy+7);g.quadraticCurveTo(sx,sy+21,sx+sr+2,sy+7);g.quadraticCurveTo(sx,sy+15,sx-sr-2,sy+7);g.fill();
+    /* specular highlight */
+    g.fillStyle='rgba(255,255,255,.45)';el(g,sx-12,sy-18,7,3.2,-.5);g.fill();g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(sx-6,sy-11,1.6,0,7);g.fill();
+    /* front flipper */
+    g.save();g.translate(48,78);g.rotate(-.15-pad*.18);const ff=g.createLinearGradient(-10,-4,14,8);ff.addColorStop(0,'#D4F1E6');ff.addColorStop(1,'#86BBA9');g.fillStyle=ff;el(g,4,3,14,6.5,.15);g.fill();g.restore();
+    /* neck + head */
+    const nx=28+hx,ny=52+hy+(RM?0:Math.sin(t*2.1+.6)*1.2);
+    const nk=g.createLinearGradient(30,56,44,72);nk.addColorStop(0,'#CBEBDF');nk.addColorStop(1,'#8DBFAE');g.fillStyle=nk;el(g,36,66,10,9,-.5);g.fill();
+    const hd=g.createRadialGradient(nx-7,ny-9,2,nx,ny,22);hd.addColorStop(0,'#F2FBF7');hd.addColorStop(.55,'#C6E9DC');hd.addColorStop(1,'#86B9A7');g.fillStyle=hd;el(g,nx,ny,19,17,-.1);g.fill();
+    /* eyes (blink) */
+    const now=t*1000;if(now>blinkAt+4200)blinkAt=now;const bl=RM?1:Math.max(.12,Math.min(1,Math.abs(now-blinkAt-90)/90));
+    [[nx-9,ny-3,5.2],[nx+4,ny-1,6.4]].forEach(([ex,ey,er])=>{g.fillStyle='#1E1B1C';el(g,ex+hx*.6,ey+hy*.5,er*.82,er*bl);g.fill();
+      if(bl>.5){g.fillStyle='#fff';g.beginPath();g.arc(ex+hx*.6-er*.25,ey+hy*.5-er*.3,er*.32,0,7);g.fill();g.beginPath();g.arc(ex+hx*.6+er*.3,ey+hy*.5+er*.25,er*.14,0,7);g.fill();}});
+    /* smile + cheek */
+    g.strokeStyle='#4E6F63';g.lineWidth=1.4;g.lineCap='round';g.beginPath();g.arc(nx-3+hx*.6,ny+6+hy*.4,happy?5.5:4,.25,Math.PI-.4);g.stroke();
+    g.fillStyle='rgba(255,140,120,.35)';el(g,nx+10+hx*.6,ny+6,3.2,2);g.fill();
+    g.restore();}
+  function mount(){const btn=document.getElementById('botBtn');if(!btn)return;
+    const st=btn.querySelector('.bot-st');if(st)st.remove();
+    const cv=document.createElement('canvas');cv.className='tt-cv';cv.setAttribute('aria-hidden','true');btn.insertBefore(cv,btn.querySelector('.bot-sh'));const sg=document.createElement('span');sg.className='tt-sig';sg.setAttribute('aria-hidden','true');btn.appendChild(sg);
+    const av=document.querySelector('.bp-av');let ac=null;if(av){av.innerHTML='';av.classList.add('tt-av');ac=document.createElement('canvas');av.appendChild(ac);}
+    const fit=(c,s)=>{const d=Math.min(2.5,devicePixelRatio||1);c.width=s*d;c.height=s*d;c.style.width=c.style.height=s+'px';return c.getContext('2d');};
+    const g=fit(cv,84),ga=ac?fit(ac,38):null,d=Math.min(2.5,devicePixelRatio||1);
+    let raf=0,t0=performance.now(),last=0;
+    const frame=now=>{raf=0;if(now-last<33){raf=requestAnimationFrame(frame);return;}last=now;const t=(now-t0)/1000;look.x+=(look.tx-look.x)*.12;look.y+=(look.ty-look.y)*.12;happy=Math.max(0,happy-.02);
+      g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);draw(g,84*d,t);
+      if(ga&&!document.getElementById('botPanel').hidden){ga.setTransform(1,0,0,1,0,0);ga.clearRect(0,0,ac.width,ac.height);draw(ga,38*d,t);}
+      if(!document.hidden&&!RM)raf=requestAnimationFrame(frame);};
+    const kick=()=>{if(!raf)raf=requestAnimationFrame(frame);};
+    addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=Math.hypot(dx,dy)||1;look.tx=dx/m*Math.min(1,m/200);look.ty=dy/m*Math.min(1,m/200);},{passive:true});
+    btn.addEventListener('pointerdown',()=>{happy=1;},{passive:true});
+    document.addEventListener('visibilitychange',kick);
+    if(RM){draw(g,84*d,0);if(ga)draw(ga,38*d,0);}else kick();
+    new MutationObserver(()=>{if(ga&&RM)draw(ga,38*d,0);kick();}).observe(document.getElementById('botPanel'),{attributes:true,attributeFilter:['hidden']});}
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
 </script>
@@ -3365,5 +3434,5 @@ html.locked .gate{display:flex}
   window.ADSLOTS={fill};
 })();
 
-</script><script>(function(){var B='5ac9ad3c60';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='c7a9ff6ec2';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
