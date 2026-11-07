@@ -3485,6 +3485,44 @@ html.locked .gate{display:flex}
   const look={x:0,y:0,tx:0,ty:0};let blinkAt=0,happy=0;
   function el(g,x,y,rx,ry,rot){g.beginPath();g.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),rot||0,0,Math.PI*2);}
 
+  /* ---------- main logo: the original soft 3D turtle ---------- */
+  function drawOrig(g,S,t,o){o=o||{};const k=S/100;g.save();g.scale(k,k);
+    const bob=RM?0:Math.sin(t*2.1)*2.2,pad=RM?0:Math.sin(t*3.2),hx=look.x*3,hy=look.y*2;
+    /* shadow */
+    g.fillStyle='rgba(0,0,0,.28)';el(g,54,92,30-bob*.8,4.5);g.fill();
+    g.translate(0,bob);
+    /* back flipper */
+    g.save();g.translate(70,74);g.rotate(.5+pad*.12);const fb=g.createLinearGradient(-8,-4,12,8);fb.addColorStop(0,'#A9D6C6');fb.addColorStop(1,'#6FA796');g.fillStyle=fb;el(g,6,4,13,6,.2);g.fill();g.restore();
+    /* body under shell */
+    const bd=g.createLinearGradient(0,60,0,84);bd.addColorStop(0,'#BFE5D6');bd.addColorStop(1,'#7FB3A2');g.fillStyle=bd;el(g,58,74,30,10);g.fill();
+    /* shell */
+    const sx=60,sy=58,sr=31;
+    g.save();g.beginPath();g.ellipse(sx,sy+6,sr,sr*.92,0,Math.PI,0);g.lineTo(sx+sr,sy+8);g.quadraticCurveTo(sx,sy+18,sx-sr,sy+8);g.closePath();
+    const sh=g.createRadialGradient(sx-12,sy-22,4,sx,sy,sr*1.25);sh.addColorStop(0,'#FFC07A');sh.addColorStop(.35,'#FF8C2A');sh.addColorStop(1,'#C4500A');g.fillStyle=sh;g.fill();g.clip();
+    /* green scutes with a dotted texture */
+    const scute=(x,y,rx,ry,rot)=>{g.save();el(g,x,y,rx,ry,rot);const sg=g.createRadialGradient(x-rx*.3,y-ry*.4,1,x,y,Math.max(rx,ry));sg.addColorStop(0,'#7FE3B2');sg.addColorStop(1,'#1F9A63');g.fillStyle=sg;g.fill();g.clip();
+      g.fillStyle='rgba(220,255,236,.55)';for(let a=x-rx;a<x+rx;a+=2.6)for(let b=y-ry;b<y+ry;b+=2.6){g.beginPath();g.arc(a+((b|0)%2?1.3:0),b,.65,0,7);g.fill();}g.restore();};
+    scute(sx+1,sy-14,12,8,0);scute(sx-17,sy-1,7,8,.5);scute(sx+19,sy-1,7,8,-.5);scute(sx+1,sy+4,9,5,0);
+    g.restore();
+    /* shell rim */
+    g.strokeStyle='#B84A08';g.lineWidth=2.2;g.beginPath();g.moveTo(sx-sr,sy+8);g.quadraticCurveTo(sx,sy+18,sx+sr,sy+8);g.stroke();
+    const rim=g.createLinearGradient(0,sy+4,0,sy+16);rim.addColorStop(0,'#FF9A3C');rim.addColorStop(1,'#D3600F');g.fillStyle=rim;g.beginPath();g.moveTo(sx-sr-2,sy+7);g.quadraticCurveTo(sx,sy+21,sx+sr+2,sy+7);g.quadraticCurveTo(sx,sy+15,sx-sr-2,sy+7);g.fill();
+    /* specular highlight */
+    g.fillStyle='rgba(255,255,255,.45)';el(g,sx-12,sy-18,7,3.2,-.5);g.fill();g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(sx-6,sy-11,1.6,0,7);g.fill();
+    /* front flipper */
+    g.save();g.translate(48,78);g.rotate(-.15-pad*.18);const ff=g.createLinearGradient(-10,-4,14,8);ff.addColorStop(0,'#D4F1E6');ff.addColorStop(1,'#86BBA9');g.fillStyle=ff;el(g,4,3,14,6.5,.15);g.fill();g.restore();
+    /* neck + head */
+    const nx=28+hx,ny=52+hy+(RM?0:Math.sin(t*2.1+.6)*1.2);
+    const nk=g.createLinearGradient(30,56,44,72);nk.addColorStop(0,'#CBEBDF');nk.addColorStop(1,'#8DBFAE');g.fillStyle=nk;el(g,36,66,10,9,-.5);g.fill();
+    const hd=g.createRadialGradient(nx-7,ny-9,2,nx,ny,22);hd.addColorStop(0,'#F2FBF7');hd.addColorStop(.55,'#C6E9DC');hd.addColorStop(1,'#86B9A7');g.fillStyle=hd;el(g,nx,ny,19,17,-.1);g.fill();
+    /* eyes (blink) */
+    const now=t*1000;if(now>blinkAt+4200)blinkAt=now;const bl=RM?1:Math.max(.12,Math.min(1,Math.abs(now-blinkAt-90)/90));
+    [[nx-9,ny-3,5.2],[nx+4,ny-1,6.4]].forEach(([ex,ey,er])=>{g.fillStyle='#1E1B1C';el(g,ex+hx*.6,ey+hy*.5,er*.82,er*bl);g.fill();
+      if(bl>.5){g.fillStyle='#fff';g.beginPath();g.arc(ex+hx*.6-er*.25,ey+hy*.5-er*.3,er*.32,0,7);g.fill();g.beginPath();g.arc(ex+hx*.6+er*.3,ey+hy*.5+er*.25,er*.14,0,7);g.fill();}});
+    /* smile + cheek */
+    g.strokeStyle='#4E6F63';g.lineWidth=1.4;g.lineCap='round';g.beginPath();g.arc(nx-3+hx*.6,ny+6+hy*.4,happy?5.5:4,.25,Math.PI-.4);g.stroke();
+    g.fillStyle='rgba(255,140,120,.35)';el(g,nx+10+hx*.6,ny+6,3.2,2);g.fill();
+    g.restore();}
   /* ---------- brand mark (SVG) ---------- */
   let MK=0;
   function mark(){const u='tm'+(MK++);return`<svg viewBox="0 0 64 64" class="tm-svg" aria-hidden="true" focusable="false">
@@ -3566,11 +3604,15 @@ html.locked .gate{display:flex}
     g.restore();
     for(let q=0;q<4;q++){g.fillStyle=happy?`rgb(${P.eye[0]})`:`rgba(${P.eye[0]},${.5+.4*pulse})`;g.fillRect(nx-6+q*3+hx*.6,ny+8+hy*.4+(happy&&(q===0||q===3)?-1:0),2,1.4);}
     g.restore();}
-  window.TURTLE={draw,mark,markURL,SKINS,MOVES};
+  window.TURTLE={draw,drawOrig,mark,markURL:logoURL,SKINS,MOVES};
 
-  /* brand mark wherever the logo appears */
-  (function logos(){const go=()=>{document.querySelectorAll('img.tkb-t').forEach(i=>{i.src=markURL();});
-      document.querySelectorAll('canvas.tlogo').forEach(c=>{const s=document.createElement('span');s.className=c.className.replace('tlogo','tlogo tmark');s.setAttribute('role','img');s.setAttribute('aria-label',c.getAttribute('aria-label')||'شعار منصة تيكو');s.innerHTML=mark();c.replaceWith(s);});};
+  /* the platform logo (hero, gate, ticker) is the original turtle */
+  let LU='';function logoURL(){if(LU)return LU;const c=document.createElement('canvas');c.width=c.height=96;drawOrig(c.getContext('2d'),96,.4);LU=c.toDataURL('image/png');return LU;}
+  (function bands(){const go=()=>{document.querySelectorAll('img.tkb-t').forEach(i=>{i.src=logoURL();});};
+    document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();})();
+  (function logos(){const go=()=>{const L=[...document.querySelectorAll('canvas.tlogo')];if(!L.length)return;const d=Math.min(2.5,devicePixelRatio||1);
+      L.forEach(c=>{const s=c.getBoundingClientRect().width||parseInt(getComputedStyle(c).width)||96;c.width=c.height=Math.round(s*d);});
+      let last=0;const f=now=>{if(now-last>40&&!document.hidden){last=now;L.forEach(c=>{if(!c.offsetParent&&!c.closest('.gate'))return;const g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,c.width,c.height);drawOrig(g,c.width,RM?0:now/1000);});}requestAnimationFrame(f);};requestAnimationFrame(f);};
     document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();})();
 
   /* mascot: cycles moves, and changes outfit every few moves (a new outfit on each visit too) */
@@ -4120,5 +4162,5 @@ html.locked .gate{display:flex}
   window.NEWSHUB={open};
 })();
 
-</script><script>(function(){var B='08e9e9f289';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='83932527a7';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
