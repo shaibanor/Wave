@@ -120,6 +120,16 @@ def stocks_full(status):
             if len(d) < 60 and len(obj.get('1h', [])) >= 60:
                 d = daily_from(h1)
                 obj['d'] = [x[:6] for x in d]
+            elif d and h1:
+                # Yahoo sometimes publishes the latest daily bar late; rebuild finished sessions from hourly bars.
+                last = d[-1][6]
+                close_h = 13 if kind == 'sa' else 21
+                fresh = [r for r in daily_from([x for x in h1 if dt.datetime.fromtimestamp(x[0], dt.timezone.utc).date().isoformat() > last])
+                         if r[6] < NOW.date().isoformat() or NOW.hour >= close_h]
+                if fresh:
+                    d = d + fresh
+                    obj['d'] = [x[:6] for x in d]
+                    status.setdefault('notes', []).append(f'{c}: {len(fresh)} daily bar(s) rebuilt from 1h')
             if len(obj['m']) < 12 and len(d) >= 60:
                 obj['m'] = monthly_from(d)
             if len(d) < 60:
