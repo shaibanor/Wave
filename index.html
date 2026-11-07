@@ -2,25 +2,26 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("wave-theme")||"dark";}catch(e){document.documentElement.dataset.theme="dark";}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="قراءة يومية وأسبوعية للأسهم السعودية والأمريكية والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته، ومنصة شارت وأدوات تحليل.">
 <meta name="robots" content="index,follow">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://raw.githubusercontent.com https://api.binance.com https://api1.binance.com https://data-api.binance.vision; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>التحليل الخاص · شيبان</title>
+<title>منصة تيكو · تحليل الأسهم والعملات والسلع</title>
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="التحليل الخاص">
-<meta property="og:title" content="التحليل الخاص">
+<meta property="og:site_name" content="منصة تيكو">
+<meta property="og:title" content="منصة تيكو">
 <meta property="og:description" content="قراءة يومية وأسبوعية للأسهم والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته.">
 <meta property="og:url" content="https://shaibanor.github.io/Wave/">
-<meta property="og:image" content="https://shaibanor.github.io/Wave/og.jpg?v=2">
+<meta property="og:image" content="https://shaibanor.github.io/Wave/og.jpg?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="التحليل الخاص · الأسهم والعملات والسلع">
+<meta property="og:image:alt" content="منصة تيكو · الأسهم والعملات والسلع">
 <meta property="og:locale" content="ar_SA">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="التحليل الخاص">
-<meta name="twitter:image" content="https://shaibanor.github.io/Wave/og.jpg?v=2">
+<meta name="twitter:title" content="منصة تيكو">
+<meta name="twitter:image" content="https://shaibanor.github.io/Wave/og.jpg?v=3">
 <meta name="theme-color" content="#0A1724">
 <link rel="apple-touch-icon" href="og.jpg">
 <script>(function(){var H='4e9fc5dd39ea8ec9973762ec73157ade42898890cb7c4c1cb00649d0a97217dd';try{if(localStorage.getItem('wave-gate')===H)return;}catch(e){}document.documentElement.classList.add('locked');})();</script>
@@ -572,6 +573,33 @@ html.ov-open .bot-fab{display:none}
 .c-ipo .nh-c{background:color-mix(in srgb,#B07CFF 25%,transparent);color:#D7C2FF}.c-earn .nh-c{background:color-mix(in srgb,var(--up) 22%,transparent);color:var(--up)}.c-div .nh-c{background:color-mix(in srgb,var(--gold,#C9A55C) 25%,transparent);color:#F1DCA0}.c-reg .nh-c{background:color-mix(in srgb,#6FB3E0 22%,transparent);color:#9FD0F0}
 .nh-a{border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);padding:6px 0}.nh-a summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none}.nh-a summary small{margin-inline-start:auto;color:var(--muted);font-size:.72rem}
 .nh-e{color:var(--muted);font-size:.86rem;display:flex;align-items:center;gap:8px}.nh-n{font-size:.72rem;color:var(--muted);margin-top:12px;line-height:1.7}
+/* ---------- theme switch ---------- */
+#themeTog{position:fixed;right:14px;bottom:calc(60px + env(safe-area-inset-bottom));z-index:40;width:38px;height:38px;border-radius:12px;border:1px solid color-mix(in srgb,var(--gold,#C9A55C) 55%,transparent);background:color-mix(in srgb,var(--panel) 80%,transparent);color:var(--gold,#C9A55C);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#themeTog svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+html.locked #themeTog,html.tv-open #themeTog,html.ov-open #themeTog{display:none}
+html.theme-anim *{transition:background-color .45s,color .45s,border-color .45s!important}
+/* ---------- platform logo ---------- */
+.hero-band .tlogo{display:block;width:96px;height:96px;margin:0 auto 2px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.45))}
+.gate .glogo{display:block;width:110px;height:110px;margin:0 auto -4px;filter:drop-shadow(0 12px 20px rgba(0,0,0,.5))}
+/* ---------- 3D glass launcher tiles (تريدنج · التحليل الشامل · أخبار السلحفاة) ---------- */
+.tvl{margin:18px 0 0;perspective:1100px}
+.tvl .tvl-card{position:relative;display:flex;flex-wrap:nowrap!important;align-items:center;gap:16px;width:100%;padding:20px 18px 20px 20px!important;border-radius:22px!important;border:1px solid rgba(255,255,255,.14)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 42%,rgba(201,165,92,.08))!important;-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(0,0,0,.25),0 1px 0 rgba(255,255,255,.06),0 18px 40px -18px rgba(0,0,0,.6),0 0 0 1px rgba(201,165,92,.08)!important;
+  transform-style:preserve-3d;transform:rotateX(8deg);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;color:var(--ink);text-align:right;cursor:pointer;overflow:visible}
+.tvl .tvl-card::before{content:"";position:absolute;inset:8px -6px -10px 6px;border-radius:22px;background:linear-gradient(135deg,color-mix(in srgb,var(--c3d,#C9A55C) 45%,transparent),transparent 70%);transform:translateZ(-40px);filter:blur(10px);opacity:.75;pointer-events:none}
+.tvl .tvl-card::after{content:"";position:absolute;inset:0;border-radius:22px;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.18) 48%,transparent 60%);background-size:250% 100%;animation:tvlSheen 6s ease-in-out infinite;pointer-events:none}
+@keyframes tvlSheen{0%,55%{background-position:120% 0}100%{background-position:-120% 0}}
+.tvl .tvl-card:hover{transform:rotateX(0) translateY(-4px) translateZ(12px)}
+.tvl .tvl-ic{flex:0 0 74px!important;height:74px!important;border-radius:20px!important;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.22),color-mix(in srgb,var(--c3d,#C9A55C) 22%,transparent) 60%,transparent)!important;border:1px solid rgba(255,255,255,.18)!important;transform:translateZ(46px) rotateY(-14deg);box-shadow:0 14px 26px -10px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.3);animation:tvlFloat 4.5s ease-in-out infinite}
+@keyframes tvlFloat{0%,100%{transform:translateZ(46px) rotateY(-14deg) translateY(0)}50%{transform:translateZ(46px) rotateY(10deg) translateY(-5px)}}
+.tvl .tvl-ic svg{width:48px}.tvl .nh-ic canvas{width:66px!important;height:66px!important}
+.tvl .tvl-t{transform:translateZ(22px)}.tvl .tvl-t b{color:var(--ink)!important;font-size:1.2rem}.tvl .tvl-t small{color:var(--muted)!important}
+.tvl .tvl-go{width:auto!important;flex:0 0 auto;transform:translateZ(30px);background:transparent!important;border:1px solid color-mix(in srgb,var(--c3d,#C9A55C) 70%,transparent);color:var(--ink)!important;border-radius:999px!important;padding:8px 14px!important;box-shadow:0 0 16px color-mix(in srgb,var(--c3d,#C9A55C) 35%,transparent)}
+#tvOpen{--c3d:#2962FF}#ovOpen{--c3d:#C9A55C}#nhOpen{--c3d:#FF8C2A}
+@media (max-width:560px){.tvl .tvl-card{flex-wrap:wrap!important}.tvl .tvl-t{flex:1 1 calc(100% - 100px)}.tvl .tvl-go{width:100%!important;text-align:center}}
+@media (prefers-reduced-motion:reduce){.tvl .tvl-card::after,.tvl .tvl-ic{animation:none}}
+.hero-band canvas.tlogo{position:relative!important;inset:auto!important;width:96px!important;height:96px!important;opacity:1!important;z-index:1}
 :root{--vsig:url(data:image/png;base64,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)}
 .vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
 .vx-stage{position:relative;width:220px;height:250px;perspective:900px}
@@ -1050,7 +1078,8 @@ html.locked .gate{display:flex}
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-t">
   <div class="gate-box" id="gateBox">
     <div class="gcubes" id="gCubes" aria-hidden="true"></div>
-    <h1 id="gate-t">التحليل الخاص</h1>
+    <canvas class="tlogo glogo" width="120" height="120" aria-hidden="true"></canvas>
+    <h1 id="gate-t">منصة تيكو</h1>
     <p class="gate-sub">الأسهم · العملات · السلع</p>
     <form class="gate-form" id="gateForm" autocomplete="off">
       <span class="g-ring" aria-hidden="true"></span>
@@ -1075,9 +1104,9 @@ html.locked .gate{display:flex}
     <p class="ov-note">القوة = نسبة توافق المؤشرات بعد خصم الأدلة المعاكسة. النقاط: شهري · أسبوعي · يومي · 4 ساعات (أخضر صاعد، أحمر هابط). القراءة التعليمية ليست توصية بالشراء أو البيع.</p>
   </div>
 </div>
-<div class="ov-app nh-app" id="nhApp" hidden role="dialog" aria-label="منصة السلحفاة للأخبار">
+<div class="ov-app nh-app" id="nhApp" hidden role="dialog" aria-label="أخبار السلحفاة">
   <div class="ov-in">
-    <div class="ov-h nh-h"><canvas id="nhTurtle" class="nh-t" aria-hidden="true"></canvas><div><h2>منصة السلحفاة للأخبار</h2><p>كل سوق على حدة · اكتتابات وإدراج · نتائج · توزيعات · قرارات</p></div><button class="ov-x" id="nhX" aria-label="إغلاق">✕</button></div>
+    <div class="ov-h nh-h"><canvas id="nhTurtle" class="nh-t" aria-hidden="true"></canvas><div><h2>أخبار السلحفاة</h2><p>كل سوق على حدة · اكتتابات وإدراج · نتائج · توزيعات · قرارات</p></div><button class="ov-x" id="nhX" aria-label="إغلاق">✕</button></div>
     <div class="ov-f nh-m" role="group" aria-label="السوق"><button data-nhm="sa" aria-pressed="true">السوق السعودي</button><button data-nhm="us" aria-pressed="false">السوق الأمريكي</button><button data-nhm="cx" aria-pressed="false">العملات الرقمية</button><button data-nhm="ix" aria-pressed="false">السلع والمؤشرات</button></div>
     <div class="ov-f nh-cf" role="group" aria-label="التصنيف"><button data-nhc="all" aria-pressed="true">الكل</button><button data-nhc="ipo" aria-pressed="false">اكتتابات وإدراج</button><button data-nhc="earn" aria-pressed="false">نتائج وأرباح</button><button data-nhc="div" aria-pressed="false">توزيعات</button><button data-nhc="reg" aria-pressed="false">تنظيم وقرارات</button><button data-nhc="gen" aria-pressed="false">عام</button></div>
     <div id="nhBody"></div>
@@ -1087,10 +1116,9 @@ html.locked .gate{display:flex}
   <header class="hero-band">
     <canvas id="waves" aria-hidden="true"></canvas>
     <div class="hb-inner">
-      <div class="sig" role="img" aria-label="شيبان"></div>
-      <p class="handle">wavehub.shaibanor</p>
+      <canvas class="tlogo" width="120" height="120" role="img" aria-label="شعار منصة تيكو"></canvas>
       <span class="rule" aria-hidden="true"></span>
-      <h1>التحليل الخاص</h1>
+      <h1>منصة تيكو</h1>
       <p class="hb-sub">الأسهم السعودية والعالمية · العملات المشفرة · المؤشرات والسلع</p>
       <p class="hb-q">أين سيغلق السعر هذا الأسبوع؟ منطقة متوقعة قبل بداية كل أسبوع، ثم نتحقق منها بعد الإغلاق.</p>
     </div>
@@ -1221,10 +1249,10 @@ html.locked .gate{display:flex}
       <span class="tvl-go">افتح الجدول</span>
     </button>
   </section>
-  <section class="tvl ovl nhl" aria-label="منصة السلحفاة للأخبار">
+  <section class="tvl ovl nhl" aria-label="أخبار السلحفاة">
     <button class="tvl-card" id="nhOpen" type="button">
       <span class="tvl-ic nh-ic" aria-hidden="true"><canvas id="nhMini" width="128" height="128"></canvas></span>
-      <span class="tvl-t"><b>منصة السلحفاة للأخبار</b><small>أخبار كل سوق منفصلة: الاكتتابات والإدراجات، النتائج والتوزيعات، القرارات التنظيمية، وأخبار كل سهم</small></span>
+      <span class="tvl-t"><b>أخبار السلحفاة</b><small>أخبار كل سوق منفصلة: الاكتتابات والإدراجات، النتائج والتوزيعات، القرارات التنظيمية، وأخبار كل سهم</small></span>
       <span class="tvl-go">افتح المنصة</span>
     </button>
   </section>
@@ -1289,7 +1317,7 @@ html.locked .gate{display:flex}
 
 
   <footer>
-    <p>التحليل الخاص: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
+    <p>منصة تيكو: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
     <p>المحتوى لغرض تعليمي فقط، وليس توصية استثمارية ولا دعوة للشراء أو البيع. القرار الاستثماري مسؤولية صاحبه.</p>
     <p>الأسهم السعودية بالريال والأسبوع من الأحد إلى الخميس. الأسهم العالمية بالدولار والأسبوع من الاثنين إلى الجمعة. العملات المشفرة بالدولار والأسبوع من الاثنين إلى الأحد بتوقيت UTC. تُحدَّث البيانات يوميًا.</p>
     <div class="foot-sig"><div class="sig" role="img" aria-label="شيبان"></div><p class="handle">wavehub.shaibanor</p></div>
@@ -2569,6 +2597,18 @@ html.locked .gate{display:flex}
   document.addEventListener('animationend',e=>{if(e.animationName==='zapGlow'||e.animationName==='zapGlowP')e.target.classList.remove('zap-on');});
 })();
 
+(function(){
+  /* Light / dark switch. Dark is the default so the logo and gold design always look right. */
+  const R=document.documentElement;const b=document.createElement('button');b.id='themeTog';b.type='button';
+  const sun='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',
+        moon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
+  const set=t=>{R.dataset.theme=t;try{localStorage.setItem('wave-theme',t);}catch(_){}b.innerHTML=t==='dark'?sun:moon;b.setAttribute('aria-label',t==='dark'?'الوضع الفاتح':'الوضع الداكن');b.title=b.getAttribute('aria-label');
+    const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='dark'?'#0A1724':'#F7F3EA';};
+  b.onclick=e=>{e.stopPropagation();R.classList.add('theme-anim');set(R.dataset.theme==='dark'?'light':'dark');setTimeout(()=>R.classList.remove('theme-anim'),600);};
+  const go=()=>{document.body.appendChild(b);set(R.dataset.theme==='light'?'light':'dark');};
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();
+})();
+
 </script>
 <script>
 (function(){
@@ -3257,6 +3297,11 @@ html.locked .gate{display:flex}
     g.fillStyle='rgba(255,140,120,.35)';el(g,nx+10+hx*.6,ny+6,3.2,2);g.fill();
     g.restore();}
   window.TURTLE={draw};
+  /* the platform logo: every .tlogo canvas shows the turtle */
+  (function logos(){const go=()=>{const L=[...document.querySelectorAll('canvas.tlogo')];if(!L.length)return;const d=Math.min(2.5,devicePixelRatio||1);
+      L.forEach(c=>{const s=c.getBoundingClientRect().width||parseInt(getComputedStyle(c).width)||96;c.width=c.height=Math.round(s*d);});
+      let last=0;const f=now=>{if(now-last>40&&!document.hidden){last=now;L.forEach(c=>{if(!c.offsetParent&&!c.closest('.gate'))return;const g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,c.width,c.height);draw(g,c.width,RM?0:now/1000);});}requestAnimationFrame(f);};requestAnimationFrame(f);};
+    document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();})();
   function mount(){const btn=document.getElementById('botBtn');if(!btn)return;
     const st=btn.querySelector('.bot-st');if(st)st.remove();
     const cv=document.createElement('canvas');cv.className='tt-cv';cv.setAttribute('aria-hidden','true');btn.insertBefore(cv,btn.querySelector('.bot-sh'));const sg=document.createElement('span');sg.className='tt-sig';sg.setAttribute('aria-hidden','true');btn.appendChild(sg);
@@ -3687,7 +3732,7 @@ html.locked .gate{display:flex}
 })();
 
 (function(){
-  /* «منصة السلحفاة للأخبار»: market-wide headlines per market (listings, IPOs, results, dividends, regulation)
+  /* «أخبار السلحفاة»: market-wide headlines per market (listings, IPOs, results, dividends, regulation)
      plus per-asset headlines, with a swimming 3D turtle host. */
   const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
   const $=id=>document.getElementById(id);
@@ -3725,5 +3770,5 @@ html.locked .gate{display:flex}
   window.NEWSHUB={open};
 })();
 
-</script><script>(function(){var B='2f1bee1b35';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='c6b883ab8c';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
