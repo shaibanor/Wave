@@ -243,7 +243,7 @@
     h+=ok?`<p><b>القرار: الإعداد صالح تعليميًا الآن.</b></p>`:`<p><b>القرار: لا صفقة الآن.</b> أي «لا» تلغي القرار.</p>`;
     h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${O.target_pct}%)</span>${P(tgt,a)}</div>
       <div class="bpl-r stop"><span>وقف الخسارة (−${sp.toFixed(1)}%)</span>${P(stop,a)}</div><div class="bpl-r rr"><span>نقل الوقف للتعادل عند</span>${P(be,a)}</div></div>
-      <p class="mut">هذه الصفقة تربح فقط إذا نجحت ${need}% من المحاولات أو أكثر، لأن الوقف (${sp.toFixed(1)}%) أبعد من الهدف (${O.target_pct}%). البروفيسور في المكعب يقيس ذلك ويوقف الدخول إذا هبطت النسبة.</p>`;
+      <p class="mut">هذه الصفقة تربح فقط إذا نجحت ${need}% من المحاولات أو أكثر، لأن الوقف (${sp.toFixed(1)}%) أبعد من الهدف (${O.target_pct}%). المدقق الداخلي يقيس ذلك ويوقف الدخول إذا هبطت النسبة.</p>`;
     CTX.topic='plan';
     return h+`<div class="bas">${act('ليش هذي المستويات؟','ليش')}${act('ولو نزل؟','ولو نزل')}${openBtn(a,'pro','افتح الشارت')}</div>`+DISC;}
   async function plan(a,tf){const RL0=await rules();if(RL0.mode==='h4_rolling'&&RL0.roll&&(!tf||tf==='4h')){const r=await planRoll(a);if(r)return r;}
