@@ -216,26 +216,46 @@
   const siteAns=x=>`<div class="bh2"><b>${x[1]}</b></div><p>${x[2]}</p><div class="bas">${x[3]==='cube'?'<button class="ba pr" data-go="cube">افتح المكعب</button>':x[3]==='tv'?`<button class="ba pr" data-go="tv">افتح تيكودينغ شارت</button>`:''}${act('كيف أقرأ التحليل','كيف اقرا التحليل')}</div>`;
 
   /* ---------- educational trade plan: where a technical trader would look to buy / sell ---------- */
-  async function plan(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,I,b,sc,conf}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
-    if(!lv||!lv.S||!lv.R||!atr)return brief(a,tf);
-    const S1=lv.S.p,R1=lv.R.p,R2=(lv.R2&&lv.R2.p)||sc.bull.t1,S2=(lv.S2&&lv.S2.p)||sc.bear.t1;
-    const zLo=S1,zHi=Math.min(S1+.5*atr,c),stop=S1-1*atr,t1=R1,t2=Math.max(R2,R1+atr);
-    const mid=(zLo+zHi)/2,rr=(t1-mid)/Math.max(1e-9,mid-stop),rr2=(t2-mid)/Math.max(1e-9,mid-stop);
-    const brk=sc.bull.trig,bStop=brk-1.2*atr,bT=sc.bull.t1;
-    let h=head(a,A)+`<p>هذه طريقة تعليمية يفكّر بها المحلل الفني، وليست توصية. الفكرة: <b>الشراء قرب الدعم، والبيع قرب المقاومة، ووقف خسارة تحت الدعم</b>.</p>`;
-    h+=`<div class="bpl"><div class="bpl-r buy"><span>منطقة شراء تعليمية (قرب الدعم)</span>${P(zLo,a)} – ${P(zHi,a)}</div>
-      <div class="bpl-r stop"><span>وقف الخسارة (تحت الدعم بمسافة ATR)</span>${P(stop,a)}</div>
-      <div class="bpl-r sell"><span>بيع أول (المقاومة الأقرب)</span>${P(t1,a)}</div>
-      <div class="bpl-r sell"><span>بيع ثانٍ (المقاومة التالية)</span>${P(t2,a)}</div>
-      <div class="bpl-r rr"><span>العائد مقابل المخاطرة</span><b class="num">${rr.toFixed(1)} : 1</b> للهدف الأول · <b class="num">${rr2.toFixed(1)} : 1</b> للثاني</div></div>`;
-    h+=rr<1.5?`<p class="mut">⚠️ العائد للهدف الأول أقل من 1.5 ضعف المخاطرة، والمحترفون عادةً لا يدخلون بهذه النسبة وينتظرون سعرًا أقرب من الدعم.</p>`:`<p class="mut">النسبة مقبولة تعليميًا (المحترفون يفضّلون 1.5 : 1 فأكثر).</p>`;
-    if(conf.dir==='down')h+=`<p>⚠️ <b>الاتجاه العام هابط الآن</b>، والشراء عكس الاتجاه أخطر لأن الدعم قد يُكسر. البديل الأسلم تعليميًا: الانتظار حتى يغلق السعر فوق ${P(brk,a)} (تأكيد اختراق)، مع وقف تحت ${P(bStop,a)} وهدف ${P(bT,a)}.</p>`;
-    else if(c>R1-.25*atr)h+=`<p>السعر الآن قريب من المقاومة، والشراء هنا يعني هدفًا قريبًا ووقفًا بعيدًا. الأفضل تعليميًا انتظار ارتداد للدعم، أو إغلاق واضح فوق ${P(R1,a)} ثم الدخول عند إعادة اختبارها.</p>`;
-    else if(c-S1<.6*atr)h+=`<p>السعر الآن داخل منطقة الدعم تقريبًا، وهي المنطقة التي يراقبها المحللون للشراء بشرط ظهور ارتداد (شمعة إغلاق خضراء فوق الدعم).</p>`;
-    else h+=`<p>السعر الآن بين الدعم والمقاومة؛ المحلل الصبور ينتظر عودته لمنطقة الشراء بدل الدخول في المنتصف.</p>`;
-    h+=`<p class="mut">إذا كُسر ${P(stop,a)} بإغلاق، تُلغى الفكرة، والدعم التالي ${P(S2,a)}.</p>`;
+  /* ---------- the professor plan: top-down levels + final audit (rules from pro/rules.json) ---------- */
+  let RULES=null,EVTS=null;const RAWB='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  async function rules(){if(RULES)return RULES;RULES={min_rr:2,stop_buffer_atr:.25,min_room_r:1,cap:6,stop_atr:1.2,min_risk_atr:.75,max_risk_atr:3,wick:.5};
+    for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/rules.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),h=j.horizons.D;
+      Object.assign(RULES,{min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
+    for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/events.json?v='+Math.floor(Date.now()/36e5));if(r.ok){EVTS=(await r.json()).events||[];break;}}catch(_){}}return RULES;}
+  function swingsOf(b,k){const H=[],L=[];if(!b)return{H,L};for(let i=k;i<b.length-k;i++){let h=true,l=true;for(let j=1;j<=k;j++){if(!(b[i-j].h<b[i].h&&b[i+j].h<=b[i].h))h=false;if(!(b[i-j].l>b[i].l&&b[i+j].l>=b[i].l))l=false;}if(h)H.push(b[i].h);if(l)L.push(b[i].l);}return{H,L};}
+  async function plan(a,tf){const A=await an(a,tf);if(!A)return fail(a);const RL=await rules();const {lv,I,b,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
+    if(!lv||!atr)return brief(a,tf);
+    const D=A.data||{},sw=swingsOf(b.slice(-250),3),sW=swingsOf(D['1w']&&D['1w'].slice(-156),3),sM=swingsOf(D['1M']&&D['1M'].slice(-120),2);
+    const sup=[...sw.L,...sW.L].filter(x=>x&&x<c-.3*atr).sort((x,y)=>y-x);
+    const res=[...sw.H,...sW.H,...sM.H].filter(x=>x&&x>c*1.0005).sort((x,y)=>x-y);
+    const m=scores['1M'],w=scores['1w'];
+    // levels
+    let S1=sup[0]||null,stop=S1?S1-RL.stop_buffer_atr*atr:c-RL.stop_atr*atr,risk=c-stop;if(risk<RL.min_risk_atr*atr){stop=c-RL.stop_atr*atr;risk=c-stop;}
+    const R1=res[0]||null,cap=c+RL.cap*atr,within=res.filter(x=>x<=cap);let tgt=within.length?Math.max(...within)-.1*atr:cap;if(tgt<=c)tgt=cap;
+    const rr=(tgt-c)/Math.max(1e-9,risk);
+    // traps
+    const L=b[n],rg=Math.max(1e-12,L.h-L.l),uw=(L.h-Math.max(L.o,L.c))/rg,prevH=sw.H.slice(-6),prevL=sw.L.slice(-6);
+    const trap=prevH.some(p=>L.h>p&&L.c<p)&&uw>=RL.wick,sweep=prevL.some(p=>L.l<p&&L.c>p);
+    const today=new Date(),ev=(EVTS||[]).find(e=>{const d=(new Date(e.d+'T00:00:00Z')-Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()))/864e5;return d>=0&&d<=1&&(e.scope==='all'||e.scope===a.pro);});
+    const ck=[
+      ['الشهري والمسار التاريخي',!!m&&m.dir!=='down'&&!(w&&w.dir==='down'),m?`الشهري ${DIR[m.dir]}${w?`، الأسبوعي ${DIR[w.dir]}`:''}${m.dir==='down'?' · لا شراء عكس الشهري':w&&w.dir==='down'?' · الأسبوعي هابط':''}`:'لا يوجد شهري كافٍ'],
+      ['الدعم والمقاومة والسيولة',(!R1||R1-c>=RL.min_room_r*risk)&&risk<=RL.max_risk_atr*atr,`الدعم ${S1?P(S1,a):'—'} · أول مقاومة ${R1?P(R1,a):'لا توجد (قمة تاريخية)'}${R1&&R1-c<RL.min_room_r*risk?' · المقاومة أقرب من مسافة الوقف':''}`],
+      ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب: ذيل علوي فوق قمة سابقة وإغلاق تحتها':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:(sweep?'لا فخ · سحب سيولة تحت قاع سابق ثم عودة (إيجابي)':'لا فخ ظاهر · القرار لا يعتمد على الأخبار')],
+      [`العائد إلى المخاطرة 1:${RL.min_rr} أو أعلى`,rr>=RL.min_rr,`1:${rr.toFixed(2)}`]];
+    const ok=ck.every(x=>x[1]);
+    let h=head(a,A)+`<div class="pa"><div class="pa-h">التدقيق النهائي · ${TFN[tf||'1d']||'اليومي'}</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
+    if(ok){h+=`<p><b>القرار: الخطة صالحة تعليميًا.</b></p><div class="bpl"><div class="bpl-r buy"><span>الدخول (السعر الحالي)</span>${P(c,a)}</div>
+      <div class="bpl-r stop"><span>وقف الخسارة (تحت الدعم بربع ATR)</span>${P(stop,a)}</div>
+      <div class="bpl-r sell"><span>الهدف (أعلى مقاومة قوية في المتناول)</span>${P(tgt,a)}</div>
+      <div class="bpl-r rr"><span>العائد إلى المخاطرة</span><b class="num">1 : ${rr.toFixed(2)}</b></div></div>
+      <p class="mut">عند ربح يساوي مسافة الوقف (${P(c+risk,a)}) يُنقل الوقف إلى سعر الدخول. تُلغى الفكرة بإغلاق تحت ${P(stop,a)}.</p>`;}
+    else{const ePx=(tgt+RL.min_rr*stop)/(1+RL.min_rr);
+      h+=`<p><b>القرار: لا صفقة الآن.</b> فشل ${ck.filter(x=>!x[1]).length} من 4 شروط، والقاعدة: أي «لا» تلغي القرار.</p>`;
+      if(ck[3][1]===false&&ck[0][1]&&ePx>stop&&ePx<c)h+=`<p class="mut">ليصبح العائد 1:${RL.min_rr} بنفس الوقف والهدف، يلزم دخول عند ${P(ePx,a)} أو أقل.</p>`;
+      if(!ck[0][1]&&sc_bull(A))h+=`<p class="mut">بديل: انتظار إغلاق فوق ${P(A.sc.bull.trig,a)} يؤكد تغيّر الاتجاه، ثم إعادة التدقيق.</p>`;}
     CTX.topic='plan';
     return h+`<div class="bas">${act('ليش هذي المستويات؟','ليش')}${act('ولو نزل؟','ولو نزل')}${act('ولو طلع؟','ولو طلع')}${openBtn(a,'pro','افتح الشارت')}</div>`+DISC;}
+  const sc_bull=A=>A.sc&&A.sc.bull&&A.sc.bull.trig;
   async function situation(a,tf){const A=await an(a,tf);if(!A)return fail(a);const {lv,I,b,conf,sc,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
     const tr=conf.dir==='up'?'صاعد':conf.dir==='down'?'هابط':'متذبذب بلا اتجاه واضح';
     const agree=['1M','1w','1d'].filter(t=>scores[t]).map(t=>`${TFN[t]} ${DIR[scores[t].dir]}`).join('، ');
