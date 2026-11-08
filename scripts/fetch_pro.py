@@ -207,6 +207,46 @@ NEWS_Q = {
 }
 
 
+CG_IDS = {'BTC': 'bitcoin', 'ETH': 'ethereum', 'XRP': 'ripple', 'BNB': 'binancecoin', 'SOL': 'solana', 'TRX': 'tron', 'DOGE': 'dogecoin',
+          'ZEC': 'zcash', 'LINK': 'chainlink', 'ADA': 'cardano', 'AVAX': 'avalanche-2', 'DOT': 'polkadot', 'LTC': 'litecoin',
+          'BCH': 'bitcoin-cash', 'NEAR': 'near'}
+
+
+def market_refs(status):
+    """Independent reference data for crypto: price, 24h volume across all exchanges, market cap.
+    CoinMarketCap when a CMC_KEY secret is set, otherwise CoinGecko's public API."""
+    out = {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'coins': {}}
+    key = os.environ.get('CMC_KEY', '').strip()
+    try:
+        if key:
+            req = urllib.request.Request('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=' + ','.join(CG_IDS) + '&convert=USD',
+                                         headers={**UA, 'X-CMC_PRO_API_KEY': key, 'Accept': 'application/json'})
+            with urllib.request.urlopen(req, timeout=25) as r:
+                data = json.loads(r.read().decode())['data']
+            out['source'] = 'CoinMarketCap'
+            for sym in CG_IDS:
+                d = data.get(sym)
+                d = d[0] if isinstance(d, list) else d
+                if not d: continue
+                q = d['quote']['USD']
+                out['coins'][sym] = {'price': q.get('price'), 'vol24': q.get('volume_24h'), 'mcap': q.get('market_cap'), 'chg24': q.get('percent_change_24h'), 'rank': d.get('cmc_rank')}
+        else:
+            data = get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' + ','.join(CG_IDS.values()) + '&price_change_percentage=24h')
+            out['source'] = 'CoinGecko'
+            inv = {v: k for k, v in CG_IDS.items()}
+            for d in data or []:
+                sym = inv.get(d.get('id'))
+                if sym:
+                    out['coins'][sym] = {'price': d.get('current_price'), 'vol24': d.get('total_volume'), 'mcap': d.get('market_cap'),
+                                         'chg24': d.get('price_change_percentage_24h'), 'rank': d.get('market_cap_rank')}
+        status['refs'] = f"{out.get('source')}: {len(out['coins'])} coins"
+    except Exception as e:
+        status['refs_err'] = str(e)[:120]
+        return
+    if out['coins']:
+        write(f'{ROOT}/refs.json', out)
+
+
 def gnews(q, lang):
     import xml.etree.ElementTree as ET, urllib.parse, email.utils
     loc = 'hl=ar&gl=SA&ceid=SA:ar' if lang == 'ar' else 'hl=en-US&gl=US&ceid=US:en'
@@ -324,6 +364,7 @@ def main():
         stocks_full(status)
         stocks_live(status)
         crypto(status)
+        market_refs(status)
         try:
             news(status)
         except Exception as e:

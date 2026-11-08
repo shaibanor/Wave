@@ -683,6 +683,32 @@ def prof_report(book, now):
                     'props': {'نسبة النجاح %': ed['win_rate'], 'نسبة التعادل اللازمة %': ed['breakeven'], 'متوسط الربح %': ed['avg_win'], 'متوسط الخسارة %': ed['avg_loss'],
                               'عينة القياس': f"آخر {RO_.get('edge_window', 30)} نتيجة (حقيقية وافتراضية)"},
                     'fix': 'الهدف 1% صغير مقابل وقف 3–6%، فكل خسارة تمسح عدة أرباح. البروفيسور يتابع الفرص افتراضيًا، ويعود الدخول تلقائيًا عندما يصبح التوقع موجبًا.'})
+    # independent reference source (CoinMarketCap / CoinGecko) versus the exchange data the analysis uses
+    refs = None; cross = []
+    try:
+        refs = json.load(open(os.path.join(ROOT, 'pro', 'refs.json'), encoding='utf-8'))
+    except Exception:
+        refs = None
+    if refs:
+        age = (now - dt.datetime.strptime(refs['updated'], '%Y-%m-%dT%H:%MZ').replace(tzinfo=dt.timezone.utc)).total_seconds() / 3600
+        for sym, r in refs.get('coins', {}).items():
+            try:
+                j = json.load(open(os.path.join(ROOT, 'pro', 'cx', f'{sym}.json')))
+                h1 = j.get('1h') or []
+                ex = float(h1[-1][4]) if h1 else None
+                vol_ex = sum(float(x[5]) * float(x[4]) for x in h1[-24:]) if h1 and len(h1[-1]) > 5 else None
+            except Exception:
+                ex, vol_ex = None, None
+            dev = round((ex / r['price'] - 1) * 100, 2) if ex and r.get('price') else None
+            cross.append({'asset': sym, 'ref_price': r.get('price'), 'exchange_price': ex, 'dev_pct': dev, 'vol24_global': r.get('vol24'), 'vol24_exchange': round(vol_ex) if vol_ex else None,
+                          'mcap': r.get('mcap'), 'rank': r.get('rank')})
+            if dev is not None and abs(dev) > 1.5 and age < 6:
+                det.append({'k': 'cross', 'lv': 'warn', 'title': f'سعر {sym} في بيانات التحليل يختلف عن المرجع العالمي بـ {dev}%', 'asset': sym, 'when': refs['updated'],
+                            'props': {'المرجع': refs.get('source'), 'سعر المرجع': r.get('price'), 'سعر بيانات التحليل': ex, 'الفرق %': dev}, 'fix': 'قد يكون فرق توقيت بين المصدرين؛ إن تكرر يُراجع مصدر البيانات.'})
+        bad = [c for c in cross if c['dev_pct'] is not None and abs(c['dev_pct']) > 1.5]
+        pts.append({'lv': 'warn' if (bad and age < 6) or age > 12 else 'ok', 't': (f"مطابقة العملات مع {refs.get('source')}: " + (f'{len(bad)} عملة بفرق أكبر من 1.5%.' if bad else 'الأسعار متطابقة ضمن 1.5%.') + (f' (المرجع عمره {age:.0f} ساعة)' if age > 12 else ''))})
+    else:
+        pts.append({'lv': 'warn', 't': 'لم يصل المرجع العالمي للعملات بعد (CoinGecko / CoinMarketCap).'})
     rep_ = None
     try:
         import urllib.request
@@ -703,6 +729,7 @@ def prof_report(book, now):
            'open': [{'asset': t['asset'], 'name': t['name'], 'entry': t['entry'], 'now': t['now'], 'target': t['target'], 'stop': t['stop'], 'upnl_usd': t['upnl_usd']} for t in book['open']],
            'cycle': {k: C.get(k) for k in ('n', 'start', 'progress_pct', 'target_pct', 'trades', 'wins', 'frozen', 'frozen_until')}, 'backtest': RO_.get('backtest'),
            'fresh': [{'asset': a, 'name': f['name'], 'market': MK[f['kind']], 'd': f['d'], 'h4': f['h4'], 'lag': stale_days(f['kind'], f['d'], now)} for a, f in (book.get('fresh') or {}).items()],
+           'refs': {'source': refs.get('source'), 'updated': refs.get('updated'), 'coins': cross} if refs else None,
            'site_report': {'when': str(rep_.get('when', ''))[:16], 'issues': len(rep_.get('issues') or []), 'checks': [str(c.get('a', '')) + ': ' + str(c.get('m', '')) for c in (rep_.get('checks') or [])][:20]} if rep_ else None}
     lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'
     return {'v': 1, 'status': lvl, 'points': pts, 'findings': det, 'monitor': mon}

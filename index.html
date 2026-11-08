@@ -2795,6 +2795,7 @@ html.locked .gate{display:flex}
         ${M.outcomes&&M.outcomes.length?`<h4>آخر النتائج</h4><div class="pf-dots">${M.outcomes.map(o=>`<i class="${o.win?'w':'l'} ${o.shadow?'s':''}" title="${esc(o.asset)} ${o.pnl_pct}%"></i>`).join('')}</div><p class="pf-note">الدائرة الممتلئة صفقة حقيقية، والمفرغة متابعة افتراضية أثناء إيقاف الدخول.</p>`:''}
         ${M.backtest?`<h4>مرجع الاختبار التاريخي</h4><p class="pf-note">${esc(M.backtest.period)} · ${M.backtest.trades} صفقة · نجاح ${M.backtest.win_rate}% · مجموع <bdi dir="ltr">${M.backtest.sum_pct}%</bdi></p>`:''}
         ${M.open&&M.open.length?`<h4>الصفقات المفتوحة</h4><table class="pf-t">${M.open.map(o=>`<tr><th>${esc(o.name)}</th><td class="num">${nf(o.entry,4)} → ${nf(o.target,4)} · وقف ${nf(o.stop,4)}</td><td class="num">${o.upnl_usd>=0?'+':''}${nf(o.upnl_usd)}$</td></tr>`).join('')}</table>`:''}
+        ${M.refs?`<h4>المطابقة مع المرجع العالمي (${esc(M.refs.source)})</h4><p class="pf-note">آخر تحديث للمرجع: <bdi dir="ltr">${esc(M.refs.updated)}</bdi>. الحجم العالمي يشمل كل المنصات، وحجم بيانات التحليل من منصة واحدة.</p><table class="pf-t"><tr><th>العملة</th><td>الفرق %</td><td>الحجم العالمي 24س</td><td>القيمة السوقية</td></tr>${M.refs.coins.map(c=>`<tr class="${c.dev_pct!=null&&Math.abs(c.dev_pct)>1.5?'pf-warn':''}"><th>${esc(c.asset)}</th><td class="num">${c.dev_pct==null?'—':c.dev_pct+'%'}</td><td class="num">${c.vol24_global?'$'+nf(c.vol24_global/1e6,0)+'M':'—'}</td><td class="num">${c.mcap?'$'+nf(c.mcap/1e9,1)+'B':'—'}</td></tr>`).join('')}</table>`:''}
         ${M.site_report?`<h4>فحص الموقع اليومي</h4><ul class="pf-sc">${(M.site_report.checks||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
         <h4>حداثة البيانات</h4><table class="pf-t">${(M.fresh||[]).map(f=>`<tr class="${f.lag>=3?'pf-warn':''}"><th>${esc(f.name)}</th><td>${esc(f.market)}</td><td class="num">${esc(f.d)}</td><td class="num">${f.h4?esc(f.h4):'—'}</td></tr>`).join('')}</table>`;}
     el.innerHTML=head+`<div class="pf-tb">${body}</div>`;}
@@ -3591,7 +3592,8 @@ html.locked .gate{display:flex}
       ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب بذيل علوي':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:'لا فخ ظاهر · القرار لا يعتمد على الأخبار'],
       ['إشارة الدخول على 4 ساعات',sig,`السعر ${c>e50?'فوق':'تحت'} متوسط 50 · RSI ${rs.toFixed(0)} ${rs<O.trigger.rsi_below?'(تهدئة)':'(مرتفع)'} · الشمعة ${L.c>L.o?'خضراء':'حمراء'}`]];
     const ok=ck.every(x=>x[1]),need=(sp/(O.target_pct+sp)*100).toFixed(0);
-    let h=head(a,A)+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
+    let ref='';if(a.pro==='cx'){try{const r=await fetch(RAWB+'pro/refs.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),q=j.coins&&j.coins[a.id];if(q)ref=`<p class="mut">من ${esc(j.source)}: الحجم العالمي 24 ساعة <b class="num">$${(q.vol24/1e6).toLocaleString('en-US',{maximumFractionDigits:0})}M</b> · القيمة السوقية <b class="num">$${(q.mcap/1e9).toLocaleString('en-US',{maximumFractionDigits:1})}B</b>${q.rank?` · الترتيب ${q.rank}`:''}</p>`;}}catch(_){}}
+    let h=head(a,A)+ref+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
     h+=ok?`<p><b>القرار: الإعداد صالح تعليميًا الآن.</b></p>`:`<p><b>القرار: لا صفقة الآن.</b> أي «لا» تلغي القرار.</p>`;
     h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${O.target_pct}%)</span>${P(tgt,a)}</div>
       <div class="bpl-r stop"><span>وقف الخسارة (−${sp.toFixed(1)}%)</span>${P(stop,a)}</div><div class="bpl-r rr"><span>نقل الوقف للتعادل عند</span>${P(be,a)}</div></div>
@@ -4417,5 +4419,5 @@ html.locked .gate{display:flex}
   window.NEWSHUB={open};
 })();
 
-</script><script>(function(){var B='c62e76289f';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='cf58aad74d';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>

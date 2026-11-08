@@ -237,7 +237,8 @@
       ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب بذيل علوي':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:'لا فخ ظاهر · القرار لا يعتمد على الأخبار'],
       ['إشارة الدخول على 4 ساعات',sig,`السعر ${c>e50?'فوق':'تحت'} متوسط 50 · RSI ${rs.toFixed(0)} ${rs<O.trigger.rsi_below?'(تهدئة)':'(مرتفع)'} · الشمعة ${L.c>L.o?'خضراء':'حمراء'}`]];
     const ok=ck.every(x=>x[1]),need=(sp/(O.target_pct+sp)*100).toFixed(0);
-    let h=head(a,A)+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
+    let ref='';if(a.pro==='cx'){try{const r=await fetch(RAWB+'pro/refs.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),q=j.coins&&j.coins[a.id];if(q)ref=`<p class="mut">من ${esc(j.source)}: الحجم العالمي 24 ساعة <b class="num">$${(q.vol24/1e6).toLocaleString('en-US',{maximumFractionDigits:0})}M</b> · القيمة السوقية <b class="num">$${(q.mcap/1e9).toLocaleString('en-US',{maximumFractionDigits:1})}B</b>${q.rank?` · الترتيب ${q.rank}`:''}</p>`;}}catch(_){}}
+    let h=head(a,A)+ref+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
     h+=ok?`<p><b>القرار: الإعداد صالح تعليميًا الآن.</b></p>`:`<p><b>القرار: لا صفقة الآن.</b> أي «لا» تلغي القرار.</p>`;
     h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${O.target_pct}%)</span>${P(tgt,a)}</div>
       <div class="bpl-r stop"><span>وقف الخسارة (−${sp.toFixed(1)}%)</span>${P(stop,a)}</div><div class="bpl-r rr"><span>نقل الوقف للتعادل عند</span>${P(be,a)}</div></div>
