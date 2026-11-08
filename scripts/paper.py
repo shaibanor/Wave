@@ -429,6 +429,7 @@ def run(now, launch=LAUNCH):
     def try_roll(a, kind, z, c, T):
         nonlocal cash, n
         if a == SWEEP or a in pos or kind not in RO['markets'] or len(pos) >= RO['max_open']: return
+        if RO['target_pct'] - (2 * FEE[kind] + 2 * SLIP) * 100 < RO.get('min_net_target_pct', 0): return   # costs would eat too much of a 1% target
         x = z['bar']; atrv = z['atr']; ctxs = c['sc']
         tg = RO['trigger']
         if not atrv or not z['e50'] or z['rsi'] is None: return

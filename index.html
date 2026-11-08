@@ -2684,7 +2684,7 @@ html.locked .gate{display:flex}
       <div><h4>صفقاته المغلقة</h4>${(a.closed||[]).map(t=>`<div class="ar"><div class="ar-n"><b>${esc(t.name)}</b><span class="num">${esc(t.asset)}</span></div><div class="ar-e">${dS(t.opened)} ← ${dS(t.closed)}</div><div class="ar-p num ${t.pnl_usd>=0?'up':'down'}">${sgu(t.pnl_usd)}</div></div>`).join('')}</div></div>`).join('');}
     if(tab==='rules'&&PRO(B)&&B.rules.rolling){const R=B.rules,O=R.rolling;el.innerHTML=`<div class="rl">
       <div><h4>صفقات 4 ساعات المتحركة</h4><p>عند إغلاق كل شمعة 4 ساعات يفحص البروفيسور كل الأصول. يدخل إذا كان السعر فوق متوسط 50 على 4 ساعات، وRSI تحت ${O.trigger.rsi_below} (تهدئة بعد صعود)، والشمعة خضراء.</p></div>
-      <div><h4>السياق من الأعلى للأسفل</h4><p>الشهري والأسبوعي ليسا هابطين، واليومي صاعد. أي إطار يخالف ذلك يلغي الصفقة.</p></div>
+      <div><h4>الأسواق</h4><p>العملات المشفرة والأسهم الأمريكية. السوق السعودي مستبعد من هذا النوع لأن العمولة والانزلاق يتركان أقل من ${O.min_net_target_pct||0.7}% صافيًا من هدف ${O.target_pct}%.</p></div><div><h4>السياق من الأعلى للأسفل</h4><p>الشهري والأسبوعي ليسا هابطين، واليومي صاعد. أي إطار يخالف ذلك يلغي الصفقة.</p></div>
       <div><h4>الهدف والوقف</h4><p>هدف واحد +${O.target_pct}% لكل صفقة. الوقف ${O.stop.atr_k}×ATR تحت الدخول، بين ${O.stop.min_pct}% و${O.stop.max_pct}%. عند وصول الربح إلى ${Math.round(O.breakeven_at_target_frac*100)}% من الهدف يُنقل الوقف فوق سعر الدخول بقليل (وقف متحرك). أقصى مدة ${O.max_hold_days} يومًا.</p></div>
       <div><h4>التدقيق النهائي</h4><ol class="au-q">${(R.checks||[]).map(c=>`<li>${esc(c.q)}</li>`).join('')}</ol></div>
       <div><h4>لماذا يتوقف أحيانًا</h4><p>هدف 1% مقابل وقف 3–6% يحتاج نسبة نجاح عالية جدًا ليربح. البروفيسور يقيس آخر ${O.edge_window} نتيجة، ويوقف الدخول إذا صارت نسبة النجاح أقل من نسبة التعادل، ويستمر في متابعة الفرص افتراضيًا ليعود تلقائيًا عند التحسن.</p></div>
@@ -3590,6 +3590,7 @@ html.locked .gate{display:flex}
       ['السياق: الشهري والأسبوعي ليسا هابطين، واليومي صاعد',!!(sM&&sW&&sD)&&sM.dir!=='down'&&sW.dir!=='down'&&sD.dir==='up',`الشهري ${sM?DIR[sM.dir]:'—'}، الأسبوعي ${sW?DIR[sW.dir]:'—'}، اليومي ${sD?DIR[sD.dir]:'—'}`],
       ['لا مقاومة 4 ساعات قبل الهدف',!r1||r1>=tgt,r1?`أقرب مقاومة ${P(r1,a)} والهدف ${P(tgt,a)}`:'لا مقاومة قريبة'],
       ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب بذيل علوي':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:'لا فخ ظاهر · القرار لا يعتمد على الأخبار'],
+      ['التكلفة تترك ربحًا كافيًا من هدف 1%',(O.target_pct-(2*({sa:.0015,us:.0005,cx:.001}[a.pro]||.001)+.001)*100)>=(O.min_net_target_pct||0),`الصافي بعد العمولة والانزلاق ${(O.target_pct-(2*({sa:.0015,us:.0005,cx:.001}[a.pro]||.001)+.001)*100).toFixed(1)}% (الحد الأدنى ${O.min_net_target_pct||0}%)${a.pro==='sa'?' · السوق السعودي مستبعد من الصفقات المتحركة لهذا السبب':''}`],
       ['إشارة الدخول على 4 ساعات',sig,`السعر ${c>e50?'فوق':'تحت'} متوسط 50 · RSI ${rs.toFixed(0)} ${rs<O.trigger.rsi_below?'(تهدئة)':'(مرتفع)'} · الشمعة ${L.c>L.o?'خضراء':'حمراء'}`]];
     const ok=ck.every(x=>x[1]),need=(sp/(O.target_pct+sp)*100).toFixed(0);
     let ref='';if(a.pro==='cx'){try{const r=await fetch(RAWB+'pro/refs.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),q=j.coins&&j.coins[a.id];if(q)ref=`<p class="mut">من ${esc(j.source)}: الحجم العالمي 24 ساعة <b class="num">$${(q.vol24/1e6).toLocaleString('en-US',{maximumFractionDigits:0})}M</b> · القيمة السوقية <b class="num">$${(q.mcap/1e9).toLocaleString('en-US',{maximumFractionDigits:1})}B</b>${q.rank?` · الترتيب ${q.rank}`:''}</p>`;}}catch(_){}}
@@ -4419,5 +4420,5 @@ html.locked .gate{display:flex}
   window.NEWSHUB={open};
 })();
 
-</script><script>(function(){var B='cf58aad74d';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='70f143c0c8';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
