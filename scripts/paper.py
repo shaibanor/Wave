@@ -28,6 +28,7 @@ try:
 except Exception:
     EVENTS = []
 LAUNCH = os.environ.get('PAPER2_LAUNCH', '2026-11-09')
+MODE = R.get('mode', 'multi'); RO = R.get('rolling', {})
 V1_END = dt.datetime(2026, 11, 8, 21, 0, tzinfo=dt.timezone.utc)  # the first version's record is frozen here
 START_USD = 87000.0
 SAR = 3.75
@@ -156,7 +157,7 @@ def load(aid, kind):
         d = bars(j['1d']); m = bars(j.get('1M', [])); h4 = bars(j.get('4h', []))
         for x in d: x['t'] = int(dt.datetime.combine(day(x['t']), dt.time(), dt.timezone.utc).timestamp())
     else:
-        d = bars(j['d']); m = bars(j.get('m', [])); h4 = bars(j.get('4h', [])) if kind == 'sa' else []
+        d = bars(j['d']); m = bars(j.get('m', [])); h4 = bars(j.get('4h', []))
     return d, m, h4
 
 def h4_close(kind, t):
@@ -165,6 +166,9 @@ def h4_close(kind, t):
     if kind == 'sa':
         dl = s.astimezone(TZ['sa']).date()
         e = min(e, dt.datetime(dl.year, dl.month, dl.day, 15, 0, tzinfo=TZ['sa']))
+    elif kind == 'us':
+        dl = s.astimezone(TZ['us']).date()
+        e = min(e, dt.datetime(dl.year, dl.month, dl.day, 16, 0, tzinfo=TZ['us']))
     return e
 
 def local_date(kind, t):
@@ -230,7 +234,7 @@ def prepare(aid, kind, now, launch):
             IH = ind(h4)
             for j, x in enumerate(h4):
                 T = h4_close(kind, x['t'])
-                ld = local_date(kind, x['t']) if kind == 'sa' else day(x['t'])
+                ld = local_date(kind, x['t']) if kind in ('sa', 'us') else day(x['t'])
                 if ld.isoformat() < launch: continue
                 HH, LL = swings(h4, k, max(0, j - LV['lookback']['H4']), j)
                 H4.append({'T': T, 'date': ld, 'bar': x, 'sc': score(h4, IH, j, HH, LL), 'atr': IH['atr'][j], 'e50': IH['e50'][j], 'rsi': IH['rsi'][j],
@@ -292,7 +296,7 @@ fx = lambda kind: (1 / SAR) if kind == 'sa' else 1.0
 
 def run(now, launch=LAUNCH):
     names = {a: (n, k) for a, n, k in ASSETS}
-    ticks, last, errs, prep = [], {}, [], {}
+    ticks, last, errs, prep, fresh = [], {}, [], {}, {}
     for aid, name, kind in ASSETS:
         try:
             P = prepare(aid, kind, now, launch)
@@ -302,6 +306,7 @@ def run(now, launch=LAUNCH):
             errs.append(f'{aid}: {str(e)[:100]}'); continue
         if not P: errs.append(f'{aid}: not enough data'); continue
         prep[aid] = P; last[aid] = P['d'][-1]['c']
+        fresh[aid] = {'name': name, 'kind': kind, 'd': day(P['d'][-1]['t']).isoformat(), 'h4': P['h4'][-1]['T'].strftime('%Y-%m-%d %H:%MZ') if P['h4'] else None}
         h4days = {z['date'] for z in P['h4']}
         for z in P['h4']: ticks.append((z['T'], 0, aid, kind, 'h4', z))
         for i, c in P['ctx'].items():
@@ -310,7 +315,7 @@ def run(now, launch=LAUNCH):
     cash, sweep_q = START_USD, 0.0
     pos, closed, curve, n = {}, [], {}, 0
     pw = [0.0]; sw_cost = [0.0]; px = {}; spy0 = None
-    cyc = {'n': 1, 'start': None, 'cap0': START_USD, 'pnl': 0.0, 'frozen_until': None}; cycles = []
+    cyc = {'n': 1, 'start': None, 'cap0': START_USD, 'pnl': 0.0, 'sum_pct': 0.0, 'trades': [], 'frozen_until': None}; cycles = []
     rejects = {'monthly': 0, 'levels': 0, 'traps': 0, 'rr': 0}; audited = 0
     ctxD = {}
 
@@ -334,7 +339,10 @@ def run(now, launch=LAUNCH):
         p['pnl_pct'] = round(p['pnl'] / (p['qty'] * p['entry']) * 100, 2); p['status'] = 'closed'; p['closed'] = ds
         p['exit'] = round(got / p['qty'], 6); p['win'] = p['pnl'] > 0
         p['r_mult'] = round((p['exit'] - p['entry']) / p['risk0'], 2) if p['risk0'] else None
-        cyc['pnl'] += p['pnl_usd']
+        p['mfe_pct'] = round((p.get('mfe', p['entry']) / p['entry'] - 1) * 100, 2); p['mae_pct'] = round((p.get('mae', p['entry']) / p['entry'] - 1) * 100, 2)
+        p['held_days'] = (dt.date.fromisoformat(ds) - dt.date.fromisoformat(p['opened'])).days
+        cyc['pnl'] += p['pnl_usd']; cyc['sum_pct'] += p['pnl_pct']; cyc['trades'].append(p)
+        if p.get('roll'): outcomes.append({'pnl_pct': p['pnl_pct'], 'win': p['win'], 'shadow': False, 'asset': p['asset']})
         if p['pnl_usd'] > 0: pw[0] += p['pnl_usd']; cash -= p['pnl_usd']
         for k in ('opened_T', 'left', 'risk0_px'): p.pop(k, None)
         closed.append(p)
@@ -349,9 +357,12 @@ def run(now, launch=LAUNCH):
         p = pos.get(a)
         if not p or p['opened_T'] >= T: return
         o, h, l = bar['o'], bar['h'], bar['l']
+        p['mfe'] = max(p.get('mfe', p['entry']), h); p['mae'] = min(p.get('mae', p['entry']), l)
         if l <= p['stop']: fill(p, p['left'], min(o, p['stop']), 'وقف التعادل' if p['be'] else 'وقف الخسارة', ds)
         elif h >= p['target']: fill(p, p['left'], max(o, p['target']), 'تحقق الهدف', ds)
-        elif not p['be'] and h >= p['entry'] + RK['breakeven_at_r'] * p['risk0']:
+        elif not p['be'] and p.get('roll') and h >= p['entry'] * (1 + RO['breakeven_at_target_frac'] * RO['target_pct'] / 100) and bar['c'] > p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP + .001):
+            p['stop'] = max(p['stop'], p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP + .001)); p['be'] = True
+        elif not p['be'] and not p.get('roll') and h >= p['entry'] + RK['breakeven_at_r'] * p['risk0']:
             p['stop'] = max(p['stop'], p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP)); p['be'] = True
         if p['left'] <= 1e-12: finish(p, ds); del pos[a]
 
@@ -391,6 +402,81 @@ def run(now, launch=LAUNCH):
                   'atr': round(atrv, 6), 'conf': conf, 'tf': {t: sc[t]['dir'] for t in tfs}, 'audit': P['checks'], 'notes': P['notes'], 'why': why,
                   'left': qty, 'be': False, 'exits': [], 'fees': fee, 'status': 'open'}
 
+    shadow, outcomes = {}, []   # paper-on-paper: setups blocked only by the edge check are still followed, so the check can recover
+
+    def shadow_step(a, bar, T):
+        q = shadow.get(a)
+        if not q or q['T'] >= T: return
+        fee = FEE[q['kind']] * 2 + SLIP * 2
+        if bar['l'] <= q['stop']: r = (min(bar['o'], q['stop']) / q['entry'] - 1) * 100 - fee * 100
+        elif bar['h'] >= q['target']: r = (max(bar['o'], q['target']) / q['entry'] - 1) * 100 - fee * 100
+        else:
+            if not q['be'] and bar['h'] >= q['entry'] * (1 + RO['breakeven_at_target_frac'] * RO['target_pct'] / 100) and bar['c'] > q['entry'] * (1 + fee + .001):
+                q['stop'] = max(q['stop'], q['entry'] * (1 + fee + .001)); q['be'] = True
+            if (T - q['T']).days >= RO['max_hold_days']: r = (bar['c'] / q['entry'] - 1) * 100 - fee * 100
+            else: return
+        outcomes.append({'pnl_pct': round(r, 3), 'win': r > 0, 'shadow': True, 'asset': a}); del shadow[a]
+
+    def edge():
+        L = outcomes[-RO.get('edge_window', 30):]
+        if len(L) < RO.get('edge_min_trades', 10): return True, None, len(L)
+        wr = sum(1 for t in L if t['win']) / len(L) * 100
+        aw = sum(t['pnl_pct'] for t in L if t['win']) / max(1, sum(1 for t in L if t['win']))
+        al = -sum(t['pnl_pct'] for t in L if not t['win']) / max(1, sum(1 for t in L if not t['win']))
+        be = al / (aw + al) * 100 if aw + al > 0 else 100
+        return wr > be, {'win_rate': round(wr, 1), 'breakeven': round(be, 1), 'avg_win': round(aw, 3), 'avg_loss': round(al, 3)}, len(L)
+
+    def try_roll(a, kind, z, c, T):
+        nonlocal cash, n
+        if a == SWEEP or a in pos or kind not in RO['markets'] or len(pos) >= RO['max_open']: return
+        x = z['bar']; atrv = z['atr']; ctxs = c['sc']
+        tg = RO['trigger']
+        if not atrv or not z['e50'] or z['rsi'] is None: return
+        if tg['above_ema50'] and x['c'] <= z['e50']: return
+        if z['rsi'] >= tg['rsi_below']: return
+        if tg['green_candle'] and x['c'] <= x['o']: return
+        nonlocal_audit[0] += 1
+        entry = x['c'] * (1 + SLIP); notes = []; ck = {}
+        sD, sW, sM = ctxs.get('D'), ctxs.get('W'), ctxs.get('M')
+        ck['monthly'] = bool(sD and sW and sM) and sD['dir'] == 'up' and sW['dir'] != 'down' and sM['dir'] != 'down'
+        if not ck['monthly']: notes.append('السياق: ' + '، '.join(f"{TFN[t]} {DIRN[s_['dir']]}" for t, s_ in (('M', sM), ('W', sW), ('D', sD)) if s_))
+        sp = min(max(RO['stop']['atr_k'] * atrv / entry * 100, RO['stop']['min_pct']), RO['stop']['max_pct'])
+        stop = entry * (1 - sp / 100); tgt = entry * (1 + RO['target_pct'] / 100)
+        above = [r for r in z['res'] if r > entry * 1.0005]
+        room = not RO.get('room_check') or not above or min(above) >= tgt
+        ck['levels'] = room
+        if not room: notes.append(f'مقاومة 4 ساعات {min(above):.6g} قبل الهدف {tgt:.6g}')
+        rng = max(1e-12, x['h'] - x['l']); uw = (x['h'] - max(x['o'], x['c'])) / rng
+        trap = any(x['h'] > q and x['c'] < q for q in z['prevH'][-6:]) and uw >= TR['failed_breakout_wick']
+        ev = event_block(kind, z['date'])
+        ck['traps'] = not trap and not ev
+        if trap: notes.append('اختراق كاذب بذيل علوي')
+        if ev: notes.append('حدث كبير قريب: ' + ev)
+        okE, est, nE = edge()
+        ck['rr'] = okE
+        if not okE: notes.append(f"التوقع سالب: نجاح {est['win_rate']}% أقل من التعادل {est['breakeven']}%")
+        if not all(ck.values()):
+            for k_, v in ck.items():
+                if not v: rejects[k_] += 1
+            if ck['monthly'] and ck['levels'] and ck['traps'] and a not in shadow:
+                shadow[a] = {'kind': kind, 'entry': entry, 'stop': stop, 'target': tgt, 'be': False, 'T': T}
+            return
+        eq = equity(); k = fx(kind); f = FEE[kind]
+        qty = RO['weight'] * eq / (entry * k)
+        raise_cash(qty * entry * k * (1 + f))
+        qty = min(qty, max(0.0, cash) / (entry * k * (1 + f)))
+        qty = math.floor(qty) if kind == 'sa' else math.floor(qty * 1e6) / 1e6
+        if qty * entry * k < 100 or (kind == 'sa' and qty < 2): return
+        n += 1; fee = qty * entry * f; cash -= (qty * entry + fee) * k
+        need = round(sp / (RO['target_pct'] + sp) * 100, 1)
+        why = f"شمعة 4 ساعات خضراء فوق متوسط 50 بعد تهدئة (RSI {z['rsi']:.0f}) · اليومي {DIRN[sD['dir']]}، الأسبوعي {DIRN[sW['dir']]}، الشهري {DIRN[sM['dir']]}"
+        pos[a] = {'id': f'P-{n}', 'asset': a, 'name': names[a][0], 'kind': kind, 'h': 'H4', 'hname': RO['name'], 'roll': True, 'cur': 'ريال' if kind == 'sa' else 'دولار',
+                  'opened': z['date'].isoformat(), 'opened_at': z['T'].strftime('%Y-%m-%dT%H:%MZ') if hasattr(z['T'], 'strftime') else None, 'opened_T': T,
+                  'entry': round(entry, 6), 'qty': qty, 'value': round(qty * entry, 2), 'value_usd': round(qty * entry * k, 2), 'weight': round(qty * entry * k / eq * 100, 1),
+                  'stop0': round(stop, 6), 'stop': stop, 'target': round(tgt, 6), 'tp_pct': RO['target_pct'], 'sl_pct': round(sp, 2), 'need_win': need,
+                  'rr': round(RO['target_pct'] / sp, 2), 'risk0': entry - stop, 'atr': round(atrv, 6), 'tf': {t: s_['dir'] for t, s_ in (('M', sM), ('W', sW), ('D', sD))},
+                  'audit': ck, 'notes': notes, 'why': why, 'left': qty, 'be': False, 'exits': [], 'fees': fee, 'status': 'open'}
+
     nonlocal_audit = [0]
     groups = {}
     for e in ticks: groups.setdefault(e[0], []).append(e)
@@ -403,15 +489,19 @@ def run(now, launch=LAUNCH):
         if cyc['start'] is None: cyc['start'] = ds_any
         frozen = cyc['frozen_until'] is not None and T < cyc['frozen_until']
         if cyc['frozen_until'] is not None and not frozen:
-            cyc.update({'n': cyc['n'] + 1, 'start': ds_any, 'cap0': equity(), 'pnl': 0.0, 'frozen_until': None})
+            cyc.update({'n': cyc['n'] + 1, 'start': ds_any, 'cap0': equity(), 'pnl': 0.0, 'sum_pct': 0.0, 'trades': [], 'frozen_until': None, 'hit': None, 'hit_pct': None})
         # exits
         for (_, _, a, kind, typ, z) in G:
             ds = z['date'].isoformat()
             if typ in ('h4', 'day'): monitor(a, z['bar'], ds, T)
+            if typ == 'h4': shadow_step(a, z['bar'], T)
             if typ in ('day', 'dsig'):
                 ctxD[a] = z
                 p = pos.get(a)
-                if p and p['opened_T'] < T:
+                if p and p['opened_T'] < T and p.get('roll'):
+                    if (z['date'] - dt.date.fromisoformat(p['opened'])).days >= RO['max_hold_days']:
+                        fill(p, p['left'], z['bar']['c'], 'انتهاء مدة الصفقة', ds); finish(p, ds); del pos[a]
+                elif p and p['opened_T'] < T:
                     hz = HZ[p['h']]; par = hz['exit_on']; s = z['sc'].get(par)
                     if s and s['dir'] == 'down' and (par != 'M' or z['month_end']):
                         fill(p, p['left'], z['bar']['c'], f"انعكاس الاتجاه {TFN[par]}", ds)
@@ -419,9 +509,15 @@ def run(now, launch=LAUNCH):
                         fill(p, p['left'], z['bar']['c'], 'انتهاء مدة الصفقة', ds)
                     if p['left'] <= 1e-12: finish(p, ds); del pos[a]
         # entries
-        if not frozen:
+        if not frozen and not cyc.get('hit'):
             cands = []
-            for (_, _, a, kind, typ, z) in G:
+            if MODE == 'h4_rolling':
+                for (_, _, a, kind, typ, z) in G:
+                    if typ == 'h4' and ctxD.get(a): try_roll(a, kind, z, ctxD[a], T)
+                G_ = []
+            else:
+                G_ = G
+            for (_, _, a, kind, typ, z) in G_:
                 if typ == 'h4':
                     c = ctxD.get(a)
                     if not c: continue
@@ -441,15 +537,25 @@ def run(now, launch=LAUNCH):
             if cash > 1:
                 sp = px[SWEEP] * (1 + SLIP); q = cash / (sp * (1 + FEE['us'])); sweep_q += q; cost = q * sp * (1 + FEE['us']); cash -= cost; sw_cost[0] += cost
         # cycle target: close everything, freeze
-        if not frozen and cyc['cap0'] and cyc['pnl'] / cyc['cap0'] * 100 >= CY['target_pct']:
+        prog = cyc['sum_pct'] if CY.get('measure') == 'sum_trade_pct' else (cyc['pnl'] / cyc['cap0'] * 100 if cyc['cap0'] else 0)
+        if not frozen and not cyc.get('hit') and prog >= CY['target_pct']:
+            cyc['hit'] = ds_any; cyc['hit_pct'] = round(prog, 2)   # target reached: no new entries; open trades finish at their own target/stop
+        if not frozen and cyc.get('hit') and not pos:
             ds = ds_any
-            for a in list(pos):
-                p = pos[a]; fill(p, p['left'], px.get(a, p['entry']), 'تحقق هدف الدورة', ds); finish(p, ds); del pos[a]
             if sweep_q > 0 and px.get(SWEEP):
                 val = sweep_q * px[SWEEP] * (1 - SLIP); cash += val - val * FEE['us']; sweep_q = 0.0; sw_cost[0] = 0.0
             fz = T + dt.timedelta(days=CY['freeze_days'])
-            cycles.append({'n': cyc['n'], 'start': cyc['start'], 'end': ds, 'cap0': round(cyc['cap0'], 2), 'pnl_usd': round(cyc['pnl'], 2),
-                           'pct': round(cyc['pnl'] / cyc['cap0'] * 100, 2), 'frozen_until': fz.date().isoformat()})
+            TT_ = cyc['trades']; W_ = [t for t in TT_ if t['win']]; L_ = [t for t in TT_ if not t['win']]
+            bym = {}
+            for t in TT_:
+                m_ = bym.setdefault(t['kind'], {'n': 0, 'wins': 0, 'sum_pct': 0.0, 'pnl_usd': 0.0}); m_['n'] += 1; m_['wins'] += t['win']; m_['sum_pct'] = round(m_['sum_pct'] + t['pnl_pct'], 2); m_['pnl_usd'] = round(m_['pnl_usd'] + t['pnl_usd'], 2)
+            cycles.append({'n': cyc['n'], 'start': cyc['start'], 'end': ds, 'hit': cyc['hit'], 'hit_pct': cyc['hit_pct'], 'days': (dt.date.fromisoformat(ds) - dt.date.fromisoformat(cyc['start'])).days, 'cap0': round(cyc['cap0'], 2),
+                           'pnl_usd': round(cyc['pnl'], 2), 'pct': round(cyc['pnl'] / cyc['cap0'] * 100, 2), 'sum_pct': round(cyc['sum_pct'], 2),
+                           'trades': len(TT_), 'wins': len(W_), 'losses': len(L_), 'win_rate': round(len(W_) / len(TT_) * 100, 1) if TT_ else None,
+                           'avg_win_pct': round(sum(t['pnl_pct'] for t in W_) / len(W_), 2) if W_ else None, 'avg_loss_pct': round(sum(t['pnl_pct'] for t in L_) / len(L_), 2) if L_ else None,
+                           'gross_win_usd': round(sum(t['pnl_usd'] for t in W_), 2), 'gross_loss_usd': round(sum(t['pnl_usd'] for t in L_), 2),
+                           'best': max(TT_, key=lambda t: t['pnl_pct'])['name'] if TT_ else None, 'worst': min(TT_, key=lambda t: t['pnl_pct'])['name'] if TT_ else None,
+                           'by_market': bym, 'frozen_until': fz.date().isoformat()})
             cyc['frozen_until'] = fz
         curve[ds_any] = round(equity() + pw[0], 2)
     # final marks
@@ -489,28 +595,117 @@ def run(now, launch=LAUNCH):
                    'util': round((inv + sweep_usd) / eq * 100, 1) if eq else 0,
                    'bench_pct': round((spy_now / spy0 - 1) * 100, 3) if spy0 and spy_now else None},
         'cycle': {'n': cyc['n'], 'start': cyc['start'], 'cap0': round(cyc['cap0'], 2), 'pnl_usd': round(cyc['pnl'], 2),
-                  'progress_pct': round(cyc['pnl'] / cyc['cap0'] * 100, 2) if cyc['cap0'] else 0, 'target_pct': CY['target_pct'],
-                  'frozen': frozen_now, 'frozen_until': cyc['frozen_until'].date().isoformat() if frozen_now else None, 'history': cycles},
+                  'progress_pct': round(cyc['sum_pct'], 2) if CY.get('measure') == 'sum_trade_pct' else (round(cyc['pnl'] / cyc['cap0'] * 100, 2) if cyc['cap0'] else 0),
+                  'measure': CY.get('measure'), 'trades': len(cyc['trades']), 'wins': sum(1 for t in cyc['trades'] if t['win']), 'target_pct': CY['target_pct'], 'edge': edge()[1],
+                  'frozen': frozen_now, 'hit': cyc.get('hit') if not frozen_now else None, 'hit_pct': cyc.get('hit_pct'), 'frozen_until': cyc['frozen_until'].date().isoformat() if frozen_now else None, 'history': cycles},
         'audit': {'audited': nonlocal_audit[0], 'opened': n, 'rejected': rejects},
         'by_h': sorted(byh.values(), key=lambda s: ['M', 'W', 'D', 'H4'].index(s['h'])),
         'open': sorted(opens, key=lambda o: o['opened'], reverse=True), 'closed': sorted(closed, key=lambda t: t['closed'], reverse=True),
         'sweep': {'asset': SWEEP, 'name': 'صندوق إس آند بي 500', 'qty': round(sweep_q, 6), 'avg': round(sw_cost[0] / sweep_q, 4) if sweep_q else None, 'now': px.get(SWEEP),
                   'cost_usd': round(sw_cost[0], 2), 'value_usd': round(sweep_usd, 2), 'pnl_usd': round(sweep_usd - sw_cost[0], 2)},
         'curve': sorted(curve.items()), 'alloc': alloc, 'stats': sorted(stats.values(), key=lambda s: -s['pnl_usd']),
-        'universe': len(ASSETS), 'errors': errs}
+        'universe': len(ASSETS), 'errors': errs, 'fresh': fresh, 'outcomes': outcomes[-40:]}
 
 # ---------- encryption ----------
-def encrypt(obj):
+def encrypt(obj, keyfile='key.json'):
     from cryptography.hazmat.primitives import serialization, hashes
     from cryptography.hazmat.primitives.asymmetric import padding
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-    kj = json.load(open(os.path.join(ROOT, 'vault', 'key.json')))
+    kj = json.load(open(os.path.join(ROOT, 'vault', keyfile)))
     pub = serialization.load_der_public_key(base64.b64decode(kj['pub']))
     k = os.urandom(32); iv = os.urandom(12)
     ct = AESGCM(k).encrypt(iv, json.dumps(obj, ensure_ascii=False, separators=(',', ':')).encode(), None)
     wk = pub.encrypt(k, padding.OAEP(mgf=padding.MGF1(hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
     b = lambda x: base64.b64encode(x).decode()
     return {'v': 1, 'wk': b(wk), 'iv': b(iv), 'ct': b(ct)}
+
+MK = {'sa': 'السوق السعودي', 'us': 'الأسهم الأمريكية', 'cx': 'العملات المشفرة'}
+
+def stale_days(kind, d, now):
+    """Market days missing between the last daily bar and the last finished session."""
+    last = dt.date.fromisoformat(d); t = now.astimezone(TZ[kind]).date(); n = 0; x = last + dt.timedelta(days=1)
+    while x < t:
+        if mday(x, kind): n += 1
+        x += dt.timedelta(days=1)
+    return n
+
+def prof_report(book, now):
+    """The professor's check: plain summary points, detailed findings, and monitoring data."""
+    C = book['cycle']; A = book['audit']; RO_ = R.get('rolling', {})
+    roll = [t for t in book['closed'] if t.get('roll')]
+    wins = [t for t in roll if t['win']]; losses = [t for t in roll if not t['win']]
+    wr = round(len(wins) / len(roll) * 100, 1) if roll else None
+    ed = C.get('edge'); goal = RO_.get('win_rate_goal', 80)
+    pts, det = [], []
+    if wr is None:
+        pts.append({'lv': 'info', 't': 'لا توجد صفقات مغلقة بعد. تبدأ الصفقات عند إغلاق شموع 4 ساعات التي تجتاز التدقيق.'})
+    else:
+        pts.append({'lv': 'ok' if wr >= goal else 'warn', 't': f'نسبة النجاح {wr}% من {len(roll)} صفقة (الهدف {goal}% أو أكثر).'})
+    if ed:
+        if ed['win_rate'] > ed['breakeven']:
+            pts.append({'lv': 'ok', 't': f"التوقع الرياضي موجب: النجاح {ed['win_rate']}% أعلى من نسبة التعادل {ed['breakeven']}%."})
+        else:
+            pts.append({'lv': 'bad', 't': f"التوقع الرياضي سالب: النجاح {ed['win_rate']}% أقل من نسبة التعادل {ed['breakeven']}%، لأن متوسط الخسارة {ed['avg_loss']}% أكبر بكثير من متوسط الربح {ed['avg_win']}%. البروفيسور أوقف الدخول الجديد حتى يتحسن."})
+    else:
+        pts.append({'lv': 'info', 't': f"التوقع الرياضي يُقاس بعد {RO_.get('edge_min_trades', 10)} نتائج على الأقل."})
+    pts.append({'lv': 'info', 't': f"تقدم الدورة {C['n']}: مجموع نسب الصفقات {C['progress_pct']}% من {C['target_pct']}%."})
+    stale = []
+    for a, f in (book.get('fresh') or {}).items():
+        lag = stale_days(f['kind'], f['d'], now)
+        if lag >= (2 if f['kind'] == 'cx' else 3): stale.append((a, f, lag))
+    pts.append({'lv': 'warn' if stale else 'ok', 't': f'بيانات متأخرة في {len(stale)} أصل.' if stale else 'كل البيانات محدثة.'})
+    if book.get('errors'): pts.append({'lv': 'bad', 't': f"{len(book['errors'])} خطأ في قراءة البيانات."})
+    rj = A.get('rejected', {}); top = max(rj, key=rj.get) if rj and any(rj.values()) else None
+    RN = {'monthly': 'السياق (الشهري/الأسبوعي/اليومي)', 'levels': 'مقاومة قبل الهدف', 'traps': 'الفخاخ والأحداث', 'rr': 'التوقع الرياضي السالب'}
+    if top: pts.append({'lv': 'info', 't': f"فُحصت {A.get('audited', 0)} فرصة، دخل منها {A.get('opened', 0)}. أكثر سبب للإلغاء: {RN[top]} ({rj[top]})."})
+    for t in losses:
+        if t.get('mfe_pct', 0) >= RO_.get('breakeven_at_target_frac', .6) * RO_.get('target_pct', 1):
+            cause, fix = 'ربحت ثم عادت للوقف', 'السعر وصل قرب الهدف ولم يُحمَ الربح كاملًا؛ يُراقب نقل الوقف أبكر.'
+        elif t.get('held_days', 0) <= 1:
+            cause, fix = 'انعكاس فوري بعد الدخول', 'الدخول جاء في نهاية حركة؛ يُراقب هل يتكرر على نفس الأصل.'
+        else:
+            cause, fix = 'هبوط تدريجي حتى الوقف', 'الاتجاه الأكبر ضعف أثناء الصفقة؛ يُراقب انقلاب اليومي.'
+        det.append({'k': 'loss', 'lv': 'bad', 'title': f"خسارة {t['name']}: {cause}", 'asset': t['asset'], 'when': t['closed'],
+                    'props': {'الدخول': t['entry'], 'الخروج': t['exit'], 'النتيجة %': t['pnl_pct'], 'المبلغ $': t['pnl_usd'], 'أعلى ربح وصلته %': t.get('mfe_pct'),
+                              'أسوأ نزول %': t.get('mae_pct'), 'مسافة الوقف %': t.get('sl_pct'), 'المدة بالأيام': t.get('held_days'), 'سبب الإغلاق': t['exits'][0]['why'] if t.get('exits') else ''},
+                    'fix': fix})
+    for t in roll:
+        if t.get('exits') and t['exits'][0]['why'] == 'انتهاء مدة الصفقة':
+            det.append({'k': 'time', 'lv': 'warn', 'title': f"{t['name']}: أُغلقت لانتهاء المدة دون هدف أو وقف", 'asset': t['asset'], 'when': t['closed'],
+                        'props': {'النتيجة %': t['pnl_pct'], 'أعلى ربح وصلته %': t.get('mfe_pct')}, 'fix': 'الحركة كانت بطيئة؛ يُراقب تكرارها.'})
+    for a, f, lag in stale:
+        det.append({'k': 'data', 'lv': 'warn', 'title': f"بيانات {f['name']} متأخرة {lag} يوم تداول", 'asset': a, 'when': f['d'],
+                    'props': {'السوق': MK[f['kind']], 'آخر شمعة يومية': f['d'], 'آخر شمعة 4 ساعات': f['h4'] or '—'}, 'fix': 'تُعاد محاولة الجلب تلقائيًا في الدورة التالية.'})
+    for e in book.get('errors') or []:
+        det.append({'k': 'engine', 'lv': 'bad', 'title': 'خطأ في قراءة بيانات أصل', 'asset': e.split(':')[0], 'when': now.date().isoformat(), 'props': {'النص': e}, 'fix': 'يُراجع ملف البيانات.'})
+    if ed and ed['win_rate'] <= ed['breakeven']:
+        det.append({'k': 'edge', 'lv': 'bad', 'title': 'إيقاف الدخول: التوقع الرياضي سالب', 'asset': '—', 'when': now.date().isoformat(),
+                    'props': {'نسبة النجاح %': ed['win_rate'], 'نسبة التعادل اللازمة %': ed['breakeven'], 'متوسط الربح %': ed['avg_win'], 'متوسط الخسارة %': ed['avg_loss'],
+                              'عينة القياس': f"آخر {RO_.get('edge_window', 30)} نتيجة (حقيقية وافتراضية)"},
+                    'fix': 'الهدف 1% صغير مقابل وقف 3–6%، فكل خسارة تمسح عدة أرباح. البروفيسور يتابع الفرص افتراضيًا، ويعود الدخول تلقائيًا عندما يصبح التوقع موجبًا.'})
+    rep_ = None
+    try:
+        import urllib.request
+        with urllib.request.urlopen('https://raw.githubusercontent.com/shaibanor/Wave/reports/latest.json', timeout=10) as r:
+            rep_ = json.loads(r.read().decode())
+    except Exception:
+        rep_ = None
+    if rep_:
+        iss = rep_.get('issues') or []
+        for it in iss[:20]:
+            d_ = it if isinstance(it, dict) else {'t': str(it)}
+            det.append({'k': 'site', 'lv': 'warn', 'title': str(d_.get('m') or d_.get('t') or d_)[:160], 'asset': str(d_.get('a') or '—'), 'when': str(rep_.get('when', ''))[:16],
+                        'props': {str(k): str(v)[:160] for k, v in d_.items()}, 'fix': str(d_.get('fix', ''))})
+        pts.append({'lv': 'ok' if not iss else 'warn', 't': 'فحص الموقع اليومي سليم: لا أخطاء في الصفحات ولا في الملفات.' if not iss else f'فحص الموقع اليومي وجد {len(iss)} ملاحظة.'})
+    mon = {'updated': now.strftime('%Y-%m-%d %H:%M UTC'), 'mode': R.get('mode'), 'rules_version': R.get('version'), 'universe': book.get('universe'),
+           'with_4h': sum(1 for f in (book.get('fresh') or {}).values() if f['h4']), 'audited': A.get('audited'), 'opened': A.get('opened'), 'rejected': rj,
+           'edge': ed, 'outcomes': book.get('outcomes'),
+           'open': [{'asset': t['asset'], 'name': t['name'], 'entry': t['entry'], 'now': t['now'], 'target': t['target'], 'stop': t['stop'], 'upnl_usd': t['upnl_usd']} for t in book['open']],
+           'cycle': {k: C.get(k) for k in ('n', 'start', 'progress_pct', 'target_pct', 'trades', 'wins', 'frozen', 'frozen_until')}, 'backtest': RO_.get('backtest'),
+           'fresh': [{'asset': a, 'name': f['name'], 'market': MK[f['kind']], 'd': f['d'], 'h4': f['h4'], 'lag': stale_days(f['kind'], f['d'], now)} for a, f in (book.get('fresh') or {}).items()],
+           'site_report': {'when': str(rep_.get('when', ''))[:16], 'issues': len(rep_.get('issues') or []), 'checks': [str(c.get('a', '')) + ': ' + str(c.get('m', '')) for c in (rep_.get('checks') or [])][:20]} if rep_ else None}
+    lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'
+    return {'v': 1, 'status': lvl, 'points': pts, 'findings': det, 'monitor': mon}
 
 def archive_v1():
     """Final state of the first version (rules unchanged), frozen at V1_END."""
@@ -533,14 +728,19 @@ def main():
     book = {'updated': now.strftime('%Y-%m-%dT%H:%MZ'), 'launch': LAUNCH, 'mode': 'professor', 'version': R['version'],
             'rules': {'risk': RK['risk_per_trade'], 'max_w': RK['max_weight'], 'max_open': RK['max_open'], 'min_rr': AU['min_rr'],
                       'breakeven_r': RK['breakeven_at_r'], 'horizons': {h: {'name': v['name'], 'max_hold_days': v['max_hold_days'], 'cap': v['target_cap_atr']} for h, v in HZ.items()},
-                      'checks': AU['checks'], 'news': R['news']['policy'], 'cycle': CY, 'fees': FEE, 'slip': SLIP, 'sweep': SWEEP}, **r}
+                      'checks': AU['checks'], 'news': R['news']['policy'], 'cycle': CY, 'rolling': RO if MODE == 'h4_rolling' else None, 'mode': MODE, 'fees': FEE, 'slip': SLIP, 'sweep': SWEEP}, **r}
     if os.environ.get('PAPER_DEBUG'):
         json.dump(book, open(os.environ['PAPER_DEBUG'], 'w'), ensure_ascii=False, indent=1, default=str)
+        if os.environ.get('PAPER_PROF'): json.dump(prof_report(book, now), open(os.environ['PAPER_PROF'], 'w'), ensure_ascii=False, indent=1)
         if os.environ.get('PAPER_NOWRITE'):
             T = r['totals']; print(f"open={T['open_n']} closed={T['closed_n']} equity={T['equity_usd']} pct={T['pct']} win={T['win_rate']} audit={r['audit']} cycle={r['cycle']['n']},{r['cycle']['progress_pct']}% hist={len(r['cycle']['history'])}")
             return
     os.makedirs(os.path.join(ROOT, 'vault'), exist_ok=True)
+    pr = prof_report(book, now)
+    for k_ in ('fresh', 'outcomes'): book.pop(k_, None)
     json.dump(encrypt(book), open(os.path.join(ROOT, 'vault', 'book.json'), 'w'), separators=(',', ':'))
+    if os.path.exists(os.path.join(ROOT, 'vault', 'prof_key.json')):
+        json.dump(encrypt(pr, 'prof_key.json'), open(os.path.join(ROOT, 'vault', 'prof.json'), 'w'), separators=(',', ':'))
     T = r['totals']
     print(f"universe={r['universe']} open={T['open_n']} closed={T['closed_n']} equity={T['equity_usd']} util={T['util']}% cycle={r['cycle']['progress_pct']}% errors={len(r['errors'])}")
 

@@ -18,7 +18,7 @@ EXTRA = [(c, f'{c}.SR', 'sa') for c in SA_X] + [(c, c, 'us') for c in US_X]
 CX = {'BTC': 'BTCUSDT', 'ETH': 'ETHUSDT', 'BNB': 'BNBUSDT', 'XRP': 'XRPUSDT', 'SOL': 'SOLUSDT',
       'TRX': 'TRXUSDT', 'DOGE': 'DOGEUSDT', 'ZEC': 'ZECUSDT', 'LINK': 'LINKUSDT', 'ADA': 'ADAUSDT',
       'AVAX': 'AVAXUSDT', 'DOT': 'DOTUSDT', 'LTC': 'LTCUSDT', 'BCH': 'BCHUSDT', 'NEAR': 'NEARUSDT'}
-CX_TF = {'1h': 500, '4h': 500, '1d': 1000, '1w': 400, '1M': 150}
+CX_TF = {'1h': 500, '4h': 1000, '1d': 1000, '1w': 400, '1M': 150}
 NOW = dt.datetime.now(dt.timezone.utc)
 
 
@@ -107,8 +107,6 @@ def stocks_full(status):
             h1 = []
             obj = {'id': c, 'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'd': [x[:6] for x in d], 'm': [x[:6] for x in m]}
             try:
-                if extra:
-                    raise StopIteration
                 h1 = frame_rows(t.history(period='730d', interval='1h', auto_adjust=False, actions=False), False)
                 if len(h1) >= 60:
                     obj['1h'] = [x[:6] for x in h1[-1500:]]

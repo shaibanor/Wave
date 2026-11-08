@@ -220,10 +220,32 @@
   let RULES=null,EVTS=null;const RAWB='https://raw.githubusercontent.com/shaibanor/Wave/main/';
   async function rules(){if(RULES)return RULES;RULES={min_rr:2,stop_buffer_atr:.25,min_room_r:1,cap:6,stop_atr:1.2,min_risk_atr:.75,max_risk_atr:3,wick:.5};
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/rules.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),h=j.horizons.D;
-      Object.assign(RULES,{min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
+      Object.assign(RULES,{mode:j.mode,roll:j.rolling,min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/events.json?v='+Math.floor(Date.now()/36e5));if(r.ok){EVTS=(await r.json()).events||[];break;}}catch(_){}}return RULES;}
   function swingsOf(b,k){const H=[],L=[];if(!b)return{H,L};for(let i=k;i<b.length-k;i++){let h=true,l=true;for(let j=1;j<=k;j++){if(!(b[i-j].h<b[i].h&&b[i+j].h<=b[i].h))h=false;if(!(b[i-j].l>b[i].l&&b[i+j].l>=b[i].l))l=false;}if(h)H.push(b[i].h);if(l)L.push(b[i].l);}return{H,L};}
-  async function plan(a,tf){const A=await an(a,tf);if(!A)return fail(a);const RL=await rules();const {lv,I,b,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
+  async function planRoll(a){const RL=await rules(),O=RL.roll;const A=await an(a,'4h');if(!A||!A.data||!A.data['4h']||A.b.length<60)return null;
+    const {I,b,scores}=A,n=b.length-1,L=b[n],c=L.c,atr=I.atr[n],e50=I.e50[n],rs=I.rsi[n];if(!atr||e50==null||rs==null)return null;
+    const sD=scores['1d'],sW=scores['1w'],sM=scores['1M'];
+    const sp=Math.min(Math.max(O.stop.atr_k*atr/c*100,O.stop.min_pct),O.stop.max_pct),stop=c*(1-sp/100),tgt=c*(1+O.target_pct/100),be=c*(1+O.breakeven_at_target_frac*O.target_pct/100);
+    const sw=swingsOf(b.slice(-180),3),above=sw.H.filter(x=>x>c*1.0005),r1=above.length?Math.min(...above):null;
+    const rg=Math.max(1e-12,L.h-L.l),uw=(L.h-Math.max(L.o,L.c))/rg,trap=sw.H.slice(-6).some(p=>L.h>p&&L.c<p)&&uw>=RL.wick;
+    const today=new Date(),ev=(EVTS||[]).find(e=>{const d=(new Date(e.d+'T00:00:00Z')-Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()))/864e5;return d>=0&&d<=1&&(e.scope==='all'||e.scope===a.pro);});
+    const sig=c>e50&&rs<O.trigger.rsi_below&&L.c>L.o;
+    const ck=[
+      ['السياق: الشهري والأسبوعي ليسا هابطين، واليومي صاعد',!!(sM&&sW&&sD)&&sM.dir!=='down'&&sW.dir!=='down'&&sD.dir==='up',`الشهري ${sM?DIR[sM.dir]:'—'}، الأسبوعي ${sW?DIR[sW.dir]:'—'}، اليومي ${sD?DIR[sD.dir]:'—'}`],
+      ['لا مقاومة 4 ساعات قبل الهدف',!r1||r1>=tgt,r1?`أقرب مقاومة ${P(r1,a)} والهدف ${P(tgt,a)}`:'لا مقاومة قريبة'],
+      ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب بذيل علوي':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:'لا فخ ظاهر · القرار لا يعتمد على الأخبار'],
+      ['إشارة الدخول على 4 ساعات',sig,`السعر ${c>e50?'فوق':'تحت'} متوسط 50 · RSI ${rs.toFixed(0)} ${rs<O.trigger.rsi_below?'(تهدئة)':'(مرتفع)'} · الشمعة ${L.c>L.o?'خضراء':'حمراء'}`]];
+    const ok=ck.every(x=>x[1]),need=(sp/(O.target_pct+sp)*100).toFixed(0);
+    let h=head(a,A)+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
+    h+=ok?`<p><b>القرار: الإعداد صالح تعليميًا الآن.</b></p>`:`<p><b>القرار: لا صفقة الآن.</b> أي «لا» تلغي القرار.</p>`;
+    h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${O.target_pct}%)</span>${P(tgt,a)}</div>
+      <div class="bpl-r stop"><span>وقف الخسارة (−${sp.toFixed(1)}%)</span>${P(stop,a)}</div><div class="bpl-r rr"><span>نقل الوقف للتعادل عند</span>${P(be,a)}</div></div>
+      <p class="mut">هذه الصفقة تربح فقط إذا نجحت ${need}% من المحاولات أو أكثر، لأن الوقف (${sp.toFixed(1)}%) أبعد من الهدف (${O.target_pct}%). البروفيسور في المكعب يقيس ذلك ويوقف الدخول إذا هبطت النسبة.</p>`;
+    CTX.topic='plan';
+    return h+`<div class="bas">${act('ليش هذي المستويات؟','ليش')}${act('ولو نزل؟','ولو نزل')}${openBtn(a,'pro','افتح الشارت')}</div>`+DISC;}
+  async function plan(a,tf){const RL0=await rules();if(RL0.mode==='h4_rolling'&&RL0.roll&&(!tf||tf==='4h')){const r=await planRoll(a);if(r)return r;}
+    const A=await an(a,tf);if(!A)return fail(a);const RL=await rules();const {lv,I,b,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
     if(!lv||!atr)return brief(a,tf);
     const D=A.data||{},sw=swingsOf(b.slice(-250),3),sW=swingsOf(D['1w']&&D['1w'].slice(-156),3),sM=swingsOf(D['1M']&&D['1M'].slice(-120),2);
     const sup=[...sw.L,...sW.L].filter(x=>x&&x<c-.3*atr).sort((x,y)=>y-x);

@@ -741,6 +741,39 @@ html[dir="rtl"] .cy-b i{inset:0 0 0 auto}
 .pa-r{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;padding:7px 10px;border-top:1px solid rgba(255,255,255,.06)}
 .pa-r b{font-size:.72rem;white-space:nowrap}.pa-r.y b{color:#5FD3A5}.pa-r.n b{color:#F29B9B}
 .pa-r span{font-size:.8rem}.pa-r small{grid-column:2;font-size:.72rem;opacity:.75;line-height:1.5}
+/* cycle report + edge */
+.cy-e{margin-top:8px;font-size:.8rem;padding:6px 10px;border-radius:10px}.cy-e.y{background:rgba(20,163,127,.14);color:#8FE3C7}.cy-e.n{background:rgba(220,150,40,.14);color:#F4C77A}
+.cr{margin-top:10px;border:1px solid rgba(233,207,143,.3);border-radius:12px;padding:8px 10px;background:rgba(233,207,143,.05)}.cr summary{cursor:pointer;color:#E9CF8F;font-weight:700;font-size:.9rem}
+.cr .sh-g{margin-top:8px}.cr-m{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.cr-m span{font-size:.75rem;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.06)}.cr-f{font-size:.78rem;color:#9FB1C2;margin:8px 0 0}
+/* the professor box */
+.pf{position:relative;overflow:hidden;margin:18px 0;border-radius:22px;min-height:230px;border:1px solid rgba(233,207,143,.35);box-shadow:0 16px 40px -22px rgba(0,0,0,.8);isolation:isolate}
+.pf-bg{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.pf-in{position:relative;padding:22px 20px 22px;max-width:560px;color:#E8EEF3}
+.pf-k{display:inline-block;font-size:.7rem;letter-spacing:.04em;color:#0A1724;background:linear-gradient(90deg,#E9CF8F,#C9A55C);padding:2px 10px;border-radius:999px}
+.pf h2{margin:8px 0 6px;font-size:1.5rem;color:#F4E7C6}.pf p{margin:0 0 14px;color:#B9C8D6;line-height:1.7;font-size:.92rem}
+.pf-btn{font:700 .95rem inherit;color:#0A1724;background:linear-gradient(100deg,#B8903F,#E9CF8F,#C9A55C);border:0;border-radius:14px;padding:11px 18px;cursor:pointer;box-shadow:0 8px 20px -10px rgba(233,207,143,.7)}
+.pfo{position:fixed;inset:0;z-index:9500;display:grid;place-items:center;background:rgba(3,9,16,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s;padding:12px}
+.pfo.on{opacity:1}.pf-sheet{width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:20px;background:linear-gradient(170deg,#0D2033,#071321);border:1px solid rgba(233,207,143,.35);color:#E2EAF1}
+.pf-top{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(7,19,33,.95);border-bottom:1px solid rgba(233,207,143,.2);z-index:1}.pf-top b{color:#E9CF8F}
+.pf-x{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;cursor:pointer}
+#pfBody{padding:14px 16px 20px}
+.pf-pin{text-align:center;padding:20px 0}.pf-pin input{font:600 1.3rem ui-monospace,monospace;letter-spacing:.3em;text-align:center;width:min(280px,90%);padding:10px;border-radius:12px;border:1px solid rgba(233,207,143,.4);background:rgba(255,255,255,.05);color:#fff}
+.pf-go{display:block;margin:12px auto 0;font:700 .95rem inherit;color:#0A1724;background:linear-gradient(100deg,#B8903F,#E9CF8F);border:0;border-radius:12px;padding:9px 26px;cursor:pointer}.pf-msg{min-height:1.4em;color:#F29B9B;font-size:.85rem}
+.pf-rh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.pf-rh small{color:#9FB1C2}
+.pf-chip{font-weight:700;font-size:.8rem;padding:3px 12px;border-radius:999px}
+.pf-ok{--c:#5FD3A5}.pf-warn{--c:#F4C77A}.pf-bad{--c:#F29B9B}.pf-info{--c:#7FC4EC}
+.pf-chip{color:var(--c);border:1px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.pf-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px}.pf-tabs button{flex:0 0 auto;font:600 .85rem inherit;color:#9FB1C2;background:rgba(15,34,52,.7);border:1px solid rgba(233,207,143,.2);border-radius:999px;padding:6px 14px;cursor:pointer}
+.pf-tabs button[aria-selected="true"]{color:#0A1724;background:linear-gradient(100deg,#B8903F,#E9CF8F);border-color:transparent}
+.pf-pts{list-style:none;margin:0;padding:0;display:grid;gap:8px}.pf-pts li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border-inline-start:3px solid var(--c);line-height:1.7;font-size:.9rem}
+.pf-pts i,.pf-f summary i{font-style:normal;font-weight:800;color:var(--c);min-width:16px;text-align:center}
+.pf-f{border-radius:12px;background:rgba(255,255,255,.04);border-inline-start:3px solid var(--c);margin-bottom:8px;padding:8px 12px}.pf-f summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}.pf-f summary small{color:#9FB1C2;font-size:.75rem;width:100%;padding-inline-start:24px}
+.pf-t{width:100%;border-collapse:collapse;margin-top:8px;font-size:.82rem}.pf-t th,.pf-t td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.06);text-align:start}.pf-t th{color:#9FB1C2;font-weight:600}.pf-t tr.pf-warn td,.pf-t tr.pf-warn th{color:#F4C77A}
+.pf-fix{font-size:.82rem;color:#C9D6E0;margin:8px 0 2px;line-height:1.7}
+.pf-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}.pf-c{padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.04)}.pf-c span{display:block;font-size:.72rem;color:#9FB1C2}.pf-c b{font-size:.95rem}
+#pfBody h4{margin:16px 0 6px;color:#E9CF8F;font-size:.9rem}.pf-note{font-size:.78rem;color:#9FB1C2;margin:6px 0}
+.pf-dots{display:flex;flex-wrap:wrap;gap:5px}.pf-dots i{width:12px;height:12px;border-radius:50%}.pf-dots i.w{background:#5FD3A5}.pf-dots i.l{background:#F29B9B}.pf-dots i.s{background:transparent;border:2px solid currentColor}.pf-dots i.w.s{color:#5FD3A5}.pf-dots i.l.s{color:#F29B9B}
+.pf-sc{margin:0;padding-inline-start:18px;font-size:.8rem;color:#B9C8D6;line-height:1.8}.pf-e{color:#9FB1C2}
 :root{--vsig:url(data:image/png;base64,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)}
 .vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
 .vx-stage{position:relative;width:220px;height:250px;perspective:900px}
@@ -2554,9 +2587,21 @@ html.locked .gate{display:flex}
   const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
   let BOOK=null,pin='',busy=false,tab='open',shown=20;
   const PRO=B=>B&&B.mode==='professor';
-  const CK={monthly:'الشهري',levels:'المستويات',traps:'الفخاخ',rr:'العائد/المخاطرة'};
+  const CK={monthly:'السياق',levels:'المستويات',traps:'الفخاخ',rr:'التوقع'};
   const hz=t=>t.hname?`<span class="hz hz-${esc(t.h)}">${esc(t.hname)}</span>`:'';
+  function cycleReport(h){const r=(k,v,c)=>`<div class="sh-c"><span>${k}</span><b class="num ${c||''}">${v}</b></div>`;
+    return`<details class="cr"><summary>تقرير الدورة ${h.n} · <bdi dir="ltr">${sg(h.sum_pct!=null?h.sum_pct:h.pct)}%</bdi> · ${dS(h.start)} ← ${dS(h.end)}</summary><div class="sh-g">
+      ${r('عدد الصفقات',h.trades!=null?h.trades:'—')}${r('الناجحة',h.wins!=null?h.wins:'—','up')}${r('الخاسرة',h.losses!=null?h.losses:'—','down')}${r('نسبة النجاح',h.win_rate!=null?h.win_rate+'%':'—')}
+      ${r('مجموع نسب الصفقات',h.sum_pct!=null?sg(h.sum_pct)+'%':'—',(h.sum_pct||0)>=0?'up':'down')}${r('الربح بالدولار',sgu(h.pnl_usd),h.pnl_usd>=0?'up':'down')}${r('نسبة من رأس المال',sg(h.pct)+'%')}${r('المدة',h.days!=null?h.days+' يوم':'—')}
+      ${r('متوسط الربح',h.avg_win_pct!=null?sg(h.avg_win_pct)+'%':'—','up')}${r('متوسط الخسارة',h.avg_loss_pct!=null?h.avg_loss_pct+'%':'—','down')}${r('أفضل صفقة',esc(h.best||'—'))}${r('أسوأ صفقة',esc(h.worst||'—'))}</div>
+      ${h.by_market?`<div class="cr-m">${Object.entries(h.by_market).map(([k,m])=>`<span>${KN[k]||k}: ${m.n} صفقة · ${m.wins} ناجحة · <bdi dir="ltr">${sg(m.sum_pct)}%</bdi> · <bdi dir="ltr">${sgu(m.pnl_usd)}</bdi></span>`).join('')}</div>`:''}
+      <p class="cr-f">${h.hit?`وصل المجموع إلى <bdi dir="ltr">${sg(h.hit_pct)}%</bdi> يوم ${dS(h.hit)} فتوقف الدخول، ثم أُغلقت الصفقات المفتوحة على أهدافها أو وقفها فصار المجموع النهائي <bdi dir="ltr">${sg(h.sum_pct)}%</bdi>. `:''}جُمّدت المحفظة حتى ${dS(h.frozen_until)}.</p></details>`;}
   function cycleCard(B){const C=B.cycle;if(!C)return'';const p=Math.max(0,Math.min(100,C.progress_pct/C.target_pct*100));
+    if(C.measure==='sum_trade_pct'){const E=C.edge;return`<section class="cy ${C.frozen?'fz':''}"><div class="cy-h"><b>الدورة ${C.n}</b><span>${C.frozen?`❄ المحفظة مجمّدة مؤقتًا حتى ${dS(C.frozen_until)} بعد تحقيق هدف الدورة`:C.hit?`✓ تحقق الهدف (${C.hit_pct}%) يوم ${dS(C.hit)} · لا دخول جديد، وبانتظار إغلاق الصفقات المفتوحة ثم التقرير والتجميد`:`الهدف: مجموع نسب الصفقات ${C.target_pct}% · صفقات 4 ساعات بهدف 1% لكل صفقة`}</span></div>
+      <div class="cy-b" role="progressbar" aria-valuemin="0" aria-valuemax="${C.target_pct}" aria-valuenow="${C.progress_pct}"><i style="width:${p.toFixed(1)}%"></i></div>
+      <div class="cy-f"><bdi class="num ${C.progress_pct>=0?'up':'down'}" dir="ltr">${sg(C.progress_pct.toFixed(2))}%</bdi><span>${C.trades} صفقة · ${C.wins} ناجحة${C.trades?` (${Math.round(C.wins/C.trades*100)}%)`:''} · من ${C.target_pct}%</span></div>
+      ${E?`<div class="cy-e ${E.win_rate>E.breakeven?'y':'n'}">${E.win_rate>E.breakeven?'✓':'⏸'} النجاح ${E.win_rate}% مقابل تعادل ${E.breakeven}%${E.win_rate>E.breakeven?'':' · الدخول متوقف مؤقتًا حتى يصبح التوقع موجبًا'}</div>`:''}
+      ${C.history&&C.history.length?C.history.map(cycleReport).join(''):''}</section>`;}
     return`<section class="cy ${C.frozen?'fz':''}"><div class="cy-h"><b>الدورة ${C.n}</b><span>${C.frozen?`❄ المحفظة مجمّدة مؤقتًا حتى ${dS(C.frozen_until)} بعد تحقيق هدف الدورة`:`الهدف: أرباح محققة ${C.target_pct}% من رأس مال الدورة ($${nf(C.cap0,0)})`}</span></div>
       <div class="cy-b" role="progressbar" aria-valuemin="0" aria-valuemax="${C.target_pct}" aria-valuenow="${C.progress_pct}"><i style="width:${p.toFixed(1)}%"></i></div>
       <div class="cy-f"><bdi class="num ${C.pnl_usd>=0?'up':'down'}" dir="ltr">${sgu(C.pnl_usd)} (${sg(C.progress_pct.toFixed(2))}%)</bdi><span>من ${C.target_pct}%</span></div>
@@ -2594,7 +2639,7 @@ html.locked .gate{display:flex}
   const usd=v=>'$'+nf(v,2),sgu=v=>(v>0?'+':v<0?'−':'')+'$'+nf(Math.abs(v),2);
   const unit=t=>t.kind==='sa'?' <small>ر.س</small>':'';
   function rowsOpen(B){const r=B.open.map((t,k)=>{const pl=t.upnl_usd,cls=pl>=0?'up':'down';
-      return`<tr><td class="c-n">${k+1}</td><th scope="row"><b>${esc(t.name)}</b><small>${esc(t.asset)} ${hz(t)}${t.rr?` · <bdi dir="ltr">1:${t.rr}</bdi>`:''}</small>${checks(t)}</th><td class="num">${usd(t.value_usd)}</td><td class="num">${qn(t.qty)}</td><td class="num">${px(t.entry)}${unit(t)}</td><td class="num tg">${px(t.target)}${unit(t)}</td><td class="num st">${px(t.stop0)}${unit(t)}</td><td class="num">${px(t.now)}${unit(t)}</td><td class="num ${cls}">${sgu(pl)}</td></tr>`;});
+      return`<tr><td class="c-n">${k+1}</td><th scope="row"><b>${esc(t.name)}</b><small>${esc(t.asset)} ${hz(t)}${t.roll?` · هدف <bdi dir="ltr">+${t.tp_pct}%</bdi> · وقف <bdi dir="ltr">−${t.sl_pct}%</bdi>${t.be?' · الوقف على التعادل':''}`:t.rr?` · <bdi dir="ltr">1:${t.rr}</bdi>`:''}</small>${checks(t)}</th><td class="num">${usd(t.value_usd)}</td><td class="num">${qn(t.qty)}</td><td class="num">${px(t.entry)}${unit(t)}</td><td class="num tg">${px(t.target)}${unit(t)}</td><td class="num st">${px(t.stop0)}${unit(t)}</td><td class="num">${px(t.now)}${unit(t)}</td><td class="num ${cls}">${sgu(pl)}</td></tr>`;});
     const w=B.sweep;if(w&&w.qty>0)r.push(`<tr class="sw"><td class="c-n">${B.open.length+1}</td><th scope="row"><b>صندوق المؤشر</b><small>${esc(w.asset)} · تشغيل باقي المبلغ</small></th><td class="num">${usd(w.cost_usd)}</td><td class="num">${qn(w.qty)}</td><td class="num">${px(w.avg)}</td><td class="num">—</td><td class="num">—</td><td class="num">${px(w.now)}</td><td class="num ${w.pnl_usd>=0?'up':'down'}">${sgu(w.pnl_usd)}</td></tr>`);
     return r.length?`<div class="vt-w"><table class="vt"><thead><tr><th>#</th><th>الأصل</th><th>المبلغ</th><th>العدد</th><th>سعر الشراء</th><th>سعر البيع المستهدف</th><th>وقف الخسارة</th><th>السعر الآن</th><th>الربح / الخسارة</th></tr></thead><tbody>${r.join('')}</tbody></table></div>`:'<p class="vb-e">لا توجد صفقات مفتوحة الآن.</p>';}
   function rowsClosed(B){const L=B.closed.slice(0,shown);if(!L.length)return'<p class="vb-e">لم تُغلق أي صفقة بعد.</p>';
@@ -2637,6 +2682,15 @@ html.locked .gate{display:flex}
     if(tab==='arch'){el.innerHTML=B.archive.map(a=>a.error?`<p class="vb-e">${esc(a.name)}: تعذر تحميله.</p>`:`<div class="rl"><div><h4>${esc(a.name)} · من ${dS(a.from)} إلى ${dS(a.to)}</h4><p>سجل الإصدار السابق محفوظ كما هو عند التحويل إلى القواعد الجديدة، ولم يُعدَّل.</p>
       <div class="sh-g">${[['الإجمالي','$'+nf(a.equity_usd,0),''],['النتيجة',sg(a.pct)+'%',a.pct>=0?'up':'down'],['S&P 500 في نفس الفترة',a.bench_pct==null?'—':sg(a.bench_pct)+'%',''],['صفقات مغلقة',a.closed_n,''],['ناجحة',a.wins,'up'],['خاسرة',a.losses,'down'],['مفتوحة عند التحويل',a.open_n,'']].map(([k,v,c])=>`<div class="sh-c"><span>${k}</span><b class="num ${c}">${v}</b></div>`).join('')}</div></div>
       <div><h4>صفقاته المغلقة</h4>${(a.closed||[]).map(t=>`<div class="ar"><div class="ar-n"><b>${esc(t.name)}</b><span class="num">${esc(t.asset)}</span></div><div class="ar-e">${dS(t.opened)} ← ${dS(t.closed)}</div><div class="ar-p num ${t.pnl_usd>=0?'up':'down'}">${sgu(t.pnl_usd)}</div></div>`).join('')}</div></div>`).join('');}
+    if(tab==='rules'&&PRO(B)&&B.rules.rolling){const R=B.rules,O=R.rolling;el.innerHTML=`<div class="rl">
+      <div><h4>صفقات 4 ساعات المتحركة</h4><p>عند إغلاق كل شمعة 4 ساعات يفحص البروفيسور كل الأصول. يدخل إذا كان السعر فوق متوسط 50 على 4 ساعات، وRSI تحت ${O.trigger.rsi_below} (تهدئة بعد صعود)، والشمعة خضراء.</p></div>
+      <div><h4>السياق من الأعلى للأسفل</h4><p>الشهري والأسبوعي ليسا هابطين، واليومي صاعد. أي إطار يخالف ذلك يلغي الصفقة.</p></div>
+      <div><h4>الهدف والوقف</h4><p>هدف واحد +${O.target_pct}% لكل صفقة. الوقف ${O.stop.atr_k}×ATR تحت الدخول، بين ${O.stop.min_pct}% و${O.stop.max_pct}%. عند وصول الربح إلى ${Math.round(O.breakeven_at_target_frac*100)}% من الهدف يُنقل الوقف فوق سعر الدخول بقليل (وقف متحرك). أقصى مدة ${O.max_hold_days} يومًا.</p></div>
+      <div><h4>التدقيق النهائي</h4><ol class="au-q">${(R.checks||[]).map(c=>`<li>${esc(c.q)}</li>`).join('')}</ol></div>
+      <div><h4>لماذا يتوقف أحيانًا</h4><p>هدف 1% مقابل وقف 3–6% يحتاج نسبة نجاح عالية جدًا ليربح. البروفيسور يقيس آخر ${O.edge_window} نتيجة، ويوقف الدخول إذا صارت نسبة النجاح أقل من نسبة التعادل، ويستمر في متابعة الفرص افتراضيًا ليعود تلقائيًا عند التحسن.</p></div>
+      ${O.backtest?`<div><h4>الاختبار التاريخي بنفس القواعد</h4><p>${esc(O.backtest.period)}: ${O.backtest.trades} صفقة، نسبة النجاح ${O.backtest.win_rate}%، متوسط الربح +${O.backtest.avg_win_pct}% ومتوسط الخسارة ${O.backtest.avg_loss_pct}%، والمجموع <bdi dir="ltr">${sg(O.backtest.sum_pct)}%</bdi>. ${esc(O.backtest.note)}</p></div>`:''}
+      <div><h4>هدف الدورة</h4><p>عندما يصل مجموع نسب الصفقات إلى ${R.cycle.target_pct}%، تُغلق كل الصفقات ويُعدّ تقرير مبسط بالنسب والمبالغ، ثم تُجمّد المحفظة ${R.cycle.freeze_days} أيام وتبدأ دورة جديدة.</p></div>
+      <div><h4>الحجم والتكاليف</h4><p>كل صفقة ${Math.round(O.weight*100)}% من رأس المال، وبحد أقصى ${O.max_open} صفقات مفتوحة. عمولة ${R.fees.sa*100}% للسعودي و${R.fees.us*100}% للأمريكي و${R.fees.cx*100}% للعملات، وانزلاق ${R.slip*100}%. المبلغ غير المستخدم يُشغَّل في صندوق ${esc(R.sweep)}.</p></div></div>`;return;}
     if(tab==='rules'&&PRO(B)){const R=B.rules,H=R.horizons;el.innerHTML=`<div class="rl">
       <div><h4>التحليل من الأعلى للأسفل</h4><p>يبدأ كل قرار بالشارت الشهري والمسار التاريخي، ثم الأسبوعي، ثم اليومي، ثم 4 ساعات. لا تُفتح صفقة تعاكس الاتجاه الشهري، ولا صفقة يومية أو 4 ساعات إذا كان الأسبوعي هابطًا.</p></div>
       <div><h4>أنواع الصفقات</h4><p>${Object.entries(H).map(([k,v])=>`<b>${esc(v.name)}</b>: أقصى مدة ${v.max_hold_days} يومًا`).join(' · ')}. الأسبوعية تُقرَّر عند إغلاق الأسبوع، والشهرية عند إغلاق الشهر، و4 ساعات للعملات والأسهم السعودية التي لها بيانات 4 ساعات.</p></div>
@@ -2675,6 +2729,96 @@ html.locked .gate{display:flex}
     let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(BOOK&&!o.hidden&&$('vxCurve'))drawCurve($('vxCurve'),BOOK.curve.map(x=>x[1]),BOOK.totals.start_usd);},150);});}
   if(/^(localhost|127\.)/.test(location.hostname))window.__vxTest=b=>{BOOK=b;const o=$('vxo');o.hidden=false;o.classList.add('on');renderBook();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+(function(){
+  /* «البروفيسور»: internal check box with a code-drawn background, and an encrypted report of what it detected. */
+  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  const nf=(v,d=2)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  let REP=null,tab='pts';
+
+  /* ---------- background: the professor at work ---------- */
+  function bg(cv){const g=cv.getContext('2d');let W=0,H=0,d=1,raf=0,vis=false,t0=performance.now();
+    const F=['RSI = 100 − 100/(1+RS)','E[R] = p·W − (1−p)·L','ATR₁₄','σ√t','p* = L/(W+L)','EMA₅₀','Δ = C − O','Σ %','φ = 1.618','H4 ▸ D ▸ W ▸ M','R:R','P(✓)','MFE · MAE','if (audit ✗) → cancel'];
+    const fl=F.map((s,i)=>({s,x:Math.random(),y:Math.random(),v:.006+Math.random()*.01,a:.06+Math.random()*.1,z:10+Math.random()*6}));
+    const C=[];let cp=100;for(let i=0;i<70;i++){const o=cp,c=o+(Math.random()-.47)*6,h=Math.max(o,c)+Math.random()*3,l=Math.min(o,c)-Math.random()*3;C.push({o,c,h,l,ok:Math.random()<.8});cp=c;}
+    const fit=()=>{const r=cv.getBoundingClientRect();d=Math.min(2,devicePixelRatio||1);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;};
+    function frame(now){raf=0;const t=(now-t0)/1000;g.setTransform(d,0,0,d,0,0);
+      const gr=g.createLinearGradient(0,0,W,H);gr.addColorStop(0,'#071321');gr.addColorStop(1,'#0E2236');g.fillStyle=gr;g.fillRect(0,0,W,H);
+      g.strokeStyle='rgba(120,170,210,.06)';g.lineWidth=1;for(let x=0;x<W;x+=22){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();}for(let y=0;y<H;y+=22){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();}
+      g.font='12px ui-monospace,Menlo,Consolas,monospace';g.textBaseline='middle';
+      for(const f of fl){if(!RM)f.x-=f.v*.016;if(f.x<-.4){f.x=1.05;f.y=Math.random();}g.fillStyle=`rgba(233,207,143,${f.a})`;g.fillText(f.s,f.x*W,f.y*H);}
+      // candle strip with the audit scan
+      const n=C.length,cw=W/n,mid=H*.68,sc=H*.012,lo=Math.min(...C.map(c=>c.l)),hi=Math.max(...C.map(c=>c.h)),Y=v=>mid+(((lo+hi)/2)-v)*sc;
+      const scan=RM?n:Math.floor((t*6)%(n+12));
+      for(let i=0;i<Math.min(n,scan);i++){const c=C[i],x=i*cw+cw/2,up=c.c>=c.o;g.strokeStyle=up?'rgba(47,211,194,.5)':'rgba(242,120,120,.45)';g.beginPath();g.moveTo(x,Y(c.h));g.lineTo(x,Y(c.l));g.stroke();
+        g.fillStyle=up?'rgba(47,211,194,.35)':'rgba(242,120,120,.3)';g.fillRect(x-cw*.3,Y(Math.max(c.o,c.c)),cw*.6,Math.max(1,Math.abs(c.o-c.c)*sc));
+        if(i%9===4){g.fillStyle=c.ok?'rgba(95,211,165,.8)':'rgba(242,155,155,.8)';g.font='bold 11px system-ui';g.fillText(c.ok?'✓':'✗',x-4,Y(c.h)-10);g.font='12px ui-monospace,Menlo,monospace';}}
+      if(scan<n){const x=scan*cw;const lg=g.createLinearGradient(x-30,0,x+4,0);lg.addColorStop(0,'rgba(39,170,226,0)');lg.addColorStop(1,'rgba(39,170,226,.35)');g.fillStyle=lg;g.fillRect(x-30,0,34,H);}
+      // emblem: hexagon with round glasses (the professor)
+      const ex=W-56,ey=48,R=30;g.save();g.translate(ex,ey);g.strokeStyle='rgba(233,207,143,.55)';g.lineWidth=1.4;g.beginPath();for(let k=0;k<6;k++){const a=Math.PI/3*k-Math.PI/2;k?g.lineTo(R*Math.cos(a),R*Math.sin(a)):g.moveTo(R*Math.cos(a),R*Math.sin(a));}g.closePath();g.stroke();
+      const bl=RM?1:(Math.sin(t*1.3)>.97?.2:1);g.strokeStyle='rgba(233,207,143,.9)';g.lineWidth=2;[-9,9].forEach(o=>{g.beginPath();g.ellipse(o,0,7,7*bl,0,0,7);g.stroke();});g.beginPath();g.moveTo(-2,-1);g.quadraticCurveTo(0,-4,2,-1);g.stroke();
+      g.fillStyle='rgba(47,211,194,.9)';[-9,9].forEach(o=>{g.beginPath();g.arc(o+Math.sin(t)*1.5,0,1.8*bl,0,7);g.fill();});g.restore();
+      if(vis&&!RM&&!document.hidden)raf=requestAnimationFrame(frame);}
+    fit();addEventListener('resize',()=>{fit();if(!raf)raf=requestAnimationFrame(frame);},{passive:true});
+    if('IntersectionObserver' in window)new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis&&!raf)raf=requestAnimationFrame(frame);},{threshold:0}).observe(cv);else{vis=true;}
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&vis&&!raf)raf=requestAnimationFrame(frame);});raf=requestAnimationFrame(frame);}
+
+  /* ---------- decrypt ---------- */
+  async function getJSON(p){for(const b of [RAW,'']){try{const r=await fetch(b+p+'?v='+Date.now(),{cache:'no-store'});if(r.ok)return await r.json();}catch(_){}}throw new Error('net');}
+  async function decrypt(code){const [K,B]=await Promise.all([getJSON('vault/prof_key.json'),getJSON('vault/prof.json')]);const S=crypto.subtle;
+    const km=await S.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
+    const kek=await S.deriveKey({name:'PBKDF2',salt:b64(K.salt),iterations:K.iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+    let pk;try{pk=await S.decrypt({name:'AES-GCM',iv:b64(K.iv)},kek,b64(K.key));}catch(_){throw new Error('code');}
+    const priv=await S.importKey('pkcs8',pk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+    const raw=await S.decrypt({name:'RSA-OAEP'},priv,b64(B.wk));const dk=await S.importKey('raw',raw,'AES-GCM',false,['decrypt']);
+    return JSON.parse(new TextDecoder().decode(await S.decrypt({name:'AES-GCM',iv:b64(B.iv)},dk,b64(B.ct))));}
+
+  /* ---------- report ---------- */
+  const LV={ok:['✓','pf-ok'],warn:['!','pf-warn'],bad:['✗','pf-bad'],info:['i','pf-info']};
+  const ST={ok:'سليم',warn:'تنبيهات',bad:'أخطاء مرصودة'};
+  function render(){const R=REP,M=R.monitor||{},el=document.getElementById('pfBody');
+    const head=`<div class="pf-rh"><span class="pf-chip ${LV[R.status][1]}">${ST[R.status]||''}</span><small>آخر رصد: <bdi dir="ltr">${esc(M.updated)}</bdi></small></div>
+      <nav class="pf-tabs" role="tablist">${[['pts','النقاط العريضة'],['det','التفاصيل',(R.findings||[]).length],['mon','معلومات الرصد']].map(([k,l,n])=>`<button role="tab" data-pt="${k}" aria-selected="${tab===k}">${l}${n!=null?` <small>${n}</small>`:''}</button>`).join('')}</nav>`;
+    let body='';
+    if(tab==='pts')body=`<ul class="pf-pts">${R.points.map(p=>`<li class="${LV[p.lv][1]}"><i>${LV[p.lv][0]}</i><span>${esc(p.t)}</span></li>`).join('')}</ul>`;
+    if(tab==='det')body=(R.findings&&R.findings.length)?R.findings.map(f=>`<details class="pf-f ${LV[f.lv][1]}"><summary><i>${LV[f.lv][0]}</i><b>${esc(f.title)}</b><small>${esc(f.asset)} · <bdi dir="ltr">${esc(f.when)}</bdi></small></summary>
+      <table class="pf-t">${Object.entries(f.props||{}).map(([k,v])=>`<tr><th>${esc(k)}</th><td class="num">${esc(v)}</td></tr>`).join('')}</table>${f.fix?`<p class="pf-fix"><b>المعالجة:</b> ${esc(f.fix)}</p>`:''}</details>`).join(''):'<p class="pf-e">لا توجد أخطاء مرصودة الآن.</p>';
+    if(tab==='mon'){const E=M.edge,rj=M.rejected||{},c=(k,v)=>`<div class="pf-c"><span>${k}</span><b class="num">${v}</b></div>`;
+      body=`<div class="pf-g">${c('النظام',esc(M.mode==='h4_rolling'?'صفقات 4 ساعات متحركة':M.mode))}${c('إصدار القواعد',M.rules_version)}${c('الأصول المراقبة',M.universe)}${c('أصول لها 4 ساعات',M.with_4h)}
+        ${c('فرص فُحصت',M.audited)}${c('صفقات فُتحت',M.opened)}${c('ألغاها السياق',rj.monthly||0)}${c('ألغتها المقاومة',rj.levels||0)}${c('ألغتها الفخاخ',rj.traps||0)}${c('ألغاها التوقع',rj.rr||0)}
+        ${E?c('نسبة النجاح (القياس)',E.win_rate+'%')+c('نسبة التعادل',E.breakeven+'%')+c('متوسط الربح',E.avg_win+'%')+c('متوسط الخسارة',E.avg_loss+'%'):c('التوقع الرياضي','يُقاس بعد 10 نتائج')}
+        ${M.cycle?c('الدورة',M.cycle.n)+c('تقدم الدورة',M.cycle.progress_pct+'% / '+M.cycle.target_pct+'%'):''}</div>
+        ${M.outcomes&&M.outcomes.length?`<h4>آخر النتائج</h4><div class="pf-dots">${M.outcomes.map(o=>`<i class="${o.win?'w':'l'} ${o.shadow?'s':''}" title="${esc(o.asset)} ${o.pnl_pct}%"></i>`).join('')}</div><p class="pf-note">الدائرة الممتلئة صفقة حقيقية، والمفرغة متابعة افتراضية أثناء إيقاف الدخول.</p>`:''}
+        ${M.backtest?`<h4>مرجع الاختبار التاريخي</h4><p class="pf-note">${esc(M.backtest.period)} · ${M.backtest.trades} صفقة · نجاح ${M.backtest.win_rate}% · مجموع <bdi dir="ltr">${M.backtest.sum_pct}%</bdi></p>`:''}
+        ${M.open&&M.open.length?`<h4>الصفقات المفتوحة</h4><table class="pf-t">${M.open.map(o=>`<tr><th>${esc(o.name)}</th><td class="num">${nf(o.entry,4)} → ${nf(o.target,4)} · وقف ${nf(o.stop,4)}</td><td class="num">${o.upnl_usd>=0?'+':''}${nf(o.upnl_usd)}$</td></tr>`).join('')}</table>`:''}
+        ${M.site_report?`<h4>فحص الموقع اليومي</h4><ul class="pf-sc">${(M.site_report.checks||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+        <h4>حداثة البيانات</h4><table class="pf-t">${(M.fresh||[]).map(f=>`<tr class="${f.lag>=3?'pf-warn':''}"><th>${esc(f.name)}</th><td>${esc(f.market)}</td><td class="num">${esc(f.d)}</td><td class="num">${f.h4?esc(f.h4):'—'}</td></tr>`).join('')}</table>`;}
+    el.innerHTML=head+`<div class="pf-tb">${body}</div>`;}
+
+  function pinView(msg){document.getElementById('pfBody').innerHTML=`<div class="pf-pin"><p>أدخل رمز البروفيسور</p>
+    <input id="pfIn" type="password" inputmode="numeric" autocomplete="off" maxlength="10" aria-label="رمز البروفيسور" dir="ltr">
+    <button type="button" class="pf-go" id="pfGo">تحقق</button><p class="pf-msg" id="pfMsg">${esc(msg||'')}</p></div>`;
+    const i=document.getElementById('pfIn'),go=async()=>{const v=i.value.replace(/\D/g,'');if(v.length<4)return;const m=document.getElementById('pfMsg');m.textContent='جارٍ التحقق…';
+      try{REP=await decrypt(v);tab='pts';render();}catch(e){pinView(e.message==='code'?'الرمز غير صحيح':'تعذر تحميل التقرير الآن');}};
+    document.getElementById('pfGo').addEventListener('click',go);i.addEventListener('keydown',e=>{if(e.key==='Enter')go();});setTimeout(()=>i.focus(),60);}
+  function open(){const o=document.getElementById('pfo');o.hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>o.classList.add('on'));REP?render():pinView();}
+  function close(){const o=document.getElementById('pfo');o.classList.remove('on');document.body.style.overflow='';setTimeout(()=>{o.hidden=true;},250);}
+
+  function mount(){const vx=document.querySelector('section.vx');if(!vx||document.getElementById('pfBox'))return;
+    vx.insertAdjacentHTML('afterend',`<section class="pf" id="pfBox" aria-label="البروفيسور"><canvas class="pf-bg" aria-hidden="true"></canvas>
+      <div class="pf-in"><span class="pf-k">مدقق داخلي</span><h2>البروفيسور</h2><p>يراجع قرارات البوت وصفقات المكعب عند كل إغلاق 4 ساعات، ويرصد الأخطاء وتأخر البيانات.</p>
+      <button type="button" class="pf-btn" id="pfOpen">🔒 تحقق البروفيسور</button></div></section>`);
+    document.body.insertAdjacentHTML('beforeend',`<div class="pfo" id="pfo" hidden role="dialog" aria-modal="true" aria-label="تقرير البروفيسور"><div class="pf-sheet"><div class="pf-top"><b>تقرير البروفيسور</b><button type="button" class="pf-x" id="pfX" aria-label="إغلاق">✕</button></div><div id="pfBody"></div></div></div>`);
+    bg(document.querySelector('.pf-bg'));
+    document.getElementById('pfOpen').addEventListener('click',open);document.getElementById('pfX').addEventListener('click',close);
+    document.getElementById('pfo').addEventListener('click',e=>{if(e.target.id==='pfo')close();const b=e.target.closest('[data-pt]');if(b){tab=b.dataset.pt;render();}});
+    addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('pfo').hidden)close();});
+    if(/^(localhost|127\.)/.test(location.hostname))window.__pfTest=r=>{REP=r;open();};}
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
 </script>
@@ -3430,10 +3574,32 @@ html.locked .gate{display:flex}
   let RULES=null,EVTS=null;const RAWB='https://raw.githubusercontent.com/shaibanor/Wave/main/';
   async function rules(){if(RULES)return RULES;RULES={min_rr:2,stop_buffer_atr:.25,min_room_r:1,cap:6,stop_atr:1.2,min_risk_atr:.75,max_risk_atr:3,wick:.5};
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/rules.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),h=j.horizons.D;
-      Object.assign(RULES,{min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
+      Object.assign(RULES,{mode:j.mode,roll:j.rolling,min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/events.json?v='+Math.floor(Date.now()/36e5));if(r.ok){EVTS=(await r.json()).events||[];break;}}catch(_){}}return RULES;}
   function swingsOf(b,k){const H=[],L=[];if(!b)return{H,L};for(let i=k;i<b.length-k;i++){let h=true,l=true;for(let j=1;j<=k;j++){if(!(b[i-j].h<b[i].h&&b[i+j].h<=b[i].h))h=false;if(!(b[i-j].l>b[i].l&&b[i+j].l>=b[i].l))l=false;}if(h)H.push(b[i].h);if(l)L.push(b[i].l);}return{H,L};}
-  async function plan(a,tf){const A=await an(a,tf);if(!A)return fail(a);const RL=await rules();const {lv,I,b,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
+  async function planRoll(a){const RL=await rules(),O=RL.roll;const A=await an(a,'4h');if(!A||!A.data||!A.data['4h']||A.b.length<60)return null;
+    const {I,b,scores}=A,n=b.length-1,L=b[n],c=L.c,atr=I.atr[n],e50=I.e50[n],rs=I.rsi[n];if(!atr||e50==null||rs==null)return null;
+    const sD=scores['1d'],sW=scores['1w'],sM=scores['1M'];
+    const sp=Math.min(Math.max(O.stop.atr_k*atr/c*100,O.stop.min_pct),O.stop.max_pct),stop=c*(1-sp/100),tgt=c*(1+O.target_pct/100),be=c*(1+O.breakeven_at_target_frac*O.target_pct/100);
+    const sw=swingsOf(b.slice(-180),3),above=sw.H.filter(x=>x>c*1.0005),r1=above.length?Math.min(...above):null;
+    const rg=Math.max(1e-12,L.h-L.l),uw=(L.h-Math.max(L.o,L.c))/rg,trap=sw.H.slice(-6).some(p=>L.h>p&&L.c<p)&&uw>=RL.wick;
+    const today=new Date(),ev=(EVTS||[]).find(e=>{const d=(new Date(e.d+'T00:00:00Z')-Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()))/864e5;return d>=0&&d<=1&&(e.scope==='all'||e.scope===a.pro);});
+    const sig=c>e50&&rs<O.trigger.rsi_below&&L.c>L.o;
+    const ck=[
+      ['السياق: الشهري والأسبوعي ليسا هابطين، واليومي صاعد',!!(sM&&sW&&sD)&&sM.dir!=='down'&&sW.dir!=='down'&&sD.dir==='up',`الشهري ${sM?DIR[sM.dir]:'—'}، الأسبوعي ${sW?DIR[sW.dir]:'—'}، اليومي ${sD?DIR[sD.dir]:'—'}`],
+      ['لا مقاومة 4 ساعات قبل الهدف',!r1||r1>=tgt,r1?`أقرب مقاومة ${P(r1,a)} والهدف ${P(tgt,a)}`:'لا مقاومة قريبة'],
+      ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب بذيل علوي':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:'لا فخ ظاهر · القرار لا يعتمد على الأخبار'],
+      ['إشارة الدخول على 4 ساعات',sig,`السعر ${c>e50?'فوق':'تحت'} متوسط 50 · RSI ${rs.toFixed(0)} ${rs<O.trigger.rsi_below?'(تهدئة)':'(مرتفع)'} · الشمعة ${L.c>L.o?'خضراء':'حمراء'}`]];
+    const ok=ck.every(x=>x[1]),need=(sp/(O.target_pct+sp)*100).toFixed(0);
+    let h=head(a,A)+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
+    h+=ok?`<p><b>القرار: الإعداد صالح تعليميًا الآن.</b></p>`:`<p><b>القرار: لا صفقة الآن.</b> أي «لا» تلغي القرار.</p>`;
+    h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${O.target_pct}%)</span>${P(tgt,a)}</div>
+      <div class="bpl-r stop"><span>وقف الخسارة (−${sp.toFixed(1)}%)</span>${P(stop,a)}</div><div class="bpl-r rr"><span>نقل الوقف للتعادل عند</span>${P(be,a)}</div></div>
+      <p class="mut">هذه الصفقة تربح فقط إذا نجحت ${need}% من المحاولات أو أكثر، لأن الوقف (${sp.toFixed(1)}%) أبعد من الهدف (${O.target_pct}%). البروفيسور في المكعب يقيس ذلك ويوقف الدخول إذا هبطت النسبة.</p>`;
+    CTX.topic='plan';
+    return h+`<div class="bas">${act('ليش هذي المستويات؟','ليش')}${act('ولو نزل؟','ولو نزل')}${openBtn(a,'pro','افتح الشارت')}</div>`+DISC;}
+  async function plan(a,tf){const RL0=await rules();if(RL0.mode==='h4_rolling'&&RL0.roll&&(!tf||tf==='4h')){const r=await planRoll(a);if(r)return r;}
+    const A=await an(a,tf);if(!A)return fail(a);const RL=await rules();const {lv,I,b,scores}=A,n=b.length-1,atr=I.atr[n],c=lastOf(A).c;
     if(!lv||!atr)return brief(a,tf);
     const D=A.data||{},sw=swingsOf(b.slice(-250),3),sW=swingsOf(D['1w']&&D['1w'].slice(-156),3),sM=swingsOf(D['1M']&&D['1M'].slice(-120),2);
     const sup=[...sw.L,...sW.L].filter(x=>x&&x<c-.3*atr).sort((x,y)=>y-x);
@@ -4251,5 +4417,5 @@ html.locked .gate{display:flex}
   window.NEWSHUB={open};
 })();
 
-</script><script>(function(){var B='89b85fb299';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='c62e76289f';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
