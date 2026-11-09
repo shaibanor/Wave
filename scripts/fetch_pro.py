@@ -3,7 +3,7 @@
 Usage: fetch_pro.py            full refresh (stocks D/M/1h/4h + crypto snapshot)
        fetch_pro.py --intraday  5-minute bars of the latest session for stocks only
 """
-import json, os, sys, time, urllib.request, datetime as dt
+import json, os, sys, time, urllib.request, urllib.parse, datetime as dt
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pro')
 UA = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'}
@@ -320,7 +320,23 @@ def mnews(status):
     status['mnews'] = {k: len(v) for k, v in out.items()}
 
 
-def summary():
+def crypto_now():
+    """Latest crypto prices and 24h change (one request), for the 15-minute refresh."""
+    syms = [f for f in os.listdir(f'{ROOT}/cx') if f.endswith('.json')] if os.path.isdir(f'{ROOT}/cx') else []
+    pairs = [f[:-5] + 'USDT' for f in syms]
+    if not pairs:
+        return {}
+    q = urllib.parse.quote(json.dumps(pairs, separators=(',', ':')))
+    for base in ('https://data-api.binance.vision', 'https://api.binance.com'):
+        try:
+            data = get(f'{base}/api/v3/ticker/24hr?symbols={q}')
+            return {d['symbol'][:-4]: (float(d['lastPrice']), float(d['priceChangePercent'])) for d in data}
+        except Exception:
+            continue
+    return {}
+
+
+def summary(cx_now=None):
     """pro/summary.json: last price and daily change per asset, used to colour the menu."""
     out = {}
     for kind in ('sa', 'us', 'ix', 'cx'):
@@ -343,6 +359,8 @@ def summary():
                     if lv.get('bars') and lv.get('day', '') >= day:
                         c, prev = lv['bars'][-1][1], lv.get('prev') or prev
                 out[fn[:-5]] = {'k': kind, 'c': round(c, 6), 'ch': round((c / prev - 1) * 100, 3) if prev else 0}
+                if kind == 'cx' and cx_now and fn[:-5] in cx_now:
+                    out[fn[:-5]] = {'k': kind, 'c': round(cx_now[fn[:-5]][0], 6), 'ch': round(cx_now[fn[:-5]][1], 3)}
             except Exception:
                 continue
     write(f'{ROOT}/summary.json', {'updated': NOW.strftime('%Y-%m-%dT%H:%MZ'), 'a': out})
@@ -357,9 +375,12 @@ def main():
     except Exception as e:
         status['yf'] = 'missing: ' + str(e)[:80]
     if live:
-        stocks_live(status)
+        if '--crypto-only' not in sys.argv:
+            stocks_live(status)
+        cn = crypto_now()
+        status['cx_now'] = len(cn)
         write(f'{ROOT}/live_status.json', status)
-        summary()
+        summary(cn)
     else:
         stocks_full(status)
         stocks_live(status)
