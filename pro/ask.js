@@ -226,24 +226,28 @@
   async function planRoll(a){const RL=await rules(),O=RL.roll;const A=await an(a,'4h');if(!A||!A.data||!A.data['4h']||A.b.length<60)return null;
     const {I,b,scores}=A,n=b.length-1,L=b[n],c=L.c,atr=I.atr[n],e50=I.e50[n],rs=I.rsi[n];if(!atr||e50==null||rs==null)return null;
     const sD=scores['1d'],sW=scores['1w'],sM=scores['1M'];
-    const sp=Math.min(Math.max(O.stop.atr_k*atr/c*100,O.stop.min_pct),O.stop.max_pct),stop=c*(1-sp/100),tgt=c*(1+O.target_pct/100),be=c*(1+O.breakeven_at_target_frac*O.target_pct/100);
-    const sw=swingsOf(b.slice(-180),3),above=sw.H.filter(x=>x>c*1.0005),r1=above.length?Math.min(...above):null;
+    const FE={sa:.0015,us:.0005,cx:.001}[a.pro]||.001,cost=(2*FE+.001)*100,sp=Math.min(Math.max(O.stop.atr_k*atr/c*100,O.stop.min_pct),O.stop.max_pct),stop=c*(1-sp/100);
+    const sw=swingsOf(b.slice(-180),3),swD=swingsOf((A.data['1d']||[]).slice(-250),3),above=sw.H.filter(x=>x>c*1.0005),r1=above.length?Math.min(...above):null;
+    let tp=O.target_pct;const AD=O.adaptive,adapt=O.target_mode==='adaptive'&&AD;
+    if(adapt){const fl=AD.min_net_pct+cost,capP=Math.min(AD.max_atr*atr/c*100,AD.max_pct),cand=[...sw.H,...swD.H].filter(r=>r>c).map(r=>(r/c-1)*100-AD.below_res_atr*atr/c*100).filter(q=>q>=fl).sort((x,y)=>x-y);tp=cand.length?Math.min(cand[0],capP):capP;}
+    const tgt=c*(1+tp/100),be=c*(1+O.breakeven_at_target_frac*tp/100);
+    let lev=(O.leverage||{})[a.pro]||1;if(lev>1)lev=Math.max(1,Math.min(lev,Math.floor(100/(sp+(O.liq_buffer_pct||1)))));
     const rg=Math.max(1e-12,L.h-L.l),uw=(L.h-Math.max(L.o,L.c))/rg,trap=sw.H.slice(-6).some(p=>L.h>p&&L.c<p)&&uw>=RL.wick;
     const today=new Date(),ev=(EVTS||[]).find(e=>{const d=(new Date(e.d+'T00:00:00Z')-Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()))/864e5;return d>=0&&d<=1&&(e.scope==='all'||e.scope===a.pro);});
     const sig=c>e50&&rs<O.trigger.rsi_below&&L.c>L.o;
     const ck=[
       ['السياق: الشهري والأسبوعي ليسا هابطين، واليومي صاعد',!!(sM&&sW&&sD)&&sM.dir!=='down'&&sW.dir!=='down'&&sD.dir==='up',`الشهري ${sM?DIR[sM.dir]:'—'}، الأسبوعي ${sW?DIR[sW.dir]:'—'}، اليومي ${sD?DIR[sD.dir]:'—'}`],
-      ['لا مقاومة 4 ساعات قبل الهدف',!r1||r1>=tgt,r1?`أقرب مقاومة ${P(r1,a)} والهدف ${P(tgt,a)}`:'لا مقاومة قريبة'],
+      [adapt?'الهدف من السيناريو الصاعد يترك ربحًا كافيًا':'لا مقاومة 4 ساعات قبل الهدف',adapt?tp>=AD.min_net_pct+cost:(!r1||r1>=tgt),adapt?`الهدف +${tp.toFixed(2)}% (أقرب مقاومة تترك ${AD.min_net_pct}% صافيًا بعد التكاليف)`:(r1?`أقرب مقاومة ${P(r1,a)} والهدف ${P(tgt,a)}`:'لا مقاومة قريبة')],
       ['الفخاخ والأخبار',!trap&&!ev,trap?'اختراق كاذب بذيل علوي':ev?`حدث كبير قريب: ${esc(ev.t)} ${esc(ev.d)}`:'لا فخ ظاهر · القرار لا يعتمد على الأخبار'],
-      ['التكلفة تترك ربحًا كافيًا من هدف 1%',(O.target_pct-(2*({sa:.0015,us:.0005,cx:.001}[a.pro]||.001)+.001)*100)>=(O.min_net_target_pct||0),`الصافي بعد العمولة والانزلاق ${(O.target_pct-(2*({sa:.0015,us:.0005,cx:.001}[a.pro]||.001)+.001)*100).toFixed(1)}% (الحد الأدنى ${O.min_net_target_pct||0}%)${a.pro==='sa'?' · السوق السعودي مستبعد من الصفقات المتحركة لهذا السبب':''}`],
+      ['السوق مشمول بالمضاربة المتحركة',(O.adaptive_markets||O.markets).includes(a.pro),a.pro==='sa'?'السوق السعودي مستبعد لأن العمولة والانزلاق ثقيلة على المضاربة القصيرة':'مشمول'],
       ['إشارة الدخول على 4 ساعات',sig,`السعر ${c>e50?'فوق':'تحت'} متوسط 50 · RSI ${rs.toFixed(0)} ${rs<O.trigger.rsi_below?'(تهدئة)':'(مرتفع)'} · الشمعة ${L.c>L.o?'خضراء':'حمراء'}`]];
-    const ok=ck.every(x=>x[1]),need=(sp/(O.target_pct+sp)*100).toFixed(0);
+    const ok=ck.every(x=>x[1]),need=(sp/(tp+sp)*100).toFixed(0);
     let ref='';if(a.pro==='cx'){try{const r=await fetch(RAWB+'pro/refs.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),q=j.coins&&j.coins[a.id];if(q)ref=`<p class="mut">من ${esc(j.source)}: الحجم العالمي 24 ساعة <b class="num">$${(q.vol24/1e6).toLocaleString('en-US',{maximumFractionDigits:0})}M</b> · القيمة السوقية <b class="num">$${(q.mcap/1e9).toLocaleString('en-US',{maximumFractionDigits:1})}B</b>${q.rank?` · الترتيب ${q.rank}`:''}</p>`;}}catch(_){}}
     let h=head(a,A)+ref+`<div class="pa"><div class="pa-h">التدقيق النهائي · 4 ساعات (صفقات متحركة)</div>${ck.map(([q,y,d])=>`<div class="pa-r ${y?'y':'n'}"><b>${y?'✓ نعم':'✗ لا'}</b><span>${q}</span><small>${d}</small></div>`).join('')}</div>`;
     h+=ok?`<p><b>القرار: الإعداد صالح تعليميًا الآن.</b></p>`:`<p><b>القرار: لا صفقة الآن.</b> أي «لا» تلغي القرار.</p>`;
-    h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${O.target_pct}%)</span>${P(tgt,a)}</div>
+    h+=`<div class="bpl"><div class="bpl-r buy"><span>الدخول (إغلاق آخر شمعة 4 ساعات)</span>${P(c,a)}</div><div class="bpl-r sell"><span>الهدف (+${tp.toFixed(2)}%)</span>${P(tgt,a)}</div>${lev>1?`<div class="bpl-r rr"><span>الرافعة (عقود دائمة)</span><b class="num">×${lev}</b> · الهدف على الهامش ≈ +${(tp*lev).toFixed(1)}% والوقف ≈ −${(sp*lev).toFixed(1)}%</div>`:''}
       <div class="bpl-r stop"><span>وقف الخسارة (−${sp.toFixed(1)}%)</span>${P(stop,a)}</div><div class="bpl-r rr"><span>نقل الوقف للتعادل عند</span>${P(be,a)}</div></div>
-      <p class="mut">هذه الصفقة تربح فقط إذا نجحت ${need}% من المحاولات أو أكثر، لأن الوقف (${sp.toFixed(1)}%) أبعد من الهدف (${O.target_pct}%). المدقق الداخلي يقيس ذلك ويوقف الدخول إذا هبطت النسبة.</p>`;
+      <p class="mut">هذا الإعداد يربح على المدى فقط إذا نجحت ${need}% من المحاولات أو أكثر، لأن الوقف (${sp.toFixed(1)}%) ${sp>tp?'أبعد من':'مقابل'} الهدف (${tp.toFixed(2)}%).${lev>1?' الرافعة تضاعف الربح والخسارة بنفس النسبة.':''} المدقق الداخلي يقيس ذلك ويوقف الدخول إذا هبطت النسبة.</p>`;
     CTX.topic='plan';
     return h+`<div class="bas">${act('ليش هذي المستويات؟','ليش')}${act('ولو نزل؟','ولو نزل')}${openBtn(a,'pro','افتح الشارت')}</div>`+DISC;}
   async function plan(a,tf){const RL0=await rules();if(RL0.mode==='h4_rolling'&&RL0.roll&&(!tf||tf==='4h')){const r=await planRoll(a);if(r)return r;}

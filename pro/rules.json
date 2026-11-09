@@ -130,8 +130,8 @@
   },
   "cycle": {
     "target_pct": 100,
-    "measure": "sum_trade_pct",
-    "on_target": "close_all_report_then_freeze",
+    "measure": "equity_double",
+    "on_target": "stop_entries_close_open_report_then_freeze",
     "freeze_days": 7
   },
   "execution": {
@@ -145,7 +145,7 @@
   },
   "mode": "h4_rolling",
   "rolling": {
-    "name": "صفقات 4 ساعات متحركة",
+    "name": "مضاربات 4 ساعات متحركة",
     "markets": [
       "sa",
       "cx",
@@ -177,13 +177,32 @@
     "edge_min_trades": 10,
     "backtest": {
       "period": "مايو 2025 → نوفمبر 2026",
-      "trades": 84,
-      "win_rate": 88.1,
-      "sum_pct": 17.88,
-      "avg_win_pct": 0.9,
-      "avg_loss_pct": -4.85,
-      "note": "اختبار بنفس القواعد على بيانات 4 ساعات للعملات والأسهم الأمريكية. النصف الأول +2.8% والثاني +15.1%. السوق السعودي مستبعد لأن العمولة والانزلاق (0.4% ذهابًا وإيابًا) يتركان 0.6% فقط من هدف 1%؛ بإدخاله كان المجموع +0.5% فقط."
+      "trades": 141,
+      "win_rate": 80.1,
+      "sum_pct": 60.5,
+      "avg_win_pct": 1.55,
+      "avg_loss_pct": -3.69,
+      "note": "نمو المحفظة كاملة +60.5% مقابل +26% لمؤشر S&P 500. 95% من ربح الصفقات جاء من العملات بالرافعة ×5 (57 صفقة بين يوليو ونوفمبر 2026 فقط، نجاح 93%)، والأسهم الأمريكية 84 صفقة بنجاح 71% وربح صغير. أسوأ صفقة عملات خسرت 32% من هامشها. العينة قصيرة للعملات، فلا تُعامل النتيجة كضمان."
     },
-    "min_net_target_pct": 0.7
+    "min_net_target_pct": 0.7,
+    "target_mode": "adaptive",
+    "adaptive_markets": [
+      "cx",
+      "us"
+    ],
+    "adaptive": {
+      "min_net_pct": 0.7,
+      "max_atr": 4,
+      "max_pct": 8,
+      "below_res_atr": 0.1
+    },
+    "leverage": {
+      "cx": 5,
+      "us": 1,
+      "sa": 1
+    },
+    "liq_buffer_pct": 1.0,
+    "dd_brake_pct": 20,
+    "funding_per_8h": 0.0001
   }
 }
