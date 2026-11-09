@@ -28,7 +28,7 @@ try:
 except Exception:
     EVENTS = []
 LAUNCH = os.environ.get('PAPER2_LAUNCH', '2026-11-09')
-MODE = R.get('mode', 'multi'); RO = R.get('rolling', {})
+MODE = R.get('mode', 'multi'); RO = R.get('rolling', {}); ZRULE = RO.get('zone', {})
 V1_END = dt.datetime(2026, 11, 8, 21, 0, tzinfo=dt.timezone.utc)  # the first version's record is frozen here
 START_USD = 87000.0
 SAR = 3.75
@@ -126,6 +126,48 @@ def score(b, I, i, H=None, L=None):
     if I['rsi'][i] is not None: P.append(1 if I['rsi'][i] > 55 else -1 if I['rsi'][i] < 45 else 0)
     s = sum(P) / len(P)
     return {'s': round(s, 3), 'dir': 'up' if s >= .35 else 'down' if s <= -.35 else 'flat'}
+
+# ---------- strong support zones ----------
+def strong_zones(d, upto, atr_d, lookback=500, k=3):
+    """Support zones from daily swing lows that the price has respected several times.
+    Each zone: low/high band, touches (swing lows inside it), holds (visits followed by a bounce of 1.5 ATR within 10 days
+    without a close below the band), breaks (closes below the band), strength score. Uses bars up to `upto` only."""
+    if not atr_d or upto < 60: return []
+    lo = max(0, upto - lookback)
+    H, L = swings(d, k, lo, upto)
+    pts = sorted(d[j]['l'] for j in L)
+    tol = 0.6 * atr_d; zones = []
+    for p_ in pts:
+        if zones and p_ - zones[-1]['hi'] <= tol and p_ - zones[-1]['lo'] <= 1.2 * atr_d:
+            z = zones[-1]; z['hi'] = max(z['hi'], p_); z['n'] += 1
+        else:
+            zones.append({'lo': p_, 'hi': p_, 'n': 1})
+    out = []
+    for z in zones:
+        if z['n'] < 2: continue
+        zl, zh = z['lo'] - 0.15 * atr_d, z['hi'] + 0.15 * atr_d
+        holds = breaks = 0; i = lo; last_touch = None
+        while i <= upto:
+            b = d[i]
+            if b['l'] <= zh and b['h'] >= zl:
+                last_touch = i
+                j_end = min(upto, i + 10); ok = None
+                for j in range(i, j_end + 1):
+                    if d[j]['c'] < zl - 0.25 * atr_d: ok = False; break
+                    if d[j]['h'] >= zh + 1.5 * atr_d: ok = True; break
+                if ok is True: holds += 1
+                elif ok is False: breaks += 1
+                i = j_end + 1 if ok is not None else i + 1
+                continue
+            i += 1
+        rate = holds / (holds + breaks) if holds + breaks else 0
+        score = z['n'] + 2 * holds - 3 * breaks
+        out.append({'lo': zl, 'hi': zh, 'touches': z['n'], 'holds': holds, 'breaks': breaks, 'rate': round(rate, 2), 'score': score,
+                    'last': day(d[last_touch]['t']).isoformat() if last_touch is not None else None})
+    return out
+
+def is_strong(z, ZR):
+    return z['touches'] >= ZR['min_touches'] and z['holds'] >= ZR['min_holds'] and z['rate'] >= ZR['min_rate']
 
 # ---------- data ----------
 def bars(rows):
@@ -225,6 +267,7 @@ def prepare(aid, kind, now, launch):
             'prevL': {'D': [d[j]['l'] for j in LD if j < i], 'W': [wk[j]['l'] for j in LW_ if j < len(wk) - 1], 'M': [mo[j]['l'] for j in LM if j < len(mo) - 1]},
             'week_end': week_key(nx, kind) != kw, 'month_end': (nx.year, nx.month) != km,
             'ath': max(z['h'] for z in mo),
+            'zones': [z for z in strong_zones(d, i, I['atr'][i]) if is_strong(z, ZRULE)] if ZRULE.get('enabled') else [],
         }
     # 4h bars (complete only), with their own causal score and levels
     H4 = []
@@ -349,7 +392,7 @@ def run(now, launch=LAUNCH):
         p['mfe_pct'] = round(sd * (p.get('mfe', p['entry']) / p['entry'] - 1) * 100, 2); p['mae_pct'] = round(sd * (p.get('mae', p['entry']) / p['entry'] - 1) * 100, 2)
         p['held_days'] = (dt.date.fromisoformat(ds) - dt.date.fromisoformat(p['opened'])).days
         cyc['pnl'] += p['pnl_usd']; cyc['sum_pct'] += p['pnl_pct']; cyc['trades'].append(p)
-        if p.get('roll'): outcomes.append({'pnl_pct': p['px_pct'], 'win': p['win'], 'shadow': False, 'asset': p['asset'], 'side': 2 if p.get('setup') == 'oversold' else p.get('side', 1)})
+        if p.get('roll'): outcomes.append({'pnl_pct': p['px_pct'], 'win': p['win'], 'shadow': False, 'asset': p['asset'], 'side': 3 if p.get('setup') == 'zone' else 2 if p.get('setup') == 'oversold' else p.get('side', 1)})
         if p['pnl_usd'] > 0: pw[0] += p['pnl_usd']; cash -= p['pnl_usd']
         for k in ('opened_T', 'left', 'risk0_px'): p.pop(k, None)
         closed.append(p)
@@ -469,27 +512,50 @@ def run(now, launch=LAUNCH):
         if a == SWEEP or a in pos or kind not in RO['markets'] or len(pos) >= RO['max_open']: return
         cost = (2 * FEE[kind] + 2 * SLIP) * 100
         if RO.get('target_mode', 'fixed') == 'fixed' and RO['target_pct'] - cost < RO.get('min_net_target_pct', 0): return   # costs would eat too much of a 1% target
-        if RO.get('target_mode') == 'adaptive' and kind not in RO.get('adaptive_markets', RO['markets']): return
+        zone_ok = ZRULE.get('enabled') and kind in ZRULE.get('markets', [])
+        if RO.get('target_mode') == 'adaptive' and kind not in RO.get('adaptive_markets', RO['markets']) and not zone_ok: return
+        dip_ok = kind in RO.get('adaptive_markets', RO['markets'])
         x = z['bar']; atrv = z['atr']; ctxs = c['sc']
         tg = RO['trigger']; OS = RO.get('oversold') or {}
         if not atrv or not z['e50'] or z['rsi'] is None: return
         osb = bool(OS.get('enabled')) and kind in OS.get('markets', []) and z['rsi'] < OS.get('rsi_below', 30) and x['c'] > x['o']
-        if not osb:
+        # strong support bounce: the 4h candle dipped into a zone that held many times, and closed back up with a rejection
+        zb = None
+        if ZRULE.get('enabled') and kind in ZRULE.get('markets', []) and c.get('zones'):
+            rng_ = max(1e-12, x['h'] - x['l']); lwk = (min(x['o'], x['c']) - x['l']) / rng_; upper = (x['c'] - x['l']) / rng_
+            for zz in sorted(c['zones'], key=lambda q: -q['hi']):
+                if x['l'] <= zz['hi'] + 0.1 * atrv and x['c'] >= zz['lo'] and x['c'] > zz['lo'] + 0.0 and (x['c'] > x['o'] or lwk >= ZRULE.get('min_lower_wick', .4)) and upper >= .5:
+                    zb = zz; break
+        if zb: osb = False
+        if not zb and not dip_ok: return
+        if not osb and not zb:
             if tg['above_ema50'] and x['c'] <= z['e50']: return
             if z['rsi'] >= tg['rsi_below']: return
             if tg['green_candle'] and x['c'] <= x['o']: return
         nonlocal_audit[0] += 1
         entry = x['c'] * (1 + SLIP); notes = []; ck = {}
         sD, sW, sM = ctxs.get('D'), ctxs.get('W'), ctxs.get('M')
-        if osb:   # oversold bounce: only the monthly trend must not be down
+        if zb:
+            ck['monthly'] = bool(sM) and (sM['dir'] != 'down' or not ZRULE.get('monthly_not_down', True))
+        elif osb:   # oversold bounce: only the monthly trend must not be down
             ck['monthly'] = bool(sM) and sM['dir'] != 'down'
         else:
             ck['monthly'] = bool(sD and sW and sM) and sD['dir'] == 'up' and sW['dir'] != 'down' and sM['dir'] != 'down'
         if not ck['monthly']: notes.append('السياق: ' + '، '.join(f"{TFN[t]} {DIRN[s_['dir']]}" for t, s_ in (('M', sM), ('W', sW), ('D', sD)) if s_))
         sp = min(max(RO['stop']['atr_k'] * atrv / entry * 100, RO['stop']['min_pct']), RO['stop']['max_pct'])
         if osb: sp = OS['stop_pct']
+        if zb:
+            atrD = c['atr']['D'] or atrv
+            sp = max((1 - (zb['lo'] - ZRULE.get('stop_below_atr', .3) * atrD) / entry) * 100, ZRULE.get('min_stop_pct', 1.0))
         stop = entry * (1 - sp / 100)
-        if osb:
+        if zb:
+            AD = RO['adaptive']; floor = AD['min_net_pct'] + cost; cap = min(ZRULE.get('max_atr', 4) * (c['atr']['D'] or atrv) / entry * 100, AD['max_pct'])
+            cand = sorted(((r / entry - 1) * 100 - AD['below_res_atr'] * atrv / entry * 100) for r in z['res'] + c['res']['D'] if r > entry)
+            cand = [q for q in cand if q >= floor]
+            tp = min(cand[0], cap) if cand else cap
+            room = tp >= floor and tp / sp >= ZRULE.get('min_rr', 1.5)
+            if not room: notes.append(f'العائد/المخاطرة {tp / sp:.2f} أقل من {ZRULE.get("min_rr", 1.5)}')
+        elif osb:
             tp = OS['target_pct']; room = tp >= RO['adaptive']['min_net_pct'] + cost
         elif RO.get('target_mode') == 'adaptive':
             # the bullish scenario's first target: nearest 4h/daily resistance that still leaves enough after costs, within reach of volatility
@@ -512,14 +578,14 @@ def run(now, launch=LAUNCH):
         ck['traps'] = not trap and not ev
         if trap: notes.append('اختراق كاذب بذيل علوي')
         if ev: notes.append('حدث كبير قريب: ' + ev)
-        okE, est, nE = edge(2 if osb else 1)
+        okE, est, nE = edge(3 if zb else 2 if osb else 1)
         ck['rr'] = okE
         if not okE: notes.append(f"التوقع سالب: نجاح {est['win_rate']}% أقل من التعادل {est['breakeven']}%")
         if not all(ck.values()):
             for k_, v in ck.items():
                 if not v: rejects[k_] += 1
             if ck['monthly'] and ck['levels'] and ck['traps'] and a not in shadow:
-                shadow[a] = {'kind': kind, 'entry': entry, 'stop': stop, 'target': tgt, 'tp': tp, 'be': False, 'T': T, 'side': 2 if osb else 1}
+                shadow[a] = {'kind': kind, 'entry': entry, 'stop': stop, 'target': tgt, 'tp': tp, 'be': False, 'T': T, 'side': 3 if zb else 2 if osb else 1}
             return
         eq = equity(); k = fx(kind); f = FEE[kind]
         L = int(RO.get('leverage', {}).get(kind, 1))
@@ -535,9 +601,10 @@ def run(now, launch=LAUNCH):
         margin = qty * entry * k / L
         n += 1; fee = qty * entry * f; cash -= margin + fee * k
         need = round(sp / (tp + sp) * 100, 1)
-        why = (f"ارتداد من تشبع بيعي: شمعة 4 ساعات خضراء وRSI {z['rsi']:.0f} · الشهري {DIRN[sM['dir']]}" if osb else
+        why = (f"ارتداد من دعم قوي {zb['lo']:.6g}–{zb['hi']:.6g} (لمسه {zb['touches']} مرات وصمد {zb['holds']} من {zb['holds'] + zb['breaks']}) · شمعة 4 ساعات رفضت الكسر · الشهري {DIRN[sM['dir']]}" if zb else
+               f"ارتداد من تشبع بيعي: شمعة 4 ساعات خضراء وRSI {z['rsi']:.0f} · الشهري {DIRN[sM['dir']]}" if osb else
                f"شمعة 4 ساعات خضراء فوق متوسط 50 بعد تهدئة (RSI {z['rsi']:.0f}) · اليومي {DIRN[sD['dir']]}، الأسبوعي {DIRN[sW['dir']]}، الشهري {DIRN[sM['dir']]}")
-        pos[a] = {'id': f'P-{n}', 'asset': a, 'name': names[a][0], 'kind': kind, 'h': 'H4', 'hname': RO['name'], 'roll': True, 'setup': 'oversold' if osb else 'dip', 'cur': 'ريال' if kind == 'sa' else 'دولار',
+        pos[a] = {'id': f'P-{n}', 'asset': a, 'name': names[a][0], 'kind': kind, 'h': 'H4', 'hname': RO['name'], 'roll': True, 'setup': 'zone' if zb else 'oversold' if osb else 'dip', 'zone': {k_: zb[k_] for k_ in ('lo', 'hi', 'touches', 'holds', 'breaks', 'rate')} if zb else None, 'cur': 'ريال' if kind == 'sa' else 'دولار',
                   'opened': z['date'].isoformat(), 'opened_at': z['T'].strftime('%Y-%m-%dT%H:%MZ') if hasattr(z['T'], 'strftime') else None, 'opened_T': T,
                   'entry': round(entry, 6), 'qty': qty, 'value': round(qty * entry, 2), 'value_usd': round(qty * entry * k, 2), 'weight': round(qty * entry * k / eq * 100, 1),
                   'stop0': round(stop, 6), 'stop': stop, 'target': round(tgt, 6), 'tp_pct': round(tp, 2), 'sl_pct': round(sp, 2), 'need_win': need,
@@ -863,6 +930,30 @@ def prof_report(book, now):
     lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'
     return {'v': 1, 'status': lvl, 'points': pts, 'findings': det, 'monitor': mon}
 
+def radar(now):
+    """Strong support zones for every asset now: where each one is relative to its nearest strong zone."""
+    ZR = RO.get('zone', {}); rows = []
+    for aid, name, kind in ASSETS:
+        if kind not in ZR.get('scan_markets', ['sa', 'us', 'cx']): continue
+        try:
+            d, m, h4 = load(aid, kind)
+        except Exception:
+            continue
+        d = [x for x in d if now >= close_time(kind, day(x['t']))]
+        if len(d) < 120: continue
+        I = ind(d); i = len(d) - 1; a = I['atr'][i]; c = d[i]['c']
+        Z = [z for z in strong_zones(d, i, a) if is_strong(z, ZR)]
+        below = [z for z in Z if z['lo'] <= c]
+        if not below: continue
+        z = max(below, key=lambda q: q['hi'])
+        distA = (c - z['hi']) / a if a else 0
+        st = 'inside' if c <= z['hi'] else 'near' if distA <= 1 else 'far'
+        rows.append({'asset': aid, 'name': name, 'kind': kind, 'price': round(c, 6), 'lo': round(z['lo'], 6), 'hi': round(z['hi'], 6),
+                     'dist_pct': round((c / z['hi'] - 1) * 100, 2), 'dist_atr': round(distA, 2), 'touches': z['touches'], 'holds': z['holds'], 'breaks': z['breaks'],
+                     'rate': z['rate'], 'last': z['last'], 'state': st, 'active': kind in ZR.get('markets', []), 'date': day(d[i]['t']).isoformat()})
+    rows.sort(key=lambda r: r['dist_atr'])
+    return {'updated': now.strftime('%Y-%m-%dT%H:%MZ'), 'rule': {k: ZR.get(k) for k in ('min_touches', 'min_holds', 'min_rate', 'min_rr', 'markets')}, 'zones': rows}
+
 def archive_v1():
     """Final state of the first version (rules unchanged), frozen at V1_END."""
     try:
@@ -892,6 +983,11 @@ def main():
             T = r['totals']; print(f"open={T['open_n']} closed={T['closed_n']} equity={T['equity_usd']} pct={T['pct']} win={T['win_rate']} audit={r['audit']} cycle={r['cycle']['n']},{r['cycle']['progress_pct']}% hist={len(r['cycle']['history'])}")
             return
     os.makedirs(os.path.join(ROOT, 'vault'), exist_ok=True)
+    try:
+        rz = radar(now); book['radar'] = rz
+        json.dump(rz, open(os.path.join(ROOT, 'pro', 'zones.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    except Exception as e:
+        book.setdefault('errors', []).append('radar: ' + str(e)[:100])
     pr = prof_report(book, now)
     for k_ in ('fresh', 'outcomes'): book.pop(k_, None)
     json.dump(encrypt(book), open(os.path.join(ROOT, 'vault', 'book.json'), 'w'), separators=(',', ':'))

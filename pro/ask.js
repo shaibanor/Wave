@@ -223,6 +223,19 @@
       Object.assign(RULES,{mode:j.mode,roll:j.rolling,min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/events.json?v='+Math.floor(Date.now()/36e5));if(r.ok){EVTS=(await r.json()).events||[];break;}}catch(_){}}return RULES;}
   function swingsOf(b,k){const H=[],L=[];if(!b)return{H,L};for(let i=k;i<b.length-k;i++){let h=true,l=true;for(let j=1;j<=k;j++){if(!(b[i-j].h<b[i].h&&b[i+j].h<=b[i].h))h=false;if(!(b[i-j].l>b[i].l&&b[i+j].l>=b[i].l))l=false;}if(h)H.push(b[i].h);if(l)L.push(b[i].l);}return{H,L};}
+  /* strong support zones (computed with every 4h update from each asset's own history) */
+  let ZN=null;async function zones(){if(ZN)return ZN;for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/zones.json?v='+Math.floor(Date.now()/9e5));if(r.ok){ZN=await r.json();return ZN;}}catch(_){}}return null;}
+  const zf=v=>nf(v,v<1?4:2);
+  const ZST={inside:'داخل المنطقة',near:'قريب منها',far:'بعيد عنها'};
+  const zRow=r=>`<div class="bpl-r ${r.state==='inside'?'buy':''}"><span><b>${esc(r.name)}</b> · ${ZST[r.state]} (${r.dist_pct>0?'+':''}${r.dist_pct}%)</span><bdi dir="ltr" class="num">${zf(r.lo)} – ${zf(r.hi)}</bdi></div>`;
+  async function zonesList(){const Z=await zones();if(!Z||!Z.zones)return'<p>رادار الدعوم غير متاح الآن، جرّب بعد قليل.</p>';
+    const L=Z.zones.filter(r=>r.state!=='far').slice(0,12);
+    return`<div class="bh2"><b>مناطق الدعم القوية الآن</b></div><p>منطقة قوية = لمسها السعر ${Z.rule.min_touches} مرات أو أكثر، وارتد منها ${Z.rule.min_holds} مرات على الأقل، وصمدت في ${Math.round(Z.rule.min_rate*100)}% من الزيارات أو أكثر.</p>
+      <div class="bpl">${L.map(zRow).join('')||'<p>لا يوجد أصل داخل منطقة دعم قوية أو قريب منها الآن.</p>'}</div>
+      <p class="mut">«داخل المنطقة» لا يعني شراء فوري: الدخول عند شمعة 4 ساعات ترفض الكسر وتغلق مرتدة، والوقف تحت المنطقة. أي إغلاق يومي واضح تحتها يلغي الفكرة. في الاختبار التاريخي صمد هذا الارتداد في 61% من صفقات الأسهم الأمريكية، وكان أضعف في العملات والسعودي.</p>`+DISC;}
+  async function zoneOf(a){const Z=await zones();const r=Z&&Z.zones&&Z.zones.find(x=>x.asset===a.id);
+    if(!r)return`<p>لا توجد منطقة دعم قوية تحت سعر ${esc(a.name)} حاليًا حسب قاعدة المدقق (لمسات متكررة وصمود مثبت).</p>`;
+    return`<div class="bh2"><b>${esc(a.name)}: أقرب دعم قوي</b></div><div class="bpl">${zRow(r)}</div><p>لمس السعر هذه المنطقة ${r.touches} مرات، وارتد منها ${r.holds} مرات وكُسرت ${r.breaks} مرات (صمود ${Math.round(r.rate*100)}%). آخر لمسة ${esc(r.last||'—')}.</p><p class="mut">الوقف المنطقي تحت ${zf(r.lo)}. إغلاق يومي واضح تحتها يعني أن الدعم سقط.</p>`+DISC;}
   async function planRoll(a){const RL=await rules(),O=RL.roll;const A=await an(a,'4h');if(!A||!A.data||!A.data['4h']||A.b.length<60)return null;
     const {I,b,scores}=A,n=b.length-1,L=b[n],c=L.c,atr=I.atr[n],e50=I.e50[n],rs=I.rsi[n];if(!atr||e50==null||rs==null)return null;
     const sD=scores['1d'],sW=scores['1w'],sM=scores['1M'];
@@ -316,6 +329,9 @@
     if(!ids.length&&CTX.last&&follow){ids.push(CTX.last);}
     if(!ids.length&&follow&&!CTX.last)return`<p>عن أي أصل تقصد؟ اكتب اسمه، مثل: «وين أشتري أرامكو» أو «وش وضع البيتكوين».</p>`+MORE();
     const gl=GLOSS.find(([r])=>r.test(t));
+    const ZQ=/(دعم قوي|دعوم قوي|الدعوم القوي|مناطق (الشراء|الدعم|ارتداد)|منطقة (شراء|دعم) قوي|ارتداد|مناطق آمن|منطقة آمن|امنه|strong support|support zone|bounce)/;
+    if(ZQ.test(t)&&!ids.length)return zonesList();
+    if(ZQ.test(t)&&ids.length)return zoneOf(ids[0]);
     if(!ids.length){
       if(has(t,I.thanks))return'<p>العفو، في الخدمة دائمًا. اسأل متى شئت.</p>';
       if(WHO.test(t))return ABOUT();

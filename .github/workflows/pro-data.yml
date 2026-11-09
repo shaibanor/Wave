@@ -35,7 +35,7 @@ jobs:
           for i in 1 2 3; do
             git fetch -q origin main && git reset -q --mixed origin/main
             # only the generated data (never site code or rules, which may be newer on main than this checkout)
-            git add -- $(ls -d pro/sa pro/us pro/cx pro/ix pro/live pro/summary.json pro/news.json pro/mnews.json pro/status.json pro/live_status.json pro/refs.json vault/book.json vault/prof.json data.json 2>/dev/null)
+            git add -- $(ls -d pro/sa pro/us pro/cx pro/ix pro/live pro/summary.json pro/news.json pro/mnews.json pro/status.json pro/live_status.json pro/refs.json pro/zones.json vault/book.json vault/prof.json data.json 2>/dev/null)
             if git diff --cached --quiet; then echo "no changes"; exit 0; fi
             git commit -qm "تحديث بيانات المنصة المتقدمة"
             git push origin HEAD:main && exit 0
