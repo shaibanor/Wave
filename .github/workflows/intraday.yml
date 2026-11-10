@@ -11,7 +11,7 @@ concurrency:
 jobs:
   live:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,13 +25,14 @@ jobs:
           if [ "$D" = 7 ] || [ "$D" -le 4 ]; then [ "$H" -ge 7 ] && [ "$H" -le 12 ] && SA=1; fi
           if [ "$D" -le 5 ]; then [ "$H" -ge 13 ] && [ "$H" -le 20 ] && US=1; fi
           if [ "$SA" = 1 ] || [ "$US" = 1 ]; then python scripts/fetch_pro.py --intraday; else python scripts/fetch_pro.py --intraday --crypto-only; fi
+          if [ "$SA" = 1 ] || [ "$US" = 1 ]; then python scripts/ext_radar.py || true; fi
       - name: Commit
         run: |
           git config user.name "shaibanor"
           git config user.email "shaibanor@users.noreply.github.com"
           for i in 1 2 3; do
             git fetch -q origin main && git reset -q --mixed origin/main
-            git add pro/live pro/live_status.json pro/summary.json
+            git add pro/live pro/live_status.json pro/summary.json $(ls pro/ext_radar.json 2>/dev/null)
             if git diff --cached --quiet; then echo "no changes"; exit 0; fi
             git commit -qm "تحديث الأسعار اللحظية"
             git push origin HEAD:main && exit 0
