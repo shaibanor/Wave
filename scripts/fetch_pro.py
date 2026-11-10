@@ -17,7 +17,7 @@ STOCKS = [(c, f'{c}.SR', 'sa') for c in SA] + [(c, c, 'us') for c in US] + [(c, 
 EXTRA = [(c, f'{c}.SR', 'sa') for c in SA_X] + [(c, c, 'us') for c in US_X]
 CX = {'BTC': 'BTCUSDT', 'ETH': 'ETHUSDT', 'BNB': 'BNBUSDT', 'XRP': 'XRPUSDT', 'SOL': 'SOLUSDT',
       'TRX': 'TRXUSDT', 'DOGE': 'DOGEUSDT', 'ZEC': 'ZECUSDT', 'LINK': 'LINKUSDT', 'ADA': 'ADAUSDT',
-      'AVAX': 'AVAXUSDT', 'DOT': 'DOTUSDT', 'LTC': 'LTCUSDT', 'BCH': 'BCHUSDT', 'NEAR': 'NEARUSDT'}
+      'AVAX': 'AVAXUSDT', 'DOT': 'DOTUSDT', 'LTC': 'LTCUSDT', 'BCH': 'BCHUSDT', 'NEAR': 'NEARUSDT', 'PARTI': 'PARTIUSDT'}
 CX_TF = {'1h': 500, '4h': 1000, '1d': 1000, '1w': 400, '1M': 150}
 NOW = dt.datetime.now(dt.timezone.utc)
 
@@ -203,13 +203,13 @@ NEWS_Q = {
     'GOLD': ('أسعار الذهب', 'gold price'), 'SILVER': ('أسعار الفضة', 'silver price'), 'BRENT': ('نفط برنت', 'Brent crude'), 'US10Y': ('عائد السندات الأمريكية', 'Treasury yields'),
     'DXY': ('مؤشر الدولار', 'dollar index'), 'BTC': ('بيتكوين', 'Bitcoin'), 'ETH': ('إيثريوم', 'Ethereum'), 'XRP': ('ريبل XRP', 'XRP Ripple'), 'BNB': ('عملة بينانس BNB', 'BNB coin'),
     'SOL': ('سولانا', 'Solana crypto'), 'TRX': ('ترون TRX', 'TRON TRX'), 'DOGE': ('دوجكوين', 'Dogecoin'), 'ZEC': ('زي كاش', 'Zcash'), 'LINK': ('تشين لينك', 'Chainlink LINK'),
-    'ADA': ('كاردانو', 'Cardano ADA'), 'LTC': ('لايتكوين', 'Litecoin'),
+    'ADA': ('كاردانو', 'Cardano ADA'), 'LTC': ('لايتكوين', 'Litecoin'), 'PARTI': ('بارتي Particle Network', 'Particle Network PARTI'),
 }
 
 
 CG_IDS = {'BTC': 'bitcoin', 'ETH': 'ethereum', 'XRP': 'ripple', 'BNB': 'binancecoin', 'SOL': 'solana', 'TRX': 'tron', 'DOGE': 'dogecoin',
           'ZEC': 'zcash', 'LINK': 'chainlink', 'ADA': 'cardano', 'AVAX': 'avalanche-2', 'DOT': 'polkadot', 'LTC': 'litecoin',
-          'BCH': 'bitcoin-cash', 'NEAR': 'near'}
+          'BCH': 'bitcoin-cash', 'NEAR': 'near', 'PARTI': 'particle-network'}
 
 
 def market_refs(status):
