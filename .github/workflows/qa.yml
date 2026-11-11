@@ -8,7 +8,7 @@ permissions:
   contents: write
 jobs:
   shots:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
       - name: Install browser
         run: |
           mkdir -p /tmp/qa && cd /tmp/qa && npm init -y >/dev/null && npm i playwright@1.47.2 >/dev/null
-          npx playwright install --with-deps chromium >/dev/null
+          npx playwright install --with-deps chromium >/dev/null || (sudo apt-get update -o Acquire::Retries=3 >/dev/null; npx playwright install --with-deps chromium >/dev/null) || npx playwright install chromium >/dev/null
       - name: Screenshots
         run: |
           python3 -m http.server 8099 >/dev/null 2>&1 &
