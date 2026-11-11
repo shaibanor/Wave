@@ -1,0 +1,42 @@
+name: voice
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'ElevenLabs model (leave empty for eleven_multilingual_v2)'
+        required: false
+        default: ''
+      stability:
+        description: 'Stability 0-1 (lower = more natural, higher = steadier)'
+        required: false
+        default: '0.45'
+      force:
+        description: 'Rebuild every clip (true/false)'
+        required: false
+        default: 'false'
+permissions:
+  contents: write
+concurrency:
+  group: pro-data
+  cancel-in-progress: false
+jobs:
+  clips:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build voice clips
+        env:
+          ELEVEN_KEY: ${{ secrets.ELEVEN_KEY }}
+          ELEVEN_VOICE_ID: ${{ secrets.ELEVEN_VOICE_ID }}
+          VOICE_MODEL: ${{ github.event.inputs.model }}
+          VOICE_STABILITY: ${{ github.event.inputs.stability }}
+          VOICE_FORCE: ${{ github.event.inputs.force }}
+        run: python3 scripts/voice_clips.py
+      - name: Commit
+        run: |
+          git config user.name shaibanor
+          git config user.email shaibanor@users.noreply.github.com
+          git add pro/voice
+          git diff --cached --quiet || git commit -m "Voice clips"
+          git pull --rebase -q && git push -q
