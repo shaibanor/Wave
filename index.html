@@ -1058,7 +1058,7 @@ html.lang-en .rd-av{margin:0!important}
 .vs-title{margin:16px 0 0;font-size:.95rem;font-weight:700;color:#E9D7A8;letter-spacing:.03em;padding:4px 16px;border-radius:999px;border:1px solid rgba(201,165,92,.4);background:rgba(10,23,36,.7)}
 @media (prefers-reduced-motion:no-preference){.vscope{animation:vsf 7s ease-in-out infinite}}
 @keyframes vsf{0%,100%{translate:0 0}50%{translate:0 -6px}}
-/* ===== «شيبان يشرح»: زر عائم في كل الصفحات ===== */
+/* ===== «الشرح الصوتي»: زر عائم في كل الصفحات ===== */
 .tk-guide{position:fixed;z-index:9500;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:6px;padding:4px 14px 4px 4px;border-radius:999px;cursor:pointer;font:700 13px var(--f-body,system-ui);color:#E0F2FE;
   background:linear-gradient(135deg,rgba(8,26,42,.94),rgba(10,40,60,.94));border:1px solid rgba(125,211,252,.55);box-shadow:0 10px 26px -10px rgba(0,0,0,.8),0 0 22px -8px rgba(125,211,252,.7)}
 .tk-guide .tg-g{width:46px;height:46px;display:block}
@@ -1068,6 +1068,9 @@ html.ov-open .tk-guide{display:none}
 @media(max-width:560px){.tk-guide{right:10px;padding-inline-end:10px}.tk-guide .tg-t{font-size:12px}}
 .rd-av.gd{left:auto!important;right:14px!important;bottom:calc(84px + env(safe-area-inset-bottom))!important}
 .rd-tag.hp{background:rgba(52,211,153,.18);color:#34d399;border-color:rgba(52,211,153,.45)}
+.bmsg .bspk{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 12px;border-radius:999px;border:1px solid rgba(125,211,252,.45);background:rgba(125,211,252,.1);color:#BAE6FD;font:600 12px var(--f-body,system-ui);cursor:pointer}
+html.tv-open .tk-guide{padding:3px;bottom:calc(40px + env(safe-area-inset-bottom))}
+html.tv-open .tk-guide .tg-t{display:none}
 :root{--vsig:url(data:image/png;base64,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)}
 .vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
 .vx-stage{position:relative;width:220px;height:250px;perspective:900px}
@@ -2439,7 +2442,7 @@ html.locked .gate{display:flex}
     legend(null);overlay();sigPanel();}
 
   /* ---------- legend ---------- */
-  function legend(i){const b=bars(),el=$('cxLeg');if(!b.length||!el)return;const k=i==null||i<0||i>=b.length?b.length-1:i,x=b[k],pv=b[k-1],I=S.I,d=dp(Math.abs(x.c));
+  function legend(i){if(i!=null&&i>=0){S.li=i;S.liT=Date.now();}const b=bars(),el=$('cxLeg');if(!b.length||!el)return;const k=i==null||i<0||i>=b.length?b.length-1:i,x=b[k],pv=b[k-1],I=S.I,d=dp(Math.abs(x.c));
     const ch=pv?(x.c/pv.c-1)*100:0,cls=x.c>=x.o?'up':'down',v=(a,dd=d)=>a&&a[k]!=null?nf(a[k],dd):'—';
     let h=`<span class="cx-dt">${tfmt(x.t)}</span><span class="cx-lo">O <b class="${cls}">${nf(x.o,d)}</b> H <b class="${cls}">${nf(x.h,d)}</b> L <b class="${cls}">${nf(x.l,d)}</b> C <b class="${cls}">${nf(x.c,d)}</b> <b class="${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch.toFixed(2)}%</b>${x.v?` <span>Vol ${nf(x.v,0)}</span>`:''}</span>`;
     const iv=[];if((S.clean?{}:S.ind).ema50)iv.push(['EMA50',v(I.ema50)]);if((S.clean?{}:S.ind).ema200)iv.push(['EMA200',v(I.ema200)]);if((S.clean?{}:S.ind).ema20)iv.push(['EMA20',v(I.ema20)]);if((S.clean?{}:S.ind).bb)iv.push(['BB',v(I.bbU)+' / '+v(I.bbL)]);
@@ -2832,7 +2835,7 @@ html.locked .gate{display:flex}
     L.forEach(x=>{if(S.draw.some(d=>d.type==='hline'&&Math.abs(d.a.p-x.p)<tol))return;S.draw.push(srStyle({type:'hline',base:1,a:{t:last.t,p:x.p}}));add++;});
     if(add){saveDraw();overlay();}}
   async function refresh(){if(!S.active||document.hidden||S.pending)return;loadSum();if(S.ref.kind!=='cx')return;const r=await PRO.data(S.ref);if(!r||!S.active)return;S.data=r.data;draw(true);status();}
-  function show(ref){ui();const same=S.ref&&S.ref.id===ref.id&&S.charts;if(!same)S.pr=null;S.ref=ref;S.active=true;S.sel=-1;if(!same)load();else{draw(true);details();}if(!S.timer)S.timer=setInterval(refresh,60000);}
+  function show(ref){ui();const same=S.ref&&S.ref.id===ref.id&&S.charts;if(!same){S.pr=null;S.li=null;}S.ref=ref;S.active=true;S.sel=-1;if(!same)load();else{draw(true);details();}if(!S.timer)S.timer=setInterval(refresh,60000);try{document.dispatchEvent(new CustomEvent('tk:chart',{detail:{id:ref.id}}));}catch(_){}}
   const RM=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   function cardClip(){const c=$('tvOpen');if(!c)return null;const r=c.getBoundingClientRect(),W=window.innerWidth,H=window.innerHeight;
     return`inset(${Math.max(0,r.top)}px ${Math.max(0,W-r.right)}px ${Math.max(0,H-r.bottom)}px ${Math.max(0,r.left)}px round 18px)`;}
@@ -2848,15 +2851,15 @@ html.locked .gate{display:flex}
     g.animate([{backgroundPosition:'120% 0',opacity:1},{backgroundPosition:'-30% 0',opacity:0}],{duration:1100,delay:200,easing:'ease-out',fill:'both'}).onfinish=()=>g.remove();}
   function open(id){const root=$('txApp');if(!root||!root.hidden)return;ui();root.hidden=false;document.documentElement.classList.add('tv-open');enterFx(root);
     if(!(history.state&&history.state.tv))history.pushState({tv:1},'');
-    const pickId=id||LS.get('tv-sym')||(API().current&&API().current())||'BTC';const r=refOf(pickId)||refOf('BTC');loadSum();show(r);}
+    const cur=API().current&&API().current();const r=refOf(id)||refOf(cur)||refOf(LS.get('tv-sym'))||refOf('BTC');loadSum();show(r);}
   function close(){const root=$('txApp');if(!root||root.hidden||root.dataset.closing)return;const done=()=>{delete root.dataset.closing;root.hidden=true;S.active=false;destroy();};
-    document.documentElement.classList.remove('tv-open');const to=cardClip();
+    document.documentElement.classList.remove('tv-open');try{document.dispatchEvent(new CustomEvent('tk:chartclose'));}catch(_){}const to=cardClip();
     if(RM()||!root.animate||!to){done();return;}root.dataset.closing='1';
     root.animate([{clipPath:'inset(0px 0px 0px 0px round 0px)',opacity:1},{clipPath:to,opacity:.4}],{duration:480,easing:'cubic-bezier(.55,0,.4,1)'}).onfinish=done;}
   window.addEventListener('popstate',()=>{if(!(history.state&&history.state.tv))close();});
   ['gesturestart','gesturechange'].forEach(t=>document.addEventListener(t,e=>{if(document.documentElement.classList.contains('tv-open'))e.preventDefault();},{passive:false}));
   document.addEventListener('touchmove',e=>{if(document.documentElement.classList.contains('tv-open')&&e.touches.length>1)e.preventDefault();},{passive:false});
-  window.CHARTX={open,close,show:r=>show(r),hide:close,cur:()=>{const r=document.getElementById('txApp');return S.ref?{id:S.ref.id,open:!!(r&&!r.hidden)}:null;},get _S(){return location.hostname==="localhost"?S:undefined}};
+  window.CHARTX={state:()=>{const b=S.charts?bars():[];return{id:S.ref&&S.ref.id,kind:S.ref&&S.ref.kind,tf:S.tf,raw:S.raw||[],I:S.I,ind:S.clean?{}:S.ind,sig:!!(S.sig&&!S.clean),li:S.li!=null&&Date.now()-(S.liT||0)<180000&&S.li<b.length-1?S.li:null,ready:!!(S.charts&&b.length&&S.I&&S.raw&&S.I.c&&S.I.c.length===S.raw.length)};},open,close,show:r=>show(r),hide:close,cur:()=>{const r=document.getElementById('txApp');return S.ref?{id:S.ref.id,open:!!(r&&!r.hidden)}:null;},get _S(){return location.hostname==="localhost"?S:undefined}};
   const ob=$('tvOpen');if(ob)ob.addEventListener('click',()=>open());
 })();
 
@@ -3971,11 +3974,12 @@ html.locked .gate{display:flex}
 
   /* ---------- router ---------- */
   const CTX={last:null};
-  async function answer(q,el){const t=norm(q);if(!t)return OUTSCOPE();
+  let ANS_ID=null;
+  async function answer(q,el){ANS_ID=null;const t=norm(q);if(!t)return OUTSCOPE();
     const ids=findAssets(t),tf=tfOf(t);
     const follow=has(t,I.plan)||has(t,I.why)||has(t,I.bull)||has(t,I.bear)||has(t,I.sit)||(has(t,I.yes)&&t.split(' ').length<=3);
     if(!ids.length&&!follow){const sh=siteHit(t);if(sh&&!MK.test(t.replace(/(تحليل|شارت)/g,'')))return siteAns(sh);}
-    if(!ids.length&&CTX.last&&follow){ids.push(CTX.last);}
+    if(!ids.length&&CTX.last&&follow){ids.push(CTX.last);}ANS_ID=ids[0]||null;
     if(!ids.length&&follow&&!CTX.last)return`<p>عن أي أصل تقصد؟ اكتب اسمه، مثل: «وين أشتري أرامكو» أو «وش وضع البيتكوين».</p>`+MORE();
     const gl=GLOSS.find(([r])=>r.test(t));
     const ZQ=/(دعم قوي|دعوم قوي|الدعوم القوي|مناطق (الشراء|الدعم|ارتداد)|منطقة (شراء|دعم) قوي|ارتداد|مناطق آمن|منطقة آمن|امنه|strong support|support zone|bounce)/;
@@ -4022,7 +4026,7 @@ html.locked .gate{display:flex}
     const d=add('bot','<span class="btyp"><i></i><i></i><i></i></span>');const t0=Date.now();let h;
     try{h=await answer(q,d);}catch(e){console.error(e);h='<p>حدث خطأ أثناء التحليل. حاول مرة أخرى.</p>';}
     const w=350-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w));
-    d.innerHTML=h;log.scrollTop=Math.max(0,d.offsetTop-8);busy=false;}
+    d.innerHTML=h;if(window.TIKO_RADAR&&TIKO_RADAR.talk&&!document.documentElement.classList.contains('lang-en')){const sp=document.createElement('button');sp.type='button';sp.className='bspk';sp.dataset.spk=ANS_ID||'';sp.textContent='🔊 اسمع الشرح';d.appendChild(sp);}log.scrollTop=Math.max(0,d.offsetTop-8);busy=false;}
   function open(){panel.hidden=false;btn.setAttribute('aria-expanded','true');document.documentElement.classList.add('bot-on');tip.hidden=true;LS.set('bot-seen','1');
     if(!log.children.length)add('bot',WELCOME());setTimeout(()=>{if(matchMedia('(min-width:700px)').matches)inp.focus();},60);}
   function close(){panel.hidden=true;btn.setAttribute('aria-expanded','false');document.documentElement.classList.remove('bot-on');btn.focus();}
@@ -4030,7 +4034,7 @@ html.locked .gate{display:flex}
   $('botClose').addEventListener('click',close);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)close();});
   form.addEventListener('submit',e=>{e.preventDefault();const v=inp.value;inp.value='';ask(v);});
-  log.addEventListener('click',e=>{const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
+  log.addEventListener('click',e=>{const sp=e.target.closest('.bspk');if(sp){const m=sp.closest('.bmsg'),c=m.cloneNode(true);c.querySelectorAll('.bspk,button,small').forEach(x=>x.remove());TIKO_RADAR.talk(c.textContent,sp.dataset.spk);return;}const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
     const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='cube'){const c=$('vxCube');if(c){close();c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.click(),500);}}else if(g.dataset.go==='tv'&&window.CHARTX){close();CHARTX.open(CTX.last||API().current());}return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
   window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
@@ -5340,6 +5344,8 @@ html.locked .gate{display:flex}
     return o;}
   let VQ=0,VT=null,VEL=null,VRAF=0,AVG=null,UNL=false;
   function unlockAudio(){try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback';}catch(_){}
+    try{const X=window.AudioContext||window.webkitAudioContext;if(X){if(!VCL.ctx)VCL.ctx=new X();if(VCL.ctx.state!=='running')VCL.ctx.resume();const b=VCL.ctx.createBuffer(1,1,22050),q=VCL.ctx.createBufferSource();q.buffer=b;q.connect(VCL.ctx.destination);q.start(0);}}catch(_){}
+    if(!VCL.ok&&VCL.idx===null)VCL.load();
     if(UNL)return;UNL=true;try{const a=new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqpAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');a.setAttribute('playsinline','');a.volume=0;const p=a.play();p&&p.catch(()=>{});}catch(_){}}
   /* The owner's voice: short clips made once from his cloned voice (pro/voice/ar), stitched in order.
      Fixed phrases are whole clips; numbers and times are built word by word. Missing clips fall back to the browser voice. */
@@ -5358,7 +5364,7 @@ html.locked .gate{display:flex}
       this.timers.push(setTimeout(()=>o.end(),(t-t0)*1000+100));return true;}};
   // the dashed line from the voice box to the item being read
   const TG=['header','.rd-px .b','.rd-px .s','.rd-px .x','.rd-sc','.rd-time'];let PC=null;
-  function target(card,i){if(!card)return null;let el=card.querySelector(TG[i]||'header');if(i===4){const d=card.querySelector('details');if(d&&!d.open)d.open=true;}return el||card.querySelector('header');}
+  function target(card,i){if(!card)return null;if(card.els){const e=card.els[i];return e&&e.isConnected&&e.getClientRects().length?e:null;}let el=card.querySelector(TG[i]||'header');if(i===4){const d=card.querySelector('details');if(d&&!d.open)d.open=true;}return el||card.querySelector('header');}
   // the link from the voice globe to the item being read: a calm sky-blue current with small nodes flowing along it
   const NODES=Array.from({length:9},(_,i)=>({o:i/9,sp:.32+((i*37)%10)/40,r:1.6+((i*13)%5)/3}));
   function lineLoop(){VRAF=0;const box=document.querySelector('#rdAv .av-box'),svg=document.getElementById('rdAvL');if(!box||!svg||!VEL){if(svg)svg.classList.remove('on');return;}
@@ -5380,7 +5386,7 @@ html.locked .gate{display:flex}
     const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,W,W);const c=W/2,r0=W*.33,N=48;g.lineCap='round';
     for(let i=0;i<N;i++){const an=i/N*6.2832,k=Math.abs(Math.sin(now*7+i*.9)*Math.sin(now*3.3+i*.37)),len=W*.03+W*.11*k;g.strokeStyle=`rgba(47,224,143,${.35+.6*k})`;g.lineWidth=2.2;
       g.beginPath();g.moveTo(c+Math.cos(an)*r0,c+Math.sin(an)*r0);g.lineTo(c+Math.cos(an)*(r0+len),c+Math.sin(an)*(r0+len));g.stroke();}}
-  function point(card,i){VEL=target(card,i);if(VEL){const r=VEL.getBoundingClientRect();if(r.top<70||r.bottom>innerHeight-170)VEL.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});}if(!VRAF)VRAF=requestAnimationFrame(lineLoop);}
+  function point(card,i){VEL=target(card,i);if(VEL){const r=VEL.getBoundingClientRect();if(card&&card.els?(r.top<innerHeight*.12||r.top>innerHeight*.5):(r.top<70||r.bottom>innerHeight-170))VEL.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});}if(!VRAF)VRAF=requestAnimationFrame(lineLoop);}
   function avatar(on){const a=document.getElementById('rdAv');if(!a)return;a.classList.toggle('talk',!!on);if(AVG)AVG.kick();if(!on){VEL=null;PC=null;const cv=document.querySelector('#rdAv .av-cv');if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);const svg=document.getElementById('rdAvL');if(svg)svg.classList.remove('on');setTimeout(()=>{if(!a.classList.contains('talk'))a.hidden=true;},1200);}}
   function speak(r,card){if(!r)return;say(sayText(r).filter(Boolean),card,RD(TAB));}
   function say(raw,card,D){hush();unlockAudio();if(location.hostname==='localhost')window.__lastSay=raw;const parts=raw.map(x=>x.replace(/[«»]/g,'')),id=++VQ,av=document.getElementById('rdAv');if(av){av.hidden=false;av.classList.toggle('gd',D===GD);av.style.setProperty('--rc',D.color);if(AVG){AVG.tint(D.color,D.accent);AVG.kick();}}
@@ -5481,11 +5487,13 @@ html.locked .gate{display:flex}
       const b=e.target.closest('[data-open]');if(b){close();const id=b.dataset.open;try{if(window.CHARTX)CHARTX.open(id);else if(window.WAVE_API)WAVE_API.open(id);}catch(_){}}});
     addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('rdo').hidden)close();});
     window.TIKO_RADAR.go=go;}
-  /* ---------- «شيبان يشرح»: the owner's voice explains the asset open on any page ---------- */
+  /* ---------- «الشرح الصوتي»: the owner's voice explains the asset open on any page ---------- */
   const GD={color:'125,211,252',accent:'233,207,143'};
-  function openAsset(){const A=(window.WAVE_API&&WAVE_API.assets)||[],f=id=>id&&A.find(x=>x.id===id);let r=null;
-    try{const c=window.CHARTX&&CHARTX.cur&&CHARTX.cur();if(c&&c.open)r=f(c.id);}catch(_){}
-    if(!r)try{const p=window.PRO&&PRO.cur&&PRO.cur();if(p)r=f(p.id);}catch(_){}return r;}
+  function assetOf(id){const A=(window.WAVE_API&&WAVE_API.assets)||[];return id&&A.find(x=>x.id===id)||null;}
+  function chartOpen(){try{const c=window.CHARTX&&CHARTX.cur&&CHARTX.cur();return c&&c.open?c:null;}catch(_){return null;}}
+  function openAsset(){let r=null;const c=chartOpen();if(c)r=assetOf(c.id);
+    if(!r)try{r=assetOf(window.WAVE_API&&WAVE_API.current&&WAVE_API.current());}catch(_){}
+    if(!r)try{const p=window.PRO&&PRO.cur&&PRO.cur();if(p&&p.active)r=assetOf(p.id);}catch(_){}return r;}
   async function explain(a){const D=a.pro==='cx'?await cxSite(a.id):a.pro==='ix'?await ixData(a.id):await stData(a.pro,a.id);if(!D||!D.h4||D.h4.length<80)return null;
     let b=D.h4.slice();const ns=Date.now()/1000;if(a.pro==='cx'&&b[b.length-1].t+H4>ns)b=b.slice(0,-1);
     let price=a.pro==='cx'?D.h4[D.h4.length-1].c:b[b.length-1].c;const lb=D.live&&D.live.bars;if(a.pro!=='cx'&&lb&&lb.length)price=lb[lb.length-1][1];
@@ -5499,16 +5507,79 @@ html.locked .gate{display:flex}
     const pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
     return[nameSay(a,nm(a))+'.',`«السعر الحين» ${pa(price)}.`,`${ck(dUp?'الاتجاه اليومي صاعد':'الاتجاه اليومي نازل')}، ${ck(up4?'وعلى الأربع ساعات السعر فوق متوسط خمسين':'وعلى الأربع ساعات السعر تحت متوسط خمسين')}.`,
       `${ck(rs)}.`,`«أقرب دعم» ${pa(S1)}، «وأقرب مقاومة» ${pa(R1)}.`,`${ck(tk)}.`,ck(joke({blocking:nearR,r:R_,flush:R_<32,dDown:!dUp},a.id))+'.','«هذا شرح تعليمي، والقرار لك».'];}
+  /* reading what is on the main page: the explanation walks down the asset panel, part by part */
+  const num=t=>{const m=String(t||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).match(/\d[\d,]*(\.\d+)?/g);return m?m.map(x=>+x.replace(/,/g,'')):[];};
+  async function pageTalk(a){const raw=await explain(a);if(!raw)return null;const q=x=>document.querySelector(x),pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
+    const els=[q('#hero .asset-head'),q('#hero .price-row')||q('#live'),q('#hero .note'),q('#psum')||q('#hero .note'),q('#hero .zc'),q('#hero .say')];
+    const extra=[],xe=[];const sy=q('#hero .say');
+    if(sy){const t=sy.textContent,i=t.indexOf('بين'),v=i>=0?num(t.slice(i)):[];if(v.length>=2&&v[0]>0&&v[1]>0){extra.push(`«توقع التحليل لإغلاق الأسبوع بين» ${pa(Math.min(v[0],v[1]))} «و» ${pa(Math.max(v[0],v[1]))}.`);xe.push(sy);}}
+    const tr=q('#hero .trust');if(tr){const m=tr.textContent.match(/(\d+)\s*\/\s*(\d+)/);if(m&&+m[2]>0&&+m[1]<=+m[2]){extra.push(`«وطريقة التحليل أصابت في» ${sayN(+m[1])} «من آخر» ${sayN(+m[2])} «أسبوع».`);xe.push(tr);}}
+    const out=raw.slice(0,6).concat(extra,raw.slice(6)),E=els.concat(xe,[els[5]||els[0],tr||els[0]]);return{raw:out,els:E};}
+  /* reading the TikoCharting screen: the candle you picked, the indicators you turned on, then the bottom line */
+  const TFW={'1h':'على فريم الساعة','4h':'على فريم الأربع ساعات','1d':'على الفريم اليومي','1w':'على الفريم الأسبوعي','1M':'على الفريم الشهري'};
+  const IW={ema20:['السعر فوق متوسط عشرين','السعر تحت متوسط عشرين'],ema50:['السعر فوق متوسط خمسين','السعر تحت متوسط خمسين'],ema200:['السعر فوق متوسط ميتين','السعر تحت متوسط ميتين'],
+    sma20:['السعر فوق المتوسط البسيط عشرين','السعر تحت المتوسط البسيط عشرين'],sma50:['السعر فوق المتوسط البسيط خمسين','السعر تحت المتوسط البسيط خمسين'],
+    st:['السوبر ترند أخضر، يعني الاتجاه صاعد','السوبر ترند أحمر، يعني الاتجاه نازل'],
+    bb:['السعر طالع فوق البولنجر العلوي، يعني تمدد قوي وممكن يهدأ','السعر نازل تحت البولنجر السفلي، يعني ضغط بيع قوي وممكن يرتد','السعر داخل نطاق البولنجر، حركة طبيعية'],
+    kc:['السعر فوق قناة الكيلتنر، زخم شرائي قوي','السعر تحت قناة الكيلتنر، زخم بيعي قوي','السعر داخل قناة الكيلتنر'],
+    don:['السعر عند أعلى قمة لعشرين شمعة، يعني اختراق','السعر عند أقل قاع لعشرين شمعة، يعني كسر','السعر في وسط قناة الدونشيان'],
+    ichi:['السعر فوق سحابة الإيشيموكو، وهذا إيجابي','السعر تحت سحابة الإيشيموكو، وهذا سلبي','السعر داخل سحابة الإيشيموكو، يعني حيرة'],
+    rsi:['يعني تشبع شرائي، الصعود صار مكلف','يعني تشبع بيعي، النزول كان قوي','يعني متوازن'],
+    macd:['الماكد إيجابي ويقوى، الزخم مع المشترين','الماكد إيجابي بس يضعف، انتبه','الماكد سلبي ويقوى، الزخم مع البائعين','الماكد سلبي بس يضعف، ممكن يقرب ارتداد'],
+    stoch:['الستوكاستك فوق ثمانين، تشبع شرائي','الستوكاستك تحت عشرين، تشبع بيعي','الستوكاستك في المنتصف'],
+    obv:['حجم التداول يدعم الصعود','حجم التداول يميل للبيع'],cci:['السي سي آي فوق مية، زخم شرائي قوي','السي سي آي تحت سالب مية، زخم بيعي قوي','السي سي آي محايد']};
+  function chartTalk(st){const a=assetOf(st.id)||{id:st.id,name:st.id,pro:st.kind},b=st.raw,I=st.I||{},n=b.length-1;if(n<30)return null;
+    const pick=st.li!=null&&st.li>=0&&st.li<n,k=pick?st.li:n,x=b[k],pv=b[k-1],c=x.c,ch=pv?(x.c/pv.c-1)*100:0,pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
+    const at=(arr,j=k)=>arr&&arr[j]!=null?arr[j]:null,T=s=>document.querySelector('#txApp '+s);
+    const main=T('#cxMain'),panes=T('#cxPanes'),leg=T('#cxLeg'),top=T('.tv-top')||main;
+    const raw=[nameSay(a,nm(a))+(TFW[st.tf]?` «${TFW[st.tf]}»`:'')+'.'],els=[top];
+    if(pick){raw.push(`«الشمعة اللي اخترتها فتحت على» ${pa(x.o)}، «وقفلت على» ${pa(c)}، «${ch>=0?'يعني صعدت':'يعني نزلت'}» ${sayPct(ch)}.`);els.push(leg);
+      raw.push(`«وأعلى سعر فيها» ${pa(x.h)}، «وأقل سعر» ${pa(x.l)}.`);els.push(leg);}
+    else{raw.push(Math.abs(ch)<0.05?`«السعر الحين» ${pa(c)}، «والشمعة الحالية ثابتة تقريبا».`:`«السعر الحين» ${pa(c)}، «${ch>=0?'والشمعة الحالية خضراء بنسبة':'والشمعة الحالية حمراء بنسبة'}» ${sayPct(ch)}.`);els.push(leg);}
+    let on=Object.keys(st.ind||{}).filter(q=>st.ind[q]&&IW[q]);let told=0;if(!on.length&&!(st.ind&&st.ind.atr)){on=['ema50','ema200','rsi','macd'];raw.push(ck('مؤشراتك مطفية، بس خلني أقرأ لك الأساسية')+'.');els.push(main);}
+    for(const q of on){if(told>=6)break;let w=null;const P=['rsi','macd','stoch','obv','cci','atr'].includes(q)&&panes&&panes.offsetHeight>20?panes:main;
+      if(/^(ema|sma)/.test(q)){const v=at(I[q]);if(v!=null)w=ck(IW[q][c>v?0:1]);}
+      else if(q==='st'){const v=at(I.st);if(v!=null)w=ck(IW.st[c>v?0:1]);}
+      else if(q==='bb'||q==='kc'||q==='don'){const U=at(I[q+'U']),Lo=at(I[q+'L']);if(U!=null&&Lo!=null)w=ck(IW[q][q==='don'?(x.h>=U?0:x.l<=Lo?1:2):(c>U?0:c<Lo?1:2)]);}
+      else if(q==='ichi'){const A2=at(I.spanA,k-26),B2=at(I.spanB,k-26);if(A2!=null&&B2!=null)w=ck(IW.ichi[c>Math.max(A2,B2)?0:c<Math.min(A2,B2)?1:2]);}
+      else if(q==='rsi'){const v=at(I.rsi);if(v!=null)w=`«مؤشر القوة النسبية» ${sayN(Math.round(v))}، ${ck(IW.rsi[v>70?0:v<30?1:2])}`;}
+      else if(q==='macd'){const h=I.macd&&I.macd.hist,v=at(h),v0=at(h,k-1);if(v!=null&&v0!=null)w=ck(IW.macd[v>=0?(v>=v0?0:1):(v<=v0?2:3)]);}
+      else if(q==='stoch'){const v=at(I.stK);if(v!=null)w=ck(IW.stoch[v>80?0:v<20?1:2]);}
+      else if(q==='obv'){const v=at(I.obv),v0=at(I.obv,k-10);if(v!=null&&v0!=null)w=ck(IW.obv[v>=v0?0:1]);}
+      else if(q==='cci'){const v=at(I.cci);if(v!=null)w=ck(IW.cci[v>100?0:v<-100?1:2]);}
+      if(w){raw.push(w+'.');els.push(P||main);told++;}}
+    if(on.includes('atr')||(st.ind&&st.ind.atr)){const v=at(I.atr);if(v!=null&&told<7){raw.push(`«متوسط حركة الشمعة» ${sayPct(v/c*100)}.`);els.push(panes||main);told++;}}
+    if(!told)raw.push(ck('ما فيه مؤشرات مفعلة على الشارت، فعّلها من القائمة وأنا أشرحها لك')+'.'),els.push(main);
+    if(st.sig)raw.push(ck('إشارات تيكو مفعلة، الأسهم على الشارت تبين نقاط الارتداد والاختراق')+'.'),els.push(main);
+    let sc=0;const e50=at(I.ema50),e200=at(I.ema200),r=at(I.rsi),mh=at(I.macd&&I.macd.hist);
+    if(e50!=null)sc+=c>e50?1:-1;if(e200!=null)sc+=c>e200?1:-1;if(mh!=null)sc+=mh>0?1:-1;if(r!=null)sc+=r>55&&r<70?1:r<45?-1:0;
+    raw.push(ck(sc>=2?'الخلاصة: أغلب الإشارات إيجابية، بس لا تشتري وهو طاير، انتظر تراجع':sc<=-2?'الخلاصة: أغلب الإشارات سلبية، الأفضل تنتظر لين يبان ارتداد':'الخلاصة: الإشارات متضاربة، والانتظار هنا قرار بحد ذاته')+'.');els.push(main);
+    raw.push(ck(joke({r,flush:r!=null&&r<32,dDown:sc<0},a.id))+'.');els.push(main);
+    raw.push(pick?'«هذا شرح تعليمي، والقرار لك».':ck('حرّك الشارت واختر أي شمعة واضغطني، وأشرحها لك')+'.');els.push(pick?main:main);
+    return{raw,els};}
+  // the chart reports its state: wait until the picked asset's candles are drawn
+  async function chartState(id,ms=9000){const t0=Date.now();while(Date.now()-t0<ms){try{const st=CHARTX.state&&CHARTX.state();if(st&&st.ready&&(!id||st.id===id))return st;}catch(_){}await new Promise(r=>setTimeout(r,250));}return null;}
+  function guideBusy(b,on){b.classList.toggle('busy',on);clearInterval(b._w);if(!on)return;let t0=Date.now();
+    b._w=setInterval(()=>{const av=document.getElementById('rdAv');if(av&&av.classList.contains('talk'))t0=Date.now();else if(Date.now()-t0>4000){clearInterval(b._w);b.classList.remove('busy');}},400);}
+  async function guideRun(auto){const b=document.getElementById('tkGuide');if(!b)return;unlockAudio();guideBusy(b,true);let job=null;
+    try{const c=chartOpen();if(c){const st=await chartState(auto?c.id:null,auto?9000:2500);if(st)job=chartTalk(st);}
+      if(!job&&!c){const a=openAsset();if(a)job=await pageTalk(a);}}catch(e){if(location.hostname==='localhost')console.error(e);}
+    if(!job){if(auto){guideBusy(b,false);return;}job={raw:['«اختر سهم أو عملة من القائمة، وأنا أشرح لك».'],els:[]};}
+    if(location.hostname==='localhost')window.__lastEls=job.els.map(e=>e?(e.id||e.className):null);
+    say(job.raw,{els:job.els},GD);}
   function mountGuide(){if(document.getElementById('tkGuide'))return;const b=document.createElement('button');b.type='button';b.id='tkGuide';b.className='tk-guide';
-    b.innerHTML='<canvas class="tg-g" aria-hidden="true"></canvas><span class="tg-t">شيبان يشرح</span>';b.setAttribute('aria-label','شيبان يشرح السهم أو العملة المفتوحة');document.body.appendChild(b);
+    b.innerHTML='<canvas class="tg-g" aria-hidden="true"></canvas><span class="tg-t">الشرح الصوتي</span>';b.setAttribute('aria-label','الشرح الصوتي للسهم أو العملة المفتوحة');document.body.appendChild(b);
     globe(b.querySelector('.tg-g'),()=>b.classList.contains('busy')?'scan':'idle',{color:GD.color,accent:GD.accent,av:true});
-    b.addEventListener('click',async()=>{if(b.classList.contains('busy')){b.classList.remove('busy');hush();return;}unlockAudio();
-      const a=openAsset();b.classList.add('busy');if(!a){say(['«اختر سهم أو عملة من القائمة، وأنا أشرح لك».'],null,GD);setTimeout(()=>b.classList.remove('busy'),3500);return;}
-      let raw=null;try{raw=await explain(a);}catch(_){}if(!raw){b.classList.remove('busy');return;}say(raw,null,GD);
-      const w=setInterval(()=>{const av=document.getElementById('rdAv');if(!av||!av.classList.contains('talk')){if(Date.now()-t0>4000){clearInterval(w);b.classList.remove('busy');}}else t0=Date.now()-3000;},500);let t0=Date.now();});}
-  window.TIKO_RADAR={scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
+    b.addEventListener('click',()=>{if(b.classList.contains('busy')){guideBusy(b,false);hush();return;}guideRun(false);});
+    // entering TikoCharting (or switching its asset) starts the explanation by itself
+    let last='';document.addEventListener('tk:chart',e=>{if(EN())return;const id=e.detail&&e.detail.id;if(!id||id===last)return;last=id;unlockAudio();hush();guideRun(true);});
+    document.addEventListener('tk:chartclose',()=>{last='';guideBusy(b,false);hush();});}
+  // read any text aloud (the smart turtle's answers); the owner's voice where clips exist, otherwise the browser voice
+  function talk(text,aid){unlockAudio();const a=assetOf(aid);if(a){explain(a).then(raw=>raw?say(raw,null,GD):sayPlain());return;}sayPlain();
+    function sayPlain(){const t=String(text||'').replace(/\s+/g,' ').trim();if(!t)return;const parts=t.split(/(?<=[.!؟?])\s+/).filter(Boolean).slice(0,14);say(parts,null,GD);}}
+  window.TIKO_RADAR={talk,guide:()=>guideRun(false),scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
-</script><script>(function(){var B='26a22bdb4a';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='44a0c4ab83';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
