@@ -78,13 +78,13 @@ def trim(raw, dst):
 def probe():
     """Speak one sample sentence with each candidate model so the owner can pick the voice that sounds like him."""
     text = 'منطقة الشراء بين أربعة وسبعين ألف دُولار وأربعة وسبعين ألف وثلاث مية دُولار، وتبيع على خمسة وسبعين ألف دُولار، يعني ربحك اثنين بالمية. تقدر تشتري الحين.'
-    os.makedirs('probe', exist_ok=True)
+    pd = os.path.join(ROOT, 'probe'); os.makedirs(pd, exist_ok=True)
     cands = [('eleven_v4', ''), ('eleven_v3', ''), ('eleven_v3', '[Saudi accent] '), ('eleven_multilingual_v2', ''), ('eleven_turbo_v2_5', ''), ('eleven_flash_v2_5', '')]
     for i, (m, pre) in enumerate(cands):
         st = {'stability': 0.5, 'similarity_boost': 0.9}
         try:
             raw = _post(pre + text, m, st, None)
-            open(f'probe/{i+1}_{m}{"_saudi_tag" if pre else ""}.mp3', 'wb').write(raw); print('probe ok', m, pre)
+            open(f'{pd}/{i+1}_{m}{"_saudi_tag" if pre else ""}.mp3', 'wb').write(raw); print('probe ok', m, pre)
         except urllib.error.HTTPError as e:
             print('probe fail', m, e.code, e.read()[:160].decode(errors='ignore'))
 
