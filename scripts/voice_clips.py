@@ -4,7 +4,7 @@ Reads pro/voice/clips.json (fixed phrases, names, number and time words), asks E
 with the owner's cloned voice, trims the silence at both ends, and writes pro/voice/ar/<hash>.mp3 plus
 pro/voice/ar/index.json (text -> file). Existing clips are kept, so a re-run only pays for new or changed items.
 Needs the repository secrets ELEVEN_KEY and ELEVEN_VOICE_ID; neither is ever written to the site."""
-import hashlib, json, os, subprocess, sys, time, urllib.request, urllib.error
+import hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.error
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pro', 'voice')
 OUT = os.path.join(ROOT, 'ar')
@@ -34,17 +34,27 @@ def tts(text):
             raise SystemExit(f'ElevenLabs error {e.code}: {msg.decode(errors="ignore")}')
 
 
+def ffmpeg():
+    exe = shutil.which('ffmpeg')
+    if exe:
+        return exe
+    import imageio_ffmpeg  # static ffmpeg build installed by the workflow
+    return imageio_ffmpeg.get_ffmpeg_exe()
+
+
 def trim(raw, dst):
     tmp = dst + '.in.mp3'
     open(tmp, 'wb').write(raw)
     f = 'silenceremove=start_periods=1:start_threshold=-42dB:start_silence=0.03,areverse,silenceremove=start_periods=1:start_threshold=-42dB:start_silence=0.06,areverse'
-    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp, '-af', f, '-ac', '1', '-b:a', '64k', dst], check=True)
+    subprocess.run([FF, '-y', '-loglevel', 'error', '-i', tmp, '-af', f, '-ac', '1', '-b:a', '64k', dst], check=True)
     os.remove(tmp)
 
 
 def main():
     if not KEY or not VOICE:
         sys.exit('Missing ELEVEN_KEY or ELEVEN_VOICE_ID secret.')
+    global FF
+    FF = ffmpeg()
     inv = json.load(open(os.path.join(ROOT, 'clips.json'), encoding='utf-8'))
     items = inv['phrases'] + inv['words']
     os.makedirs(OUT, exist_ok=True)
