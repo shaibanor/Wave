@@ -5265,7 +5265,11 @@ html.locked .gate{display:flex}
     const h=Math.floor(r/100),rr=r%100;if(h)P.push(HU[h]);if(rr)P.push(w99(rr));return P;}
   const sayN=n=>numParts(n).map((p,i)=>ck(i?'و'+p:p)).join(' ');
   function sayMoney(v,pro){if(v==null||!isFinite(v))return'';const sa=pro==='sa',cur=ck(sa?'ريال':'دولار');
-    if(v>=100)return`${sayN(v)} ${cur}`;
+    if(v>=1000)return`${sayN(v)} ${cur}`;
+    if(!sa&&v>=1){let i=Math.floor(v),c=Math.round((v-i)*100);if(c===100){i++;c=0;}return c?`${sayN(i)} ${cur} ${ck('و'+w99(c))} ${ck('سنت')}`:`${sayN(i)} ${cur}`;}
+    if(!sa&&v>=.1)return`${sayN(Math.round(v*100))} ${ck('سنت')}`;
+    if(!sa){const e=Math.floor(Math.log10(v)),z=-e-1,two=Math.round(v*Math.pow(10,z+2)),dd=two>=100?10:two,zs=z<=0?'':ck(z===1?'صفر':z===2?'صفرين':`${TH[z]||U[z]} أصفار`);
+      return`${ck('صفر')} ${zs} ${sayN(dd%10===0&&dd>=10?dd/10:dd)} ${ck('سنت')}`.replace(/\s+/g,' ');}
     if(sa){const i=Math.floor(v),c=Math.round((v-i)*100);return c?`${sayN(i)} ${cur} ${ck('و'+numParts(c).join(' و'))} ${ck('هللة')}`:`${sayN(i)} ${cur}`;}
     const f=fmt(v);let[ip,dp]=f.replace(/,/g,'').split('.');dp=(dp||'').replace(/0+$/,'');if(!dp)return`${sayN(+ip)} ${cur}`;
     const z=(dp.match(/^0*/)||[''])[0].length,rest=dp.slice(z),zs=z===0?'':ck(z===1?'صفر':z===2?'صفرين':`${TH[z]||U[z]} أصفار`);
@@ -5283,8 +5287,12 @@ html.locked .gate{display:flex}
     // «…» marks a fixed phrase recorded as one clip in the owner's voice; other words are number and time words
     const when=t.mode==='now'?`«تقدر تشتري الحين»${t.buyTo?' «لين الساعة» '+tq(t.buyTo):''}، «وبيعك قبل الساعة» ${tq(t.exitBy)}.`:t.mode==='limit'?`«حط أمر شراء عند» ${pa(r.buy)}، «ويظل لين الساعة» ${tq(t.buyTo)}.`:t.mode==='next'?`«تشتري مع بداية الشمعة الجاية، الساعة» ${tq(t.buyAt)}.`:t.mode==='trig'?`«ما تشتري إلا إذا قفلت شمعة الساعة» ${tq(t.closeAt)} «تحت» ${pa(t.trig)}.`:r.wt==='up'?`«ما تشتري إلا إذا قفلت شمعة ساعة فوق» ${pa(r.buy)}.`:'';
     const SC=scen(r).map(x=>ck(x)).join(' ');
-    return[`«${D.ar}». «${n}».`,`«منطقة الشراء بين» ${pa(zoneLo)} «و» ${pa(r.buy)}.`,`«وتبيع على» ${pa(r.tgt)}، «يعني ربحك» ${sayPct(r.tp)}.`,`«والوقف على» ${pa(r.stop)}، «يعني خسارتك» ${sayPct(r.sl)}.`,SC,when];}
+    return[nameSay(r.a,n)+'.',`«منطقة الشراء بين» ${pa(zoneLo)} «و» ${pa(r.buy)}.`,`«وتبيع على» ${pa(r.tgt)}، «يعني ربحك» ${sayPct(r.tp)}.`,`«والوقف على» ${pa(r.stop)}، «يعني خسارتك» ${sayPct(r.sl)}.`,SC,when];}
   // the scenario changes with the setup: oversold depth, the drop, the daily trend, resistance on the way
+  const LET={A:'إيه',B:'بي',C:'سي',D:'دي',E:'إي',F:'إف',G:'جي',H:'إتش',I:'آي',J:'جيه',K:'كيه',L:'إل',M:'إم',N:'إن',O:'أو',P:'بي',Q:'كيو',R:'آر',S:'إس',T:'تي',U:'يو',V:'في',W:'دبليو',X:'إكس',Y:'واي',Z:'زد'};
+  function nameSay(a,n){const has=t=>VCL.idx&&VCL.idx[t];if(!VCL.idx||has(n))return ck(n);
+    if(a.ext&&a.name&&has(a.name))return ck(a.name);
+    const sp=String(a.id||n).toUpperCase().split('').map(ch=>LET[ch]||(/\d/.test(ch)?U[+ch]:'')).filter(Boolean);return sp.map(ck).join(' ');}
   const SCN={rsi:'السوق مضغوط بقوة والمؤشر في تشبع بيعي واضح، والارتداد هنا وارد، بس خلك منتبه',drop:'نزل نزلة حادة في آخر كم شمعة، وعادةً يرجع يتنفس شوي قبل لا يكمل',up:'الاتجاه العام صاعد، وهالنزلة تصحيح، فالارتداد فرصته أحسن',down:'الاتجاه العام نازل، فالارتداد يكون قصير، خذ ربحك أول ما يلمس الهدف',
     base:'بعد هالنزلة نتوقع ارتداد بسيط خلال الشمعة، وإذا ما وصل الهدف تطلع مع قفلتها',block:'فيه مقاومة قريبة قبل الهدف، لا تطمع، وإذا تعثر عندها اطلع',
     pSup:'السعر جالس على الدعم والاتجاه معك، والدخول هنا مريح',pOver:'السعر في تشبع بيعي وقريب من الدعم، ونتوقع يرتد لين المقاومة',pLim:'السعر بعيد شوي عن الدعم، الأفضل تحط أمرك تحت وتخليه ينزل لك',pUp:'الاتجاه نازل، لا تستعجل، انتظر شمعة ساعة تقفل فوق السعر المحدد',pDip:'انتظر السعر ينزل للدعم وتبين شمعة ساعة خضراء، بعدها ادخل'};
@@ -5434,5 +5442,5 @@ html.locked .gate{display:flex}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
-</script><script>(function(){var B='62f80a82e6';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='07f60918ed';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
