@@ -101,6 +101,7 @@ def main():
     inv = json.load(open(os.path.join(ROOT, 'clips.json'), encoding='utf-8'))
     items = inv['phrases'] + inv.get('words', [])
     say = inv.get('say', {})
+    say2 = inv.get('say2', {})  # pronunciation fixes: a clip is remade when one of these words is in it
     # coins listed on Binance that have no Arabic name yet: spoken as a word, not letter by letter
     try:
         with urllib.request.urlopen('https://data-api.binance.vision/api/v3/ticker/24hr?type=MINI', timeout=30) as r:
@@ -124,10 +125,12 @@ def main():
     tag = f'{MODEL}|{STAB}|v2'
     made = 0
     for t in items:
-        h = hashlib.sha1(f'{tag}|{t}'.encode()).hexdigest()[:12] + '.mp3'
+        fix = [w for w in t.replace('،', ' ').split() if w in say2]
+        key = f'{tag}|{t}' + (('|p2|' + '|'.join(say2[w] for w in fix)) if fix else '')
+        h = hashlib.sha1(key.encode()).hexdigest()[:12] + '.mp3'
         if not FORCE and idx['clips'].get(t) == h and os.path.exists(os.path.join(OUT, h)):
             continue
-        spoken = ' '.join(say.get(w, w) for w in t.split(' '))
+        spoken = ' '.join(say2.get(w.rstrip('،'), say.get(w, w)) + ('،' if w.endswith('،') and w.rstrip('،') in say2 else '') for w in t.split(' '))
         trim(tts(spoken, len(t) <= 28), os.path.join(OUT, h))
         idx['clips'][t] = h
         made += 1

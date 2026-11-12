@@ -2243,7 +2243,7 @@ html.locked .gate{display:flex}
     else{L.pts=r.pts;L.prev=r.prev;L.hi=r.hi??null;L.lo=r.lo??null;L.upd=r.upd||null;L.day=r.day||null;L.anim=null;}
     head();loop();}
 
-  window.LIVE={
+  window.LIVE={price:()=>L.ref&&L.last!=null?{id:L.ref.id,p:L.last}:null,
     show(ref){if(L.ref&&L.ref.kind===ref.kind&&L.ref.id===ref.id&&$('lvCanvas')){head();loop();return;}
       this.stop();L.ref=ref;dp=ref.kind==='cx'?dpc:(()=>2);L.pts=[];L.prev=null;L.last=null;L.seq++;
       const feed=window.WAVE_LIVE_FEED;
@@ -5496,7 +5496,7 @@ html.locked .gate{display:flex}
     if(!r)try{const p=window.PRO&&PRO.cur&&PRO.cur();if(p&&p.active)r=assetOf(p.id);}catch(_){}return r;}
   async function explain(a){const D=a.pro==='cx'?await cxSite(a.id):a.pro==='ix'?await ixData(a.id):await stData(a.pro,a.id);if(!D||!D.h4||D.h4.length<80)return null;
     let b=D.h4.slice();const ns=Date.now()/1000;if(a.pro==='cx'&&b[b.length-1].t+H4>ns)b=b.slice(0,-1);
-    let price=a.pro==='cx'?D.h4[D.h4.length-1].c:b[b.length-1].c;const lb=D.live&&D.live.bars;if(a.pro!=='cx'&&lb&&lb.length)price=lb[lb.length-1][1];
+    let price=a.pro==='cx'?D.h4[D.h4.length-1].c:b[b.length-1].c;const lb=D.live&&D.live.bars;if(a.pro!=='cx'&&lb&&lb.length)price=lb[lb.length-1][1];try{const lp=window.LIVE&&LIVE.price&&LIVE.price();if(lp&&lp.id===a.id&&lp.p>0)price=lp.p;}catch(_){} // the price the screen shows
     const c=b.map(x=>x.c),n=c.length-1,e50=ema(c,50)[n],R_=rsi(c)[n],A_=atr(b)[n],h1=D.h1||[],dB=D.d&&D.d.length>60?D.d:null;
     const sw=swings(b.slice(-180),3),sw1=h1.length>40?swings(h1.slice(-120),2):{H:[],L:[]},swd=dB?swings(dB.slice(-250),3):{H:[],L:[]};
     const S1=Math.max(...[...sw1.L,...sw.L,...swd.L].filter(x=>x<price*.998),price-1.5*A_),R1s=[...sw1.H,...sw.H,...swd.H].filter(x=>x>price*1.002),R1=R1s.length?Math.min(...R1s):price+1.5*A_;
@@ -5529,7 +5529,7 @@ html.locked .gate{display:flex}
     stoch:['الستوكاستك فوق ثمانين، تشبع شرائي','الستوكاستك تحت عشرين، تشبع بيعي','الستوكاستك في المنتصف'],
     obv:['حجم التداول يدعم الصعود','حجم التداول يميل للبيع'],cci:['السي سي آي فوق مية، زخم شرائي قوي','السي سي آي تحت سالب مية، زخم بيعي قوي','السي سي آي محايد']};
   function chartTalk(st){const a=assetOf(st.id)||{id:st.id,name:st.id,pro:st.kind},b=st.raw,I=st.I||{},n=b.length-1;if(n<30)return null;
-    const pick=st.li!=null&&st.li>=0&&st.li<n,k=pick?st.li:n,x=b[k],pv=b[k-1],c=x.c,ch=pv?(x.c/pv.c-1)*100:0,pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
+    const pick=st.li!=null&&st.li>=0&&st.li<n,k=pick?st.li:n,x=b[k],pv=b[k-1],lp=pick?null:(()=>{try{const q=window.LIVE&&LIVE.price&&LIVE.price();return q&&q.id===st.id&&q.p>0&&Math.abs(q.p/x.c-1)<.15?q.p:null;}catch(_){return null;}})(),c=lp||x.c,ch=pv?(c/pv.c-1)*100:0,pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
     const at=(arr,j=k)=>arr&&arr[j]!=null?arr[j]:null,T=s=>document.querySelector('#txApp '+s);
     const main=T('#cxMain'),panes=T('#cxPanes'),leg=T('#cxLeg'),top=T('.tv-top')||main;
     const raw=[nameSay(a,nm(a))+(TFW[st.tf]?` «${TFW[st.tf]}»`:'')+'.'],els=[top];
@@ -5581,5 +5581,5 @@ html.locked .gate{display:flex}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
-</script><script>(function(){var B='44a0c4ab83';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='f4f3b1a8ca';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
