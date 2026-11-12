@@ -5500,21 +5500,70 @@ html.locked .gate{display:flex}
     const c=b.map(x=>x.c),n=c.length-1,e50=ema(c,50)[n],R_=rsi(c)[n],A_=atr(b)[n],h1=D.h1||[],dB=D.d&&D.d.length>60?D.d:null;
     const sw=swings(b.slice(-180),3),sw1=h1.length>40?swings(h1.slice(-120),2):{H:[],L:[]},swd=dB?swings(dB.slice(-250),3):{H:[],L:[]};
     const S1=Math.max(...[...sw1.L,...sw.L,...swd.L].filter(x=>x<price*.998),price-1.5*A_),R1s=[...sw1.H,...sw.H,...swd.H].filter(x=>x>price*1.002),R1=R1s.length?Math.min(...R1s):price+1.5*A_;
+    const srcOf=(v,a1,a4,ad)=>ad.includes(v)?'d':a4.includes(v)?'h4':a1.includes(v)?'h1':'atr',sS=srcOf(S1,sw1.L,sw.L,swd.L),sR=srcOf(R1,sw1.H,sw.H,swd.H);
+    const wk=dB&&dB.length>8?(price/dB[dB.length-(a.pro==='cx'?8:6)].c-1)*100:null;
     const dE=dB?ema(dB.map(x=>x.c),50):null,dUp=dE?dB[dB.length-1].c>dE[dE.length-1]:price>e50,up4=price>e50;
     const nearS=(price-S1)<=.5*A_,nearR=(R1-price)<=.5*A_;
     const rs=R_<30?'المؤشر في تشبع بيعي، يعني النزول كان قوي':R_>70?'المؤشر في تشبع شرائي، يعني الصعود صار مكلف':'المؤشر متوازن، لا تشبع بيعي ولا شرائي';
     const tk=nearS&&dUp?'السعر قريب من الدعم والاتجاه صاعد، هذي منطقة تستاهل المراقبة للشراء':nearS?'السعر قريب من الدعم، بس الاتجاه نازل، انتظر شمعة ارتداد قبل لا تدخل':nearR?'السعر قريب من المقاومة، لا تستعجل بالشراء هنا':dUp&&up4?'الاتجاه صاعد والسعر متماسك، والأفضل تشتري مع أي تراجع للدعم':!dUp&&!up4?'الاتجاه نازل، الأفضل تنتظر لين يثبت السعر':'السعر بين الدعم والمقاومة، انتظر يقرب من أحدهم';
     const pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
-    return[nameSay(a,nm(a))+'.',`«السعر الحين» ${pa(price)}.`,`${ck(dUp?'الاتجاه اليومي صاعد':'الاتجاه اليومي نازل')}، ${ck(up4?'وعلى الأربع ساعات السعر فوق متوسط خمسين':'وعلى الأربع ساعات السعر تحت متوسط خمسين')}.`,
-      `${ck(rs)}.`,`«أقرب دعم» ${pa(S1)}، «وأقرب مقاومة» ${pa(R1)}.`,`${ck(tk)}.`,ck(joke({blocking:nearR,r:R_,flush:R_<32,dDown:!dUp},a.id))+'.','«هذا شرح تعليمي، والقرار لك».'];}
+    const out=[nameSay(a,nm(a))+'.',`«السعر الحين» ${pa(price)}.`,`${ck(dUp?'الاتجاه اليومي صاعد':'الاتجاه اليومي نازل')}، ${ck(up4?'وعلى الأربع ساعات السعر فوق متوسط خمسين':'وعلى الأربع ساعات السعر تحت متوسط خمسين')}.`,
+      `${ck(rs)}.`,`«أقرب دعم» ${pa(S1)}، «وأقرب مقاومة» ${pa(R1)}.`,`${ck(ZS[sS])}، ${ck(ZR[sR])}.`,`${ck(tk)}.`,ck(joke({blocking:nearR,r:R_,flush:R_<32,dDown:!dUp},a.id))+'.','«هذا شرح تعليمي، والقرار لك».'];out.wk=wk;out.up=dUp;return out;}
+  /* why the zone sits where it does */
+  const ZS={d:'وحددت الدعم هنا لأنه قاع سابق ارتد منه السعر على الفريم اليومي',h4:'وحددت الدعم هنا لأنه قاع سابق ارتد منه السعر على الأربع ساعات',h1:'وحددت الدعم هنا لأنه قاع قريب ارتد منه السعر على فريم الساعة',atr:'والدعم هنا تقديري، على مسافة حركة شمعة ونص من السعر'};
+  const ZR={d:'والمقاومة قمة سابقة وقف عندها الصعود على اليومي',h4:'والمقاومة قمة سابقة وقف عندها الصعود على الأربع ساعات',h1:'والمقاومة قمة قريبة وقف عندها الصعود على فريم الساعة',atr:'والمقاومة تقديرية، على مسافة حركة شمعة ونص'};
+  /* what the news says moved the price: headlines grouped by driver (Fed, inflation, sovereign funds, dividends, earnings, OPEC...) */
+  const nzA=t=>String(t||'').toLowerCase().replace(/[ً-ٟـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
+  const DRV=[
+    ['fed',/(فيدرالي|فدرالي|الفائده|الفايده|اسعار الفائده|باول|fomc|\bfed\b|federal reserve|powell|rate cut|rate hike|interest rate)/,'قرار الفيدرالي وأسعار الفايدة',1],
+    ['cpi',/(تضخم|التضخم|\bcpi\b|inflation|\bpce\b)/,'بيانات التضخم الأمريكية',1],
+    ['jobs',/(الوظائف|البطاله|payroll|jobs report|unemployment|jobless)/,'بيانات الوظائف الأمريكية',1],
+    ['usd',/(الدولار|عوائد السندات|سندات الخزانه|dollar|\bdxy\b|treasury|yields)/,'حركة الدولار وعوائد السندات',1],
+    ['sov',/(صندوق الاستثمارات|الاستثمارات العامه|السيادي|سياديه|\bpif\b|sovereign|بلاك ?روك|blackrock|استحواذ|حصه|stake|acquisition|acquire)/,'دخول صناديق سيادية أو مستثمرين كبار',0],
+    ['etf',/(\betf\b|صناديق المؤشرات|الصناديق المتداوله|تدفقات|inflows|outflows)/,'تدفقات صناديق الاستثمار المتداولة',0],
+    ['div',/(توزيع|توزيعات|كوبون|dividend|payout)/,'توزيعات الأرباح',0],
+    ['earn',/(نتائج|ارباح|الربع|ايرادات|صافي الربح|earnings|quarter|revenue|\beps\b|guidance|profit)/,'نتائج الشركة المالية',0],
+    ['opec',/(اوبك|opec|النفط|برنت|الخام|crude|\boil\b)/,'قرارات أوبك وأسعار النفط',1],
+    ['geo',/(حرب|الحرب|هجوم|توتر|توترات|ايران|اسرائيل|روسيا|اوكرانيا|غزه|\bwar\b|attack|tension|geopolit|missile)/,'التوترات الجيوسياسية',1],
+    ['tar',/(رسوم جمركيه|الرسوم|جمارك|tariff|trade war)/,'الرسوم الجمركية والحرب التجارية',1],
+    ['law',/(دعوي|قضائيه|غرامه|lawsuit|\bsued\b|\bfined?\b)/,'قضايا وغرامات على الجهة نفسها',0],
+    ['reg',/(هيئه السوق|هيئه الاوراق|\bsec\b|تنظيم|regulat|قانون|\bbill\b|approv|موافقه)/,'قرارات الجهات التنظيمية',0],
+    ['hack',/(\bhack|اختراق|exploit|سرقه)/,'اختراق أمني',0],
+    ['cap',/(زياده راس المال|حقوق اولويه|راس المال|buyback|اعاده شراء|\bsplit\b|تجزئه|اكتتاب)/,'قرارات رأس المال',0],
+    ['deal',/(عقد|اتفاقيه|صفقه|شراكه|ترسيه|مذكره تفاهم|\bdeal\b|contract|partnership)/,'صفقات وعقود جديدة',0],
+    ['debt',/(صكوك|تسهيلات|تمويل|قرض|sukuk|bond sale|loan)/,'صكوك وتمويل جديد',0],
+    ['agm',/(الجمعيه|عموميه|مجلس الاداره|مجلس اداره|التصويت)/,'قرارات الجمعية ومجلس الإدارة',0],
+    ['mgmt',/(استقاله|تعيين|الرئيس التنفيذي|\bceo\b|resign)/,'تغييرات في الإدارة',0],
+    ['cb',/(البنوك المركزيه|البنك المركزي|central bank|ملاذ|safe haven)/,'مشتريات البنوك المركزية والطلب على الملاذ الآمن',1],
+    ['ai',/(ذكاء اصطناعي|الذكاء الاصطناعي|\bai\b|artificial intelligence|رقائق|chips?\b|semiconductor|data cent)/,'طفرة الذكاء الاصطناعي والتقنية',0],
+    ['btc',/(بيتكوين|bitcoin|\bbtc\b|العملات المشفره|العملات الرقميه|crypto)/,'حركة سوق الكريبتو والبيتكوين',0],
+    ['idx',/(ناسداك|nasdaq|s&p|داو جونز|dow jones|وول ستريت|wall street|تاسي|tasi|المؤشر العام|السوق السعودي|مؤشر الاسهم|الاسهم الامريكيه)/,'حركة السوق والمؤشرات الكبرى',1],
+    ['flow',/(تداولات|سيوله|مكاسب|تراجع|يرتفع|ترتفع|ينخفض|تنخفض|يقفز|يهبط|صعود|هبوط|rall|surge|plunge|jump|slump)/,'زخم البيع والشراء على السهم نفسه',0]];
+  const NSENT={pos:'وهذا يدعم الصعود',neg:'وهذا يضغط على السعر',neu:'وأثره للحين محايد'};
+  const NAGE=d=>d<1?'والخبر اليوم':d<2?'والخبر أمس':d<7?'والخبر هذا الأسبوع':'والخبر الأسبوع اللي فات';
+  const ageD=d=>{const t=Date.parse(d);return isFinite(t)?Math.max(0,(Date.now()-t)/864e5):99;};
+  function drivers(items,macroOnly){const G={};for(const it of items||[]){const d=ageD(it.d);if(d>14)continue;const t=nzA((it.t||'')+' '+(it.sum||''));
+      const D=DRV.find(x=>x[1].test(t));if(!D||(macroOnly&&!D[3]))continue;const g=G[D[0]]||(G[D[0]]={k:D[0],w:D[2],n:0,sc:0,age:99,top:null});g.n++;g.sc+=it.sc||0;if(d<g.age){g.age=d;g.top=it;}}
+    return Object.values(G).sort((x,y)=>(y.n+3*Math.exp(-y.age/3))-(x.n+3*Math.exp(-x.age/3)));}
+  async function newsTalk(a,wk,up){if(!window.NEWSAI)return null;let nw=null;try{nw=await NEWSAI.forAsset(a.id);}catch(_){}
+    const raw=[];const mv=wk==null?null:Math.abs(wk)<1.5?ck('السعر خلال الأسبوع شبه ثابت'):`«${wk>0?'السعر خلال الأسبوع ارتفع':'السعر خلال الأسبوع نزل'}» ${sayPct(wk)}`;
+    let G=drivers(nw&&nw.items).slice(0,2);
+    if(G.length<2){const mk=a.pro==='sa'?['TASI']:['US10Y','DXY','SPX'];for(const m of mk){try{const x=await NEWSAI.forAsset(m);for(const g of drivers(x&&x.items,true))if(G.length<2&&!G.some(q=>q.k===g.k))G.push(Object.assign(g,{macro:1}));}catch(_){}}}
+    if(!G.length){raw.push((mv?mv+'، ':'')+ck('وما لقيت خبر واضح يفسر الحركة، فالحركة فنية بحتة')+'.');return{raw,label:nw&&nw.label};}
+    G.forEach((g,i)=>{const lab=g.sc>.3?'pos':g.sc<-.3?'neg':'neu';
+      raw.push(`${i===0&&mv?mv+'، ':''}«${i===0?(g.macro?'والمحرك الأبرز من أخبار السوق العامة':'والسبب الأبرز حسب الأخبار'):(g.macro?'وعلى مستوى السوق العام':'وفيه بعد')}» «${g.w}»، «${NAGE(g.age)}»، «${NSENT[lab]}».`);});
+    const L=nw&&nw.label;if(L==='pos'||L==='neg'){const agree=(L==='pos')===!!up;raw.push(ck(agree?'والأخبار متوافقة مع الشارت، وهذا يقوي القراءة':'بس انتبه، الأخبار عكس الشارت، وهذا يرفع احتمال التذبذب')+'.');}
+    return{raw,label:L,top:G.map(g=>g.top)};}
   /* reading what is on the main page: the explanation walks down the asset panel, part by part */
   const num=t=>{const m=String(t||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).match(/\d[\d,]*(\.\d+)?/g);return m?m.map(x=>+x.replace(/,/g,'')):[];};
   async function pageTalk(a){const raw=await explain(a);if(!raw)return null;const q=x=>document.querySelector(x),pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
-    const els=[q('#hero .asset-head'),q('#hero .price-row')||q('#live'),q('#hero .note'),q('#psum')||q('#hero .note'),q('#hero .zc'),q('#hero .say')];
+    const v=x=>x&&x.getClientRects().length?x:null,Q=(...a)=>{for(const x of a){const e=v(q(x));if(e)return e;}return null;};
+    const els=[Q('#hero .asset-head','#live'),Q('#hero .price-row','#live'),Q('#hero .note','#hero .say','#hero'),Q('#psum','#hero .note','#hero'),Q('#hero .zc','#hero .say','#hero'),Q('#hero .zc','#hero .say','#hero')];
+    let nt=null;try{nt=await newsTalk(a,raw.wk,raw.up);}catch(_){}const ne=Q('#hero .nprev','#newsAi','#hero .alert','#hero');
     const extra=[],xe=[];const sy=q('#hero .say');
     if(sy){const t=sy.textContent,i=t.indexOf('بين'),v=i>=0?num(t.slice(i)):[];if(v.length>=2&&v[0]>0&&v[1]>0){extra.push(`«توقع التحليل لإغلاق الأسبوع بين» ${pa(Math.min(v[0],v[1]))} «و» ${pa(Math.max(v[0],v[1]))}.`);xe.push(sy);}}
     const tr=q('#hero .trust');if(tr){const m=tr.textContent.match(/(\d+)\s*\/\s*(\d+)/);if(m&&+m[2]>0&&+m[1]<=+m[2]){extra.push(`«وطريقة التحليل أصابت في» ${sayN(+m[1])} «من آخر» ${sayN(+m[2])} «أسبوع».`);xe.push(tr);}}
-    const out=raw.slice(0,6).concat(extra,raw.slice(6)),E=els.concat(xe,[els[5]||els[0],tr||els[0]]);return{raw:out,els:E};}
+    const NR=nt?nt.raw:[],out=raw.slice(0,6).concat(NR,[raw[6]],extra,raw.slice(7)),E=els.concat(NR.map(()=>ne),[sy],xe,[sy||els[0],tr||els[0]]);return{raw:out,els:E};}
   /* reading the TikoCharting screen: the candle you picked, the indicators you turned on, then the bottom line */
   const TFW={'1h':'على فريم الساعة','4h':'على فريم الأربع ساعات','1d':'على الفريم اليومي','1w':'على الفريم الأسبوعي','1M':'على الفريم الشهري'};
   const IW={ema20:['السعر فوق متوسط عشرين','السعر تحت متوسط عشرين'],ema50:['السعر فوق متوسط خمسين','السعر تحت متوسط خمسين'],ema200:['السعر فوق متوسط ميتين','السعر تحت متوسط ميتين'],
@@ -5562,7 +5611,10 @@ html.locked .gate{display:flex}
   function guideBusy(b,on){b.classList.toggle('busy',on);clearInterval(b._w);if(!on)return;let t0=Date.now();
     b._w=setInterval(()=>{const av=document.getElementById('rdAv');if(av&&av.classList.contains('talk'))t0=Date.now();else if(Date.now()-t0>4000){clearInterval(b._w);b.classList.remove('busy');}},400);}
   async function guideRun(auto){const b=document.getElementById('tkGuide');if(!b)return;unlockAudio();guideBusy(b,true);let job=null;
-    try{const c=chartOpen();if(c){const st=await chartState(auto?c.id:null,auto?9000:2500);if(st)job=chartTalk(st);}
+    try{const c=chartOpen();if(c){const st=await chartState(auto?c.id:null,auto?9000:2500);if(st)job=chartTalk(st);
+        if(job&&!(st.li!=null)){const a=assetOf(st.id),r=st.raw,n=r.length-1,wk=st.tf==='1d'&&n>8?(r[n].c/r[n-(a&&a.pro==='cx'?7:5)].c-1)*100:st.tf==='1w'&&n>1?(r[n].c/r[n-1].c-1)*100:null;
+          let nt=null;try{nt=a?await newsTalk(a,wk,r[n].c>(st.I&&st.I.ema50?st.I.ema50[n]:0)):null;}catch(_){}
+          if(nt&&nt.raw.length){const at=job.raw.length-3,m=job.els[at]||job.els[0];job.raw.splice(at,0,...nt.raw);job.els.splice(at,0,...nt.raw.map(()=>m));}}}
       if(!job&&!c){const a=openAsset();if(a)job=await pageTalk(a);}}catch(e){if(location.hostname==='localhost')console.error(e);}
     if(!job){if(auto){guideBusy(b,false);return;}job={raw:['«اختر سهم أو عملة من القائمة، وأنا أشرح لك».'],els:[]};}
     if(location.hostname==='localhost')window.__lastEls=job.els.map(e=>e?(e.id||e.className):null);
@@ -5575,11 +5627,11 @@ html.locked .gate{display:flex}
     let last='';document.addEventListener('tk:chart',e=>{if(EN())return;const id=e.detail&&e.detail.id;if(!id||id===last)return;last=id;unlockAudio();hush();guideRun(true);});
     document.addEventListener('tk:chartclose',()=>{last='';guideBusy(b,false);hush();});}
   // read any text aloud (the smart turtle's answers); the owner's voice where clips exist, otherwise the browser voice
-  function talk(text,aid){unlockAudio();const a=assetOf(aid);if(a){explain(a).then(raw=>raw?say(raw,null,GD):sayPlain());return;}sayPlain();
+  function talk(text,aid){unlockAudio();const a=assetOf(aid);if(a){(async()=>{const raw=await explain(a);if(!raw)return sayPlain();let nt=null;try{nt=await newsTalk(a,raw.wk,raw.up);}catch(_){}say(nt?raw.slice(0,6).concat(nt.raw,raw.slice(6)):raw,null,GD);})();return;}sayPlain();
     function sayPlain(){const t=String(text||'').replace(/\s+/g,' ').trim();if(!t)return;const parts=t.split(/(?<=[.!؟?])\s+/).filter(Boolean).slice(0,14);say(parts,null,GD);}}
   window.TIKO_RADAR={talk,guide:()=>guideRun(false),scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
-</script><script>(function(){var B='f4f3b1a8ca';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='192fdf1231';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
