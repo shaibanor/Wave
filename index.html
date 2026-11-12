@@ -5268,7 +5268,7 @@ html.locked .gate{display:flex}
     else h+=`<div class="rd-none"><b>${L('لا توجد فرصة ارتداد الآن.','No bounce setup right now.')}</b><p>${L('الرادار يرشّح فقط بعد هبوط حاد على 4 ساعات (RSI تحت 32 أو هبوط 5% في 3 شموع). لا يوجد أصل بهذه الحالة الآن. هذه الأقرب، ومع كل منها شرط الدخول ووقته:','The radar only picks after a sharp 4h drop (RSI under 32, or 5% down over 3 candles). No asset is in that state now. These are the closest, each with its entry condition and time:')}</p></div>`;
     const rest=top.filter(x=>x!==B);if(rest.length)h+=`<h3 class="rd-h">${B?L('فرص ومراقبة','More setups and watch list'):L('للمراقبة','Watch list')}</h3>`+rest.map(x=>card(x,!B&&x===rest[0])).join('');
     return{h,main:B||rest[0]||null};}
-  function render(k,R,G){SHOWN.length=0;hush();const el=document.getElementById('rdBody'),D=RD(k),nOk=R.ranked.filter(x=>x.ok).length,closed=R.all.filter(x=>x.closed).length,skipped=R.all.filter(x=>x.skip&&!x.closed&&!x.far),far=R.all.filter(x=>x.far);
+  function render(k,R,G){SHOWN.length=0;if(!GFLOW)hush();const el=document.getElementById('rdBody'),D=RD(k),nOk=R.ranked.filter(x=>x.ok).length,closed=R.all.filter(x=>x.closed).length,skipped=R.all.filter(x=>x.skip&&!x.closed&&!x.far),far=R.all.filter(x=>x.far);
     const tm=`<bdi>${RY.format(new Date(R.at))}</bdi>`;const{h,main}=list(R);
     let info=k==='bn'?L(`${R.pairs} عملة من بايننس (حجم يومي فوق 3 ملايين $) · ${R.cand} مرشحًا للتحليل العميق`,`${R.pairs} Binance coins (daily volume over $3M) · ${R.cand} candidates analysed in depth`)
       :k==='cmd'?L('الذهب والفضة ونفط برنت','Gold, silver and Brent oil'):L(`${R.all.length} أصلًا${R.nExt?` (منها ${R.nExt} خارج المنصة)`:''}${closed?` · ${closed} في سوق مغلق`:''}`,`${R.all.length} assets${R.nExt?` (${R.nExt} outside the platform)`:''}${closed?` · ${closed} in a closed market`:''}`);
@@ -5327,7 +5327,7 @@ html.locked .gate{display:flex}
   const JOKE={trap:'لا تقع في الفخ، السوق ما يرحم اللي يدخل بدون خطة',stop:'الوقف مو عيب، العيب تجلس تناظر الخسارة تكبر وتقول بيرجع',heart:'اشتر بعقلك مو بقلبك، القلب للمحبين مو للشارت',
     top:'لا تصير مثل اللي اشترى القمة وقال هذي بداية الصعود',greed:'الطمع يا صاحبي ضيّع ربح ناس كثير، خذ ربحك وامش',candle:'شمعة خضراء وحدة ما تعني إنك صرت مليونير',
     marry:'اصبر على الصفقة، بس لا تتزوجها',sure:'إذا قال لك أحد مضمونة مية بالمية، اقفل الجوال',coffee:'لا تبيع خوف ولا تشتري حماس، القهوة أول وبعدين القرار',
-    limit:'حط أمرك وروح تقهوى، السعر يجيك لين عندك',wait:'الصبر مفتاح الفرج، ومفتاح المحفظة بعد',wall:'لا تشتري تحت المقاومة، ترى الجدار ما ينتسلق بسهولة',
+    limit:'حط أمرك وروح تقهوى، السعر يجيك لين عندك',wait:'الصبر مفتاح الفرج، ومفتاح المحفظة بعد',wall:'لا تشتري تحت المقاومة، ترى الجدار يرجعك لورا',
     fall:'نزل كأنه طايح من الدرج، بس ممكن يقوم وينفض ثيابه',trend:'الترند صديقك، لا تخاصمه'};
   function joke(r,seed){const k=r&&(r.plan&&r.act==='limit'?'limit':r.plan&&r.act==='wait'?'wait':r.blocking?'wall':r.r!=null&&r.r<25?'fall':r.dDown===false&&r.flush?'trend':null);
     const pool=['trap','stop','heart','top','greed','candle','marry','sure','coffee'];let h=0;for(const ch of String(seed||''))h=(h*31+ch.charCodeAt(0))>>>0;h+=Math.floor(Date.now()/36e5);
@@ -5342,7 +5342,7 @@ html.locked .gate{display:flex}
   function scen(r){const o=[];if(r.plan){o.push(SCN[r.act==='now'?(r.r!=null&&r.r<35?'pOver':'pSup'):r.act==='limit'?'pLim':r.wt==='up'?'pUp':'pDip']);}
     else{o.push(SCN[r.r!=null&&r.r<22?'rsi':r.d3!=null&&r.d3<=-8?'drop':r.dDown===false?'up':r.dDown?'down':'base']);if(r.blocking)o.push(SCN.block);else if(r.dDown&&o[0]!==SCN.down)o.push(SCN.down);}
     return o;}
-  let VQ=0,VT=null,VEL=null,VRAF=0,AVG=null,UNL=false;
+  let VQ=0,VRES={},GFLOW=false,VT=null,VEL=null,VRAF=0,AVG=null,UNL=false;
   function unlockAudio(){try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback';}catch(_){}
     try{const X=window.AudioContext||window.webkitAudioContext;if(X){if(!VCL.ctx)VCL.ctx=new X();if(VCL.ctx.state!=='running')VCL.ctx.resume();const b=VCL.ctx.createBuffer(1,1,22050),q=VCL.ctx.createBufferSource();q.buffer=b;q.connect(VCL.ctx.destination);q.start(0);}}catch(_){}
     if(!VCL.ok&&VCL.idx===null)VCL.load();
@@ -5351,7 +5351,7 @@ html.locked .gate{display:flex}
      Fixed phrases are whole clips; numbers and times are built word by word. Missing clips fall back to the browser voice. */
   const VCL={ok:false,idx:null,buf:{},ctx:null,src:[],
     async load(){if(this.idx!==null)return;this.idx=false;const j=await getJSON(`pro/voice/ar/index.json?v=${Math.floor(Date.now()/36e5)}`);if(j&&j.clips&&j.clips['منطقة الشراء بين']){this.idx=j.clips;this.ok=true;}},
-    toks(part){const out=[];for(const m of part.matchAll(/«([^»]+)»|([،.])|([^\s،.«»]+)/g)){if(m[1])out.push({t:m[1].replace(/[.]$/,''),ph:1});else if(m[2])out.push({gap:m[2]==='.'?.2:.1});else out.push({t:m[3]});}return out;},
+    toks(part){const out=[];for(const m of part.matchAll(/«([^»]+)»|([،.])|([^\s،.«»]+)/g)){if(m[1])out.push({t:m[1].replace(/[.]$/,''),ph:1});else if(m[2])out.push({gap:m[2]==='.'?.38:.14});else out.push({t:m[3]});}return out;},
     async get(f){if(this.buf[f])return this.buf[f];const r=await fetch(`pro/voice/ar/${f}`);if(!r.ok)throw 0;const b=await this.ctx.decodeAudioData(await r.arrayBuffer());this.buf[f]=b;return b;},
     stop(){this.src.forEach(x=>{try{x.stop();}catch(_){}});this.src=[];(this.timers||[]).forEach(clearTimeout);this.timers=[];},
     async play(parts,o){if(!this.ok)return false;try{if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)();if(this.ctx.state==='suspended')this.ctx.resume();}catch(_){return false;}
@@ -5360,7 +5360,7 @@ html.locked .gate{display:flex}
       try{await Promise.all(P.flat().filter(x=>x.t&&this.idx[x.t]).map(x=>this.get(this.idx[x.t])));}catch(_){return false;}
       if(!o.id())return true;this.stop();let t=this.ctx.currentTime+.08;const t0=t;this.timers=[];
       P.forEach((seq,i)=>{const at=t;this.timers.push(setTimeout(()=>{if(o.id())o.on(i);},Math.max(0,(at-t0)*1000)));
-        seq.forEach(x=>{if(x.gap){t+=x.gap;return;}const b=this.buf[this.idx[x.t]];if(!b)return;const s=this.ctx.createBufferSource();s.buffer=b;s.connect(this.ctx.destination);s.start(t);this.src.push(s);t+=b.duration+(x.ph?.02:.01);});t+=.26;});
+        seq.forEach(x=>{if(x.gap){t+=x.gap;return;}const b=this.buf[this.idx[x.t]];if(!b)return;const s=this.ctx.createBufferSource();s.buffer=b;s.connect(this.ctx.destination);s.start(t);this.src.push(s);t+=b.duration+(x.ph?.02:.01);});t+=.42;});
       this.timers.push(setTimeout(()=>o.end(),(t-t0)*1000+100));return true;}};
   // the dashed line from the voice box to the item being read
   const TG=['header','.rd-px .b','.rd-px .s','.rd-px .x','.rd-sc','.rd-time'];let PC=null;
@@ -5390,17 +5390,17 @@ html.locked .gate{display:flex}
   function avatar(on){const a=document.getElementById('rdAv');if(!a)return;a.classList.toggle('talk',!!on);if(AVG)AVG.kick();if(!on){VEL=null;PC=null;const cv=document.querySelector('#rdAv .av-cv');if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);const svg=document.getElementById('rdAvL');if(svg)svg.classList.remove('on');setTimeout(()=>{if(!a.classList.contains('talk'))a.hidden=true;},1200);}}
   function speak(r,card){if(!r)return;say(sayText(r).filter(Boolean),card,RD(TAB));}
   function say(raw,card,D){hush();unlockAudio();if(location.hostname==='localhost')window.__lastSay=raw;const parts=raw.map(x=>x.replace(/[«»]/g,'')),id=++VQ,av=document.getElementById('rdAv');if(av){av.hidden=false;av.classList.toggle('gd',D===GD);av.style.setProperty('--rc',D.color);if(AVG){AVG.tint(D.color,D.accent);AVG.kick();}}
-    const at=i=>{if(id!==VQ)return;avatar(true);point(card,i);};
-    if(!EN()&&VCL.ok){VCL.play(raw,{on:i=>at(i),end:()=>{if(id===VQ)avatar(false);},id:()=>id===VQ}).then(ok=>{if(!ok&&id===VQ)browserSay();});return;}
+    const at=i=>{if(id!==VQ)return;avatar(true);point(card,i);},fin=()=>{const f=VRES[id];if(f){delete VRES[id];f();}};
+    if(!EN()&&VCL.ok){VCL.play(raw,{on:i=>at(i),end:()=>{if(id===VQ)avatar(false);fin();},id:()=>id===VQ}).then(ok=>{if(!ok&&id===VQ)browserSay();});return;}
     function browserSay(){
-    if(window.TIKO_VOICE&&TIKO_VOICE.speak){TIKO_VOICE.speak(parts,{lang:EN()?'en':'ar',on:(c,i)=>at(i==null?parts.indexOf(c):i),end:()=>{if(id===VQ)avatar(false);}});return;}
-    const S=window.speechSynthesis;if(!S){avatar(false);return;}S.cancel();
+    if(window.TIKO_VOICE&&TIKO_VOICE.speak){TIKO_VOICE.speak(parts,{lang:EN()?'en':'ar',on:(c,i)=>at(i==null?parts.indexOf(c):i),end:()=>{if(id===VQ)avatar(false);fin();}});return;}
+    const S=window.speechSynthesis;if(!S){avatar(false);fin();return;}S.cancel();
     const lang=EN()?'en':'ar',vs=S.getVoices(),v=vs.find(x=>x.lang&&x.lang.toLowerCase().startsWith(lang==='ar'?'ar-sa':'en-us'))||vs.find(x=>x.lang&&x.lang.toLowerCase().startsWith(lang));
-    let cur=-1,fb=0;const next=i=>{if(id!==VQ||i<=cur)return;cur=i;clearTimeout(fb);if(i>=parts.length){avatar(false);return;}at(i);
+    let cur=-1,fb=0;const next=i=>{if(id!==VQ||i<=cur)return;cur=i;clearTimeout(fb);if(i>=parts.length){avatar(false);fin();return;}at(i);
       const u=new SpeechSynthesisUtterance(parts[i]);u.lang=lang==='ar'?'ar-SA':'en-US';if(v)u.voice=v;u.rate=lang==='ar'?.95:1;
       const st=performance.now(),est=900+parts[i].length*80,go=()=>{const el=performance.now()-st;if(el<est*.35){clearTimeout(fb);fb=setTimeout(()=>next(i+1),est-el);}else next(i+1);};u.onend=go;u.onerror=go;fb=setTimeout(()=>next(i+1),est+1200);S.speak(u);};next(0);}
     browserSay();}
-  function hush(){VQ++;try{VCL.stop();}catch(_){}try{window.speechSynthesis&&speechSynthesis.cancel();}catch(_){}if(window.TIKO_VOICE&&TIKO_VOICE.stop)TIKO_VOICE.stop();avatar(false);}
+  function hush(){VQ++;const rs=Object.values(VRES);VRES={};rs.forEach(f=>f());try{VCL.stop();}catch(_){}try{window.speechSynthesis&&speechSynthesis.cancel();}catch(_){}if(window.TIKO_VOICE&&TIKO_VOICE.stop)TIKO_VOICE.stop();avatar(false);}
   const SHOWN=[];
 
   /* ---------- live tracking of the shown trades ---------- */
@@ -5456,7 +5456,7 @@ html.locked .gate{display:flex}
       gold(r){if(r)put(`XAU (PAXG)  ▸ ${fmt(r.price)} ▸ ${r.act.toUpperCase()} ▸ buy ${fmt(r.buy)} → ${fmt(r.tgt)} stop ${fmt(r.stop)}`);},
       finish(R){pipe(4);const b=R.best||R.ranked[0];if(b){st.best=b.a.id;upd();put(`◎ LOCK ${b.a.sym||b.a.id} ▸ ${L('شراء','buy')} ${fmt(b.buy)} ▸ ${L('بيع','sell')} ${fmt(b.tgt)} ▸ ${L('وقف','stop')} ${fmt(b.stop)}`);G.forEach(s=>s&&(s.blip(b.a.id,R.best?'95,211,165':'233,207,143',true),s.lock(b.a.id)));}
         else put(L('لا يوجد مرشح','no candidate'));}};}
-  async function go(k){if(RUN)return;k=k||TAB;TAB=k;hush();try{await names();}catch(_){}liveStop();openSheet();setTabs();mode='scan';MINI[k]&&MINI[k].clear();
+  async function go(k){if(RUN)return;k=k||TAB;TAB=k;if(!GFLOW)hush();try{await names();}catch(_){}liveStop();openSheet();setTabs();mode='scan';MINI[k]&&MINI[k].clear();
     const T=theatre(k),t0=performance.now();
     RUN=RD(k).run(T);let R=null,G=null;try{R=await RUN;}catch(e){R=null;}RUN=null;
     if(!R){mode='idle';document.getElementById('rdBody').innerHTML=`<p class="rd-none">${L('تعذر الفحص الآن. جرّب بعد قليل.','The scan failed. Try again shortly.')}</p>`;return;}
@@ -5502,12 +5502,12 @@ html.locked .gate{display:flex}
     const S1=Math.max(...[...sw1.L,...sw.L,...swd.L].filter(x=>x<price*.998),price-1.5*A_),R1s=[...sw1.H,...sw.H,...swd.H].filter(x=>x>price*1.002),R1=R1s.length?Math.min(...R1s):price+1.5*A_;
     const srcOf=(v,a1,a4,ad)=>ad.includes(v)?'d':a4.includes(v)?'h4':a1.includes(v)?'h1':'atr',sS=srcOf(S1,sw1.L,sw.L,swd.L),sR=srcOf(R1,sw1.H,sw.H,swd.H);
     const wk=dB&&dB.length>8?(price/dB[dB.length-(a.pro==='cx'?8:6)].c-1)*100:null;
-    const dE=dB?ema(dB.map(x=>x.c),50):null,dUp=dE?dB[dB.length-1].c>dE[dE.length-1]:price>e50,up4=price>e50;
+    const dE=dB?ema(dB.map(x=>x.c),50):null,dUp=dE?dB[dB.length-1].c>dE[dE.length-1]:price>e50,dFlat=dE?Math.abs(dB[dB.length-1].c/dE[dE.length-1]-1)<.01:false,up4=price>e50;
     const nearS=(price-S1)<=.5*A_,nearR=(R1-price)<=.5*A_;
     const rs=R_<30?'المؤشر في تشبع بيعي، يعني النزول كان قوي':R_>70?'المؤشر في تشبع شرائي، يعني الصعود صار مكلف':'المؤشر متوازن، لا تشبع بيعي ولا شرائي';
     const tk=nearS&&dUp?'السعر قريب من الدعم والاتجاه صاعد، هذي منطقة تستاهل المراقبة للشراء':nearS?'السعر قريب من الدعم، بس الاتجاه نازل، انتظر شمعة ارتداد قبل لا تدخل':nearR?'السعر قريب من المقاومة، لا تستعجل بالشراء هنا':dUp&&up4?'الاتجاه صاعد والسعر متماسك، والأفضل تشتري مع أي تراجع للدعم':!dUp&&!up4?'الاتجاه نازل، الأفضل تنتظر لين يثبت السعر':'السعر بين الدعم والمقاومة، انتظر يقرب من أحدهم';
     const pa=v=>sayMoney(v,a.pro==='ix'?'us':a.pro);
-    const out=[nameSay(a,nm(a))+'.',`«السعر الحين» ${pa(price)}.`,`${ck(dUp?'الاتجاه اليومي صاعد':'الاتجاه اليومي نازل')}، ${ck(up4?'وعلى الأربع ساعات السعر فوق متوسط خمسين':'وعلى الأربع ساعات السعر تحت متوسط خمسين')}.`,
+    const out=[nameSay(a,nm(a))+'.',`«السعر الحين» ${pa(price)}.`,`${ck(dFlat?'الاتجاه اليومي عرضي':dUp?'الاتجاه اليومي صاعد':'الاتجاه اليومي نازل')}، ${ck(up4?'وعلى الأربع ساعات السعر فوق متوسط خمسين':'وعلى الأربع ساعات السعر تحت متوسط خمسين')}.`,
       `${ck(rs)}.`,`«أقرب دعم» ${pa(S1)}، «وأقرب مقاومة» ${pa(R1)}.`,`${ck(ZS[sS])}، ${ck(ZR[sR])}.`,`${ck(tk)}.`,ck(joke({blocking:nearR,r:R_,flush:R_<32,dDown:!dUp},a.id))+'.','«هذا شرح تعليمي، والقرار لك».'];out.wk=wk;out.up=dUp;return out;}
   /* why the zone sits where it does */
   const ZS={d:'وحددت الدعم هنا لأنه قاع سابق ارتد منه السعر على الفريم اليومي',h4:'وحددت الدعم هنا لأنه قاع سابق ارتد منه السعر على الأربع ساعات',h1:'وحددت الدعم هنا لأنه قاع قريب ارتد منه السعر على فريم الساعة',atr:'والدعم هنا تقديري، على مسافة حركة شمعة ونص من السعر'};
@@ -5574,7 +5574,7 @@ html.locked .gate{display:flex}
     don:['السعر عند أعلى قمة لعشرين شمعة، يعني اختراق','السعر عند أقل قاع لعشرين شمعة، يعني كسر','السعر في وسط قناة الدونشيان'],
     ichi:['السعر فوق سحابة الإيشيموكو، وهذا إيجابي','السعر تحت سحابة الإيشيموكو، وهذا سلبي','السعر داخل سحابة الإيشيموكو، يعني حيرة'],
     rsi:['يعني تشبع شرائي، الصعود صار مكلف','يعني تشبع بيعي، النزول كان قوي','يعني متوازن'],
-    macd:['الماكد إيجابي ويقوى، الزخم مع المشترين','الماكد إيجابي بس يضعف، انتبه','الماكد سلبي ويقوى، الزخم مع البائعين','الماكد سلبي بس يضعف، ممكن يقرب ارتداد'],
+    macd:['الماكدي إيجابي ويقوى، الزخم مع المشترين','الماكدي إيجابي بس يضعف، انتبه','الماكدي سلبي ويقوى، الزخم مع البائعين','الماكدي سلبي بس يضعف، ممكن يقرب ارتداد'],
     stoch:['الستوكاستك فوق ثمانين، تشبع شرائي','الستوكاستك تحت عشرين، تشبع بيعي','الستوكاستك في المنتصف'],
     obv:['حجم التداول يدعم الصعود','حجم التداول يميل للبيع'],cci:['السي سي آي فوق مية، زخم شرائي قوي','السي سي آي تحت سالب مية، زخم بيعي قوي','السي سي آي محايد']};
   function chartTalk(st){const a=assetOf(st.id)||{id:st.id,name:st.id,pro:st.kind},b=st.raw,I=st.I||{},n=b.length-1;if(n<30)return null;
@@ -5610,22 +5610,41 @@ html.locked .gate{display:flex}
   async function chartState(id,ms=9000){const t0=Date.now();while(Date.now()-t0<ms){try{const st=CHARTX.state&&CHARTX.state();if(st&&st.ready&&(!id||st.id===id))return st;}catch(_){}await new Promise(r=>setTimeout(r,250));}return null;}
   function guideBusy(b,on){b.classList.toggle('busy',on);clearInterval(b._w);if(!on)return;let t0=Date.now();
     b._w=setInterval(()=>{const av=document.getElementById('rdAv');if(av&&av.classList.contains('talk'))t0=Date.now();else if(Date.now()-t0>4000){clearInterval(b._w);b.classList.remove('busy');}},400);}
-  async function guideRun(auto){const b=document.getElementById('tkGuide');if(!b)return;unlockAudio();guideBusy(b,true);let job=null;
+  const sayWait=(raw,card,D)=>new Promise(res=>{say(raw,card,D);VRES[VQ]=res;});
+  let GTOK=0;
+  /* first stop: the radar opens on the asset's market, searches, and gives a quick trade on this asset; then back to the analysis */
+  async function radarFirst(a,tok){const k=a.pro==='cx'?'cx':a.pro==='ix'?'cmd':a.pro;if(!RADARS.some(x=>x.k===k))return true;
+    const ov=document.getElementById('rdo');GFLOW=true;let ok=true;
+    try{const g=go(k);await new Promise(r=>setTimeout(r,350));if(tok!==GTOK)return false;
+      await sayWait([nameSay(a,nm(a))+'.',ck('خلني أشغّل لك الرادار أول، ويدوّر لك صفقة سريعة')+'.'],null,GD);if(tok!==GTOK)return false;
+      await g;await new Promise(r=>setTimeout(r,500));if(tok!==GTOK||!ov.classList.contains('on'))return false;
+      const Rr=LAST[k]&&LAST[k].R,same=x=>x.a.id===a.id||(a.id==='GOLD'&&x.a.gold),r=Rr&&(Rr.ranked.find(same)||Rr.all.find(same));
+      if(!r||r.skip||r.price==null){await sayWait([ck(r&&r.closed?'السوق مغلق الحين، فما فيه صفقة سريعة عليه':'الرادار ما لقى صفقة سريعة على هذا الأصل الحين')+'.',ck('خلني أرجع لك للتحليل')+'.'],null,RD(k));}
+      else{let i=SHOWN.indexOf(r);if(i<0){const body=document.getElementById('rdBody');if(body){body.insertAdjacentHTML('afterbegin',`<h3 class="rd-h">${L('صفقة سريعة على ','Quick trade on ')}${esc(nm(a))}</h3>`+card(r,false));i=SHOWN.indexOf(r);}}
+        const btn=document.querySelector(`.rd-say[data-say="${i}"]`),cd=btn&&btn.closest('.rd-card');if(cd)cd.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+        await sayWait([ck(r.ok||(r.plan&&(r.act==='now'||r.act==='limit'))?'لقيت صفقة سريعة، اسمعها':'ما فيه صفقة مؤكدة الحين، بس هذي خطة المراقبة')+'.'],null,RD(k));if(tok!==GTOK||!ov.classList.contains('on'))return false;
+        await sayWait(sayText(r).filter(Boolean),cd,RD(k));if(tok!==GTOK||!ov.classList.contains('on'))return false;
+        await sayWait([ck('الحين نرجع للتحليل')+'.'],null,GD);}
+      if(tok!==GTOK)return false;}catch(e){if(location.hostname==='localhost')console.error(e);}
+    finally{GFLOW=false;}
+    if(ov.classList.contains('on')){close();await new Promise(r=>setTimeout(r,450));}return ok&&tok===GTOK;}
+  async function guideRun(auto){const b=document.getElementById('tkGuide');if(!b)return;unlockAudio();guideBusy(b,true);let job=null;const tok=++GTOK;
     try{const c=chartOpen();if(c){const st=await chartState(auto?c.id:null,auto?9000:2500);if(st)job=chartTalk(st);
         if(job&&!(st.li!=null)){const a=assetOf(st.id),r=st.raw,n=r.length-1,wk=st.tf==='1d'&&n>8?(r[n].c/r[n-(a&&a.pro==='cx'?7:5)].c-1)*100:st.tf==='1w'&&n>1?(r[n].c/r[n-1].c-1)*100:null;
           let nt=null;try{nt=a?await newsTalk(a,wk,r[n].c>(st.I&&st.I.ema50?st.I.ema50[n]:0)):null;}catch(_){}
           if(nt&&nt.raw.length){const at=job.raw.length-3,m=job.els[at]||job.els[0];job.raw.splice(at,0,...nt.raw);job.els.splice(at,0,...nt.raw.map(()=>m));}}}
-      if(!job&&!c){const a=openAsset();if(a)job=await pageTalk(a);}}catch(e){if(location.hostname==='localhost')console.error(e);}
+      if(!job&&!c){const a=openAsset();if(a){if(!auto&&!EN()){const go_on=await radarFirst(a,tok);if(!go_on||tok!==GTOK)return;guideBusy(b,true);}job=await pageTalk(a);}}}catch(e){if(location.hostname==='localhost')console.error(e);}
+    if(tok!==GTOK)return;
     if(!job){if(auto){guideBusy(b,false);return;}job={raw:['«اختر سهم أو عملة من القائمة، وأنا أشرح لك».'],els:[]};}
     if(location.hostname==='localhost')window.__lastEls=job.els.map(e=>e?(e.id||e.className):null);
     say(job.raw,{els:job.els},GD);}
   function mountGuide(){if(document.getElementById('tkGuide'))return;const b=document.createElement('button');b.type='button';b.id='tkGuide';b.className='tk-guide';
     b.innerHTML='<canvas class="tg-g" aria-hidden="true"></canvas><span class="tg-t">الشرح الصوتي</span>';b.setAttribute('aria-label','الشرح الصوتي للسهم أو العملة المفتوحة');document.body.appendChild(b);
     globe(b.querySelector('.tg-g'),()=>b.classList.contains('busy')?'scan':'idle',{color:GD.color,accent:GD.accent,av:true});
-    b.addEventListener('click',()=>{if(b.classList.contains('busy')){guideBusy(b,false);hush();return;}guideRun(false);});
+    b.addEventListener('click',()=>{if(b.classList.contains('busy')){GTOK++;guideBusy(b,false);hush();return;}guideRun(false);});
     // entering TikoCharting (or switching its asset) starts the explanation by itself
     let last='';document.addEventListener('tk:chart',e=>{if(EN())return;const id=e.detail&&e.detail.id;if(!id||id===last)return;last=id;unlockAudio();hush();guideRun(true);});
-    document.addEventListener('tk:chartclose',()=>{last='';guideBusy(b,false);hush();});}
+    document.addEventListener('tk:chartclose',()=>{last='';GTOK++;guideBusy(b,false);hush();});}
   // read any text aloud (the smart turtle's answers); the owner's voice where clips exist, otherwise the browser voice
   function talk(text,aid){unlockAudio();const a=assetOf(aid);if(a){(async()=>{const raw=await explain(a);if(!raw)return sayPlain();let nt=null;try{nt=await newsTalk(a,raw.wk,raw.up);}catch(_){}say(nt?raw.slice(0,6).concat(nt.raw,raw.slice(6)):raw,null,GD);})();return;}sayPlain();
     function sayPlain(){const t=String(text||'').replace(/\s+/g,' ').trim();if(!t)return;const parts=t.split(/(?<=[.!؟?])\s+/).filter(Boolean).slice(0,14);say(parts,null,GD);}}
@@ -5633,5 +5652,5 @@ html.locked .gate{display:flex}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
-</script><script>(function(){var B='192fdf1231';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='cc44ca00e1';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
