@@ -9,7 +9,7 @@ import hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pro', 'voice')
 OUT = os.path.join(ROOT, 'ar')
 KEY, VOICE = os.environ.get('ELEVEN_KEY', '').strip(), os.environ.get('ELEVEN_VOICE_ID', '').strip()
-MODEL = os.environ.get('VOICE_MODEL', '').strip() or 'eleven_v3'
+MODEL = os.environ.get('VOICE_MODEL', '').strip() or 'eleven_v4'
 STAB = float(os.environ.get('VOICE_STABILITY', '') or 0.45)
 FORCE = os.environ.get('VOICE_FORCE', '') == 'true'
 
@@ -51,7 +51,7 @@ def tts(text, short):
 def pick_model():
     """Use the requested model; if the account cannot use it, fall back to the next one."""
     global MODEL
-    for m in [MODEL] + [x for x in ('eleven_v3', 'eleven_multilingual_v2') if x != MODEL]:
+    for m in [MODEL] + [x for x in ('eleven_v4', 'eleven_v3', 'eleven_multilingual_v2') if x != MODEL]:
         try:
             _post('تجربة', m, {'stability': 0.5, 'similarity_boost': 0.9}, None); MODEL = m; print('model', m); return
         except urllib.error.HTTPError as e:

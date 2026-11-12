@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       model:
-        description: 'ElevenLabs model (empty = eleven_v3, falls back to eleven_multilingual_v2)'
+        description: 'ElevenLabs model (empty = eleven_v4, the owner voice)'
         required: false
         default: ''
       stability:
