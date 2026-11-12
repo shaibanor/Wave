@@ -101,6 +101,22 @@ def main():
     inv = json.load(open(os.path.join(ROOT, 'clips.json'), encoding='utf-8'))
     items = inv['phrases'] + inv.get('words', [])
     say = inv.get('say', {})
+    # coins listed on Binance that have no Arabic name yet: spoken as a word, not letter by letter
+    try:
+        with urllib.request.urlopen('https://data-api.binance.vision/api/v3/ticker/24hr?type=MINI', timeout=30) as r:
+            tk = json.loads(r.read())
+        skip = {'USDC', 'FDUSD', 'TUSD', 'USDP', 'DAI', 'EUR', 'AEUR', 'USDE', 'XUSD', 'BFUSD', 'RLUSD', 'USD1', 'PYUSD', 'EURI', 'BUSD'}
+        for x in tk:
+            sym = x.get('symbol', '')
+            if not sym.endswith('USDT') or float(x.get('quoteVolume') or 0) < 3e6:
+                continue
+            b = sym[:-4]
+            if b in skip or b.endswith(('UP', 'DOWN', 'BULL', 'BEAR')) or b in items:
+                continue
+            items.append(b); say.setdefault(b, b.capitalize())
+        print('binance names', len(items))
+    except Exception as e:
+        print('binance list skipped:', e)
     pick_model()
     os.makedirs(OUT, exist_ok=True)
     idx_p = os.path.join(OUT, 'index.json')
