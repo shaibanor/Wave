@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       model:
-        description: 'ElevenLabs model (leave empty for eleven_multilingual_v2)'
+        description: 'ElevenLabs model (empty = eleven_v3, falls back to eleven_multilingual_v2)'
         required: false
         default: ''
       stability:
@@ -22,7 +22,7 @@ concurrency:
 jobs:
   clips:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - run: pip install -q imageio-ffmpeg

@@ -5258,13 +5258,19 @@ html.locked .gate{display:flex}
     if(K)a.push(K===1?'ألف':K===2?'ألفين':K<=10?`${TH[K]} آلاف`:`${w999(K)} ألف`);
     if(r)a.push(w999(r));return a.join(' و');}
   const digits=str=>str.split('').map(d=>U[+d]).join(' ');
-  function sayMoney(v,pro){if(v==null||!isFinite(v))return'';const sa=pro==='sa',cur=sa?'ريال':'دولار';
-    if(v>=100)return`${words(v)} ${cur}`;
-    if(sa){const i=Math.floor(v),c=Math.round((v-i)*100);return c?`${words(i)} ${cur} و${words(c)} هللة`:`${words(i)} ${cur}`;}
-    const f=fmt(v);let[ip,dp]=f.replace(/,/g,'').split('.');dp=(dp||'').replace(/0+$/,'');if(!dp)return`${words(+ip)} ${cur}`;
-    const z=(dp.match(/^0*/)||[''])[0].length,rest=dp.slice(z),zs=z===0?'':z===1?'صفر':z===2?'صفرين':`${TH[z]||words(z)} أصفار`;
-    const tail=[zs,rest?words(+rest):''].filter(Boolean).join('، ');return +ip===0?`صفر، ${tail} سنت`:`${words(+ip)} فاصلة ${tail} ${cur}`;}
-  function sayPct(v){v=Math.abs(v);const t=v.toFixed(1).replace(/\.0$/,''),[i,d]=t.split('.');return`${words(+i)}${d?' فاصلة '+U[+d]:''} بالمية`;}
+  const ck=x=>`«${x}»`;
+  function numParts(n){n=Math.round(n);if(n===0)return[U[0]];const P=[],M=Math.floor(n/1e6),K=Math.floor(n/1e3)%1e3,r=n%1e3;
+    if(M)P.push(M===1?'مليون':M===2?'مليونين':M<=10?`${TH[M]} ملايين`:`${w99(M%100)||HU[Math.floor(M/100)]} مليون`);
+    if(K){const kh=Math.floor(K/100),kr=K%100;if(K<100)P.push(K===1?'ألف':K===2?'ألفين':K<=10?`${TH[K]} آلاف`:`${w99(K)} ألف`);else if(kr)P.push(HU[kh],`${w99(kr)} ألف`);else P.push(`${HU[kh]} ألف`);}
+    const h=Math.floor(r/100),rr=r%100;if(h)P.push(HU[h]);if(rr)P.push(w99(rr));return P;}
+  const sayN=n=>numParts(n).map((p,i)=>ck(i?'و'+p:p)).join(' ');
+  function sayMoney(v,pro){if(v==null||!isFinite(v))return'';const sa=pro==='sa',cur=ck(sa?'ريال':'دولار');
+    if(v>=100)return`${sayN(v)} ${cur}`;
+    if(sa){const i=Math.floor(v),c=Math.round((v-i)*100);return c?`${sayN(i)} ${cur} ${ck('و'+numParts(c).join(' و'))} ${ck('هللة')}`:`${sayN(i)} ${cur}`;}
+    const f=fmt(v);let[ip,dp]=f.replace(/,/g,'').split('.');dp=(dp||'').replace(/0+$/,'');if(!dp)return`${sayN(+ip)} ${cur}`;
+    const z=(dp.match(/^0*/)||[''])[0].length,rest=dp.slice(z),zs=z===0?'':ck(z===1?'صفر':z===2?'صفرين':`${TH[z]||U[z]} أصفار`);
+    const tail=[zs,rest?sayN(+rest):''].filter(Boolean).join(' ');return +ip===0?`${ck('صفر')} ${tail} ${ck('سنت')}`:`${sayN(+ip)} ${ck('فاصلة')} ${tail} ${cur}`;}
+  function sayPct(v){v=Math.abs(v);const t=v.toFixed(1).replace(/\.0$/,''),[i,d]=t.split('.');return`${sayN(+i)}${d?' '+ck('فاصلة')+' '+ck(U[+d]):''} ${ck('بالمية')}`;}
   const money=(v,pro)=>EN()?(pro==='sa'?`SAR ${fmt(v)}`:`$${fmt(v)}`):`${fmt(v)} ${pro==='sa'?'ر.س':'$'}`;
   function sayText(r){const n=nm(r.a),D=RD(TAB),p=v=>fmt(v).replace(/,/g,''),q=v=>Math.abs(v).toFixed(1).replace(/\.0$/,'');
     const zoneLo=Math.min(r.buy,r.S1||r.buy),t=r.tm||{};
@@ -5272,18 +5278,25 @@ html.locked .gate{display:flex}
       const pe=v=>money(v,r.a.pro).replace(/,/g,'');return[`${L(D.ar,D.en)}. ${n}.`,`Buy zone: from ${pe(zoneLo)} to ${pe(r.buy)}.`,`Sell at ${pe(r.tgt)}, a gain of ${q(r.tp)} percent.`,`Stop loss at ${pe(r.stop)}, a loss of ${q(r.sl)} percent.`,
         r.plan?`Scenario: ${r.act==='now'?'price is near support, so a short bounce toward resistance is expected.':'wait for price to dip to support, then aim for the nearest resistance.'}`:`Scenario: after a sharp drop, a short bounce is expected within this candle. If it does not reach the target, exit at the candle close.`,when];}
     // Saudi colloquial wording for the spoken explanation, with colloquial times of day
-    const tq=sec=>{if(!sec)return'';const[h,m]=RY0.format(new Date(sec*1000)).split(':').map(Number),h12=h%12||12,part=h<4?'بالليل':h<6?'الفجر':h<12?'الصبح':h<15?'الظهر':h<18?'العصر':h<20?'المغرب':'بالليل';return`${words(h12)}${m===30?' ونص':m===15?' وربع':m===45?' إلا ربع':m?' و'+words(m)+' دقيقة':''} ${part}`;};
+    const tq=sec=>{if(!sec)return'';const[h,m]=RY0.format(new Date(sec*1000)).split(':').map(Number),h12=h%12||12,part=h<4?'بالليل':h<6?'الفجر':h<12?'الصبح':h<15?'الظهر':h<18?'العصر':h<20?'المغرب':'بالليل';return`${ck(w99(h12))}${m===30?' '+ck('ونص'):m===15?' '+ck('وربع'):m===45?' '+ck('إلا ربع'):m?' '+ck('و'+w99(m)+' دقيقة'):''} ${ck(part)}`;};
     const pa=v=>sayMoney(v,r.a.pro);
     // «…» marks a fixed phrase recorded as one clip in the owner's voice; other words are number and time words
-    const when=t.mode==='now'?`«تشتري الحين»${t.buyTo?' «لين الساعة» '+tq(t.buyTo):''}، «وتبيع قبل الساعة» ${tq(t.exitBy)}.`:t.mode==='limit'?`«حط أمر شراء عند» ${pa(r.buy)}، «ويظل لين الساعة» ${tq(t.buyTo)}.`:t.mode==='next'?`«تشتري مع بداية الشمعة الجاية، الساعة» ${tq(t.buyAt)}.`:t.mode==='trig'?`«ما تشتري إلا إذا قفلت شمعة الساعة» ${tq(t.closeAt)} «تحت» ${pa(t.trig)}.`:r.wt==='up'?`«ما تشتري إلا إذا قفلت شمعة ساعة فوق» ${pa(r.buy)}.`:'';
-    return[`«${D.ar}». «${n}».`,`«منطقة الشراء من» ${pa(zoneLo)} «لين» ${pa(r.buy)}.`,`«البيع عند» ${pa(r.tgt)}، «يعني ربح» ${sayPct(r.tp)}.`,`«وقف الخسارة عند» ${pa(r.stop)}، «يعني خسارة» ${sayPct(r.sl)}.`,
-      r.plan?(r.act==='now'?'«السيناريو: السعر قريب من الدعم، ونتوقع يرتد شوي لين المقاومة.»':'«السيناريو: ننتظر السعر ينزل للدعم، وبعدها هدفنا أقرب مقاومة.»'):'«السيناريو: بعد نزلة قوية، نتوقع ارتداد بسيط خلال هالشمعة. وإذا ما وصل الهدف، نطلع مع قفلة الشمعة.»',when];}
+    const when=t.mode==='now'?`«تقدر تشتري الحين»${t.buyTo?' «لين الساعة» '+tq(t.buyTo):''}، «وبيعك قبل الساعة» ${tq(t.exitBy)}.`:t.mode==='limit'?`«حط أمر شراء عند» ${pa(r.buy)}، «ويظل لين الساعة» ${tq(t.buyTo)}.`:t.mode==='next'?`«تشتري مع بداية الشمعة الجاية، الساعة» ${tq(t.buyAt)}.`:t.mode==='trig'?`«ما تشتري إلا إذا قفلت شمعة الساعة» ${tq(t.closeAt)} «تحت» ${pa(t.trig)}.`:r.wt==='up'?`«ما تشتري إلا إذا قفلت شمعة ساعة فوق» ${pa(r.buy)}.`:'';
+    const SC=scen(r).map(x=>ck(x)).join(' ');
+    return[`«${D.ar}». «${n}».`,`«منطقة الشراء بين» ${pa(zoneLo)} «و» ${pa(r.buy)}.`,`«وتبيع على» ${pa(r.tgt)}، «يعني ربحك» ${sayPct(r.tp)}.`,`«والوقف على» ${pa(r.stop)}، «يعني خسارتك» ${sayPct(r.sl)}.`,SC,when];}
+  // the scenario changes with the setup: oversold depth, the drop, the daily trend, resistance on the way
+  const SCN={rsi:'السوق مضغوط بقوة والمؤشر في تشبع بيعي واضح، والارتداد هنا وارد، بس خلك منتبه',drop:'نزل نزلة حادة في آخر كم شمعة، وعادةً يرجع يتنفس شوي قبل لا يكمل',up:'الاتجاه العام صاعد، وهالنزلة تصحيح، فالارتداد فرصته أحسن',down:'الاتجاه العام نازل، فالارتداد يكون قصير، خذ ربحك أول ما يلمس الهدف',
+    base:'بعد هالنزلة نتوقع ارتداد بسيط خلال الشمعة، وإذا ما وصل الهدف تطلع مع قفلتها',block:'فيه مقاومة قريبة قبل الهدف، لا تطمع، وإذا تعثر عندها اطلع',
+    pSup:'السعر جالس على الدعم والاتجاه معك، والدخول هنا مريح',pOver:'السعر في تشبع بيعي وقريب من الدعم، ونتوقع يرتد لين المقاومة',pLim:'السعر بعيد شوي عن الدعم، الأفضل تحط أمرك تحت وتخليه ينزل لك',pUp:'الاتجاه نازل، لا تستعجل، انتظر شمعة ساعة تقفل فوق السعر المحدد',pDip:'انتظر السعر ينزل للدعم وتبين شمعة ساعة خضراء، بعدها ادخل'};
+  function scen(r){const o=[];if(r.plan){o.push(SCN[r.act==='now'?(r.r!=null&&r.r<35?'pOver':'pSup'):r.act==='limit'?'pLim':r.wt==='up'?'pUp':'pDip']);}
+    else{o.push(SCN[r.r!=null&&r.r<22?'rsi':r.d3!=null&&r.d3<=-8?'drop':r.dDown===false?'up':r.dDown?'down':'base']);if(r.blocking)o.push(SCN.block);else if(r.dDown&&o[0]!==SCN.down)o.push(SCN.down);}
+    return o;}
   let VQ=0,VT=null,VEL=null,VRAF=0,AVG=null;
   /* The owner's voice: short clips made once from his cloned voice (pro/voice/ar), stitched in order.
      Fixed phrases are whole clips; numbers and times are built word by word. Missing clips fall back to the browser voice. */
   const VCL={ok:false,idx:null,buf:{},ctx:null,src:[],
-    async load(){if(this.idx!==null)return;this.idx=false;const j=await getJSON(`pro/voice/ar/index.json?v=${Math.floor(Date.now()/36e5)}`);if(j&&j.clips&&j.clips['منطقة الشراء من']){this.idx=j.clips;this.ok=true;}},
-    toks(part){const out=[];for(const m of part.matchAll(/«([^»]+)»|([،.])|([^\s،.«»]+)/g)){if(m[1])out.push({t:m[1].replace(/[.]$/,''),ph:1});else if(m[2])out.push({gap:m[2]==='.'?.26:.14});else out.push({t:m[3]});}return out;},
+    async load(){if(this.idx!==null)return;this.idx=false;const j=await getJSON(`pro/voice/ar/index.json?v=${Math.floor(Date.now()/36e5)}`);if(j&&j.clips&&j.clips['منطقة الشراء بين']){this.idx=j.clips;this.ok=true;}},
+    toks(part){const out=[];for(const m of part.matchAll(/«([^»]+)»|([،.])|([^\s،.«»]+)/g)){if(m[1])out.push({t:m[1].replace(/[.]$/,''),ph:1});else if(m[2])out.push({gap:m[2]==='.'?.2:.1});else out.push({t:m[3]});}return out;},
     async get(f){if(this.buf[f])return this.buf[f];const r=await fetch(`pro/voice/ar/${f}`);if(!r.ok)throw 0;const b=await this.ctx.decodeAudioData(await r.arrayBuffer());this.buf[f]=b;return b;},
     stop(){this.src.forEach(x=>{try{x.stop();}catch(_){}});this.src=[];(this.timers||[]).forEach(clearTimeout);this.timers=[];},
     async play(parts,o){if(!this.ok)return false;try{if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)();if(this.ctx.state==='suspended')this.ctx.resume();}catch(_){return false;}
@@ -5292,7 +5305,7 @@ html.locked .gate{display:flex}
       try{await Promise.all(P.flat().filter(x=>x.t&&this.idx[x.t]).map(x=>this.get(this.idx[x.t])));}catch(_){return false;}
       if(!o.id())return true;this.stop();let t=this.ctx.currentTime+.08;const t0=t;this.timers=[];
       P.forEach((seq,i)=>{const at=t;this.timers.push(setTimeout(()=>{if(o.id())o.on(i);},Math.max(0,(at-t0)*1000)));
-        seq.forEach(x=>{if(x.gap){t+=x.gap;return;}const b=this.buf[this.idx[x.t]];if(!b)return;const s=this.ctx.createBufferSource();s.buffer=b;s.connect(this.ctx.destination);s.start(t);this.src.push(s);t+=b.duration+(x.ph?.06:.015);});t+=.32;});
+        seq.forEach(x=>{if(x.gap){t+=x.gap;return;}const b=this.buf[this.idx[x.t]];if(!b)return;const s=this.ctx.createBufferSource();s.buffer=b;s.connect(this.ctx.destination);s.start(t);this.src.push(s);t+=b.duration+(x.ph?.02:.01);});t+=.26;});
       this.timers.push(setTimeout(()=>o.end(),(t-t0)*1000+100));return true;}};
   // the dashed line from the voice box to the item being read
   const TG=['header','.rd-px .b','.rd-px .s','.rd-px .x','.rd-sc','.rd-time'];let PC=null;
@@ -5421,5 +5434,5 @@ html.locked .gate{display:flex}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
-</script><script>(function(){var B='6f71c7c26c';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='62f80a82e6';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
