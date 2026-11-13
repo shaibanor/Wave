@@ -33,6 +33,11 @@ jobs:
           AGENT_DAILY: ${{ github.event.inputs.daily }}
           AGENT_MAXSEC: ${{ github.event.inputs.maxsec }}
         run: python3 scripts/agent_setup.py
+      - name: Check the agent
+        continue-on-error: true
+        env:
+          ELEVEN_KEY: ${{ secrets.ELEVEN_KEY }}
+        run: python3 scripts/agent_check.py
       - name: Commit
         run: |
           git config user.name shaibanor
