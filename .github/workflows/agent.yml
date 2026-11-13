@@ -1,0 +1,42 @@
+name: agent
+on:
+  workflow_dispatch:
+    inputs:
+      tts:
+        description: 'Voice model for the agent (empty = eleven_v4, the owner voice)'
+        required: false
+        default: ''
+      daily:
+        description: 'Max conversations per day'
+        required: false
+        default: '40'
+      maxsec:
+        description: 'Max seconds per conversation'
+        required: false
+        default: '300'
+permissions:
+  contents: write
+concurrency:
+  group: pro-data
+  cancel-in-progress: false
+jobs:
+  setup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create or update the voice agent
+        env:
+          ELEVEN_KEY: ${{ secrets.ELEVEN_KEY }}
+          ELEVEN_VOICE_ID: ${{ secrets.ELEVEN_VOICE_ID }}
+          AGENT_TTS: ${{ github.event.inputs.tts }}
+          AGENT_DAILY: ${{ github.event.inputs.daily }}
+          AGENT_MAXSEC: ${{ github.event.inputs.maxsec }}
+        run: python3 scripts/agent_setup.py
+      - name: Commit
+        run: |
+          git config user.name shaibanor
+          git config user.email shaibanor@users.noreply.github.com
+          git add pro/voice/agent.json
+          git diff --cached --quiet || git commit -m "Voice agent"
+          git pull --rebase -q && git push -q

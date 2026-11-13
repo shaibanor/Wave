@@ -1,0 +1,28 @@
+name: agent-log
+on:
+  schedule:
+    - cron: '41 */2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: pro-data
+  cancel-in-progress: false
+jobs:
+  pull:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet cryptography
+      - name: Pull agent conversations for the internal auditor
+        env:
+          ELEVEN_KEY: ${{ secrets.ELEVEN_KEY }}
+        run: python3 scripts/agent_log.py
+      - name: Commit
+        run: |
+          git config user.name shaibanor
+          git config user.email shaibanor@users.noreply.github.com
+          git add vault/agent_log.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Agent log"
+          git pull --rebase -q && git push -q
