@@ -15,7 +15,7 @@
     '2010':['سابك','sabic'],'2082':['أكوا','أكوا باور','acwa'],'4013':['الحبيب','سليمان الحبيب'],'1010':['بنك الرياض','riyad bank'],'1325':['حديد وطني','وطني للحديد','حديد الوطني','الوطني للحديد','watani steel'],'1150':['الإنماء','مصرف الإنماء','بنك الإنماء','alinma'],
     'BTC':['بيتكوين','بتكوين','bitcoin','بيتكون'],'ETH':['إيثريوم','ايثيريوم','إيثيريوم','الإيثر','ايثر','ethereum'],'XRP':['ريبل','ripple'],'BNB':['بينانس','بي إن بي'],
     'SOL':['سولانا','solana'],'TRX':['ترون','tron'],'DOGE':['دوج','دوجكوين','دوج كوين','dogecoin'],'ZEC':['زي كاش','زيكاش','zcash'],'LINK':['لينك','تشين لينك','chainlink'],
-    'ADA':['كاردانو','cardano'],'LTC':['لايتكوين','لايت كوين','ليتكوين','litecoin'],'PARTI':['بارتي','بارتيكل','بارتيكل نتورك','particle','parti'],
+    'ADA':['كاردانو','cardano'],'LTC':['لايتكوين','لايت كوين','ليتكوين','litecoin'],'PARTI':['بارتي','بارتيكل','بارتيكل نتورك','particle','parti'],'IMX':['ايميوتبل','إيميوتبل','ايموتابل','إيموتابل','ايميوتابل','immutable','imx','اي ام اكس','آي إم إكس'],
     'GOOGL':['قوقل','جوجل','google','ألفابت','alphabet'],'META':['ميتا','فيسبوك','facebook'],'AVGO':['برودكوم','broadcom'],'TSM':['تايوان','tsmc','تايوان للرقائق'],
     'JPM':['جي بي مورقان','جي بي مورغان','jp morgan','jpmorgan','مورقان','مورغان'],'LLY':['إيلي ليلي','ليلي','eli lilly'],'V':['فيزا','visa'],
     'TASI':['تاسي','المؤشر العام','مؤشر السوق','السوق السعودي','المؤشر السعودي','السوق'],'DJI':['داو جونز','داوجونز','الداو','dow jones','dow'],
@@ -322,11 +322,12 @@
 
   /* ---------- router ---------- */
   const CTX={last:null};
-  async function answer(q,el){const t=norm(q);if(!t)return OUTSCOPE();
+  let ANS_ID=null;
+  async function answer(q,el){ANS_ID=null;const t=norm(q);if(!t)return OUTSCOPE();
     const ids=findAssets(t),tf=tfOf(t);
     const follow=has(t,I.plan)||has(t,I.why)||has(t,I.bull)||has(t,I.bear)||has(t,I.sit)||(has(t,I.yes)&&t.split(' ').length<=3);
     if(!ids.length&&!follow){const sh=siteHit(t);if(sh&&!MK.test(t.replace(/(تحليل|شارت)/g,'')))return siteAns(sh);}
-    if(!ids.length&&CTX.last&&follow){ids.push(CTX.last);}
+    if(!ids.length&&CTX.last&&follow){ids.push(CTX.last);}ANS_ID=ids[0]||null;
     if(!ids.length&&follow&&!CTX.last)return`<p>عن أي أصل تقصد؟ اكتب اسمه، مثل: «وين أشتري أرامكو» أو «وش وضع البيتكوين».</p>`+MORE();
     const gl=GLOSS.find(([r])=>r.test(t));
     const ZQ=/(دعم قوي|دعوم قوي|الدعوم القوي|مناطق (الشراء|الدعم|ارتداد)|منطقة (شراء|دعم) قوي|ارتداد|مناطق آمن|منطقة آمن|امنه|strong support|support zone|bounce)/;
@@ -373,7 +374,7 @@
     const d=add('bot','<span class="btyp"><i></i><i></i><i></i></span>');const t0=Date.now();let h;
     try{h=await answer(q,d);}catch(e){console.error(e);h='<p>حدث خطأ أثناء التحليل. حاول مرة أخرى.</p>';}
     const w=350-(Date.now()-t0);if(w>0)await new Promise(r=>setTimeout(r,w));
-    d.innerHTML=h;log.scrollTop=Math.max(0,d.offsetTop-8);busy=false;}
+    d.innerHTML=h;if(window.TIKO_RADAR&&TIKO_RADAR.talk&&!document.documentElement.classList.contains('lang-en')){const sp=document.createElement('button');sp.type='button';sp.className='bspk';sp.dataset.spk=ANS_ID||'';sp.textContent='🔊 اسمع الشرح';d.appendChild(sp);}log.scrollTop=Math.max(0,d.offsetTop-8);busy=false;}
   function open(){panel.hidden=false;btn.setAttribute('aria-expanded','true');document.documentElement.classList.add('bot-on');tip.hidden=true;LS.set('bot-seen','1');
     if(!log.children.length)add('bot',WELCOME());setTimeout(()=>{if(matchMedia('(min-width:700px)').matches)inp.focus();},60);}
   function close(){panel.hidden=true;btn.setAttribute('aria-expanded','false');document.documentElement.classList.remove('bot-on');btn.focus();}
@@ -381,7 +382,7 @@
   $('botClose').addEventListener('click',close);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)close();});
   form.addEventListener('submit',e=>{e.preventDefault();const v=inp.value;inp.value='';ask(v);});
-  log.addEventListener('click',e=>{const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
+  log.addEventListener('click',e=>{const sp=e.target.closest('.bspk');if(sp){const m=sp.closest('.bmsg'),c=m.cloneNode(true);c.querySelectorAll('.bspk,button,small').forEach(x=>x.remove());TIKO_RADAR.talk(c.textContent,sp.dataset.spk);return;}const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
     const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='cube'){const c=$('vxCube');if(c){close();c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.click(),500);}}else if(g.dataset.go==='tv'&&window.CHARTX){close();CHARTX.open(CTX.last||API().current());}return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
   window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
