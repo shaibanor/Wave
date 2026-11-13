@@ -5407,24 +5407,38 @@ html.locked .gate{display:flex}
     return o;}
   let VQ=0,VRES={},GFLOW=false,VT=null,VEL=null,VRAF=0,AVG=null,UNL=false;
   function unlockAudio(){try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback';}catch(_){}
-    try{const X=window.AudioContext||window.webkitAudioContext;if(X){if(!VCL.ctx)VCL.ctx=new X();if(VCL.ctx.state!=='running')VCL.ctx.resume();const b=VCL.ctx.createBuffer(1,1,22050),q=VCL.ctx.createBufferSource();q.buffer=b;q.connect(VCL.ctx.destination);q.start(0);}}catch(_){}
+    try{const X=window.AudioContext||window.webkitAudioContext;if(X){if(VCL.ctx&&(VCL.ctx.state==='closed'||VCL.ctx.state==='interrupted'||VCL.stale)){try{VCL.ctx.close();}catch(_){}VCL.ctx=null;VCL.stale=false;}if(!VCL.ctx)VCL.ctx=new X();if(VCL.ctx.state!=='running')VCL.ctx.resume();const b=VCL.ctx.createBuffer(1,1,22050),q=VCL.ctx.createBufferSource();q.buffer=b;q.connect(VCL.ctx.destination);q.start(0);}}catch(_){}
     if(!VCL.ok&&VCL.idx===null)VCL.load();
-    if(UNL)return;UNL=true;try{const a=new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqpAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');a.setAttribute('playsinline','');a.volume=0;const p=a.play();p&&p.catch(()=>{});}catch(_){}}
+    try{if(!VCL.el){VCL.el=new Audio();VCL.el.setAttribute('playsinline','');VCL.el.preload='auto';}if(VCL.el.paused){VCL.el.src=SIL;VCL.el.volume=1;const p=VCL.el.play();p&&p.catch(()=>{});}}catch(_){}
+    if(UNL)return;UNL=true;try{const a=new Audio(SIL);a.setAttribute('playsinline','');a.volume=0;const p=a.play();p&&p.catch(()=>{});}catch(_){}}
+  const SIL='data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqpAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
   /* The owner's voice: short clips made once from his cloned voice (pro/voice/ar), stitched in order.
      Fixed phrases are whole clips; numbers and times are built word by word. Missing clips fall back to the browser voice. */
   const VCL={ok:false,idx:null,buf:{},ctx:null,src:[],
-    async load(){if(this.idx!==null)return;this.idx=false;const j=await getJSON(`pro/voice/ar/index.json?v=${Math.floor(Date.now()/36e5)}`);if(j&&j.clips&&j.clips['منطقة الشراء بين']){this.idx=j.clips;this.ok=true;}},
+    load(){if(this.ok)return Promise.resolve(true);if(this.lp)return this.lp;this.idx=false;
+      this.lp=getJSON(`pro/voice/ar/index.json?v=${Math.floor(Date.now()/36e5)}`).then(j=>{if(j&&j.clips&&j.clips['منطقة الشراء بين']){this.idx=j.clips;this.ok=true;}}).catch(()=>{}).then(()=>{if(!this.ok)this.idx=null;this.lp=null;return this.ok;});return this.lp;},
     toks(part){const out=[];for(const m of part.matchAll(/«([^»]+)»|([،.])|([^\s،.«»]+)/g)){if(m[1])out.push({t:m[1].replace(/[.]$/,''),ph:1});else if(m[2])out.push({gap:m[2]==='.'?.38:.14});else out.push({t:m[3]});}return out;},
-    async get(f){if(this.buf[f])return this.buf[f];const r=await fetch(`pro/voice/ar/${f}`);if(!r.ok)throw 0;const b=await this.ctx.decodeAudioData(await r.arrayBuffer());this.buf[f]=b;return b;},
-    stop(){this.src.forEach(x=>{try{x.stop();}catch(_){}});this.src=[];(this.timers||[]).forEach(clearTimeout);this.timers=[];},
+    raw:{},
+    async get(f){if(this.buf[f])return this.buf[f];const r=await fetch(`pro/voice/ar/${f}`);if(!r.ok)throw 0;const ab=await r.arrayBuffer();this.raw[f]=ab.slice(0);
+      const b=await new Promise((ok,no)=>{const q=this.ctx.decodeAudioData(ab,ok,no);if(q&&q.then)q.then(ok,no);});this.buf[f]=b;return b;},
+    stop(){this.src.forEach(x=>{try{x.stop();}catch(_){}});this.src=[];(this.timers||[]).forEach(clearTimeout);this.timers=[];try{if(this.el&&this.el.src&&this.el.src.startsWith('blob:')){this.el.pause();}}catch(_){}},
+    async running(){const c=this.ctx;if(!c)return false;if(c.state==='running')return true;try{await Promise.race([c.resume(),new Promise(r=>setTimeout(r,900))]);}catch(_){}return c.state==='running';},
     async play(parts,o){if(!this.ok)return false;try{if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)();if(this.ctx.state==='suspended')this.ctx.resume();}catch(_){return false;}
       const P=parts.map(p=>this.toks(p).filter(x=>x.gap||this.idx[x.t]||(x.ph&&p.indexOf('«')===0)));
       for(const [i,p] of parts.entries())for(const x of this.toks(p))if(x.t&&!this.idx[x.t]&&!(x.ph&&i===0)){if(location.hostname==='localhost')window.__miss=x.t;return false;} // a needed clip is missing
       try{await Promise.all(P.flat().filter(x=>x.t&&this.idx[x.t]).map(x=>this.get(this.idx[x.t])));}catch(_){return false;}
-      if(!o.id())return true;this.stop();let t=this.ctx.currentTime+.08;const t0=t;this.timers=[];
+      if(!o.id())return true;this.stop();
+      if(!(await this.running()))return this.playEl(P,o);if(!o.id())return true;
+      let t=this.ctx.currentTime+.08;const t0=t;this.timers=[];
       P.forEach((seq,i)=>{const at=t;this.timers.push(setTimeout(()=>{if(o.id())o.on(i);},Math.max(0,(at-t0)*1000)));
         seq.forEach(x=>{if(x.gap){t+=x.gap;return;}const b=this.buf[this.idx[x.t]];if(!b)return;const s=this.ctx.createBufferSource();s.buffer=b;s.connect(this.ctx.destination);s.start(t);this.src.push(s);t+=b.duration+(x.ph?.02:.01);});t+=.42;});
-      this.timers.push(setTimeout(()=>o.end(),(t-t0)*1000+100));return true;}};
+      this.timers.push(setTimeout(()=>o.end(),(t-t0)*1000+100));return true;},
+    // fallback for phones that keep the audio context asleep: one joined mp3 in the element unlocked by the tap
+    playEl(P,o){const el=this.el;if(!el)return false;const chunks=[];let t=0;const marks=[];
+      P.forEach(seq=>{marks.push(t);seq.forEach(x=>{if(x.gap){return;}const f=this.idx[x.t],b=this.buf[f];if(!b||!this.raw[f])return;chunks.push(this.raw[f]);t+=b.duration;});});
+      if(!chunks.length)return false;try{if(this._url)URL.revokeObjectURL(this._url);this._url=URL.createObjectURL(new Blob(chunks,{type:'audio/mpeg'}));el.src=this._url;el.volume=1;
+        const p=el.play();p&&p.catch(()=>{});}catch(_){return false;}
+      this.timers=marks.map((m,i)=>setTimeout(()=>{if(o.id())o.on(i);},m*1000));const done=()=>{el.onended=null;o.end();};el.onended=done;this.timers.push(setTimeout(done,t*1000+1500));return true;}};
   // the dashed line from the voice box to the item being read
   const TG=['header','.rd-px .b','.rd-px .s','.rd-px .x','.rd-sc','.rd-time'];let PC=null;
   function target(card,i){if(!card)return null;if(card.els){const e=card.els[i];return e&&e.isConnected&&e.getClientRects().length?e:null;}let el=card.querySelector(TG[i]||'header');if(i===4){const d=card.querySelector('details');if(d&&!d.open)d.open=true;}return el||card.querySelector('header');}
@@ -5454,6 +5468,7 @@ html.locked .gate{display:flex}
   function speak(r,card){if(!r)return;say(sayText(r).filter(Boolean),card,RD(TAB));}
   function say(raw,card,D){hush();unlockAudio();if(location.hostname==='localhost')window.__lastSay=raw;const parts=raw.map(x=>x.replace(/[«»]/g,'')),id=++VQ,av=document.getElementById('rdAv');if(av){av.hidden=false;av.classList.toggle('gd',D===GD);av.style.setProperty('--rc',D.color);if(AVG){AVG.tint(D.color,D.accent);AVG.kick();}}
     const at=i=>{if(id!==VQ)return;avatar(true);point(card,i);},fin=()=>{const f=VRES[id];if(f){delete VRES[id];f();}};
+    if(!EN()&&!VCL.ok){Promise.race([VCL.load(),new Promise(r=>setTimeout(r,5000))]).then(()=>{if(id!==VQ)return;if(VCL.ok)VCL.play(raw,{on:i=>at(i),end:()=>{if(id===VQ)avatar(false);fin();},id:()=>id===VQ}).then(ok=>{if(!ok&&id===VQ)browserSay();});else browserSay();});return;}
     if(!EN()&&VCL.ok){VCL.play(raw,{on:i=>at(i),end:()=>{if(id===VQ)avatar(false);fin();},id:()=>id===VQ}).then(ok=>{if(!ok&&id===VQ)browserSay();});return;}
     function browserSay(){
     if(window.TIKO_VOICE&&TIKO_VOICE.speak){TIKO_VOICE.speak(parts,{lang:EN()?'en':'ar',on:(c,i)=>at(i==null?parts.indexOf(c):i),end:()=>{if(id===VQ)avatar(false);fin();}});return;}
@@ -5542,7 +5557,7 @@ html.locked .gate{display:flex}
     document.querySelectorAll('.rdr').forEach(b=>{const D=RD(b.dataset.k);MINI[D.k]=globe(b.querySelector('.rdr-cv'),()=>TAB===D.k?mode:'idle',{color:D.color,accent:D.accent});b.addEventListener('click',()=>go(D.k));});
     document.getElementById('rdAgain').addEventListener('click',()=>go(TAB));
     ['rdAv','rdAvL'].forEach(i=>{const e=document.getElementById(i);if(e)document.body.appendChild(e);});mountGuide();
-    VCL.load();AVG=globe(document.querySelector('#rdAv .av-g'),()=>document.getElementById('rdAv').classList.contains('talk')?'scan':'idle',{av:true});
+    VCL.load();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&VCL.ctx&&VCL.ctx.state!=='running')VCL.stale=true;});AVG=globe(document.querySelector('#rdAv .av-g'),()=>document.getElementById('rdAv').classList.contains('talk')?'scan':'idle',{av:true});
     document.getElementById('rdAv').addEventListener('click',hush);document.getElementById('rdo').addEventListener('scroll',()=>{if(VEL&&!VRAF)VRAF=requestAnimationFrame(lineLoop);},{passive:true});
     try{window.speechSynthesis&&speechSynthesis.getVoices();window.speechSynthesis&&speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{});}catch(_){}document.getElementById('rdX').addEventListener('click',close);
     document.getElementById('rdo').addEventListener('click',e=>{if(e.target.id==='rdo')return close();const tb=e.target.closest('.rd-tab');if(tb)return switchTab(tb.dataset.t);
@@ -5734,7 +5749,7 @@ html.locked .gate{display:flex}
       buy:['.rd-px .b','#hero .zc'],sell:['.rd-px .s','#hero .zc'],stop:['.rd-px .x','#hero .zc'],news:['#hero .nprev','#newsAi'],forecast:['#hero .say'],radar:['#rdBox','.rd-card']};for(const k in M)M[k]=M[k].concat(['#hero']);
     const el=pick(...(M[zone]||M.price));if(!el)return false;VEL=el;const r=el.getBoundingClientRect();if(r.top<innerHeight*.12||r.top>innerHeight*.6)el.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
     el.classList.add('ag-hl');clearTimeout(el._agh);el._agh=setTimeout(()=>el.classList.remove('ag-hl'),3500);return true;}
-  window.TIKO_RADAR={agentInfo,agentTrade,agentPoint,assetOf,talk,guide:()=>guideRun(false),scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
+  window.TIKO_RADAR={hush,vctx:()=>VCL.ctx,agentInfo,agentTrade,agentPoint,assetOf,talk,guide:()=>guideRun(false),scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
@@ -5801,13 +5816,23 @@ html.locked .gate{display:flex}
       p.style.setProperty('--ag-v',Math.min(1,v*1.6).toFixed(3));RAF=requestAnimationFrame(tick);};RAF=requestAnimationFrame(tick);}
 
   /* ---------- session ---------- */
+  // loaded ahead of the tap, so the call starts while the tap still counts as the visitor's gesture (iPhone)
+  let SDKP=null;const sdk=()=>SDKP||(SDKP=import(SDK).catch(e=>{SDKP=null;throw e;}));
+  function prime(){// inside the tap: stop the explainer voice, switch the phone to call mode, ask for the mic, wake audio output
+    try{window.TIKO_RADAR&&TIKO_RADAR.hush&&TIKO_RADAR.hush();const x=TIKO_RADAR.vctx&&TIKO_RADAR.vctx();if(x&&x.state==='running')x.suspend();}catch(_){}
+    try{if(navigator.audioSession)navigator.audioSession.type='play-and-record';}catch(_){}
+    let mic=null;try{mic=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true});}catch(_){}
+    try{const A=window.AudioContext||window.webkitAudioContext;if(A){const c=new A();c.resume();const o=c.createOscillator(),g=c.createGain();g.gain.value=0;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.05);setTimeout(()=>{try{c.close();}catch(_){}},400);}}catch(_){}
+    return mic;}
   async function start(){ui();show(true);const L=document.getElementById('agLog');L.innerHTML='';ST='connecting';status('يتصل…','wait');
+    const micP=prime();
+    try{const st=await micP;st&&st.getTracks().forEach(t=>t.stop());}catch(e){ST='off';status('المايك مقفل','err');log('sys','اسمح للموقع باستخدام المايك (من إعدادات Safari ← الميكروفون)، ثم اضغط «ناقش الوكيل» مرة ثانية.');return;}
     const c=await conf();if(!c){ST='off';status('الوكيل غير مفعّل بعد','err');log('sys','الوكيل الصوتي قيد التجهيز، جرّب لاحقًا.');return;}
-    let M;try{M=await import(SDK);}catch(_){ST='off';status('تعذر التحميل','err');log('sys','تعذر تحميل خدمة الصوت. تأكد من الاتصال وحاول مرة ثانية.');return;}
+    let M;try{M=await sdk();}catch(_){ST='off';status('تعذر التحميل','err');log('sys','تعذر تحميل خدمة الصوت. تأكد من الاتصال وحاول مرة ثانية.');return;}
     try{const Conv=M.Conversation||(M.default&&M.default.Conversation);const a=onScreen();
       CONV=await Conv.startSession({agentId:c.agent_id,connectionType:'webrtc',dynamicVariables:{current_asset:a?`${nameOf(a)} (${a.id}) من ${MK[a.pro]||''}`:'لا يوجد أصل محدد'},clientTools:tools,
         onConnect:()=>{ST='on';status('متصل · تكلم براحتك','listen');orb();},
-        onDisconnect:()=>{CONV=null;ST='off';MODE='idle';status('انتهت المحادثة','');cancelAnimationFrame(RAF);const b=document.getElementById('tkAgent');if(b)b.classList.remove('live');},
+        onDisconnect:()=>{CONV=null;try{if(navigator.audioSession)navigator.audioSession.type='auto';}catch(_){}ST='off';MODE='idle';status('انتهت المحادثة','');cancelAnimationFrame(RAF);const b=document.getElementById('tkAgent');if(b)b.classList.remove('live');},
         onError:e=>{log('sys','صار خلل بالاتصال: '+(e&&e.message||e||''));},
         onModeChange:m=>{MODE=(m&&m.mode)||m;status(MODE==='speaking'?'يتكلم…':'يسمعك…',MODE==='speaking'?'speak':'listen');},
         onMessage:m=>{if(!m)return;const who=m.source||m.role,t=String(m.message||m.text||'').replace(/\[[^\]]{1,24}\]\s*/g,'').trim();if(!t||t==='...')return;log(who==='user'?'user':'ai',t);}});
@@ -5815,12 +5840,12 @@ html.locked .gate{display:flex}
     catch(e){CONV=null;ST='off';const msg=String(e&&(e.message||e.reason||(e.type&&('event:'+e.type)))||e||'');try{console.warn('[agent]',e);}catch(_){}
       status(/permission|denied|NotAllowed/i.test(msg)?'المايك مقفل':'تعذر الاتصال','err');
       log('sys',/permission|denied|NotAllowed/i.test(msg)?'اسمح للموقع باستخدام المايك من إعدادات المتصفح، ثم اضغط «ناقش الوكيل» مرة ثانية.':'تعذر بدء المحادثة الحين. حاول بعد شوي.'+(msg?` (${msg.slice(0,90)})`:''));}}
-  async function stop(){const c=CONV;CONV=null;try{c&&await c.endSession();}catch(_){}ST='off';cancelAnimationFrame(RAF);show(false);const b=document.getElementById('tkAgent');if(b)b.classList.remove('live');}
+  async function stop(){const c=CONV;CONV=null;try{c&&await c.endSession();}catch(_){}try{if(navigator.audioSession)navigator.audioSession.type='auto';}catch(_){}ST='off';cancelAnimationFrame(RAF);show(false);const b=document.getElementById('tkAgent');if(b)b.classList.remove('live');}
 
-  function boot(){if(EN())return;ui();}
+  function boot(){if(EN())return;ui();setTimeout(()=>{conf();sdk().catch(()=>{});},2500);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='24d166bd1b';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='58797f1cf4';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
