@@ -9,6 +9,9 @@ import hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'pro', 'voice')
 OUT = os.path.join(ROOT, 'ar')
 KEY, VOICE = os.environ.get('ELEVEN_KEY', '').strip(), os.environ.get('ELEVEN_VOICE_ID', '').strip()
+_VF = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'agent', 'voice_id')
+if os.path.exists(_VF) and open(_VF).read().strip():
+    VOICE = open(_VF).read().strip()  # the owner's current voice (a voice id is not a secret; the API key stays in Secrets)
 MODEL = os.environ.get('VOICE_MODEL', '').strip() or 'eleven_v4'
 STAB = float(os.environ.get('VOICE_STABILITY', '') or 0.45)
 FORCE = os.environ.get('VOICE_FORCE', '') == 'true'
@@ -122,7 +125,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     idx_p = os.path.join(OUT, 'index.json')
     idx = json.load(open(idx_p, encoding='utf-8')) if os.path.exists(idx_p) and not FORCE else {'clips': {}}
-    tag = f'{MODEL}|{STAB}|v2'
+    tag = f'{MODEL}|{STAB}|v2' + (f'|{VOICE}' if os.path.exists(_VF) else '')
     made = 0
     for t in items:
         fix = [w for w in t.replace('،', ' ').split() if w in say2]

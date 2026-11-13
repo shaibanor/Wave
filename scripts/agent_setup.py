@@ -5,6 +5,9 @@ import json, os, sys, urllib.request, urllib.error
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEY = os.environ.get('ELEVEN_KEY', '').strip()
 VOICE = os.environ.get('ELEVEN_VOICE_ID', '').strip()
+_VF = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'agent', 'voice_id')
+if os.path.exists(_VF) and open(_VF).read().strip():
+    VOICE = open(_VF).read().strip()  # the owner's current voice (a voice id is not a secret; the API key stays in Secrets)
 MODEL = (os.environ.get('AGENT_TTS') or 'eleven_v4').strip()
 LLM = (os.environ.get('AGENT_LLM') or 'gpt-4.1').strip()
 DAILY = int(os.environ.get('AGENT_DAILY') or 40)
