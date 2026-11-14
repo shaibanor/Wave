@@ -1207,10 +1207,18 @@
 "ما فيه صفقة مؤكدة الحين، بس هذي خطة المراقبة": "bc761d728a9a.mp3",
 "PROM": "f73c124d9e78.mp3",
 "CBRSB": "41f5a31fec89.mp3",
-"BNCB": "f88d4652642d.mp3"
+"BNCB": "f88d4652642d.mp3",
+"SHELL": "119aca69d64d.mp3",
+"إيميوتبل": "148fefae91b9.mp3",
+"ماي شيل": "a62ff94d6bbe.mp3",
+"WBTC": "d16a045700b7.mp3",
+"WBETH": "def746fddd66.mp3",
+"BMT": "53955ef82034.mp3",
+"MITO": "cf952e8c5bc0.mp3",
+"MARSCOIN": "5c0d2177f02e.mp3"
 },
 "model": "eleven_v4",
 "stability": 0.45,
-"count": 1208,
-"updated": "2026-11-13T03:00Z"
+"count": 1216,
+"updated": "2026-11-14T21:08Z"
 }
