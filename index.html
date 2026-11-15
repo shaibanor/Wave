@@ -5336,7 +5336,10 @@ html.locked .gate{display:flex}
       const E=window.WAVE_ASK&&WAVE_ASK.calendar?await WAVE_ASK.calendar():[];ctx.ev=E.filter(e=>e.d===today||e.d===tom);}catch(_){}
     const syms=[...new Set(cands.filter(r=>r.a.pro==='cx'||k==='bn').map(r=>r.a.sym||r.a.id+'USDT').concat(['BTCUSDT']))].slice(0,60);
     try{const j=await bn('/api/v3/ticker/24hr?type=MINI&symbols='+encodeURIComponent(JSON.stringify(syms)));if(Array.isArray(j))for(const x of j){const o=+x.openPrice,c=+x.lastPrice;ctx.tick[x.symbol]={qv:+x.quoteVolume,ch:o?(c/o-1)*100:0};}}catch(_){}
-    ctx.btc=ctx.tick.BTCUSDT?ctx.tick.BTCUSDT.ch:null;return ctx;}
+    ctx.btc=ctx.tick.BTCUSDT?ctx.tick.BTCUSDT.ch:null;
+    // market regime: in the backtest, bounce longs did clearly worse while BTC sat under its 50-day average
+    try{const d=kl(await bn('/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=80'));if(d.length>55){const e=ema(d.map(x=>x.c),50);ctx.btcDown=d[d.length-1].c<e[e.length-1];}}catch(_){}
+    return ctx;}
   const HARD=/(اختراق|سرقه|exploit|hack|احتيال|fraud|تحقيق|دعوي|lawsuit|شطب|delist|ايقاف التداول|halt)/;
   async function vetOne(r,ctx){const C=[];let pts=0,reject=null;const add=(st,txt,p)=>{C.push({st,txt});pts+=p;};
     const rr=r.sl?r.tp/r.sl:0;
@@ -5353,6 +5356,7 @@ html.locked .gate{display:flex}
       else add(t.qv>=1e7?'ok':'warn',L(`السيولة ${(t.qv/1e6).toFixed(0)} مليون $ خلال 24 ساعة`,`liquidity $${(t.qv/1e6).toFixed(0)}M in 24h`),t.qv>=1e7?5:-4);
       if(Math.abs(t.ch)>=(r.lev?60:35))reject=L(`حركة غير طبيعية ${t.ch>0?'+':''}${t.ch.toFixed(0)}% خلال 24 ساعة (ضخ أو انهيار)`,`abnormal ${t.ch.toFixed(0)}% move in 24h (pump or crash)`);}
     if((r.a.pro==='cx'||ctx.k==='bn'||ctx.k==='vol')&&ctx.btc!=null&&r.side!=='short'){if(ctx.btc<=-6)add('warn',L(`السوق كله في هبوط حاد (البيتكوين ${ctx.btc.toFixed(1)}%)`,`whole market falling (BTC ${ctx.btc.toFixed(1)}%)`),-8);else if(ctx.btc>=2)add('ok',L('البيتكوين إيجابي اليوم','BTC positive today'),3);}
+    if(ctx.btcDown&&r.side!=='short'&&(r.a.pro==='cx'||ctx.k==='bn'||ctx.k==='vol'))add('bad',L('البيتكوين تحت متوسط 50 يوم: الارتدادات في هذه المرحلة أضعف تاريخيًا','BTC below its 50-day average: bounces are historically weaker'),-12);
     if(ctx.macro){const m=ctx.macro;if(m.sc<=-2)add('warn',L('البيئة الاقتصادية ضاغطة: ','macro headwinds: ')+(m.R.find(x=>x[0]==='neg')||[,''])[1],-8);else if(m.sc>=1)add('ok',L('البيئة الاقتصادية داعمة','supportive macro backdrop'),5);}
     if(ctx.ev.length)add('warn',L(`حدث اقتصادي كبير خلال 24 ساعة: ${ctx.ev[0].t}`,`major release within 24h: ${ctx.ev[0].t}`),-10);
     if(window.NEWSAI&&!r.a.ext){try{const nw=await NEWSAI.forAsset(r.a.id);if(nw&&nw.n){const nz=t=>String(t||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي'),keys=[r.a.id,nm(r.a),r.a.name].filter(Boolean).map(x=>nz(x)).filter(x=>x.length>=3);
@@ -6158,5 +6162,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='2e2cf56427';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='f0b5feb6be';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
