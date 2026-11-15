@@ -1117,6 +1117,19 @@ html.tv-open .tk-agent span{display:none}
 .agl-z{display:inline-block;margin:2px 0 2px 5px;padding:2px 8px;border-radius:5px;font-size:11.5px;font-weight:600;background:rgba(41,98,255,.16);color:#93b4ff}
 .agl-c details summary{cursor:pointer;font-size:12px;color:#7DD3FC}
 .agl-c details p{margin:4px 0;font-size:12.5px}
+/* comprehensive report in the smart turtle */
+.bmsg .bv{margin:8px 0;padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:flex;flex-direction:column;gap:3px}
+.bmsg .bv b{font-size:13.5px}.bmsg .bv small{font-size:11.5px;opacity:.75}
+.bmsg .bv.up{border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08)}.bmsg .bv.down{border-color:rgba(248,113,113,.45);background:rgba(248,113,113,.08)}.bmsg .bv.flat{border-color:rgba(252,211,77,.4);background:rgba(252,211,77,.07)}
+.bmsg .bdd{margin:8px 0;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:2px 10px}
+.bmsg .bdd>summary{cursor:pointer;padding:7px 0;font-weight:700;font-size:13px;list-style-position:inside}
+.bmsg .bdd[open]>summary{border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:6px}
+.bmsg .bl{margin:6px 0;padding-inline-start:16px;display:flex;flex-direction:column;gap:4px;font-size:12.5px;line-height:1.7}
+.bmsg .bl li.up::marker{color:#34d399}.bmsg .bl li.down::marker{color:#f87171}
+.bmsg .bl a{color:inherit;text-decoration:underline dotted}
+.foot-edu{margin:8px 0;padding:10px 12px;border:1px solid rgba(252,211,77,.35);border-radius:12px;background:rgba(252,211,77,.06);display:flex;flex-direction:column;gap:5px}
+.foot-edu b{color:var(--ink,#fff);font-size:.9rem}.foot-edu p{margin:0;line-height:1.75}
+html.bot-on .tk-agent,html.bot-on .tk-guide{display:none}
 :root{--vsig:url(data:image/png;base64,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)}
 .vx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0 6px}
 .vx-stage{position:relative;width:220px;height:250px;perspective:900px}
@@ -1833,6 +1846,10 @@ html.locked .gate{display:flex}
   <footer>
     <p>منصة تيكو: منصة تعليمية لتعلم قراءة الشموع وتقدير مناطق السعر.</p>
     <p>المحتوى لغرض تعليمي فقط، وليس توصية استثمارية ولا دعوة للشراء أو البيع. القرار الاستثماري مسؤولية صاحبه.</p>
+    <div class="foot-edu" role="note"><b>تنبيه مهم عن العبارات المستخدمة</b>
+      <p>كل ما يظهر أو يُقال في المنصة، سواء في الرادار أو الشرح الصوتي أو «ناقش الوكيل» أو السلحفاة الذكية، هو شرح تعليمي بحت لطريقة قراءة الشارت، وليس توصية استثمارية لأي شخص.</p>
+      <p>عبارات مثل «منطقة الشراء» و«الهدف» و«الوقف» و«حدد المنطقة واختبر الفرصة»، وحتى النكت مثل «اشتر بعقلك مو بقلبك»، هي أمثلة عامة تشرح كيف يفكر المتداول عمومًا، وليست موجّهة لك شخصيًا ولا تراعي وضعك المالي.</p>
+      <p>الأسعار والفرص تتغير لحظيًا، والنتائج السابقة لا تضمن المستقبل. لا تستثمر إلا ما تتحمل خسارته، واستشر جهة مرخّصة من هيئة السوق المالية قبل أي قرار.</p></div>
     <p>الأسهم السعودية بالريال والأسبوع من الأحد إلى الخميس. الأسهم العالمية بالدولار والأسبوع من الاثنين إلى الجمعة. العملات المشفرة بالدولار والأسبوع من الاثنين إلى الأحد بتوقيت UTC. تُحدَّث البيانات يوميًا.</p>
     <div class="foot-sig"><div class="sig" role="img" aria-label="شيبان"></div><p class="handle">wavehub.shaibanor</p></div>
   </footer>
@@ -3767,6 +3784,8 @@ html.locked .gate{display:flex}
     levels:/(دعم|مقاوم|مستوي|مستويات)/,target:/(هدف|اهداف|يوصل|يصل|توصل|تصل|الي كم|لين كم|وين يروح|وين بيروح|سقف)/,
     mom:/(rsi|زخم|تشبع|macd|ماكد|انحراف|دايفرجنس)/,act:/(اشتري|اشتر|شراء|ابيع|بيع|ادخل|دخول|اخرج|استثمر|يستاهل|اجمع|اعزز|اتعزز)/,
     news:/(خبر|اخبار)/,plan:/(وين اشتري|متي اشتري|وين ابيع|متي ابيع|نقطه دخول|نقاط دخول|نقطه الدخول|منطقه شراء|منطقه الشراء|منطقه بيع|وقف الخساره|ستوب|خطه|خطة|كيف اتداول|كيف ادخل|وش اسوي|ايش اسوي|ماذا افعل|افضل سعر|سعر الشراء|سعر البيع|اين اشتري|اين ابيع)/,
+    full:/(شامل|كامل|تقرير|تفصيل|بالتفصيل|اقتصادي|اقتصاد|اساسي|ماكرو|حلل|تحليل)/,
+    macro:/(وضع الاقتصاد|الاقتصاد|الماكرو|وضع السوق|السوق العام|الفيدرالي|الفايده|الفائده|التضخم|عوائد السندات|الاسواق اليوم)/,
     why:/^(ليش|لماذا|ليه|علي ايش|علي اي اساس|كيف عرفت|وش السبب|السبب|ايش السبب)/,
     bull:/(لو طلع|اذا طلع|لو ارتفع|اذا ارتفع|لو اخترق|اذا اخترق|لو كسر المقاومه|سيناريو الصعود|لو صعد|اذا صعد)/,
     bear:/(لو نزل|اذا نزل|لو كسر|اذا كسر|لو هبط|اذا هبط|لو طاح|اذا طاح|سيناريو الهبوط)/,
@@ -4036,6 +4055,95 @@ html.locked .gate{display:flex}
     return h+`<div class="bas">${act(up?'ولو نزل؟':'ولو طلع؟',up?'ولو نزل':'ولو طلع')}${act('وين أشتري؟','وين اشتري')}</div>`+DISC;}
 
   /* ---------- router ---------- */
+  /* ---------- comprehensive report: technical + economic + news ---------- */
+  const MAC=[['DXY','مؤشر الدولار'],['US10Y','عائد السندات 10 سنوات'],['SPX','S&P 500'],['NDX','ناسداك 100'],['GOLD','الذهب'],['BRENT','نفط برنت'],['TASI','تاسي']];
+  let CAL=null;async function cal(){if(CAL)return CAL;const ev=[];
+    for(const f of ['pro/events.json','pro/calendar.json'])for(const b of [RAWB,'']){try{const r=await fetch(b+f+'?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json();ev.push(...(j.events||[]));break;}}catch(_){}}
+    CAL=ev.sort((x,y)=>x.d<y.d?-1:1);return CAL;}
+  const dkey=t=>new Date(t*1000).toISOString().slice(0,10);
+  const chgN=(d,n)=>d&&d.length>n?(d[d.length-1].c/d[d.length-1-n].c-1)*100:null;
+  function emaS(v,n){const k=2/(n+1);let e=null;return v.map(x=>e=e==null?x:x*k+e*(1-k));}
+  function adx(b,n=14){if(!b||b.length<n*3)return null;let tr=0,pd=0,md=0,ad=null;const out=[];
+    for(let i=1;i<b.length;i++){const u=b[i].h-b[i-1].h,d=b[i-1].l-b[i].l,P=u>d&&u>0?u:0,M=d>u&&d>0?d:0,T=Math.max(b[i].h-b[i].l,Math.abs(b[i].h-b[i-1].c),Math.abs(b[i].l-b[i-1].c));
+      if(i<=n){tr+=T;pd+=P;md+=M;if(i<n)continue;}else{tr=tr-tr/n+T;pd=pd-pd/n+P;md=md-md/n+M;}
+      const pi=100*pd/tr,mi=100*md/tr,dx=pi+mi?100*Math.abs(pi-mi)/(pi+mi):0;ad=ad==null?dx:(ad*(n-1)+dx)/n;out.push({adx:ad,pi,mi});}
+    return out[out.length-1];}
+  function corr(A,B,n=60){if(!A||!B)return null;const mb=new Map(B.map(x=>[dkey(x.t),x.c]));const ra=[],rb=[];let pa=null,pb=null;
+    for(const x of A){const k=dkey(x.t),cb=mb.get(k);if(cb==null)continue;if(pa!=null){ra.push(x.c/pa-1);rb.push(cb/pb-1);}pa=x.c;pb=cb;}
+    const a=ra.slice(-n),b=rb.slice(-n);if(a.length<25)return null;const ma=a.reduce((s,x)=>s+x,0)/a.length,mb2=b.reduce((s,x)=>s+x,0)/b.length;
+    let sab=0,saa=0,sbb=0;a.forEach((x,i)=>{sab+=(x-ma)*(b[i]-mb2);saa+=(x-ma)**2;sbb+=(b[i]-mb2)**2;});return saa&&sbb?sab/Math.sqrt(saa*sbb):null;}
+  function structure(d){if(!d||d.length<40)return null;const s=swingsOf(d.slice(-120),3),H=s.H.slice(-2),L=s.L.slice(-2);if(H.length<2||L.length<2)return null;
+    const hh=H[1]>H[0],hl=L[1]>L[0];return hh&&hl?'قمم وقيعان صاعدة (اتجاه صاعد سليم)':!hh&&!hl?'قمم وقيعان هابطة (اتجاه هابط)':hh?'قمة أعلى لكن قاع أدنى (تذبذب واتساع)':'قاع أعلى لكن قمة أدنى (انضغاط، يسبق حركة قوية)';}
+  async function macroSnap(){const out=[];for(const [id,n] of MAC){const a=BY[id];if(!a)continue;let A=null;try{A=await an(a,'1d');}catch(_){}const d=A&&A.data&&A.data['1d'];if(!d||!d.length)continue;
+      const c=d[d.length-1].c,e50=emaS(d.map(x=>x.c),50).pop();out.push({id,n,a,c,d1:chgN(d,1),w1:chgN(d,5),m1:chgN(d,21),bp1:id==='US10Y'&&d.length>1?(c-d[d.length-2].c)*100:null,bpw:id==='US10Y'&&d.length>5?(c-d[d.length-6].c)*100:null,up:c>e50,d});}return out;}
+  function macroRead(k,M){const g=id=>M.find(x=>x.id===id),R=[];let sc=0;
+    const dx=g('DXY'),y=g('US10Y'),sp=g('SPX'),nd=g('NDX'),br=g('BRENT'),go=g('GOLD'),ta=g('TASI');
+    if(dx&&dx.w1!=null){if(dx.w1>0.5){R.push(['neg','الدولار يرتفع ('+dx.w1.toFixed(1)+'% بالأسبوع)، وهذا ضغط على '+(k==='cx'?'العملات المشفرة':k==='ix'?'الذهب والسلع':'الأصول الخطرة')]);sc--;}else if(dx.w1<-0.5){R.push(['pos','الدولار يتراجع ('+dx.w1.toFixed(1)+'%)، وهذا داعم للأصول المسعّرة بالدولار']);sc++;}}
+    if(y&&y.w1!=null){const bp=(y.c-y.d[Math.max(0,y.d.length-6)].c)*100;if(bp>8){R.push(['neg','عوائد السندات صاعدة ('+bp.toFixed(0)+' نقطة أساس بالأسبوع): تشديد في السيولة وضغط على أسهم النمو والكريبتو والذهب']);sc--;}else if(bp<-8){R.push(['pos','عوائد السندات نازلة ('+bp.toFixed(0)+' نقطة أساس): تحسن في السيولة']);sc++;}}
+    if(k!=='sa'&&sp){if(sp.up&&(nd?nd.up:true)){R.push(['pos','الأسهم الأمريكية فوق متوسط 50 يوم: شهية المخاطرة جيدة']);sc++;}else if(!sp.up){R.push(['neg','الأسهم الأمريكية تحت متوسط 50 يوم: مزاج حذر وعزوف عن المخاطرة']);sc--;}}
+    if(k==='sa'&&br&&br.w1!=null){if(br.w1>2){R.push(['pos','النفط يرتفع ('+br.w1.toFixed(1)+'%): داعم للسوق السعودي وإيرادات الدولة']);sc++;}else if(br.w1<-2){R.push(['neg','النفط يتراجع ('+br.w1.toFixed(1)+'%): ضغط على السوق السعودي وقطاع الطاقة']);sc--;}}
+    if(k==='sa'&&ta){R.push([ta.up?'pos':'neg','المؤشر العام تاسي '+(ta.up?'فوق':'تحت')+' متوسط 50 يوم']);sc+=ta.up?1:-1;}
+    if(k==='ix'&&go&&go.w1!=null&&Math.abs(go.w1)>1.5)R.push([go.w1>0?'pos':'neg','الذهب '+(go.w1>0?'يرتفع':'يتراجع')+' ('+go.w1.toFixed(1)+'%) '+(go.w1>0?'والطلب على الملاذ الآمن قوي':'مع تراجع الطلب على الملاذ الآمن')]);
+    return{R,sc};}
+  async function deep(a){const A=await an(a,'1d');if(!A)return null;const d=A.data['1d'],k=a.pro,n=d.length-1,c=d[n].c;
+    const Ix=A.I||{},S=A.scores||{},vol20=d.slice(-21,-1).reduce((s,x)=>s+(x.v||0),0)/20,vr=vol20?(d[n].v||0)/vol20:null;
+    const w52=d.slice(-252),hi=Math.max(...w52.map(x=>x.h)),lo=Math.min(...w52.map(x=>x.l));
+    const tr=d.slice(-15).map((x,i,ar)=>i?Math.max(x.h-x.l,Math.abs(x.h-ar[i-1].c),Math.abs(x.l-ar[i-1].c)):0).slice(1),atrp=tr.reduce((s,x)=>s+x,0)/tr.length/c*100;
+    const cl=d.map(x=>x.c),e20=emaS(cl,20).pop(),e50=emaS(cl,50).pop(),e200=d.length>200?emaS(cl,200).pop():null;
+    const m=cl.slice(-20),mean=m.reduce((s,x)=>s+x,0)/20,sd=Math.sqrt(m.reduce((s,x)=>s+(x-mean)**2,0)/20),bbp=sd?(c-(mean-2*sd))/(4*sd):null;
+    const T={tf:['1M','1w','1d','4h','1h'].filter(t=>S[t]).map(t=>({t,dir:S[t].dir,rsi:S[t].rsi,macd:S[t].hist>0})),adx:adx(d),vr,atrp,bbp,e20,e50,e200,str:structure(d),
+      perf:{w:chgN(d,k==='cx'?7:5),m:chgN(d,k==='cx'?30:21),q:chgN(d,k==='cx'?90:63),y:chgN(d,k==='cx'?365:250)},hi,lo,fromHi:(c/hi-1)*100,fromLo:(c/lo-1)*100,lv:A.lv,div:A.div||[],conf:A.conf,sc:A.sc,au:A.au||[]};
+    const M=await macroSnap(),E=macroRead(k,M);const cr=[];
+    const pairs=k==='cx'?[['BTC','البيتكوين'],['SPX','S&P 500'],['DXY','الدولار']]:k==='sa'?[['TASI','تاسي'],['BRENT','النفط']]:k==='us'?[['SPX','S&P 500'],['US10Y','عوائد السندات']]:[['DXY','الدولار'],['SPX','S&P 500']];
+    for(const [id,nm] of pairs){if(id===a.id)continue;const ref=id==='BTC'?BY.BTC:BY[id];if(!ref)continue;let B=null;try{B=await an(ref,'1d');}catch(_){}const r=corr(d,B&&B.data['1d']);if(r!=null)cr.push({nm,r});}
+    const today=new Date().toISOString().slice(0,10),lim=new Date(Date.now()+21*864e5).toISOString().slice(0,10);
+    const ev=(await cal()).filter(e=>e.d>=today&&e.d<=lim).slice(0,4).map(e=>({...e,days:Math.round((Date.parse(e.d)-Date.parse(today))/864e5)}));
+    let crypto=null;if(k==='cx'){try{const r=await fetch(RAWB+'pro/refs.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),b=j.coins&&j.coins.BTC;if(b)crypto={btc:b.price,btc24:b.chg24};}}catch(_){}}
+    let nw=null,drv=[];try{nw=window.NEWSAI?await NEWSAI.forAsset(a.id):null;}catch(_){}try{drv=window.TIKO_RADAR&&TIKO_RADAR.drivers?await TIKO_RADAR.drivers(a.id):[];}catch(_){}
+    // overall: technical direction × strength, economic backdrop, news tone
+    const tS=(A.conf.dir==='up'?1:A.conf.dir==='down'?-1:0)*(A.sc.eff||0)/100*3,eS=Math.max(-2,Math.min(2,E.sc)),nS=nw&&nw.n?(nw.label==='pos'?1:nw.label==='neg'?-1:0):0,tot=tS+eS*.6+nS*.6;
+    return{a,A,T,M,E,cr,ev,crypto,nw,drv,score:{t:tS,e:eS,n:nS,tot},c};}
+  const bps=v=>v==null?'—':`<span class="num ${v>=0?'down':'up'}">${v>=0?'+':''}${v.toFixed(0)} نقطة أساس</span>`;
+  const sgn=v=>v==null?'—':`<span class="num ${v>=0?'up':'down'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
+  async function full(a){const D=await deep(a);if(!D)return fail(a);const {A,T,M,E,cr,ev,crypto,nw,drv,score}=D;
+    const verdict=score.tot>1.2?['up','الصورة العامة إيجابية: الفني والاقتصاد والأخبار يميلون للصعود']:score.tot<-1.2?['down','الصورة العامة سلبية: الضغوط أكثر من الدعم']:['flat','الصورة العامة متضاربة: لا توافق بين الفني والاقتصاد والأخبار، والانتظار أوضح'];
+    let h=head(a,A)+`<div class="bv ${verdict[0]}"><b>${verdict[1]}.</b><small>الفني ${score.t>0.5?'إيجابي':score.t<-0.5?'سلبي':'محايد'} · الاقتصاد ${score.e>0?'داعم':score.e<0?'ضاغط':'محايد'} · الأخبار ${score.n>0?'إيجابية':score.n<0?'سلبية':'محايدة'}</small></div>`;
+    // technical
+    const ad=T.adx;let tt=`<ul class="bk">${T.tf.map(x=>`<li><span>${TFN[x.t]}</span><b class="${x.dir}">${DIR[x.dir]}</b> · RSI <b class="num">${x.rsi!=null?x.rsi.toFixed(0):'—'}</b> · MACD ${x.macd?'موجب':'سالب'}</li>`).join('')}</ul>`;
+    tt+=`<ul class="bk"><li><span>المتوسطات</span>${D.c>T.e20?'فوق':'تحت'} 20 · ${D.c>T.e50?'فوق':'تحت'} 50${T.e200?' · '+(D.c>T.e200?'فوق':'تحت')+' 200':''}</li>
+      ${ad?`<li><span>قوة الاتجاه (ADX)</span><b class="num">${ad.adx.toFixed(0)}</b> · ${ad.adx>25?(ad.pi>ad.mi?'اتجاه صاعد قوي':'اتجاه هابط قوي'):ad.adx<18?'بدون اتجاه واضح (تذبذب)':'اتجاه متوسط القوة'}</li>`:''}
+      ${T.bbp!=null?`<li><span>البولنجر</span>${T.bbp>1?'فوق الحد العلوي (تمدد)':T.bbp<0?'تحت الحد السفلي (ضغط بيع)':T.bbp>.8?'قرب الحد العلوي':T.bbp<.2?'قرب الحد السفلي':'في منتصف النطاق'}</li>`:''}
+      <li><span>التذبذب اليومي (ATR)</span><b class="num">${T.atrp.toFixed(1)}%</b> ${T.atrp>6?'· عالٍ جدًا':T.atrp>3?'· مرتفع':'· طبيعي'}</li>
+      ${T.vr!=null?`<li><span>حجم التداول</span><b class="num">${T.vr.toFixed(1)}×</b> متوسط 20 يوم${T.vr>2?' · نشاط غير عادي':''}</li>`:''}
+      ${T.str?`<li><span>هيكل السعر</span>${T.str}</li>`:''}</ul>`;
+    tt+=`<ul class="bk"><li><span>الأداء</span>أسبوع ${sgn(T.perf.w)} · شهر ${sgn(T.perf.m)} · 3 أشهر ${sgn(T.perf.q)} · سنة ${sgn(T.perf.y)}</li>
+      <li><span>نطاق 52 أسبوع</span>${P(T.lo,a)} – ${P(T.hi,a)} · يبعد عن القمة ${sgn(T.fromHi)}</li>
+      ${T.lv&&T.lv.S?`<li><span>الدعم / المقاومة</span>${P(T.lv.S.p,a)} / ${T.lv.R?P(T.lv.R.p,a):'—'}</li>`:''}</ul>`;
+    if(T.div.length)tt+=`<div class="bx"><span>انحرافات</span><ul>${T.div.slice(0,2).map(x=>`<li>${x.txt}</li>`).join('')}</ul></div>`;
+    tt+=scenTxt(a,A)+btTxt(A);
+    // economic
+    let et=`<ul class="bk">${M.map(x=>`<li><span>${x.n}</span>${x.id==='US10Y'?`<b class="num">${x.c.toFixed(2)}%</b> · يوم ${bps(x.bp1)} · أسبوع ${bps(x.bpw)}`:`${P(x.c,x.a)} · يوم ${sgn(x.d1)} · أسبوع ${sgn(x.w1)}`}</li>`).join('')}</ul>`;
+    if(crypto)et+=`<p>البيتكوين (قائد سوق الكريبتو) ${sgn(crypto.btc24)} خلال 24 ساعة.</p>`;
+    if(E.R.length)et+=`<ul class="bl">${E.R.map(([s,t])=>`<li class="${s==='pos'?'up':'down'}">${t}</li>`).join('')}</ul>`;
+    if(cr.length)et+=`<p class="mut">ارتباط حركته اليومية (آخر 60 يوم): ${cr.map(x=>`${x.nm} <b class="num">${x.r.toFixed(2)}</b>${Math.abs(x.r)>.6?' (قوي)':Math.abs(x.r)>.3?' (متوسط)':' (ضعيف)'}`).join(' · ')}.</p>`;
+    et+=ev.length?`<div class="bx"><span>أحداث قادمة مؤثرة</span><ul>${ev.map(e=>`<li>${esc(e.t)} · ${e.days===0?'اليوم':e.days===1?'غدًا':'بعد '+e.days+' يوم'} (${esc(e.d)})${e.days<=1?' · توقّع تذبذبًا عاليًا':''}</li>`).join('')}</ul></div>`:`<p class="mut">لا أحداث اقتصادية أمريكية كبرى في الأسابيع الثلاثة القادمة.</p>`;
+    // news
+    let nt='';if(nw&&nw.n){nt+=`<p>قراءة الأخبار: <b>${NEWSAI.LAB[nw.label]}</b> من ${nw.n} خبر حديث.</p>`;const v=NEWSAI.verdict(A.conf,nw);if(v&&v.txt)nt+=`<p class="mut">${v.txt}</p>`;}
+    if(drv.length)nt+=`<ul class="bl">${drv.slice(0,4).map(g=>`<li class="${g.sc>.3?'up':g.sc<-.3?'down':''}">${esc(g.w)} · ${g.n} خبر${g.top?` · <a href="${esc(g.top.u||'#')}" target="_blank" rel="noopener noreferrer">${esc((g.top.t||'').slice(0,90))}</a>`:''}</li>`).join('')}</ul>`;
+    if(!nt)nt='<p class="mut">لا توجد أخبار حديثة كافية عن هذا الأصل.</p>';
+    const sec=(t,b,o)=>`<details class="bdd"${o?' open':''}><summary>${t}</summary>${b}</details>`;
+    h+=sec('📊 التحليل الفني الشامل',tt,true)+sec('🌍 التحليل الاقتصادي',et,true)+sec('📰 الأخبار وأسباب الحركة',nt,false);
+    if(A.au&&A.au.length)h+=`<div class="bx"><span>ما يعاكس القراءة</span><ul>${A.au.slice(0,3).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    h+=weeklyTxt(a,A)+`<div class="bas">${act('وين أشتري ووين أبيع؟','وين اشتري ووين ابيع '+a.name)}${act('الدعم والمقاومة','دعم ومقاومة '+a.name)}${openBtn(a,'pro','افتح الشارت')}${act('وضع السوق العام','وش وضع الاقتصاد والسوق')}</div>`;
+    return h+DISC;}
+  async function macro(){const M=await macroSnap();if(!M.length)return'<p>بيانات السوق العام غير متاحة الآن.</p>';
+    const read=k=>macroRead(k,M);const L=[['cx','العملات المشفرة'],['us','الأسهم الأمريكية'],['sa','السوق السعودي'],['ix','الذهب والسلع']];
+    const today=new Date().toISOString().slice(0,10),ev=(await cal()).filter(e=>e.d>=today).slice(0,4);
+    let h=`<div class="bh2"><b>وضع الاقتصاد والأسواق</b></div><ul class="bk">${M.map(x=>`<li><span>${x.n}</span>${x.id==='US10Y'?`<b class="num">${x.c.toFixed(2)}%</b> · يوم ${bps(x.bp1)} · أسبوع ${bps(x.bpw)}`:`${P(x.c,x.a)} · يوم ${sgn(x.d1)} · أسبوع ${sgn(x.w1)} · شهر ${sgn(x.m1)}`}</li>`).join('')}</ul>`;
+    h+=`<ul class="bk">${L.map(([k,n])=>{const r=read(k);return`<li><span>${n}</span><b class="${r.sc>0?'up':r.sc<0?'down':'flat'}">${r.sc>0?'بيئة داعمة':r.sc<0?'بيئة ضاغطة':'بيئة محايدة'}</b></li>`;}).join('')}</ul>`;
+    const all=read('us').R.concat(read('sa').R.filter(x=>/النفط|تاسي/.test(x[1])));if(all.length)h+=`<ul class="bl">${all.map(([s,t])=>`<li class="${s==='pos'?'up':'down'}">${t}</li>`).join('')}</ul>`;
+    if(ev.length)h+=`<div class="bx"><span>الأحداث القادمة</span><ul>${ev.map(e=>`<li>${esc(e.t)} · ${esc(e.d)}</li>`).join('')}</ul></div>`;
+    return h+`<p class="bd">قراءة آلية لبيانات السوق لغرض تعليمي، وليست توصية.</p>`;}
   const CTX={last:null};
   let ANS_ID=null;
   async function answer(q,el){ANS_ID=null;const t=norm(q);if(!t)return OUTSCOPE();
@@ -4053,6 +4161,7 @@ html.locked .gate{display:flex}
       if(WHO.test(t))return ABOUT();
       if(gl&&has(t,I.define))return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`;
       if(has(t,I.rank))return rank(t,el);
+      if(has(t,I.macro))return macro();
       if(has(t,I.list))return listAll();
       if(has(t,I.greet)||has(t,I.help))return WELCOME();
       const cand=candidate(q,t),nt=t.split(' ').length;
@@ -4062,6 +4171,7 @@ html.locked .gate{display:flex}
       else if(gl)return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`;
       else if(MK.test(t))return UNAVAIL('');
       else return OUTSCOPE();}
+    if(has(t,I.macro)&&(!ids.length||(ids.length===1&&ids[0]==='TASI'&&!/(تاسي|المؤشر العام|السوق السعودي|سهم)/.test(t))))return macro();
     if(has(t,I.rank)&&ids.length===1&&ids[0]==='TASI'&&/(اسهم|سهم|شركات)/.test(t))return rank(t,el);
     const a=BY[ids[0]];const same=CTX.last===a.id;CTX.last=a.id;
     if(ids.length>1)return compare(ids);
@@ -4078,6 +4188,7 @@ html.locked .gate{display:flex}
     if(has(t,I.mom))return momentum(a);
     if(has(t,I.weekly)&&!tf)return weekly(a);
     if(has(t,I.act))return plan(a,tf);
+    if(has(t,I.full)&&!/(باختصار|مختصر|سريع)/.test(t)){CTX.topic='full';return full(a);}
     CTX.topic='brief';return brief(a,tf);}
 
   /* ---------- ui ---------- */
@@ -4100,7 +4211,17 @@ html.locked .gate{display:flex}
   log.addEventListener('click',e=>{const sp=e.target.closest('.bspk');if(sp){const m=sp.closest('.bmsg'),c=m.cloneNode(true);c.querySelectorAll('.bspk,button,small').forEach(x=>x.remove());TIKO_RADAR.talk(c.textContent,sp.dataset.spk);return;}const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
     const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='cube'){const c=$('vxCube');if(c){close();c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.click(),500);}}else if(g.dataset.go==='tv'&&window.CHARTX){close();CHARTX.open(CTX.last||API().current());}return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
-  window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
+  // compact facts for the voice agent: the same comprehensive reading, as data
+  async function deepFacts(id){const a=BY[id];if(!a)return null;const D=await deep(a);if(!D)return null;const {T,M,E,cr,ev,crypto,nw,drv,score}=D,r1=v=>v==null?null:Math.round(v*10)/10;
+    return{overall:score.tot>1.2?'إيجابية':score.tot<-1.2?'سلبية':'متضاربة',technical_bias:score.t>0.5?'إيجابي':score.t<-0.5?'سلبي':'محايد',economy_bias:score.e>0?'داعم':score.e<0?'ضاغط':'محايد',news_bias:score.n>0?'إيجابية':score.n<0?'سلبية':'محايدة',
+      timeframes:T.tf.map(x=>({tf:TFN[x.t],dir:DIR[x.dir],rsi:x.rsi!=null?Math.round(x.rsi):null,macd:x.macd?'موجب':'سالب'})),
+      adx:T.adx?Math.round(T.adx.adx):null,bollinger:T.bbp==null?null:T.bbp>1?'فوق الحد العلوي':T.bbp<0?'تحت الحد السفلي':T.bbp>.8?'قرب العلوي':T.bbp<.2?'قرب السفلي':'منتصف النطاق',
+      atr_daily_pct:r1(T.atrp),volume_vs_20d:T.vr!=null?r1(T.vr):null,structure:T.str,performance_pct:{week:r1(T.perf.w),month:r1(T.perf.m),quarter:r1(T.perf.q),year:r1(T.perf.y)},from_52w_high_pct:r1(T.fromHi),
+      divergences:T.div.slice(0,2).map(x=>String(x.txt).replace(/<[^>]+>/g,'')),
+      macro:M.map(x=>x.id==='US10Y'?{name:x.n,last:x.c.toFixed(2)+'%',day_bp:Math.round(x.bp1||0),week_bp:Math.round(x.bpw||0)}:{name:x.n,last:x.c,day_pct:r1(x.d1),week_pct:r1(x.w1)}),macro_reading:E.R.map(x=>x[1]),correlation_60d:cr.map(x=>({with:x.nm,r:Math.round(x.r*100)/100})),
+      upcoming_events:ev.map(e=>({event:e.t,date:e.d,in_days:e.days})),btc_24h_pct:crypto?r1(crypto.btc24):undefined,
+      news:{tone:nw&&nw.n?NEWSAI.LAB[nw.label]:'لا أخبار كافية',count:nw?nw.n:0,drivers:drv.slice(0,4).map(g=>({driver:g.w,count:g.n,headline:g.top&&g.top.t}))}};}
+  window.WAVE_ASK={ask,answer,deepFacts,findAssets:q=>findAssets(norm(q))};
 })();
 
 (function(){
@@ -5293,11 +5414,11 @@ html.locked .gate{display:flex}
 
   /* ---------- cards ---------- */
   function timeBox(r){const t=r.tm||{},RT=`<small>${L('بتوقيت الرياض','Riyadh time')}</small>`;
-    if(t.mode==='now')return`<div class="rd-time go"><span>🕒 <b>${L('وقت الشراء','Buy time')}</b> ${L('الآن','now')}${t.buyTo?` ${L('حتى','until')} ${hm(t.buyTo)}`:''}</span><span>⌛ <b>${L('البيع قبل','Sell by')}</b> ${hm(t.exitBy)}</span>${RT}</div>`;
-    if(t.mode==='limit')return`<div class="rd-time nx"><span>🕒 <b>${L('أمر شراء','Buy order')}</b> ${L('عند','at')} ${fmt(r.buy)} ${L('حتى','until')} ${hm(t.buyTo)}</span><span>⌛ <b>${L('البيع قبل','Sell by')}</b> ${hm(t.exitBy)}</span>${RT}</div>`;
-    if(t.mode==='wait')return`<div class="rd-time w"><span>⏳ <b>${L('انتظار','Wait')}</b> ${r.wt==='up'?L(`الشراء إذا أغلقت شمعة ساعة فوق ${fmt(r.buy)}`,`buy if a 1h candle closes above ${fmt(r.buy)}`):L(`حتى يصل السعر إلى ${fmt(r.buy)} وتُغلق شمعة ساعة خضراء`,`until price reaches ${fmt(r.buy)} and a green 1h candle closes`)} ${L('حتى','until')} ${hm(t.buyTo)}</span>${RT}</div>`;
-    if(t.mode==='next')return`<div class="rd-time nx"><span>🕒 <b>${L('وقت الشراء','Buy time')}</b> ${hm(t.buyAt)} ${L('(افتتاح الشمعة التالية، إذا بقي الشرط)','(next candle open, if the setup holds)')}</span>${t.exitBy?`<span>⌛ <b>${L('البيع قبل','Sell by')}</b> ${hm(t.exitBy)}</span>`:''}${RT}</div>`;
-    if(t.mode==='trig')return`<div class="rd-time w"><span>⏳ <b>${L('شرط الدخول','Entry condition')}</b> ${L(`إغلاق شمعة ${hm(t.closeAt)} تحت ${fmt(t.trig)}`,`the ${hm(t.closeAt)} candle closes below ${fmt(t.trig)}`)}</span><span>🕒 ${L('عندها الشراء','then buy at')} ${hm(t.buyAt)}${t.exitBy?` · ${L('البيع قبل','sell by')} ${hm(t.exitBy)}`:''}</span>${RT}</div>`;
+    if(t.mode==='now')return`<div class="rd-time go"><span>🕒 <b>${L('نافذة الفرصة','Opportunity window')}</b> ${L('الآن','now')}${t.buyTo?` ${L('حتى','until')} ${hm(t.buyTo)}`:''}</span><span>⌛ <b>${L('الخروج المفترض قبل','Planned exit by')}</b> ${hm(t.exitBy)}</span>${RT}</div>`;
+    if(t.mode==='limit')return`<div class="rd-time nx"><span>🕒 <b>${L('حدد المنطقة واختبر الفرصة','Mark the zone, test the setup')}</b> ${L('عند','at')} ${fmt(r.buy)} ${L('حتى','until')} ${hm(t.buyTo)}</span><span>⌛ <b>${L('الخروج المفترض قبل','Planned exit by')}</b> ${hm(t.exitBy)}</span>${RT}</div>`;
+    if(t.mode==='wait')return`<div class="rd-time w"><span>⏳ <b>${L('انتظار','Wait')}</b> ${r.wt==='up'?L(`تتأكد الفرصة إذا أغلقت شمعة ساعة فوق ${fmt(r.buy)}`,`buy if a 1h candle closes above ${fmt(r.buy)}`):L(`حتى يصل السعر إلى ${fmt(r.buy)} وتُغلق شمعة ساعة خضراء`,`until price reaches ${fmt(r.buy)} and a green 1h candle closes`)} ${L('حتى','until')} ${hm(t.buyTo)}</span>${RT}</div>`;
+    if(t.mode==='next')return`<div class="rd-time nx"><span>🕒 <b>${L('بداية الفرصة','Setup starts')}</b> ${hm(t.buyAt)} ${L('(افتتاح الشمعة التالية، إذا بقي الشرط)','(next candle open, if the setup holds)')}</span>${t.exitBy?`<span>⌛ <b>${L('الخروج المفترض قبل','Planned exit by')}</b> ${hm(t.exitBy)}</span>`:''}${RT}</div>`;
+    if(t.mode==='trig')return`<div class="rd-time w"><span>⏳ <b>${L('شرط الدخول','Entry condition')}</b> ${L(`إغلاق شمعة ${hm(t.closeAt)} تحت ${fmt(t.trig)}`,`the ${hm(t.closeAt)} candle closes below ${fmt(t.trig)}`)}</span><span>🕒 ${L('عندها تبدأ الفرصة','then the setup starts at')} ${hm(t.buyAt)}${t.exitBy?` · ${L('الخروج المفترض قبل','planned exit by')} ${hm(t.exitBy)}`:''}</span>${RT}</div>`;
     if(t.mode==='open')return`<div class="rd-time nx"><span>🕒 <b>${L('السوق مغلق','Market closed')}</b> ${L('أعد الفحص بعد افتتاح الجلسة','re-scan after the session opens')} ${hm(t.buyAt)}</span>${RT}</div>`;
     return'';}
   const liveKey=r=>{const x=r.a;if(x.sym)return'B:'+x.sym;if(x.pro==='cx')return'B:'+x.id+'USDT';if(!x.ext&&['sa','us','ix'].includes(x.pro))return'L:'+x.id;return'';};
@@ -5390,9 +5511,9 @@ html.locked .gate{display:flex}
     const tq=sec=>{if(!sec)return'';const[h,m]=RY0.format(new Date(sec*1000)).split(':').map(Number),h12=h%12||12,part=h<4?'بالليل':h<6?'الفجر':h<12?'الصبح':h<15?'الظهر':h<18?'العصر':h<20?'المغرب':'بالليل';return`${ck(w99(h12))}${m===30?' '+ck('ونص'):m===15?' '+ck('وربع'):m===45?' '+ck('إلا ربع'):m?' '+ck('و'+w99(m)+' دقيقة'):''} ${ck(part)}`;};
     const pa=v=>sayMoney(v,r.a.pro);
     // «…» marks a fixed phrase recorded as one clip in the owner's voice; other words are number and time words
-    const when=t.mode==='now'?`«تقدر تشتري الحين»${t.buyTo?' «لين الساعة» '+tq(t.buyTo):''}، «وبيعك قبل الساعة» ${tq(t.exitBy)}.`:t.mode==='limit'?`«حط أمر شراء عند» ${pa(r.buy)}، «ويظل لين الساعة» ${tq(t.buyTo)}.`:t.mode==='next'?`«تشتري مع بداية الشمعة الجاية، الساعة» ${tq(t.buyAt)}.`:t.mode==='trig'?`«ما تشتري إلا إذا قفلت شمعة الساعة» ${tq(t.closeAt)} «تحت» ${pa(t.trig)}.`:r.wt==='up'?`«ما تشتري إلا إذا قفلت شمعة ساعة فوق» ${pa(r.buy)}.`:'';
+    const when=t.mode==='now'?`«منطقة الفرصة متاحة الحين»${t.buyTo?' «لين الساعة» '+tq(t.buyTo):''}، «والخروج المفترض قبل الساعة» ${tq(t.exitBy)}.`:t.mode==='limit'?`«حدد المنطقة واختبر الفرصة عند» ${pa(r.buy)}، «ويظل لين الساعة» ${tq(t.buyTo)}.`:t.mode==='next'?`«الفرصة تبدأ مع الشمعة الجاية، الساعة» ${tq(t.buyAt)}.`:t.mode==='trig'?`«الفرصة ما تتأكد إلا إذا قفلت شمعة الساعة» ${tq(t.closeAt)} «تحت» ${pa(t.trig)}.`:r.wt==='up'?`«الفرصة ما تتأكد إلا إذا قفلت شمعة ساعة فوق» ${pa(r.buy)}.`:'';
     const SC=scen(r).map(x=>ck(x)).join(' ');
-    return[nameSay(r.a,n)+(r.hp?'. «فرصة احتمالها عالي، بس الهدف قريب»':'')+'.',`«منطقة الشراء بين» ${pa(zoneLo)} «و» ${pa(r.buy)}.`,`«وتبيع على» ${pa(r.tgt)}، «يعني ربحك» ${sayPct(r.tp)}.`,`«والوقف على» ${pa(r.stop)}، «يعني خسارتك» ${sayPct(r.sl)}.`,SC,when,ck(joke(r,r.a.id))+'.'];}
+    return[nameSay(r.a,n)+(r.hp?'. «فرصة احتمالها عالي، بس الهدف قريب»':'')+'.',`«منطقة الشراء بين» ${pa(zoneLo)} «و» ${pa(r.buy)}.`,`«والهدف عند» ${pa(r.tgt)}، «يعني ربح محتمل» ${sayPct(r.tp)}.`,`«والوقف على» ${pa(r.stop)}، «يعني خسارة محتملة» ${sayPct(r.sl)}.`,SC,when,ck(joke(r,r.a.id))+'.'];}
   // the scenario changes with the setup: oversold depth, the drop, the daily trend, resistance on the way
   // a light word from the owner after each explanation: picked by the situation, otherwise rotated
   const JOKE={trap:'لا تقع في الفخ، السوق ما يرحم اللي يدخل بدون خطة',stop:'الوقف مو عيب، العيب تجلس تناظر الخسارة تكبر وتقول بيرجع',heart:'اشتر بعقلك مو بقلبك، القلب للمحبين مو للشارت',
@@ -5407,9 +5528,9 @@ html.locked .gate{display:flex}
   function nameSay(a,n){const has=t=>VCL.idx&&VCL.idx[t];if(a.pro==='cx'&&has(a.id))return ck(a.id);if(!VCL.idx||has(n))return ck(n);
     if(a.ext&&a.name&&has(a.name))return ck(a.name);
     const sp=String(a.id||n).toUpperCase().split('').map(ch=>LET[ch]||(/\d/.test(ch)?U[+ch]:'')).filter(Boolean);return sp.map(ck).join(' ');}
-  const SCN={rsi:'السوق مضغوط بقوة والمؤشر في تشبع بيعي واضح، والارتداد هنا وارد، بس خلك منتبه',drop:'نزل نزلة حادة في آخر كم شمعة، وعادةً يرجع يتنفس شوي قبل لا يكمل',up:'الاتجاه العام صاعد، وهالنزلة تصحيح، فالارتداد فرصته أحسن',down:'الاتجاه العام نازل، فالارتداد يكون قصير، خذ ربحك أول ما يلمس الهدف',
-    base:'بعد هالنزلة نتوقع ارتداد بسيط خلال الشمعة، وإذا ما وصل الهدف تطلع مع قفلتها',block:'فيه مقاومة قريبة قبل الهدف، لا تطمع، وإذا تعثر عندها اطلع',
-    pSup:'السعر جالس على الدعم والاتجاه معك، والدخول هنا مريح',pOver:'السعر في تشبع بيعي وقريب من الدعم، ونتوقع يرتد لين المقاومة',pLim:'السعر بعيد شوي عن الدعم، الأفضل تحط أمرك تحت وتخليه ينزل لك',pUp:'الاتجاه نازل، لا تستعجل، انتظر شمعة ساعة تقفل فوق السعر المحدد',pDip:'انتظر السعر ينزل للدعم وتبين شمعة ساعة خضراء، بعدها ادخل'};
+  const SCN={rsi:'السوق مضغوط بقوة والمؤشر في تشبع بيعي واضح، والارتداد هنا وارد، بس الحذر واجب',drop:'نزل نزلة حادة في آخر كم شمعة، وعادةً يرجع يتنفس شوي قبل لا يكمل',up:'الاتجاه العام صاعد، وهالنزلة تصحيح، فالارتداد فرصته أحسن',down:'الاتجاه العام نازل، فالارتداد يكون قصير، وجني الربح يكون أول ما يلمس الهدف',
+    base:'بعد هالنزلة نتوقع ارتداد بسيط خلال الشمعة، وإذا ما وصل الهدف يكون الخروج مع قفلتها',block:'فيه مقاومة قريبة قبل الهدف، والطمع هنا خطر، وإذا تعثر عندها يكون الخروج أسلم',
+    pSup:'السعر جالس على الدعم والاتجاه داعم، والمنطقة هنا مريحة للمتداول',pOver:'السعر في تشبع بيعي وقريب من الدعم، ونتوقع يرتد لين المقاومة',pLim:'السعر بعيد شوي عن الدعم، والأنسب تحديد المنطقة تحت وانتظار السعر ينزل لها',pUp:'الاتجاه نازل، والأنسب الانتظار لين تقفل شمعة ساعة فوق السعر المحدد',pDip:'الأنسب انتظار السعر ينزل للدعم وتبين شمعة ساعة خضراء، بعدها تُختبر الفرصة'};
   function scen(r){const o=[];if(r.plan){o.push(SCN[r.act==='now'?(r.r!=null&&r.r<35?'pOver':'pSup'):r.act==='limit'?'pLim':r.wt==='up'?'pUp':'pDip']);}
     else{o.push(SCN[r.r!=null&&r.r<22?'rsi':r.d3!=null&&r.d3<=-8?'drop':r.dDown===false?'up':r.dDown?'down':'base']);if(r.blocking)o.push(SCN.block);else if(r.dDown&&o[0]!==SCN.down)o.push(SCN.down);}
     return o;}
@@ -5742,13 +5863,13 @@ html.locked .gate{display:flex}
     return{asset:nm(a),id:a.id,market:{cx:'عملات مشفرة',sa:'السوق السعودي',us:'الأسهم الأمريكية',ix:'السلع'}[a.pro]||a.pro,price_now:m(f.price),
       daily_trend:f.dFlat?'عرضي':f.dUp?'صاعد':'نازل',h4_vs_ema50:f.up4?'فوق متوسط 50':'تحت متوسط 50',rsi_4h:Math.round(f.rsi),rsi_reading:f.rs,
       support:m(f.S1),support_reason:ZS[f.sS],resistance:m(f.R1),resistance_reason:ZR[f.sR],takeaway:f.tk,week_change:pc2(f.wk),
-      news_drivers:nt?nt.raw.map(strip):[],headlines:hl,weekly_forecast:wkF,note:'تحليل تعليمي وليس توصية مالية'};}
+      news_drivers:nt?nt.raw.map(strip):[],headlines:hl,weekly_forecast:wkF,comprehensive:await (async()=>{try{return window.WAVE_ASK&&WAVE_ASK.deepFacts?await WAVE_ASK.deepFacts(a.id):null;}catch(_){return null;}})(),note:'تحليل تعليمي وليس توصية مالية'};}
   async function quick(a){if(a.pro==='ix'){if(a.id==='GOLD')return await goldPlan();const D=await ixData(a.id);return D?plan(a,D,Date.now()):null;}
     const Z=await zones(),D=a.pro==='cx'?await cxSite(a.id):await stData(a.pro,a.id);return D?analyse(a,D,Z,Date.now()):null;}
   async function agentTrade(a){let r=null;try{r=await quick(a);}catch(_){}if(!r)return{asset:nm(a),available:false,reason:'تعذر تحميل البيانات'};
     if(r.closed)return{asset:nm(a),available:false,reason:'السوق مغلق الحين',next_open:r.skip||null};if(r.skip||r.buy==null)return{asset:nm(a),available:false,reason:r.skip||'ما فيه صفقة الحين'};
     const m=v=>money(v,a.pro==='ix'?'us':a.pro),t=r.tm||{},T=plainT;
-    const when=t.mode==='now'?`اشتر الحين${t.buyTo?' لين '+T(t.buyTo):''}، وبع قبل ${T(t.exitBy)}`:t.mode==='limit'?`حط أمر شراء عند ${m(r.buy)} لين ${T(t.buyTo)}`:t.mode==='next'?`اشتر مع افتتاح الشمعة الجاية ${T(t.buyAt)}`:t.mode==='trig'?`اشتر فقط إذا قفلت شمعة ${T(t.closeAt)} تحت ${m(t.trig)}`:r.wt==='up'?`اشتر فقط إذا قفلت شمعة ساعة فوق ${m(r.buy)}`:'';
+    const when=t.mode==='now'?`منطقة الفرصة متاحة الحين${t.buyTo?' لين '+T(t.buyTo):''}، والخروج المفترض قبل ${T(t.exitBy)}`:t.mode==='limit'?`حدد المنطقة واختبر الفرصة عند ${m(r.buy)} لين ${T(t.buyTo)}`:t.mode==='next'?`الفرصة تبدأ مع افتتاح الشمعة الجاية ${T(t.buyAt)}`:t.mode==='trig'?`الفرصة تتأكد فقط إذا قفلت شمعة ${T(t.closeAt)} تحت ${m(t.trig)}`:r.wt==='up'?`الفرصة تتأكد فقط إذا قفلت شمعة ساعة فوق ${m(r.buy)}`:'';
     return{asset:nm(a),available:true,confirmed:!!(r.ok||(r.plan&&(r.act==='now'||r.act==='limit'))),high_probability:!!r.hp,buy_zone_from:m(Math.min(r.buy,r.S1||r.buy)),buy_zone_to:m(r.buy),
       target:m(r.tgt),gain:'+'+r.tp.toFixed(2)+'%',stop:m(r.stop),loss:'-'+r.sl.toFixed(2)+'%',timing:when,why:(r.why||[]).slice(0,3).map(x=>String(x).replace(/[\u2066-\u2069]/g,'')),warnings:(r.warn||[]).slice(0,3).map(x=>String(x).replace(/[\u2066-\u2069]/g,'')),note:'تحليل تعليمي وليس توصية مالية'};}
   // point at a part of the screen while the agent speaks about it
@@ -5757,7 +5878,8 @@ html.locked .gate{display:flex}
       buy:['.rd-px .b','#hero .zc'],sell:['.rd-px .s','#hero .zc'],stop:['.rd-px .x','#hero .zc'],news:['#hero .nprev','#newsAi'],forecast:['#hero .say'],radar:['#rdBox','.rd-card']};for(const k in M)M[k]=M[k].concat(['#hero']);
     const el=pick(...(M[zone]||M.price));if(!el)return false;VEL=el;const r=el.getBoundingClientRect();if(r.top<innerHeight*.12||r.top>innerHeight*.6)el.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
     el.classList.add('ag-hl');clearTimeout(el._agh);el._agh=setTimeout(()=>el.classList.remove('ag-hl'),3500);return true;}
-  window.TIKO_RADAR={hush,vctx:()=>VCL.ctx,agentInfo,agentTrade,agentPoint,assetOf,talk,guide:()=>guideRun(false),scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
+  async function driversOf(id){try{const nw=await NEWSAI.forAsset(id);return drivers(nw&&nw.items);}catch(_){return[];}}
+  window.TIKO_RADAR={drivers:driversOf,hush,vctx:()=>VCL.ctx,agentInfo,agentTrade,agentPoint,assetOf,talk,guide:()=>guideRun(false),scanSite,scanBn,scanCmd,goldPlan,analyse,plan,go:()=>{},get vcl(){return VCL;}};
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount):mount();
 })();
 
@@ -5855,5 +5977,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='fed6ea681f';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='28b9d5cce8';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
