@@ -5,7 +5,8 @@
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("wave-theme")||"dark";}catch(e){document.documentElement.dataset.theme="dark";}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="قراءة يومية وأسبوعية للأسهم السعودية والأمريكية والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته، ومنصة شارت وأدوات تحليل.">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+<meta name="googlebot" content="noindex,nofollow">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net blob: data:; worker-src 'self' blob: data:; media-src 'self' blob: data: https://raw.githubusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://raw.githubusercontent.com https://api.binance.com https://api1.binance.com https://data-api.binance.vision https://cdn.jsdelivr.net https://api.elevenlabs.io wss://api.elevenlabs.io https://*.elevenlabs.io wss://*.elevenlabs.io https://*.livekit.cloud wss://*.livekit.cloud; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>منصة تيكو · تحليل الأسهم والعملات والسلع</title>
@@ -13,7 +14,6 @@
 <meta property="og:site_name" content="منصة تيكو">
 <meta property="og:title" content="منصة تيكو">
 <meta property="og:description" content="قراءة يومية وأسبوعية للأسهم والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته.">
-<meta property="og:url" content="https://shaibanor.github.io/Wave/">
 <meta property="og:image" content="https://shaibanor.github.io/Wave/og.jpg?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -2032,7 +2032,7 @@ html.locked .gate{display:flex}
 })(window);
 
 (function(){
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const TFS=['1M','1w','1d','4h','1h'],TFN=QE.TFN;
   const LOOK={'1M':60,'1w':104,'1d':180,'4h':180,'1h':240};
   const $=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2289,7 +2289,7 @@ html.locked .gate{display:flex}
 })();
 
 (function(){
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const $=id=>document.getElementById(id);
   const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const dpc=p=>p>=10?2:p>=1?4:5;
@@ -2367,7 +2367,7 @@ html.locked .gate{display:flex}
 
 (function(){
   /* Keyword-based reading of headlines (Arabic + English), weighted by recency, then compared with the technical reading */
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const nz=s=>String(s||'').toLowerCase().replace(/[ً-ٟـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
   const POS=['ارتفاع','يرتفع','ترتفع','ارتفعت','ارباح','ربح','نمو','توزيع','توزيعات','صفقه','اتفاقيه','موافقه','يوافق','ترقيه','قياسي','مكاسب','زياده','توسع','تفوق','ايجابي','شراكه','عقد','تحسن','صعود','يقفز','قفزه','تعافي','يتجاوز','اعلي مستوي',
     'beat','beats','surge','surges','soar','soars','jump','jumps','rally','rallies','record','upgrade','upgraded','raises','raised','growth','profit','profits','gain','gains','strong','stronger','bullish','outperform','approval','approved','wins','expands','expansion','partnership','deal','dividend','buyback','rebound','rebounds','rise','rises','climbs','tops','boost','boosts','optimism','higher','inflows','all-time high'];
@@ -2828,7 +2828,7 @@ html.locked .gate{display:flex}
     el.innerHTML=h;const btn=$('cxDrawSig');if(btn)btn.onclick=()=>{S.draw.push({type:live.d>0?'long':'short',a:{t:live.t,p:live.e},sl:live.stop,tp:live.t2,t2:live.t+barSec()*20});saveDraw();overlay();$('cxMain').scrollIntoView({behavior:'smooth',block:'center'});};}
 
   /* ---------- shell: «تيكودينغ شارت» full-screen app ---------- */
-  const API=()=>window.WAVE_API;const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const API=()=>window.WAVE_API;const RAW='';
   const MK={sa:'السوق السعودي',cx:'العملات المشفرة',us:'الأسهم الأمريكية',ix:'المؤشرات والسلع'};
   const refOf=id=>{const a=(API().assets||[]).find(x=>x.id===id&&x.pro);return a?{kind:a.pro,id:a.id,name:a.name,unit:a.unit||'',code:a.code||'',weekly:!!a.weekly,btn:a.btn}:null;};
   let SUM={},DT='sum';
@@ -2977,7 +2977,7 @@ html.locked .gate{display:flex}
 </script>
 <script>
 (function(){
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const nf=(v,d=2)=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -3141,7 +3141,7 @@ html.locked .gate{display:flex}
 
 (function(){
   /* Internal auditor box with a code-drawn background, and an encrypted report. */
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
@@ -3435,7 +3435,7 @@ html.locked .gate{display:flex}
     (root.querySelectorAll?root:document).querySelectorAll('['+ATTR.join('],[')+']').forEach(e=>ATTR.forEach(a=>{const v=e.getAttribute(a);if(v){const t=tx(v);if(t!=null)e.setAttribute(a,t);}}));}
   const run0=run;run=function(root){run0(root);try{news(root);}catch(_){}};
   let q=0;const mo=new MutationObserver(ms=>{if(q)return;q=requestAnimationFrame(()=>{q=0;run(document.body);});});
-  async function loadTT(){for(const b of ['https://raw.githubusercontent.com/shaibanor/Wave/main/','']){try{const r=await fetch(b+'pro/i18n_en.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json();TT=j.tt||{};NM=j.names||{};return true;}}catch(_){}}return false;}
+  async function loadTT(){for(const b of ['','']){try{const r=await fetch(b+'pro/i18n_en.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json();TT=j.tt||{};NM=j.names||{};return true;}}catch(_){}}return false;}
   function applyEn(){const R=document.documentElement;R.lang='en';R.dir='ltr';R.classList.add('lang-en');document.querySelectorAll('[dir="rtl"]').forEach(e=>e.setAttribute('dir','ltr'));document.title='Tiko Platform · Stocks, crypto and commodities analysis';run(document.body);loadTT().then(ok=>{if(ok)run(document.body);});mo.observe(document.body,{childList:true,subtree:true,characterData:true});}
   const b=document.createElement('button');b.id='langTog';b.type='button';b.setAttribute('aria-label',lang==='en'?'العربية':'English');
   b.innerHTML='<span class="lt-c"><i class="lt-f">EN</i><i class="lt-b">ع</i></span>';
@@ -3999,7 +3999,7 @@ html.locked .gate{display:flex}
 
   /* ---------- educational trade plan: where a technical trader would look to buy / sell ---------- */
   /* ---------- the professor plan: top-down levels + final audit (rules from pro/rules.json) ---------- */
-  let RULES=null,EVTS=null;const RAWB='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  let RULES=null,EVTS=null;const RAWB='';
   async function rules(){if(RULES)return RULES;RULES={min_rr:2,stop_buffer_atr:.25,min_room_r:1,cap:6,stop_atr:1.2,min_risk_atr:.75,max_risk_atr:3,wick:.5};
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/rules.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),h=j.horizons.D;
       Object.assign(RULES,{mode:j.mode,roll:j.rolling,min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
@@ -4610,7 +4610,7 @@ html.locked .gate{display:flex}
 (function(){
   /* 1) Live ticker bands: prices with daily change, top movers and the main headlines.
      2) Cube reveal: the background coin of the selected asset rises, spins and lands in the ring on top of the cube. */
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const dp=v=>{v=Math.abs(v);return v>=1000?0:v>=100?1:v>=1?2:v>=.1?3:4;};
   const nf=v=>Number(v).toLocaleString('en-US',{minimumFractionDigits:dp(v),maximumFractionDigits:dp(v)});
@@ -4737,12 +4737,12 @@ html.locked .gate{display:flex}
 (function(){
   /* Ad spaces. Until real advertisers are booked they show clearly-labelled sample ads from fictional brands
      and an "advertise here" card. To book a slot later, replace the entries in ADS. */
-  const SITE='https://shaibanor.github.io/Wave/';
+  const SITE=location.origin+location.pathname;
   const ADS=[
     {t:'تيكودينغ شارت',d:'منصة شارت كاملة بأدوات الرسم وفيبوناتشي و19 مؤشرًا · جرّبها الآن',c:'افتح الموقع',g:'#2962FF',i:'M4 18l5-6 4 3 7-9'},
     {t:'أخبار السلحفاة',d:'اكتتابات وإدراجات ونتائج وتوزيعات لكل سوق في مكان واحد',c:'افتح الموقع',g:'#FF8C2A',i:'M5 5h14v14H5zM8 9h8M8 13h8M8 17h5'},
     {t:'التحليل الشامل',d:'40 سهمًا وعملة وسلعة في جدول واحد: الاتجاه والقوة وتوقع الأسبوع',c:'افتح الموقع',g:'#C9A55C',i:'M3 5h18v14H3zM3 10h18M3 15h18M9 5v14M15 5v14'}];
-  const HERE={t:'منصة تيكو',d:'تحليل يومي وأسبوعي للأسهم السعودية والأمريكية والعملات والسلع · shaibanor.github.io/Wave',c:'زيارة الموقع',g:'#E9CF8F',i:'M12 3l9 5v8l-9 5-9-5V8z',here:1};
+  const HERE={t:'منصة تيكو',d:'تحليل يومي وأسبوعي للأسهم السعودية والأمريكية والعملات والسلع',c:'زيارة الموقع',g:'#E9CF8F',i:'M12 3l9 5v8l-9 5-9-5V8z',here:1};
   let k=0;
   function card(a){return`<a class="ad-card${a.here?' here':''}" href="${SITE}" target="_blank" rel="noopener" style="--ag:${a.g}"><span class="ad-tag">إعلان</span><span class="ad-ic"><svg viewBox="0 0 24 24"><path d="${a.i}"/></svg></span><span class="ad-tx"><b>${a.t}</b><small>${a.d}</small></span><span class="ad-cta">${a.c}</span></a>`;}
   function fill(){document.querySelectorAll('.adslot:not([data-ok])').forEach(el=>{const a=el.dataset.ad==='mid'?HERE:ADS[k++%ADS.length];el.innerHTML=card(a);el.dataset.ok='1';});}
@@ -4966,7 +4966,7 @@ html.locked .gate{display:flex}
 (function(){
   /* «أخبار السلحفاة»: market-wide headlines per market (listings, IPOs, results, dividends, regulation)
      plus per-asset headlines, with a swimming 3D turtle host. */
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const MK=[['sa','السوق السعودي'],['us','السوق الأمريكي'],['cx','العملات الرقمية'],['ix','السلع والمؤشرات']];
@@ -5006,7 +5006,7 @@ html.locked .gate{display:flex}
   /* سجل توصيات الرادار. Only the owner's scans are recorded: the owner flag is set on this device when the internal
      auditor code is entered correctly. Records live in this browser; each one is judged against real candles after its
      window closes (target, stop, or the price at the sell time), and failures get a reason from the auditor's rules. */
-  const KEY='tk_rlog_v1',OWN='tk_owner_v1',RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/',BN=['https://data-api.binance.vision','https://api.binance.com'];
+  const KEY='tk_rlog_v1',OWN='tk_owner_v1',RAW='',BN=['https://data-api.binance.vision','https://api.binance.com'];
   const MK={cx:'العملات',bn:'بايننس',us:'الأسهم الأمريكية',sa:'السوق السعودي',cmd:'السلع',vol:'أرض وسماء'};
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const fmt=v=>v==null||!isFinite(v)?'—':(v>=1000?v.toLocaleString('en-US',{maximumFractionDigits:0}):v>=10?v.toFixed(2):v>=1?v.toFixed(3):v.toPrecision(4));
@@ -5140,7 +5140,7 @@ html.locked .gate{display:flex}
      Rule (same everywhere): a sharp 4h flush (RSI under 32, or 5%+ down over three candles), target the first resistance
      between 1.8% and what one candle can reach (else 2%), stop under support or 3%, exit at the candle close at the latest.
      Times are shown in Riyadh time. Educational; not a recommendation. */
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const BN=['https://data-api.binance.vision','https://api.binance.com'];
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -6073,7 +6073,7 @@ html.locked .gate{display:flex}
 (function(){
   'use strict';
   const SDK='https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.16.0/+esm';
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const EN=()=>document.documentElement.classList.contains('lang-en');
   let CONF=null,CONV=null,MUTE=false,RAF=0,MODE='idle',ST='off';
@@ -6162,5 +6162,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='f0b5feb6be';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='cdf9d47888';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>

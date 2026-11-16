@@ -52,6 +52,8 @@
     levels:/(دعم|مقاوم|مستوي|مستويات)/,target:/(هدف|اهداف|يوصل|يصل|توصل|تصل|الي كم|لين كم|وين يروح|وين بيروح|سقف)/,
     mom:/(rsi|زخم|تشبع|macd|ماكد|انحراف|دايفرجنس)/,act:/(اشتري|اشتر|شراء|ابيع|بيع|ادخل|دخول|اخرج|استثمر|يستاهل|اجمع|اعزز|اتعزز)/,
     news:/(خبر|اخبار)/,plan:/(وين اشتري|متي اشتري|وين ابيع|متي ابيع|نقطه دخول|نقاط دخول|نقطه الدخول|منطقه شراء|منطقه الشراء|منطقه بيع|وقف الخساره|ستوب|خطه|خطة|كيف اتداول|كيف ادخل|وش اسوي|ايش اسوي|ماذا افعل|افضل سعر|سعر الشراء|سعر البيع|اين اشتري|اين ابيع)/,
+    full:/(شامل|كامل|تقرير|تفصيل|بالتفصيل|اقتصادي|اقتصاد|اساسي|ماكرو|حلل|تحليل)/,
+    macro:/(وضع الاقتصاد|الاقتصاد|الماكرو|وضع السوق|السوق العام|الفيدرالي|الفايده|الفائده|التضخم|عوائد السندات|الاسواق اليوم)/,
     why:/^(ليش|لماذا|ليه|علي ايش|علي اي اساس|كيف عرفت|وش السبب|السبب|ايش السبب)/,
     bull:/(لو طلع|اذا طلع|لو ارتفع|اذا ارتفع|لو اخترق|اذا اخترق|لو كسر المقاومه|سيناريو الصعود|لو صعد|اذا صعد)/,
     bear:/(لو نزل|اذا نزل|لو كسر|اذا كسر|لو هبط|اذا هبط|لو طاح|اذا طاح|سيناريو الهبوط)/,
@@ -217,7 +219,7 @@
 
   /* ---------- educational trade plan: where a technical trader would look to buy / sell ---------- */
   /* ---------- the professor plan: top-down levels + final audit (rules from pro/rules.json) ---------- */
-  let RULES=null,EVTS=null;const RAWB='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  let RULES=null,EVTS=null;const RAWB='';
   async function rules(){if(RULES)return RULES;RULES={min_rr:2,stop_buffer_atr:.25,min_room_r:1,cap:6,stop_atr:1.2,min_risk_atr:.75,max_risk_atr:3,wick:.5};
     for(const b of [RAWB,'']){try{const r=await fetch(b+'pro/rules.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),h=j.horizons.D;
       Object.assign(RULES,{mode:j.mode,roll:j.rolling,min_rr:j.auditor.min_rr,stop_buffer_atr:j.levels.stop_buffer_atr,min_room_r:j.levels.min_room_r,cap:h.target_cap_atr,stop_atr:h.stop_atr,min_risk_atr:h.min_risk_atr,max_risk_atr:h.max_risk_atr,wick:j.traps.failed_breakout_wick});break;}}catch(_){}}
@@ -321,6 +323,95 @@
     return h+`<div class="bas">${act(up?'ولو نزل؟':'ولو طلع؟',up?'ولو نزل':'ولو طلع')}${act('وين أشتري؟','وين اشتري')}</div>`+DISC;}
 
   /* ---------- router ---------- */
+  /* ---------- comprehensive report: technical + economic + news ---------- */
+  const MAC=[['DXY','مؤشر الدولار'],['US10Y','عائد السندات 10 سنوات'],['SPX','S&P 500'],['NDX','ناسداك 100'],['GOLD','الذهب'],['BRENT','نفط برنت'],['TASI','تاسي']];
+  let CAL=null;async function cal(){if(CAL)return CAL;const ev=[];
+    for(const f of ['pro/events.json','pro/calendar.json'])for(const b of [RAWB,'']){try{const r=await fetch(b+f+'?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json();ev.push(...(j.events||[]));break;}}catch(_){}}
+    CAL=ev.sort((x,y)=>x.d<y.d?-1:1);return CAL;}
+  const dkey=t=>new Date(t*1000).toISOString().slice(0,10);
+  const chgN=(d,n)=>d&&d.length>n?(d[d.length-1].c/d[d.length-1-n].c-1)*100:null;
+  function emaS(v,n){const k=2/(n+1);let e=null;return v.map(x=>e=e==null?x:x*k+e*(1-k));}
+  function adx(b,n=14){if(!b||b.length<n*3)return null;let tr=0,pd=0,md=0,ad=null;const out=[];
+    for(let i=1;i<b.length;i++){const u=b[i].h-b[i-1].h,d=b[i-1].l-b[i].l,P=u>d&&u>0?u:0,M=d>u&&d>0?d:0,T=Math.max(b[i].h-b[i].l,Math.abs(b[i].h-b[i-1].c),Math.abs(b[i].l-b[i-1].c));
+      if(i<=n){tr+=T;pd+=P;md+=M;if(i<n)continue;}else{tr=tr-tr/n+T;pd=pd-pd/n+P;md=md-md/n+M;}
+      const pi=100*pd/tr,mi=100*md/tr,dx=pi+mi?100*Math.abs(pi-mi)/(pi+mi):0;ad=ad==null?dx:(ad*(n-1)+dx)/n;out.push({adx:ad,pi,mi});}
+    return out[out.length-1];}
+  function corr(A,B,n=60){if(!A||!B)return null;const mb=new Map(B.map(x=>[dkey(x.t),x.c]));const ra=[],rb=[];let pa=null,pb=null;
+    for(const x of A){const k=dkey(x.t),cb=mb.get(k);if(cb==null)continue;if(pa!=null){ra.push(x.c/pa-1);rb.push(cb/pb-1);}pa=x.c;pb=cb;}
+    const a=ra.slice(-n),b=rb.slice(-n);if(a.length<25)return null;const ma=a.reduce((s,x)=>s+x,0)/a.length,mb2=b.reduce((s,x)=>s+x,0)/b.length;
+    let sab=0,saa=0,sbb=0;a.forEach((x,i)=>{sab+=(x-ma)*(b[i]-mb2);saa+=(x-ma)**2;sbb+=(b[i]-mb2)**2;});return saa&&sbb?sab/Math.sqrt(saa*sbb):null;}
+  function structure(d){if(!d||d.length<40)return null;const s=swingsOf(d.slice(-120),3),H=s.H.slice(-2),L=s.L.slice(-2);if(H.length<2||L.length<2)return null;
+    const hh=H[1]>H[0],hl=L[1]>L[0];return hh&&hl?'قمم وقيعان صاعدة (اتجاه صاعد سليم)':!hh&&!hl?'قمم وقيعان هابطة (اتجاه هابط)':hh?'قمة أعلى لكن قاع أدنى (تذبذب واتساع)':'قاع أعلى لكن قمة أدنى (انضغاط، يسبق حركة قوية)';}
+  async function macroSnap(){const out=[];for(const [id,n] of MAC){const a=BY[id];if(!a)continue;let A=null;try{A=await an(a,'1d');}catch(_){}const d=A&&A.data&&A.data['1d'];if(!d||!d.length)continue;
+      const c=d[d.length-1].c,e50=emaS(d.map(x=>x.c),50).pop();out.push({id,n,a,c,d1:chgN(d,1),w1:chgN(d,5),m1:chgN(d,21),bp1:id==='US10Y'&&d.length>1?(c-d[d.length-2].c)*100:null,bpw:id==='US10Y'&&d.length>5?(c-d[d.length-6].c)*100:null,up:c>e50,d});}return out;}
+  function macroRead(k,M){const g=id=>M.find(x=>x.id===id),R=[];let sc=0;
+    const dx=g('DXY'),y=g('US10Y'),sp=g('SPX'),nd=g('NDX'),br=g('BRENT'),go=g('GOLD'),ta=g('TASI');
+    if(dx&&dx.w1!=null){if(dx.w1>0.5){R.push(['neg','الدولار يرتفع ('+dx.w1.toFixed(1)+'% بالأسبوع)، وهذا ضغط على '+(k==='cx'?'العملات المشفرة':k==='ix'?'الذهب والسلع':'الأصول الخطرة')]);sc--;}else if(dx.w1<-0.5){R.push(['pos','الدولار يتراجع ('+dx.w1.toFixed(1)+'%)، وهذا داعم للأصول المسعّرة بالدولار']);sc++;}}
+    if(y&&y.w1!=null){const bp=(y.c-y.d[Math.max(0,y.d.length-6)].c)*100;if(bp>8){R.push(['neg','عوائد السندات صاعدة ('+bp.toFixed(0)+' نقطة أساس بالأسبوع): تشديد في السيولة وضغط على أسهم النمو والكريبتو والذهب']);sc--;}else if(bp<-8){R.push(['pos','عوائد السندات نازلة ('+bp.toFixed(0)+' نقطة أساس): تحسن في السيولة']);sc++;}}
+    if(k!=='sa'&&sp){if(sp.up&&(nd?nd.up:true)){R.push(['pos','الأسهم الأمريكية فوق متوسط 50 يوم: شهية المخاطرة جيدة']);sc++;}else if(!sp.up){R.push(['neg','الأسهم الأمريكية تحت متوسط 50 يوم: مزاج حذر وعزوف عن المخاطرة']);sc--;}}
+    if(k==='sa'&&br&&br.w1!=null){if(br.w1>2){R.push(['pos','النفط يرتفع ('+br.w1.toFixed(1)+'%): داعم للسوق السعودي وإيرادات الدولة']);sc++;}else if(br.w1<-2){R.push(['neg','النفط يتراجع ('+br.w1.toFixed(1)+'%): ضغط على السوق السعودي وقطاع الطاقة']);sc--;}}
+    if(k==='sa'&&ta){R.push([ta.up?'pos':'neg','المؤشر العام تاسي '+(ta.up?'فوق':'تحت')+' متوسط 50 يوم']);sc+=ta.up?1:-1;}
+    if(k==='ix'&&go&&go.w1!=null&&Math.abs(go.w1)>1.5)R.push([go.w1>0?'pos':'neg','الذهب '+(go.w1>0?'يرتفع':'يتراجع')+' ('+go.w1.toFixed(1)+'%) '+(go.w1>0?'والطلب على الملاذ الآمن قوي':'مع تراجع الطلب على الملاذ الآمن')]);
+    return{R,sc};}
+  async function deep(a){const A=await an(a,'1d');if(!A)return null;const d=A.data['1d'],k=a.pro,n=d.length-1,c=d[n].c;
+    const Ix=A.I||{},S=A.scores||{},vol20=d.slice(-21,-1).reduce((s,x)=>s+(x.v||0),0)/20,vr=vol20?(d[n].v||0)/vol20:null;
+    const w52=d.slice(-252),hi=Math.max(...w52.map(x=>x.h)),lo=Math.min(...w52.map(x=>x.l));
+    const tr=d.slice(-15).map((x,i,ar)=>i?Math.max(x.h-x.l,Math.abs(x.h-ar[i-1].c),Math.abs(x.l-ar[i-1].c)):0).slice(1),atrp=tr.reduce((s,x)=>s+x,0)/tr.length/c*100;
+    const cl=d.map(x=>x.c),e20=emaS(cl,20).pop(),e50=emaS(cl,50).pop(),e200=d.length>200?emaS(cl,200).pop():null;
+    const m=cl.slice(-20),mean=m.reduce((s,x)=>s+x,0)/20,sd=Math.sqrt(m.reduce((s,x)=>s+(x-mean)**2,0)/20),bbp=sd?(c-(mean-2*sd))/(4*sd):null;
+    const T={tf:['1M','1w','1d','4h','1h'].filter(t=>S[t]).map(t=>({t,dir:S[t].dir,rsi:S[t].rsi,macd:S[t].hist>0})),adx:adx(d),vr,atrp,bbp,e20,e50,e200,str:structure(d),
+      perf:{w:chgN(d,k==='cx'?7:5),m:chgN(d,k==='cx'?30:21),q:chgN(d,k==='cx'?90:63),y:chgN(d,k==='cx'?365:250)},hi,lo,fromHi:(c/hi-1)*100,fromLo:(c/lo-1)*100,lv:A.lv,div:A.div||[],conf:A.conf,sc:A.sc,au:A.au||[]};
+    const M=await macroSnap(),E=macroRead(k,M);const cr=[];
+    const pairs=k==='cx'?[['BTC','البيتكوين'],['SPX','S&P 500'],['DXY','الدولار']]:k==='sa'?[['TASI','تاسي'],['BRENT','النفط']]:k==='us'?[['SPX','S&P 500'],['US10Y','عوائد السندات']]:[['DXY','الدولار'],['SPX','S&P 500']];
+    for(const [id,nm] of pairs){if(id===a.id)continue;const ref=id==='BTC'?BY.BTC:BY[id];if(!ref)continue;let B=null;try{B=await an(ref,'1d');}catch(_){}const r=corr(d,B&&B.data['1d']);if(r!=null)cr.push({nm,r});}
+    const today=new Date().toISOString().slice(0,10),lim=new Date(Date.now()+21*864e5).toISOString().slice(0,10);
+    const ev=(await cal()).filter(e=>e.d>=today&&e.d<=lim).slice(0,4).map(e=>({...e,days:Math.round((Date.parse(e.d)-Date.parse(today))/864e5)}));
+    let crypto=null;if(k==='cx'){try{const r=await fetch(RAWB+'pro/refs.json?v='+Math.floor(Date.now()/36e5));if(r.ok){const j=await r.json(),b=j.coins&&j.coins.BTC;if(b)crypto={btc:b.price,btc24:b.chg24};}}catch(_){}}
+    let nw=null,drv=[];try{nw=window.NEWSAI?await NEWSAI.forAsset(a.id):null;}catch(_){}try{drv=window.TIKO_RADAR&&TIKO_RADAR.drivers?await TIKO_RADAR.drivers(a.id):[];}catch(_){}
+    // overall: technical direction × strength, economic backdrop, news tone
+    const tS=(A.conf.dir==='up'?1:A.conf.dir==='down'?-1:0)*(A.sc.eff||0)/100*3,eS=Math.max(-2,Math.min(2,E.sc)),nS=nw&&nw.n?(nw.label==='pos'?1:nw.label==='neg'?-1:0):0,tot=tS+eS*.6+nS*.6;
+    return{a,A,T,M,E,cr,ev,crypto,nw,drv,score:{t:tS,e:eS,n:nS,tot},c};}
+  const bps=v=>v==null?'—':`<span class="num ${v>=0?'down':'up'}">${v>=0?'+':''}${v.toFixed(0)} نقطة أساس</span>`;
+  const sgn=v=>v==null?'—':`<span class="num ${v>=0?'up':'down'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
+  async function full(a){const D=await deep(a);if(!D)return fail(a);const {A,T,M,E,cr,ev,crypto,nw,drv,score}=D;
+    const verdict=score.tot>1.2?['up','الصورة العامة إيجابية: الفني والاقتصاد والأخبار يميلون للصعود']:score.tot<-1.2?['down','الصورة العامة سلبية: الضغوط أكثر من الدعم']:['flat','الصورة العامة متضاربة: لا توافق بين الفني والاقتصاد والأخبار، والانتظار أوضح'];
+    let h=head(a,A)+`<div class="bv ${verdict[0]}"><b>${verdict[1]}.</b><small>الفني ${score.t>0.5?'إيجابي':score.t<-0.5?'سلبي':'محايد'} · الاقتصاد ${score.e>0?'داعم':score.e<0?'ضاغط':'محايد'} · الأخبار ${score.n>0?'إيجابية':score.n<0?'سلبية':'محايدة'}</small></div>`;
+    // technical
+    const ad=T.adx;let tt=`<ul class="bk">${T.tf.map(x=>`<li><span>${TFN[x.t]}</span><b class="${x.dir}">${DIR[x.dir]}</b> · RSI <b class="num">${x.rsi!=null?x.rsi.toFixed(0):'—'}</b> · MACD ${x.macd?'موجب':'سالب'}</li>`).join('')}</ul>`;
+    tt+=`<ul class="bk"><li><span>المتوسطات</span>${D.c>T.e20?'فوق':'تحت'} 20 · ${D.c>T.e50?'فوق':'تحت'} 50${T.e200?' · '+(D.c>T.e200?'فوق':'تحت')+' 200':''}</li>
+      ${ad?`<li><span>قوة الاتجاه (ADX)</span><b class="num">${ad.adx.toFixed(0)}</b> · ${ad.adx>25?(ad.pi>ad.mi?'اتجاه صاعد قوي':'اتجاه هابط قوي'):ad.adx<18?'بدون اتجاه واضح (تذبذب)':'اتجاه متوسط القوة'}</li>`:''}
+      ${T.bbp!=null?`<li><span>البولنجر</span>${T.bbp>1?'فوق الحد العلوي (تمدد)':T.bbp<0?'تحت الحد السفلي (ضغط بيع)':T.bbp>.8?'قرب الحد العلوي':T.bbp<.2?'قرب الحد السفلي':'في منتصف النطاق'}</li>`:''}
+      <li><span>التذبذب اليومي (ATR)</span><b class="num">${T.atrp.toFixed(1)}%</b> ${T.atrp>6?'· عالٍ جدًا':T.atrp>3?'· مرتفع':'· طبيعي'}</li>
+      ${T.vr!=null?`<li><span>حجم التداول</span><b class="num">${T.vr.toFixed(1)}×</b> متوسط 20 يوم${T.vr>2?' · نشاط غير عادي':''}</li>`:''}
+      ${T.str?`<li><span>هيكل السعر</span>${T.str}</li>`:''}</ul>`;
+    tt+=`<ul class="bk"><li><span>الأداء</span>أسبوع ${sgn(T.perf.w)} · شهر ${sgn(T.perf.m)} · 3 أشهر ${sgn(T.perf.q)} · سنة ${sgn(T.perf.y)}</li>
+      <li><span>نطاق 52 أسبوع</span>${P(T.lo,a)} – ${P(T.hi,a)} · يبعد عن القمة ${sgn(T.fromHi)}</li>
+      ${T.lv&&T.lv.S?`<li><span>الدعم / المقاومة</span>${P(T.lv.S.p,a)} / ${T.lv.R?P(T.lv.R.p,a):'—'}</li>`:''}</ul>`;
+    if(T.div.length)tt+=`<div class="bx"><span>انحرافات</span><ul>${T.div.slice(0,2).map(x=>`<li>${x.txt}</li>`).join('')}</ul></div>`;
+    tt+=scenTxt(a,A)+btTxt(A);
+    // economic
+    let et=`<ul class="bk">${M.map(x=>`<li><span>${x.n}</span>${x.id==='US10Y'?`<b class="num">${x.c.toFixed(2)}%</b> · يوم ${bps(x.bp1)} · أسبوع ${bps(x.bpw)}`:`${P(x.c,x.a)} · يوم ${sgn(x.d1)} · أسبوع ${sgn(x.w1)}`}</li>`).join('')}</ul>`;
+    if(crypto)et+=`<p>البيتكوين (قائد سوق الكريبتو) ${sgn(crypto.btc24)} خلال 24 ساعة.</p>`;
+    if(E.R.length)et+=`<ul class="bl">${E.R.map(([s,t])=>`<li class="${s==='pos'?'up':'down'}">${t}</li>`).join('')}</ul>`;
+    if(cr.length)et+=`<p class="mut">ارتباط حركته اليومية (آخر 60 يوم): ${cr.map(x=>`${x.nm} <b class="num">${x.r.toFixed(2)}</b>${Math.abs(x.r)>.6?' (قوي)':Math.abs(x.r)>.3?' (متوسط)':' (ضعيف)'}`).join(' · ')}.</p>`;
+    et+=ev.length?`<div class="bx"><span>أحداث قادمة مؤثرة</span><ul>${ev.map(e=>`<li>${esc(e.t)} · ${e.days===0?'اليوم':e.days===1?'غدًا':'بعد '+e.days+' يوم'} (${esc(e.d)})${e.days<=1?' · توقّع تذبذبًا عاليًا':''}</li>`).join('')}</ul></div>`:`<p class="mut">لا أحداث اقتصادية أمريكية كبرى في الأسابيع الثلاثة القادمة.</p>`;
+    // news
+    let nt='';if(nw&&nw.n){nt+=`<p>قراءة الأخبار: <b>${NEWSAI.LAB[nw.label]}</b> من ${nw.n} خبر حديث.</p>`;const v=NEWSAI.verdict(A.conf,nw);if(v&&v.txt)nt+=`<p class="mut">${v.txt}</p>`;}
+    if(drv.length)nt+=`<ul class="bl">${drv.slice(0,4).map(g=>`<li class="${g.sc>.3?'up':g.sc<-.3?'down':''}">${esc(g.w)} · ${g.n} خبر${g.top?` · <a href="${esc(g.top.u||'#')}" target="_blank" rel="noopener noreferrer">${esc((g.top.t||'').slice(0,90))}</a>`:''}</li>`).join('')}</ul>`;
+    if(!nt)nt='<p class="mut">لا توجد أخبار حديثة كافية عن هذا الأصل.</p>';
+    const sec=(t,b,o)=>`<details class="bdd"${o?' open':''}><summary>${t}</summary>${b}</details>`;
+    h+=sec('📊 التحليل الفني الشامل',tt,true)+sec('🌍 التحليل الاقتصادي',et,true)+sec('📰 الأخبار وأسباب الحركة',nt,false);
+    if(A.au&&A.au.length)h+=`<div class="bx"><span>ما يعاكس القراءة</span><ul>${A.au.slice(0,3).map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    h+=weeklyTxt(a,A)+`<div class="bas">${act('وين أشتري ووين أبيع؟','وين اشتري ووين ابيع '+a.name)}${act('الدعم والمقاومة','دعم ومقاومة '+a.name)}${openBtn(a,'pro','افتح الشارت')}${act('وضع السوق العام','وش وضع الاقتصاد والسوق')}</div>`;
+    return h+DISC;}
+  async function macro(){const M=await macroSnap();if(!M.length)return'<p>بيانات السوق العام غير متاحة الآن.</p>';
+    const read=k=>macroRead(k,M);const L=[['cx','العملات المشفرة'],['us','الأسهم الأمريكية'],['sa','السوق السعودي'],['ix','الذهب والسلع']];
+    const today=new Date().toISOString().slice(0,10),ev=(await cal()).filter(e=>e.d>=today).slice(0,4);
+    let h=`<div class="bh2"><b>وضع الاقتصاد والأسواق</b></div><ul class="bk">${M.map(x=>`<li><span>${x.n}</span>${x.id==='US10Y'?`<b class="num">${x.c.toFixed(2)}%</b> · يوم ${bps(x.bp1)} · أسبوع ${bps(x.bpw)}`:`${P(x.c,x.a)} · يوم ${sgn(x.d1)} · أسبوع ${sgn(x.w1)} · شهر ${sgn(x.m1)}`}</li>`).join('')}</ul>`;
+    h+=`<ul class="bk">${L.map(([k,n])=>{const r=read(k);return`<li><span>${n}</span><b class="${r.sc>0?'up':r.sc<0?'down':'flat'}">${r.sc>0?'بيئة داعمة':r.sc<0?'بيئة ضاغطة':'بيئة محايدة'}</b></li>`;}).join('')}</ul>`;
+    const all=read('us').R.concat(read('sa').R.filter(x=>/النفط|تاسي/.test(x[1])));if(all.length)h+=`<ul class="bl">${all.map(([s,t])=>`<li class="${s==='pos'?'up':'down'}">${t}</li>`).join('')}</ul>`;
+    if(ev.length)h+=`<div class="bx"><span>الأحداث القادمة</span><ul>${ev.map(e=>`<li>${esc(e.t)} · ${esc(e.d)}</li>`).join('')}</ul></div>`;
+    return h+`<p class="bd">قراءة آلية لبيانات السوق لغرض تعليمي، وليست توصية.</p>`;}
   const CTX={last:null};
   let ANS_ID=null;
   async function answer(q,el){ANS_ID=null;const t=norm(q);if(!t)return OUTSCOPE();
@@ -338,6 +429,7 @@
       if(WHO.test(t))return ABOUT();
       if(gl&&has(t,I.define))return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`;
       if(has(t,I.rank))return rank(t,el);
+      if(has(t,I.macro))return macro();
       if(has(t,I.list))return listAll();
       if(has(t,I.greet)||has(t,I.help))return WELCOME();
       const cand=candidate(q,t),nt=t.split(' ').length;
@@ -347,6 +439,7 @@
       else if(gl)return`<div class="bh2"><b>${gl[1]}</b></div><p>${gl[2]}</p>`;
       else if(MK.test(t))return UNAVAIL('');
       else return OUTSCOPE();}
+    if(has(t,I.macro)&&(!ids.length||(ids.length===1&&ids[0]==='TASI'&&!/(تاسي|المؤشر العام|السوق السعودي|سهم)/.test(t))))return macro();
     if(has(t,I.rank)&&ids.length===1&&ids[0]==='TASI'&&/(اسهم|سهم|شركات)/.test(t))return rank(t,el);
     const a=BY[ids[0]];const same=CTX.last===a.id;CTX.last=a.id;
     if(ids.length>1)return compare(ids);
@@ -363,6 +456,7 @@
     if(has(t,I.mom))return momentum(a);
     if(has(t,I.weekly)&&!tf)return weekly(a);
     if(has(t,I.act))return plan(a,tf);
+    if(has(t,I.full)&&!/(باختصار|مختصر|سريع)/.test(t)){CTX.topic='full';return full(a);}
     CTX.topic='brief';return brief(a,tf);}
 
   /* ---------- ui ---------- */
@@ -385,5 +479,15 @@
   log.addEventListener('click',e=>{const sp=e.target.closest('.bspk');if(sp){const m=sp.closest('.bmsg'),c=m.cloneNode(true);c.querySelectorAll('.bspk,button,small').forEach(x=>x.remove());TIKO_RADAR.talk(c.textContent,sp.dataset.spk);return;}const q=e.target.closest('[data-q]');if(q){ask(q.dataset.q);return;}
     const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='cube'){const c=$('vxCube');if(c){close();c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>c.click(),500);}}else if(g.dataset.go==='tv'&&window.CHARTX){close();CHARTX.open(CTX.last||API().current());}return;}
     const o=e.target.closest('[data-open]');if(o){const [id,tab]=o.dataset.open.split(':');API().open(id,tab);if(!matchMedia('(min-width:700px)').matches)close();}});
-  window.WAVE_ASK={ask,answer,findAssets:q=>findAssets(norm(q))};
+  // compact facts for the voice agent: the same comprehensive reading, as data
+  async function deepFacts(id){const a=BY[id];if(!a)return null;const D=await deep(a);if(!D)return null;const {T,M,E,cr,ev,crypto,nw,drv,score}=D,r1=v=>v==null?null:Math.round(v*10)/10;
+    return{overall:score.tot>1.2?'إيجابية':score.tot<-1.2?'سلبية':'متضاربة',technical_bias:score.t>0.5?'إيجابي':score.t<-0.5?'سلبي':'محايد',economy_bias:score.e>0?'داعم':score.e<0?'ضاغط':'محايد',news_bias:score.n>0?'إيجابية':score.n<0?'سلبية':'محايدة',
+      timeframes:T.tf.map(x=>({tf:TFN[x.t],dir:DIR[x.dir],rsi:x.rsi!=null?Math.round(x.rsi):null,macd:x.macd?'موجب':'سالب'})),
+      adx:T.adx?Math.round(T.adx.adx):null,bollinger:T.bbp==null?null:T.bbp>1?'فوق الحد العلوي':T.bbp<0?'تحت الحد السفلي':T.bbp>.8?'قرب العلوي':T.bbp<.2?'قرب السفلي':'منتصف النطاق',
+      atr_daily_pct:r1(T.atrp),volume_vs_20d:T.vr!=null?r1(T.vr):null,structure:T.str,performance_pct:{week:r1(T.perf.w),month:r1(T.perf.m),quarter:r1(T.perf.q),year:r1(T.perf.y)},from_52w_high_pct:r1(T.fromHi),
+      divergences:T.div.slice(0,2).map(x=>String(x.txt).replace(/<[^>]+>/g,'')),
+      macro:M.map(x=>x.id==='US10Y'?{name:x.n,last:x.c.toFixed(2)+'%',day_bp:Math.round(x.bp1||0),week_bp:Math.round(x.bpw||0)}:{name:x.n,last:x.c,day_pct:r1(x.d1),week_pct:r1(x.w1)}),macro_reading:E.R.map(x=>x[1]),correlation_60d:cr.map(x=>({with:x.nm,r:Math.round(x.r*100)/100})),
+      upcoming_events:ev.map(e=>({event:e.t,date:e.d,in_days:e.days})),btc_24h_pct:crypto?r1(crypto.btc24):undefined,
+      news:{tone:nw&&nw.n?NEWSAI.LAB[nw.label]:'لا أخبار كافية',count:nw?nw.n:0,drivers:drv.slice(0,4).map(g=>({driver:g.w,count:g.n,headline:g.top&&g.top.t}))}};}
+  window.WAVE_ASK={macroFor:async k=>{const M=await macroSnap();return macroRead(k==='bn'?'cx':k==='cmd'?'ix':k,M);},calendar:cal,ask,answer,deepFacts,findAssets:q=>findAssets(norm(q))};
 })();

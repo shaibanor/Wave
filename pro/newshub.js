@@ -1,7 +1,7 @@
 (function(){
   /* «أخبار السلحفاة»: market-wide headlines per market (listings, IPOs, results, dividends, regulation)
      plus per-asset headlines, with a swimming 3D turtle host. */
-  const RAW='https://raw.githubusercontent.com/shaibanor/Wave/main/';
+  const RAW='';
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const MK=[['sa','السوق السعودي'],['us','السوق الأمريكي'],['cx','العملات الرقمية'],['ix','السلع والمؤشرات']];
