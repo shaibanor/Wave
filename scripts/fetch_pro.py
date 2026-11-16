@@ -269,10 +269,36 @@ def gnews(q, lang):
     return out
 
 
+# Headlines must name the asset: search engines pad small-coin queries with unrelated price pages.
+NEWS_KEYS = {'TASI': ['tasi', 'تاسي', 'الأسهم السعودية', 'سوق الأسهم السعودي'], '7010': ['stc', 'اس تي سي', 'إس تي سي', 'الاتصالات السعودية'], 'SHELL': ['myshell', 'ماي شيل'], 'IMX': ['immutable', 'imx', 'إيميوتبل', 'ايميوتبل'], 'PARTI': ['particle', 'parti', 'بارتي']}
+NEWS_STOP = {'السعودية', 'السعودي', 'سهم', 'اسهم', 'أسهم', 'شركة', 'بنك', 'مصرف', 'عملة', 'crypto', 'token', 'coin', 'stock', 'shares', 'inc', 'price',
+             'network', 'corp', 'group', 'holdings', 'the', 'and', 'news', 'أخبار', 'اخبار', 'سعر', 'الأسهم', 'الامريكية', 'الأمريكية', 'اسعار', 'أسعار', 'مؤشر', 'السوق', 'للتأمين', 'تأمين'}
+
+
+def _nz(t):
+    import re
+    t = (t or '').lower()
+    t = re.sub('[\u064b-\u065f\u0640]', '', t)
+    return t.replace('أ', 'ا').replace('إ', 'ا').replace('آ', 'ا').replace('ة', 'ه').replace('ى', 'ي')
+
+
+def news_keys(c, qa, qe):
+    if c in NEWS_KEYS:
+        return [_nz(k) for k in NEWS_KEYS[c]]
+    ks = {c.lower()} if len(c) >= 3 and not c.isdigit() else set()
+    for q in (qa, qe):
+        for w in (q or '').replace('(', ' ').replace(')', ' ').split():
+            w2 = _nz(w)
+            if len(w2) >= 3 and w2 not in {_nz(x) for x in NEWS_STOP} and not w2.isdigit():
+                ks.add(w2)
+    return list(ks)
+
+
 def news(status):
     """pro/news.json: recent headlines per asset from Google News (Arabic, plus English for global assets)."""
     out, errs = {}, 0
     for c, (qa, qe) in NEWS_Q.items():
+        keys = news_keys(c, qa, qe)
         items = []
         for q, lang, n in ((qa, 'ar', 8), (qe, 'en', 6)):
             if not q:
@@ -284,6 +310,8 @@ def news(status):
                 if errs < 4:
                     status.setdefault('notes', []).append(f'{c} news: {str(e)[:60]}')
             time.sleep(0.6)
+        if keys:
+            items = [it for it in items if any(k in _nz(it['t']) for k in keys)]
         items.sort(key=lambda x: x['d'], reverse=True)
         if items:
             out[c] = items[:14]
