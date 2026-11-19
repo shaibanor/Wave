@@ -3308,7 +3308,7 @@ html.locked .gate{display:flex}
         nowTxt=late.length?`${late.length} أصول بياناتها متأخرة 3 أيام أو أكثر`:`كل الأصول محدثة (${f.length})`;
         if(late.length)act=`راجع الأصول المتأخرة: ${late.slice(0,4).map(x=>x.name).join('، ')}`;else if(pub.s!=='ok')act='تأكد أن مهمة «نشر الموقع» مفعّلة';}
       if(a.id==='pf'){const cy=M.cycle||{},ed=M.edge,op=(M.open||[]).length;
-        kpi.push(['الدورة',cy.n??'—'],['تقدم الدورة',cy.n!=null?`${cy.progress_pct}% / ${cy.target_pct}%`:'—'],['الصفقات المفتوحة',op],['فرص فُحصت / فُتحت',`${M.audited??'—'} / ${M.opened??'—'}`],
+        const ls=(R.findings||[]).filter(x=>x.k==='loss').length;kpi.push(['خسائر تحتاج مراجعة',ls],['الدورة',cy.n??'—'],['تقدم الدورة',cy.n!=null?`${cy.progress_pct}% / ${cy.target_pct}%`:'—'],['الصفقات المفتوحة',op],['فرص فُحصت / فُتحت',`${M.audited??'—'} / ${M.opened??'—'}`],
           ['النجاح مقابل التعادل',ed?`${ed.win_rate}% / ${ed.breakeven}%`:'بعد 10 نتائج']);
         if(ed&&ed.win_rate<ed.breakeven){st=worst([st,'warn']);act='الدخول موقوف تلقائيًا حتى تتحسن النسبة';}
         if(cy.frozen){st=worst([st,'warn']);facts.push('الدورة مجمّدة مؤقتًا');}
@@ -3323,10 +3323,10 @@ html.locked .gate{display:flex}
         kpi.push(['المحادثات',it.length],['آخر 24 ساعة',d1],['تتطلب تدخلًا',fu],['متوسط الرضا',av+' / 5']);
         if(fu){st=worst([st,'warn']);act=`${fu} محادثة تحتاج ردك؛ افتح «ناقش الوكيل»`;}
         nowTxt=it.length?`آخر محادثة ${ago(it[0].t)}`:'لا توجد محادثات بعد';}
-      if(a.id==='qa'){const sr=M.site_report,fd=(R.findings||[]).filter(x=>x.lv==='bad').length;kpi.push(['ملاحظات حرجة',fd],['آخر فحص يومي',sr?sr.when:'—'],['مشاكل الفحص اليومي',sr?sr.issues:'—']);
+      if(a.id==='qa'){const sr=M.site_report,fd=(R.findings||[]).filter(x=>x.lv==='bad'&&x.k==='engine').length;if(fd)st=worst([st,'bad']);kpi.push(['أخطاء قراءة البيانات',fd],['آخر فحص يومي',sr?sr.when:'—'],['مشاكل الفحص اليومي',sr?sr.issues:'—']);
         const q=S&&S.wf&&S.wf.qa;if(q&&q.last&&q.last.c==='failure'&&S.site!=='closed')facts.push('آخر اختبار للصفحة فشل');
         if(sr&&sr.issues){st=worst([st,'warn']);act='افتح الملاحظات وراجع مشاكل الفحص اليومي';}
-        nowTxt=fd?`${fd} ملاحظات حرجة في التفاصيل`:'لا أخطاء حرجة مرصودة';}
+        nowTxt=fd?`${fd} خطأ في قراءة البيانات`:'لا أخطاء في البيانات أو الموقع';if(fd&&!act)act='افتح التفاصيل وراجع أخطاء قراءة البيانات';}
       if(a.id==='ref'){const cs=(M.refs&&M.refs.coins)||[],bad=cs.filter(c=>c.dev_pct!=null&&Math.abs(c.dev_pct)>1.5);if(bad.length){st=worst([st,'warn']);act=`فرق سعري كبير في: ${bad.map(c=>c.asset).join('، ')}`;}
         kpi.push(['العملات المطابقة',cs.length],['فرق أكبر من 1.5%',bad.length],['المرجع',M.refs?M.refs.source:'—']);nowTxt=cs.length?(bad.length?'رصد فرقًا سعريًا':'الأسعار متطابقة مع المرجع'):'لا توجد مطابقة بعد';}
       if(a.id==='vox'){const f=file(S,'voice',8*24,'المقاطع');kpi.push(['آخر توليد',ago(f.at)]);nowTxt='يعمل أسبوعيًا يوم الاثنين';}
@@ -6433,5 +6433,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='161e7faf20';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='144b5786e0';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
