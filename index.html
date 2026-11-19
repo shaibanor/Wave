@@ -3304,9 +3304,9 @@ html.locked .gate{display:flex}
       let st=js.length?worst(js.map(j=>j.s)):'ok';const facts=[],kpi=[];let nowTxt='',act='';
       const offAll=js.length&&js.every(j=>j.s==='off');
       if(a.id==='data'){const pub=file(S,'publish',30,'النشر اليومي'),f=(M.fresh||[]),late=f.filter(x=>x.lag>=3);
-        st=worst([st,pub.s,late.length?'warn':'ok']);facts.push(pub.why);kpi.push(['الأصول المتابعة',f.length||'—'],['أصول متأخرة',late.length],['آخر نشر يومي',ago(pub.at)]);
+        st=worst([st,late.length?'warn':'ok']);facts.push(pub.why+' (تكمله مزامنة الشموع)');kpi.push(['الأصول المتابعة',f.length||'—'],['أصول متأخرة',late.length],['آخر نشر يومي',ago(pub.at)]);
         nowTxt=late.length?`${late.length} أصول بياناتها متأخرة 3 أيام أو أكثر`:`كل الأصول محدثة (${f.length})`;
-        if(late.length)act=`راجع الأصول المتأخرة: ${late.slice(0,4).map(x=>x.name).join('، ')}`;else if(pub.s!=='ok')act='تأكد أن مهمة «نشر الموقع» مفعّلة';}
+        if(late.length)act=`راجع الأصول المتأخرة: ${late.slice(0,4).map(x=>x.name).join('، ')}`;}
       if(a.id==='pf'){const cy=M.cycle||{},ed=M.edge,op=(M.open||[]).length;
         const ls=(R.findings||[]).filter(x=>x.k==='loss').length;kpi.push(['خسائر تحتاج مراجعة',ls],['الدورة',cy.n??'—'],['تقدم الدورة',cy.n!=null?`${cy.progress_pct}% / ${cy.target_pct}%`:'—'],['الصفقات المفتوحة',op],['فرص فُحصت / فُتحت',`${M.audited??'—'} / ${M.opened??'—'}`],
           ['النجاح مقابل التعادل',ed?`${ed.win_rate}% / ${ed.breakeven}%`:'بعد 10 نتائج']);
@@ -3340,7 +3340,7 @@ html.locked .gate{display:flex}
     out.mgr={s:worst([n('bad')?'bad':'ok',n('warn')?'warn':'ok',R.status==='bad'?'bad':R.status==='warn'?'warn':'ok']),
       now:`${n('ok')} يعمل · ${n('warn')} متأخر · ${n('bad')} متعطل · ${n('off')} موقوف`,facts:(R.points||[]).map(p=>p.t),
       kpi:[['تشغيلات اليوم',`${d1[0]} / ${d1[1]}`],['تشغيلات الأسبوع',`${d7[0]} / ${d7[1]}`],['آخر رصد للنظام',ago(S&&S.at)],['آخر تقرير تداول',M.updated||'—']],
-      act:n('bad')?'ابدأ بالمكاتب الحمراء في الاجتماع اليومي':'',d1,d7};
+      act:n('bad')?'ابدأ بالمكاتب الحمراء في الاجتماع اليومي':(R.status==='warn'||R.status==='bad')?'كل المكاتب تعمل؛ التنبيه من أداء المحفظة التجريبية، راجع «النقاط العريضة»':'',d1,d7};
     out.lobby={s:S&&S.site==='closed'?'off':'ok',now:S&&S.site==='closed'?'الموقع مغلق للإصلاحات':'الموقع مفتوح للزوار',facts:[],kpi:[['حالة الموقع',S&&S.site==='closed'?'مغلق':'مفتوح'],['آخر رصد',ago(S&&S.at)]]};
     const items=[];AG.forEach(a=>{const v=out[a.id];if(!v||a.room||a.id==='mgr')return;if(v.s!=='ok')items.push({a,v});});
     items.sort((x,y)=>RANK[y.v.s]-RANK[x.v.s]);out.meet={s:items.length?worst(items.map(i=>i.v.s)):'ok',now:items.length?`${items.length} بنود على جدول الأعمال`:'لا بنود: كل المكاتب تعمل',items,facts:[],kpi:[]};
@@ -6433,5 +6433,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='144b5786e0';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='7cdd03e0e0';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
