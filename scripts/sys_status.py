@@ -54,7 +54,18 @@ def main():
         dur = None
         if last and last.get('run_started_at') and last.get('updated_at') and last.get('status') == 'completed':
             dur = int((iso(last['updated_at']) - iso(last['run_started_at'])).total_seconds())
-        wf[name] = {'state': 'on' if states[name] == 'active' else 'off',
+        days = []
+        for i in range(6, -1, -1):
+            day = (now - timedelta(days=i)).date()
+            rs = [r for r in runs if r.get('status') == 'completed' and iso(r['created_at']).date() == day]
+            days.append([sum(1 for r in rs if r.get('conclusion') in ('success', 'skipped')), len(rs)])
+        hist = []
+        for r in runs[:8]:
+            d = None
+            if r.get('run_started_at') and r.get('updated_at') and r.get('status') == 'completed':
+                d = int((iso(r['updated_at']) - iso(r['run_started_at'])).total_seconds())
+            hist.append({'at': r['created_at'], 'c': r.get('conclusion') or r.get('status'), 'dur': d, 'ev': r.get('event')})
+        wf[name] = {'state': 'on' if states[name] == 'active' else 'off', 'days': days, 'runs': hist,
                     'last': {'st': last.get('status'), 'c': last.get('conclusion'), 'at': last['created_at'], 'ev': last.get('event'), 'dur': dur} if last else None,
                     'ok_at': lastok['created_at'] if lastok else None, 'd1': cnt(d1), 'd7': cnt(d7)}
         time.sleep(0.1)
