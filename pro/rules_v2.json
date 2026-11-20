@@ -1,0 +1,247 @@
+{
+  "version": 3,
+  "name": "Tiko Professor",
+  "direction": "long_only",
+  "hierarchy": [
+    "M",
+    "W",
+    "D",
+    "H4"
+  ],
+  "monthly_veto": true,
+  "weekly_veto_for": [
+    "D",
+    "H4"
+  ],
+  "weights": {
+    "M": 0.35,
+    "W": 0.3,
+    "D": 0.2,
+    "H4": 0.15
+  },
+  "horizons": {
+    "H4": {
+      "name": "4 ساعات",
+      "context": [
+        "M",
+        "W",
+        "D"
+      ],
+      "stop_atr": 1.2,
+      "min_risk_atr": 0.75,
+      "max_risk_atr": 3.0,
+      "target_cap_atr": 7,
+      "max_hold_days": 10,
+      "min_conf": 55,
+      "exit_on": "D"
+    },
+    "D": {
+      "name": "يومية",
+      "context": [
+        "M",
+        "W"
+      ],
+      "stop_atr": 1.2,
+      "min_risk_atr": 0.75,
+      "max_risk_atr": 3.0,
+      "target_cap_atr": 6,
+      "max_hold_days": 45,
+      "min_conf": 50,
+      "exit_on": "W"
+    },
+    "W": {
+      "name": "أسبوعية",
+      "context": [
+        "M"
+      ],
+      "stop_atr": 1.0,
+      "min_risk_atr": 0.6,
+      "max_risk_atr": 2.5,
+      "target_cap_atr": 4,
+      "max_hold_days": 200,
+      "min_conf": 45,
+      "exit_on": "M"
+    },
+    "M": {
+      "name": "شهرية",
+      "context": [],
+      "stop_atr": 1.0,
+      "min_risk_atr": 0.5,
+      "max_risk_atr": 2.0,
+      "target_cap_atr": 3,
+      "max_hold_days": 400,
+      "min_conf": 40,
+      "exit_on": "M"
+    }
+  },
+  "entry_filters": {
+    "exec_score_min": 0.35,
+    "above_ema50": true,
+    "rsi_max": 75
+  },
+  "levels": {
+    "swing_k": 3,
+    "lookback": {
+      "H4": 180,
+      "D": 250,
+      "W": 156,
+      "M": 120
+    },
+    "stop_buffer_atr": 0.25,
+    "target_below_res_atr": 0.1,
+    "min_room_r": 1.0
+  },
+  "traps": {
+    "failed_breakout_wick": 0.5,
+    "sweep_bonus": 10
+  },
+  "auditor": {
+    "min_rr": 2.0,
+    "checks": [
+      {
+        "id": "monthly",
+        "q": "هل الاتجاه الشهري والأسبوعي ليس هابطًا، واليومي صاعد؟"
+      },
+      {
+        "id": "levels",
+        "q": "هل الوقف بين 3% و6% تحت الدخول، ولا توجد مقاومة 4 ساعات قبل الهدف؟"
+      },
+      {
+        "id": "traps",
+        "q": "هل استُبعدت الفخاخ: اختراق كاذب بذيل علوي، وحدث كبير قريب، ولا يعتمد القرار على خبر؟"
+      },
+      {
+        "id": "rr",
+        "q": "هل التوقع الرياضي موجب؟ نسبة نجاح آخر الصفقات أعلى من نسبة التعادل اللازمة لهذا الهدف والوقف."
+      }
+    ],
+    "fail_action": "cancel"
+  },
+  "news": {
+    "use_as_trigger": false,
+    "policy": "الخبر لا يفتح صفقة ولا يغلقها. الأسعار والمستويات هي التي تقرر. الحدث الكبير المعلن (نتائج، فائدة، اكتتاب حقوق) يمنع الدخول قبله ولا يغيّر الاتجاه."
+  },
+  "risk": {
+    "risk_per_trade": 0.01,
+    "max_weight": 0.12,
+    "max_open": 12,
+    "breakeven_at_r": 1.0,
+    "one_trade_per_asset": true
+  },
+  "cycle": {
+    "target_pct": 100,
+    "measure": "equity_double",
+    "on_target": "stop_entries_close_open_report_then_freeze",
+    "freeze_days": 7
+  },
+  "execution": {
+    "fees": {
+      "sa": 0.0015,
+      "us": 0.0005,
+      "cx": 0.001
+    },
+    "slip": 0.0005,
+    "sweep": "SPY"
+  },
+  "mode": "h4_rolling",
+  "rolling": {
+    "name": "مضاربات 4 ساعات متحركة",
+    "markets": [
+      "sa",
+      "cx",
+      "us"
+    ],
+    "context": {
+      "D": "up",
+      "W": "not_down",
+      "M": "not_down"
+    },
+    "trigger": {
+      "above_ema50": true,
+      "rsi_below": 50,
+      "green_candle": true
+    },
+    "target_pct": 1.0,
+    "stop": {
+      "atr_k": 3.0,
+      "min_pct": 3.0,
+      "max_pct": 6.0
+    },
+    "breakeven_at_target_frac": 0.6,
+    "room_check": true,
+    "max_hold_days": 14,
+    "max_open": 8,
+    "weight": 0.12,
+    "win_rate_goal": 80,
+    "edge_window": 30,
+    "edge_min_trades": 10,
+    "backtest": {
+      "period": "مايو 2025 → نوفمبر 2026",
+      "trades": 141,
+      "win_rate": 80.1,
+      "sum_pct": 60.5,
+      "avg_win_pct": 1.55,
+      "avg_loss_pct": -3.69,
+      "note": "نمو المحفظة كاملة +60.5% مقابل +26% لمؤشر S&P 500. 95% من ربح الصفقات جاء من العملات بالرافعة ×5 (57 صفقة بين يوليو ونوفمبر 2026 فقط، نجاح 93%)، والأسهم الأمريكية 84 صفقة بنجاح 71% وربح صغير. أسوأ صفقة عملات خسرت 32% من هامشها. العينة قصيرة للعملات، فلا تُعامل النتيجة كضمان. أُضيف لاحقًا ارتداد التشبع البيعي في الأسهم الأمريكية (اختبار منفصل أدناه)."
+    },
+    "min_net_target_pct": 0.7,
+    "target_mode": "adaptive",
+    "adaptive_markets": [
+      "cx",
+      "us"
+    ],
+    "adaptive": {
+      "min_net_pct": 0.7,
+      "max_atr": 4,
+      "max_pct": 8,
+      "below_res_atr": 0.1
+    },
+    "leverage": {
+      "cx": 5,
+      "us": 1,
+      "sa": 1
+    },
+    "liq_buffer_pct": 1.0,
+    "dd_brake_pct": 20,
+    "funding_per_8h": 0.0001,
+    "oversold": {
+      "enabled": true,
+      "markets": [
+        "us"
+      ],
+      "rsi_below": 30,
+      "target_pct": 2.0,
+      "stop_pct": 6.0,
+      "backtest": "الأسهم الأمريكية: 60 صفقة، نجاح 88%، +5,608 دولار (آخر 3 أشهر: 8 صفقات، نجاح 88%). على العملات خسر فلم يُفعّل."
+    },
+    "short": {
+      "enabled": false,
+      "markets": [
+        "cx"
+      ],
+      "rsi_above": 50,
+      "backtest": "البيع على المكشوف في العملات: 15 صفقة، نجاح 47%، −26,642 دولار، وأقصى تراجع للمحفظة 32%. في الأسهم الأمريكية: 17 صفقة بلا ربح. لذلك غير مفعّل."
+    },
+    "zone": {
+      "enabled": true,
+      "markets": [
+        "us"
+      ],
+      "min_touches": 3,
+      "min_holds": 2,
+      "min_rate": 0.7,
+      "stop_below_atr": 0.3,
+      "min_stop_pct": 1.0,
+      "max_atr": 4,
+      "min_lower_wick": 0.4,
+      "min_rr": 2.0,
+      "monthly_not_down": true,
+      "scan_markets": [
+        "sa",
+        "us",
+        "cx"
+      ],
+      "backtest": "الأسهم الأمريكية: 23 صفقة، نجاح 61%، متوسط +1.4% للصفقة، +3,456 دولار. العملات والسعودي خسرت بنفس القاعدة (نجاح 43% و18%) فلم تُفعّل فيها، لكن الرادار يعرض مناطقها للمتابعة."
+    }
+  }
+}

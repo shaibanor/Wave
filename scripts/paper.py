@@ -27,7 +27,7 @@ try:
     EVENTS = json.load(open(os.path.join(ROOT, 'pro', 'events.json'), encoding='utf-8'))['events']
 except Exception:
     EVENTS = []
-LAUNCH = os.environ.get('PAPER2_LAUNCH', '2026-11-09')
+LAUNCH = os.environ.get('PAPER2_LAUNCH', '2026-11-21')   # third version (compounding, fully invested) starts here
 MODE = R.get('mode', 'multi'); RO = R.get('rolling', {}); ZRULE = RO.get('zone', {})
 V1_END = dt.datetime(2026, 11, 8, 21, 0, tzinfo=dt.timezone.utc)  # the first version's record is frozen here
 START_USD = 87000.0
@@ -216,6 +216,42 @@ def h4_close(kind, t):
 def local_date(kind, t):
     return dt.datetime.fromtimestamp(t, dt.timezone.utc).astimezone(TZ[kind]).date()
 
+# ---------- news tone (same keyword reading the site uses, weighted by recency) ----------
+def _nz(t):
+    import re
+    t = re.sub('[\u064B-\u065F\u0640]', '', str(t or '').lower())
+    return t.replace('أ', 'ا').replace('إ', 'ا').replace('آ', 'ا').replace('ة', 'ه').replace('ى', 'ي')
+NPOS = ['ارتفاع', 'يرتفع', 'ترتفع', 'ارتفعت', 'ارباح', 'ربح', 'نمو', 'توزيع', 'توزيعات', 'صفقه', 'اتفاقيه', 'موافقه', 'يوافق', 'ترقيه', 'قياسي', 'مكاسب', 'زياده', 'توسع', 'تفوق', 'ايجابي', 'شراكه', 'عقد', 'تحسن', 'صعود', 'يقفز', 'قفزه', 'تعافي', 'يتجاوز', 'اعلي مستوي',
+        'beat', 'beats', 'surge', 'surges', 'soar', 'soars', 'jump', 'jumps', 'rally', 'rallies', 'record', 'upgrade', 'upgraded', 'raises', 'raised', 'growth', 'profit', 'profits', 'gain', 'gains', 'strong', 'stronger', 'bullish', 'outperform', 'approval', 'approved', 'wins', 'expands', 'expansion', 'partnership', 'deal', 'dividend', 'buyback', 'rebound', 'rebounds', 'rise', 'rises', 'climbs', 'tops', 'boost', 'boosts', 'optimism', 'higher', 'inflows', 'all-time high']
+NNEG = ['خساره', 'خسائر', 'تراجع', 'تراجعت', 'انخفاض', 'انخفضت', 'هبوط', 'يهبط', 'غرامه', 'تحقيق', 'استقاله', 'دعوي', 'مخالفه', 'ايقاف', 'تعليق', 'تحذير', 'ضعف', 'سلبي', 'تخفيض', 'شطب', 'افلاس', 'تاجيل', 'ازمه', 'عقوبات', 'ركود', 'تضخم',
+        'miss', 'misses', 'plunge', 'plunges', 'fall', 'falls', 'drop', 'drops', 'slump', 'slumps', 'cut', 'cuts', 'downgrade', 'downgraded', 'loss', 'losses', 'weak', 'weaker', 'bearish', 'underperform', 'lawsuit', 'probe', 'investigation', 'fine', 'fined', 'recall', 'layoffs', 'decline', 'declines', 'warns', 'warning', 'crash', 'hack', 'hacked', 'ban', 'delay', 'tumbles', 'sinks', 'slides', 'selloff', 'sell-off', 'outflows', 'lower', 'fears', 'concerns', 'tariff', 'tariffs']
+try:
+    NEWS = json.load(open(os.path.join(ROOT, 'pro', 'news.json'), encoding='utf-8')).get('a', {})
+except Exception:
+    NEWS = {}
+
+def news_tone(aid, ds):
+    """Headline tone for an asset as of day ds: only headlines published on or before ds count (no look-ahead)."""
+    import math as _m, re
+    num = den = 0.0; recent = 0; neg = pos = 0; top = None
+    for it in NEWS.get(aid, []) or []:
+        try: d = dt.date.fromisoformat(str(it.get('d', ''))[:10])
+        except Exception: continue
+        age = (ds - d).days
+        if age < 0 or age > 30: continue
+        t = _nz((it.get('t') or '') + ' ' + (it.get('sum') or ''))
+        p = sum(1 for w in NPOS if w in t); n_ = sum(1 for w in NNEG if w in t)
+        if re.search(r'(^|\s)(لا|لم|لن|غير|not|no|without)\s', t) and p + n_ == 1: p, n_ = n_, p
+        sc = (p - n_) / (p + n_) if p + n_ else 0.0
+        k = _m.exp(-age / 7); num += k * sc; den += k
+        if age <= 14: recent += 1
+        if sc < -.2: neg += 1
+        elif sc > .2: pos += 1
+        if top is None or abs(sc) * k > abs(top[0]): top = (sc * k, it.get('t'))
+    if not den or not recent: return {'label': 'none', 'score': None, 'n': 0}
+    s_ = num / den
+    return {'label': 'pos' if s_ > .15 else 'neg' if s_ < -.15 else 'neu', 'score': round(s_, 2), 'n': recent, 'pos': pos, 'neg': neg, 'top': (top[1] or '')[:90] if top else None}
+
 def event_block(kind, ds):
     """Scheduled high-impact event today or tomorrow -> no new short-horizon entries."""
     for e in EVENTS:
@@ -393,7 +429,7 @@ def run(now, launch=LAUNCH):
         p['held_days'] = (dt.date.fromisoformat(ds) - dt.date.fromisoformat(p['opened'])).days
         cyc['pnl'] += p['pnl_usd']; cyc['sum_pct'] += p['pnl_pct']; cyc['trades'].append(p)
         if p.get('roll'): outcomes.append({'pnl_pct': p['px_pct'], 'win': p['win'], 'shadow': False, 'asset': p['asset'], 'side': 3 if p.get('setup') == 'zone' else 2 if p.get('setup') == 'oversold' else p.get('side', 1)})
-        if p['pnl_usd'] > 0: pw[0] += p['pnl_usd']; cash -= p['pnl_usd']
+        if p['pnl_usd'] > 0 and not RO.get('compound'): pw[0] += p['pnl_usd']; cash -= p['pnl_usd']   # with compound on, profit stays in the trading capital
         for k in ('opened_T', 'left', 'risk0_px'): p.pop(k, None)
         closed.append(p)
 
@@ -575,9 +611,12 @@ def run(now, launch=LAUNCH):
         rng = max(1e-12, x['h'] - x['l']); uw = (x['h'] - max(x['o'], x['c'])) / rng
         trap = any(x['h'] > q and x['c'] < q for q in z['prevH'][-6:]) and uw >= TR['failed_breakout_wick']
         ev = event_block(kind, z['date'])
-        ck['traps'] = not trap and not ev
+        nt = news_tone(a, z['date']) if RO.get('news_filter') else {'label': 'none'}
+        bad_news = nt['label'] == 'neg'
+        ck['traps'] = not trap and not ev and not bad_news
         if trap: notes.append('اختراق كاذب بذيل علوي')
         if ev: notes.append('حدث كبير قريب: ' + ev)
+        if bad_news: notes.append(f"أخبار سلبية حديثة ({nt['neg']} من {nt['n']}): {nt.get('top') or ''}")
         okE, est, nE = edge(3 if zb else 2 if osb else 1)
         ck['rr'] = okE
         if not okE: notes.append(f"التوقع سالب: نجاح {est['win_rate']}% أقل من التعادل {est['breakeven']}%")
@@ -609,7 +648,8 @@ def run(now, launch=LAUNCH):
                   'entry': round(entry, 6), 'qty': qty, 'value': round(qty * entry, 2), 'value_usd': round(qty * entry * k, 2), 'weight': round(qty * entry * k / eq * 100, 1),
                   'stop0': round(stop, 6), 'stop': stop, 'target': round(tgt, 6), 'tp_pct': round(tp, 2), 'sl_pct': round(sp, 2), 'need_win': need,
                   'lev': L, 'margin': margin / k, 'rr': round(tp / sp, 2), 'risk0': entry - stop, 'atr': round(atrv, 6), 'tf': {t: s_['dir'] for t, s_ in (('M', sM), ('W', sW), ('D', sD))},
-                  'audit': ck, 'notes': notes, 'why': why, 'left': qty, 'be': False, 'exits': [], 'fees': fee, 'status': 'open'}
+                  'audit': ck, 'notes': notes, 'why': why + (f" · الأخبار {'إيجابية' if nt['label'] == 'pos' else 'محايدة'}" if nt['label'] in ('pos', 'neu') else ''), 'news': nt if nt['label'] != 'none' else None,
+                  'left': qty, 'be': False, 'exits': [], 'fees': fee, 'status': 'open'}
 
     def try_short(a, kind, z, c, T):
         """Mirror of try_roll for falling markets: sell a bounce in a downtrend (perpetual futures)."""
@@ -727,7 +767,7 @@ def run(now, launch=LAUNCH):
             cands.sort(key=lambda c: (order[c[2]], -(c[8].get(c[2]) or {'s': 0})['s'], c[0]))
             for c in cands: try_enter(*c, T)
         # sweep idle cash into the index (not while frozen)
-        if not frozen and any(e[2] == SWEEP and e[4] != 'h4' for e in G) and px.get(SWEEP):
+        if (not frozen or RO.get('compound')) and any(e[2] == SWEEP and e[4] != 'h4' for e in G) and px.get(SWEEP):   # idle money never sits as cash
             if cash > 1:
                 sp = px[SWEEP] * (1 + SLIP); q = cash / (sp * (1 + FEE['us'])); sweep_q += q; cost = q * sp * (1 + FEE['us']); cash -= cost; sw_cost[0] += cost
         # cycle target: close everything, freeze
@@ -954,6 +994,22 @@ def radar(now):
     rows.sort(key=lambda r: r['dist_atr'])
     return {'updated': now.strftime('%Y-%m-%dT%H:%MZ'), 'rule': {k: ZR.get(k) for k in ('min_touches', 'min_holds', 'min_rate', 'min_rr', 'markets')}, 'zones': rows}
 
+V2_END = dt.datetime(2026, 11, 21, 0, 0, tzinfo=dt.timezone.utc)   # the second version's record is frozen here
+
+def archive_v2():
+    """Final state of the second version (its own frozen rules), replayed up to V2_END."""
+    try:
+        import importlib.util
+        sp = importlib.util.spec_from_file_location('paper_v2', os.path.join(HERE, 'paper_v2.py'))
+        m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+        r = m.run(V2_END); T = r['totals']
+        return {'name': 'الإصدار الثاني', 'from': m.LAUNCH, 'to': V2_END.date().isoformat(), 'start_usd': T['start_usd'], 'equity_usd': T['equity_usd'], 'pct': T['pct'],
+                'closed_n': T['closed_n'], 'wins': T['wins'], 'losses': T['losses'], 'win_rate': T['win_rate'], 'open_n': T['open_n'], 'bench_pct': T['bench_pct'],
+                'closed': [{k: t.get(k) for k in ('asset', 'name', 'opened', 'closed', 'entry', 'exit', 'pnl_usd', 'pnl_pct', 'win')} for t in r['closed']],
+                'open': [{k: t.get(k) for k in ('asset', 'name', 'opened', 'entry', 'now', 'upnl_usd')} for t in r['open']]}
+    except Exception as e:
+        return {'name': 'الإصدار الثاني', 'error': str(e)[:120]}
+
 def archive_v1():
     """Final state of the first version (rules unchanged), frozen at V1_END."""
     try:
@@ -970,8 +1026,11 @@ def archive_v1():
 
 def main():
     now = dt.datetime.now(dt.timezone.utc)
+    global START_USD
+    a2 = archive_v2()
+    if R.get('carry_from_v2') and a2.get('equity_usd'): START_USD = float(a2['equity_usd'])   # the new version continues with the money the previous one ended with
     r = run(now)
-    r['archive'] = [archive_v1()]
+    r['archive'] = [archive_v1(), a2]
     book = {'updated': now.strftime('%Y-%m-%dT%H:%MZ'), 'launch': LAUNCH, 'mode': 'professor', 'version': R['version'],
             'rules': {'risk': RK['risk_per_trade'], 'max_w': RK['max_weight'], 'max_open': RK['max_open'], 'min_rr': AU['min_rr'],
                       'breakeven_r': RK['breakeven_at_r'], 'horizons': {h: {'name': v['name'], 'max_hold_days': v['max_hold_days'], 'cap': v['target_cap_atr']} for h, v in HZ.items()},
