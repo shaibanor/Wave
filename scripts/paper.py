@@ -399,8 +399,13 @@ def run(now, launch=LAUNCH):
     peak = [START_USD]; mdd = [0.0]; cyc['tot0'] = START_USD
     ctxD = {}
 
+    park_log = []
+    cur_d = [None]
+    park = {}   # idle money parked in the strongest trending 24/7 assets: asset -> {'q', 'cost'}
+    PK = RO.get('park') or {}
+
     def equity():
-        v = cash + sweep_q * (px.get(SWEEP) or 0)
+        v = cash + sweep_q * (px.get(SWEEP) or 0) + sum(h['q'] * (px.get(a) or 0) for a, h in park.items())
         for a, p in pos.items():
             if p.get('margin') is not None:
                 v += (p['margin'] * p['left'] / p['qty'] + p.get('side', 1) * p['left'] * ((px.get(a) or p['entry']) - p['entry'])) * fx(p['kind'])
@@ -408,8 +413,28 @@ def run(now, launch=LAUNCH):
                 v += p['left'] * (px.get(a) or p['entry']) * fx(p['kind'])
         return v
 
+    def park_sell(a, q=None):
+        nonlocal cash
+        h = park.get(a); p_ = px.get(a)
+        if not h or not p_: return
+        q = h['q'] if q is None else min(q, h['q'])
+        val = q * p_ * (1 - SLIP); cash += val - val * FEE['cx']
+        park_log.append({'a': a, 'act': 'sell', 'usd': round(val, 2), 'pnl_usd': round(val - h['cost'] * q / h['q'], 2), 'px': p_, 'd': cur_d[0]})
+        h['cost'] *= (1 - q / h['q']); h['q'] -= q
+        if h['q'] <= 1e-12: del park[a]
+
+    def park_ok(a):
+        c = ctxD.get(a)
+        if not c: return False
+        sD, sW = c['sc'].get('D'), c['sc'].get('W')
+        return bool(sD and sW) and sD['dir'] == 'up' and sW['dir'] != 'down' and c['e50']['D'] and c['bar']['c'] > c['e50']['D']
+
     def raise_cash(need):
         nonlocal cash, sweep_q
+        for a in sorted(park, key=lambda a: park[a]['q'] * (px.get(a) or 0)):   # parked money is released first (24/7 markets)
+            if need <= cash: return
+            p_ = px.get(a)
+            if p_: park_sell(a, (need - cash) / (p_ * (1 - SLIP)) * (1 + FEE['cx']))
         sp = px.get(SWEEP)
         if need <= cash or not sp or sweep_q <= 0: return
         q = min(sweep_q, (need - cash) / (sp * (1 - SLIP)) * (1 + FEE['us']))
@@ -718,6 +743,7 @@ def run(now, launch=LAUNCH):
         for (_, _, a, kind, typ, z) in G:
             px[a] = z['bar']['c']; ds_any = z['date'].isoformat() if typ != 'h4' else z['date'].isoformat()
         if spy0 is None and px.get(SWEEP): spy0 = px[SWEEP]
+        cur_d[0] = ds_any
         if cyc['start'] is None: cyc['start'] = ds_any
         frozen = cyc['frozen_until'] is not None and T < cyc['frozen_until']
         if cyc['frozen_until'] is not None and not frozen:
@@ -766,6 +792,22 @@ def run(now, launch=LAUNCH):
             order = {'M': 0, 'W': 1, 'D': 2, 'H4': 3}
             cands.sort(key=lambda c: (order[c[2]], -(c[8].get(c[2]) or {'s': 0})['s'], c[0]))
             for c in cands: try_enter(*c, T)
+        # park idle cash in the strongest trending 24/7 assets, so money keeps working after every exit
+        if PK.get('enabled') and (not frozen or RO.get('compound')) and not cyc.get('hit'):
+            for a in list(park):
+                if not park_ok(a): park_sell(a)   # trend broke: release it
+            if cash > PK.get('min_usd', 500):
+                cand = [a for a, (nm, kd) in names.items() if kd in PK.get('markets', ['cx']) and (not PK.get('assets') or a in PK['assets']) and a not in pos and px.get(a) and park_ok(a)]
+                cand.sort(key=lambda a: -(ctxD[a]['sc']['D']['s'] + ctxD[a]['sc']['W']['s']))
+                top = cand[:PK.get('top', 2)]
+                if top:
+                    eq_ = equity(); room = {a: max(0.0, PK.get('max_w', 1.0) * eq_ - (park[a]['q'] * px[a] if a in park else 0)) for a in top}
+                    per0 = cash / len(top)
+                    for a in top:
+                        per = min(per0, room[a])
+                        if per < PK.get('min_usd', 500): continue
+                        p_ = px[a] * (1 + SLIP); q = per / (p_ * (1 + FEE['cx']))
+                        h = park.setdefault(a, {'q': 0.0, 'cost': 0.0}); park_log.append({'a': a, 'act': 'buy', 'usd': round(per, 2), 'px': px[a], 'd': cur_d[0]}); h['q'] += q; h['cost'] += q * p_ * (1 + FEE['cx']); cash -= q * p_ * (1 + FEE['cx'])
         # sweep idle cash into the index (not while frozen)
         if (not frozen or RO.get('compound')) and any(e[2] == SWEEP and e[4] != 'h4' for e in G) and px.get(SWEEP):   # idle money never sits as cash
             if cash > 1:
@@ -780,6 +822,7 @@ def run(now, launch=LAUNCH):
             ds = ds_any
             if sweep_q > 0 and px.get(SWEEP):
                 val = sweep_q * px[SWEEP] * (1 - SLIP); cash += val - val * FEE['us']; sweep_q = 0.0; sw_cost[0] = 0.0
+            for a in list(park): park_sell(a)
             fz = T + dt.timedelta(days=CY['freeze_days'])
             TT_ = cyc['trades']; W_ = [t for t in TT_ if t['win']]; L_ = [t for t in TT_ if not t['win']]
             bym = {}
@@ -808,6 +851,9 @@ def run(now, launch=LAUNCH):
     for t in closed: t['fees'] = round(t['fees'], 4); t['stop'] = round(t['stop'], 6); t['risk0'] = round(t['risk0'], 6)
     sweep_usd = sweep_q * (px.get(SWEEP) or 0); inv = sum(o['now_usd'] for o in opens)
     alloc = sorted([{'label': o['name'], 'usd': o['now_usd']} for o in opens], key=lambda z: -z['usd'])
+    park_out = [{'asset': a, 'name': names[a][0], 'qty': round(h['q'], 6), 'now': px.get(a), 'cost_usd': round(h['cost'], 2),
+                 'value_usd': round(h['q'] * (px.get(a) or 0), 2), 'pnl_usd': round(h['q'] * (px.get(a) or 0) - h['cost'], 2)} for a, h in park.items()]
+    alloc += [{'label': f"{z['name']} · تشغيل السيولة", 'usd': z['value_usd'], 'park': True} for z in park_out]
     alloc += [{'label': 'صندوق المؤشر SPY', 'usd': round(sweep_usd, 2), 'sweep': True}, {'label': 'نقد', 'usd': round(cash, 2), 'cash': True}]
     for z in alloc: z['pct'] = round(z['usd'] / eq * 100, 1) if eq else 0
     stats = {}
@@ -827,8 +873,8 @@ def run(now, launch=LAUNCH):
                    'pnl_usd': round(eq + pw[0] - START_USD, 2), 'pct': round((eq + pw[0]) / START_USD * 100 - 100, 3),
                    'wins': wins, 'losses': len(closed) - wins, 'gross_win_usd': gw, 'gross_loss_usd': gl,
                    'open_n': len(opens), 'closed_n': len(closed), 'win_rate': round(wins / len(closed) * 100, 1) if closed else None,
-                   'cash_usd': round(cash, 2), 'sweep_usd': round(sweep_usd, 2), 'invested_usd': round(inv, 2),
-                   'util': round((inv + sweep_usd) / eq * 100, 1) if eq else 0,
+                   'cash_usd': round(cash, 2), 'sweep_usd': round(sweep_usd, 2), 'park_usd': round(sum(z['value_usd'] for z in park_out), 2), 'invested_usd': round(inv, 2),
+                   'util': round((inv + sweep_usd + sum(z['value_usd'] for z in park_out)) / eq * 100, 1) if eq else 0,
                    'bench_pct': round((spy_now / spy0 - 1) * 100, 3) if spy0 and spy_now else None},
         'cycle': {'n': cyc['n'], 'start': cyc['start'], 'cap0': round(cyc['cap0'], 2), 'pnl_usd': round(cyc['pnl'], 2),
                   'progress_pct': round((equity() + pw[0]) / cyc['tot0'] * 100 - 100, 2) if CY.get('measure') == 'equity_double' else (round(cyc['sum_pct'], 2) if CY.get('measure') == 'sum_trade_pct' else (round(cyc['pnl'] / cyc['cap0'] * 100, 2) if cyc['cap0'] else 0)), 'tot0': round(cyc['tot0'], 2), 'max_dd_pct': round(mdd[0], 2),
@@ -837,6 +883,7 @@ def run(now, launch=LAUNCH):
         'audit': {'audited': nonlocal_audit[0], 'opened': n, 'rejected': rejects},
         'by_h': sorted(byh.values(), key=lambda s: ['M', 'W', 'D', 'H4'].index(s['h'])),
         'open': sorted(opens, key=lambda o: o['opened'], reverse=True), 'closed': sorted(closed, key=lambda t: t['closed'], reverse=True),
+        'park': park_out, 'park_log': park_log if os.environ.get('PAPER_NOWRITE') else park_log[-60:],
         'sweep': {'asset': SWEEP, 'name': 'صندوق إس آند بي 500', 'qty': round(sweep_q, 6), 'avg': round(sw_cost[0] / sweep_q, 4) if sweep_q else None, 'now': px.get(SWEEP),
                   'cost_usd': round(sw_cost[0], 2), 'value_usd': round(sweep_usd, 2), 'pnl_usd': round(sweep_usd - sw_cost[0], 2)},
         'curve': sorted(curve.items()), 'alloc': alloc, 'stats': sorted(stats.values(), key=lambda s: -s['pnl_usd']),
