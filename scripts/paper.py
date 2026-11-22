@@ -1014,6 +1014,17 @@ def prof_report(book, now):
            'fresh': [{'asset': a, 'name': f['name'], 'market': MK[f['kind']], 'd': f['d'], 'h4': f['h4'], 'lag': stale_days(f['kind'], f['d'], now)} for a, f in (book.get('fresh') or {}).items()],
            'refs': {'source': refs.get('source'), 'updated': refs.get('updated'), 'coins': cross} if refs else None,
            'site_report': {'when': str(rep_.get('when', ''))[:16], 'issues': len(rep_.get('issues') or []), 'checks': [str(c.get('a', '')) + ': ' + str(c.get('m', '')) for c in (rep_.get('checks') or [])][:20]} if rep_ else None}
+    # success rate of the portfolio manager, its weekly progress, and the previous versions for comparison
+    wk_ = {}
+    for t in roll:
+        try: d_ = dt.date.fromisoformat(str(t.get('closed'))[:10])
+        except Exception: continue
+        k_ = (d_ - dt.timedelta(days=d_.weekday())).isoformat(); w_ = wk_.setdefault(k_, [0, 0]); w_[0] += 1; w_[1] += 1 if t['win'] else 0
+    mon['perf'] = {'closed': len(roll), 'wins': len(wins), 'win_rate': wr, 'since': LAUNCH,
+                   'weekly': [[k_, v_[0], v_[1]] for k_, v_ in sorted(wk_.items())][-12:],
+                   'versions': [{'name': a_.get('name'), 'from': a_.get('from'), 'to': a_.get('to'), 'win_rate': a_.get('win_rate'), 'closed': a_.get('closed_n'), 'pct': a_.get('pct')} for a_ in (book.get('archive') or []) if a_ and not a_.get('error')]}
+    try: mon['optimizer'] = json.load(open(os.path.join(ROOT, 'pro', 'opt_log.json'), encoding='utf-8'))[-6:]
+    except Exception: mon['optimizer'] = []
     lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'
     return {'v': 1, 'status': lvl, 'points': pts, 'findings': det, 'monitor': mon}
 
@@ -1074,10 +1085,10 @@ def archive_v1():
 def main():
     now = dt.datetime.now(dt.timezone.utc)
     global START_USD
-    a2 = archive_v2()
+    a2 = archive_v2() if not os.environ.get('PAPER_NOWRITE') else {}   # backtests do not need the archive replay
     if R.get('carry_from_v2') and a2.get('equity_usd'): START_USD = float(a2['equity_usd'])   # the new version continues with the money the previous one ended with
     r = run(now)
-    r['archive'] = [archive_v1(), a2]
+    r['archive'] = [archive_v1(), a2] if not os.environ.get('PAPER_NOWRITE') else []
     book = {'updated': now.strftime('%Y-%m-%dT%H:%MZ'), 'launch': LAUNCH, 'mode': 'professor', 'version': R['version'],
             'rules': {'risk': RK['risk_per_trade'], 'max_w': RK['max_weight'], 'max_open': RK['max_open'], 'min_rr': AU['min_rr'],
                       'breakeven_r': RK['breakeven_at_r'], 'horizons': {h: {'name': v['name'], 'max_hold_days': v['max_hold_days'], 'cap': v['target_cap_atr']} for h, v in HZ.items()},

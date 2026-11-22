@@ -1,0 +1,36 @@
+name: optimize
+on:
+  schedule:
+    - cron: '17 23 * * 4'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: pro-data
+  cancel-in-progress: false
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet cryptography
+      - run: python scripts/optimize.py
+      - name: Commit
+        run: |
+          git config user.name "shaibanor"
+          git config user.email "shaibanor@users.noreply.github.com"
+          cp pro/rules.json /tmp/rules.json; cp pro/opt_log.json /tmp/opt_log.json
+          for i in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            cp /tmp/rules.json pro/rules.json; cp /tmp/opt_log.json pro/opt_log.json
+            git add pro/rules.json pro/opt_log.json
+            if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+            git commit -qm "تحسين أسبوعي لقواعد المحفظة التجريبية"
+            git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
