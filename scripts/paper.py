@@ -171,7 +171,17 @@ def is_strong(z, ZR):
 
 # ---------- data ----------
 def bars(rows):
-    return [{'t': int(r[0]), 'o': float(r[1]), 'h': float(r[2]), 'l': float(r[3]), 'c': float(r[4])} for r in rows if r[4] and r[4] > 0]
+    return [{'t': int(r[0]), 'o': float(r[1]), 'h': float(r[2]), 'l': float(r[3]), 'c': float(r[4]), 'v': float(r[5]) if len(r) > 5 and r[5] is not None else None} for r in rows if r[4] and r[4] > 0]
+
+def candle_pattern(x, pv):
+    """Bullish Japanese-candlestick confirmation on the trigger candle (None when there is none)."""
+    o, h, l, c = x['o'], x['h'], x['l'], x['c']; rng = max(h - l, 1e-12); body = abs(c - o)
+    lw = min(o, c) - l; uw = h - max(o, c)
+    if pv and c > o and pv['c'] < pv['o'] and c >= pv['o'] and o <= pv['c']: return 'ابتلاع شرائي'
+    if lw >= 2 * body and uw <= max(body, .1 * rng) and (c - l) / rng >= .6: return 'مطرقة'
+    if pv and c > o and pv['c'] < pv['o'] and o < pv['c'] and c > (pv['o'] + pv['c']) / 2: return 'خط الاختراق'
+    if c > o and body >= .6 * rng and (c - l) / rng >= .85: return 'شمعة صاعدة قوية'
+    return None
 
 def day(t): return dt.datetime.fromtimestamp(t, dt.timezone.utc).date()
 TZ = {'sa': ZoneInfo('Asia/Riyadh'), 'us': ZoneInfo('America/New_York'), 'cx': dt.timezone.utc}
@@ -316,7 +326,9 @@ def prepare(aid, kind, now, launch):
                 ld = local_date(kind, x['t']) if kind in ('sa', 'us') else day(x['t'])
                 if ld.isoformat() < launch: continue
                 HH, LL = swings(h4, k, max(0, j - LV['lookback']['H4']), j)
-                H4.append({'T': T, 'date': ld, 'bar': x, 'sc': score(h4, IH, j, HH, LL), 'atr': IH['atr'][j], 'e50': IH['e50'][j], 'rsi': IH['rsi'][j],
+                vs_ = [q['v'] for q in h4[max(0, j - 20):j] if q.get('v')]
+                H4.append({'T': T, 'date': ld, 'bar': x, 'prev': h4[j - 1] if j else None, 'vavg': sum(vs_) / len(vs_) if len(vs_) >= 10 else None,
+                           'sc': score(h4, IH, j, HH, LL), 'atr': IH['atr'][j], 'e50': IH['e50'][j], 'rsi': IH['rsi'][j],
                            'res': [h4[q]['h'] for q in HH], 'sup': [h4[q]['l'] for q in LL],
                            'prevH': [h4[q]['h'] for q in HH if q < j], 'prevL': [h4[q]['l'] for q in LL if q < j]})
     return {'d': d, 'ctx': ctx, 'h4': H4}
@@ -491,12 +503,20 @@ def run(now, launch=LAUNCH):
                 p['stop'] = min(p['stop'], p['entry'] * (1 - cst)); p['be'] = True
             if p['left'] <= 1e-12: finish(p, ds); del pos[a]
             return
-        if l <= p['stop']: fill(p, p['left'], min(o, p['stop']), 'وقف التعادل' if p['be'] else 'وقف الخسارة', ds)
-        elif h >= p['target']: fill(p, p['left'], max(o, p['target']), 'تحقق الهدف', ds)
+        if l <= p['stop']: fill(p, p['left'], min(o, p['stop']), 'وقف متحرك' if p.get('runner') else 'وقف التعادل' if p['be'] else 'وقف الخسارة', ds)
+        elif h >= p['target'] and not p.get('runner'):
+            pt = RO.get('partial_tp') or 0
+            if pt and p.get('roll') and 0 < pt < 1:   # take part of the profit at the target and let the rest run with a trailing stop
+                fill(p, p['left'] * pt, max(o, p['target']), 'جني جزئي عند الهدف', ds); p['runner'] = True; p['be'] = True
+                p['stop'] = max(p['stop'], p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP + .001))
+            else: fill(p, p['left'], max(o, p['target']), 'تحقق الهدف', ds)
         elif not p['be'] and p.get('roll') and h >= p['entry'] * (1 + RO['breakeven_at_target_frac'] * p.get('tp_pct', RO['target_pct']) / 100) and bar['c'] > p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP + .001):
             p['stop'] = max(p['stop'], p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP + .001)); p['be'] = True
         elif not p['be'] and not p.get('roll') and h >= p['entry'] + RK['breakeven_at_r'] * p['risk0']:
             p['stop'] = max(p['stop'], p['entry'] * (1 + 2 * FEE[p['kind']] + 2 * SLIP)); p['be'] = True
+        ta = RO.get('trail_atr') or (2.0 if p.get('runner') else 0)
+        if ta and p.get('roll') and p['left'] > 1e-12 and (p['be'] or p.get('runner')) and p.get('atr'):   # trailing stop once the trade is safe
+            p['stop'] = max(p['stop'], p['mfe'] - ta * p['atr'])
         if p['left'] <= 1e-12: finish(p, ds); del pos[a]
 
     def try_enter(a, kind, h, bar, entry_px, atrv, e50, rsi_, sc, sup, res, prevH, prevL, ds, T):
@@ -642,6 +662,11 @@ def run(now, launch=LAUNCH):
         if trap: notes.append('اختراق كاذب بذيل علوي')
         if ev: notes.append('حدث كبير قريب: ' + ev)
         if bad_news: notes.append(f"أخبار سلبية حديثة ({nt['neg']} من {nt['n']}): {nt.get('top') or ''}")
+        pat = candle_pattern(x, z.get('prev'))
+        if RO.get('candle_confirm') and not pat:   # Japanese-candlestick confirmation on the trigger candle
+            ck['traps'] = False; notes.append('لا يوجد نمط شموع انعكاسي يؤكد الدخول')
+        if RO.get('vol_confirm') and x.get('v') and z.get('vavg') and x['v'] < RO['vol_confirm'] * z['vavg']:   # liquidity: volume must back the move
+            ck['traps'] = False; notes.append(f"حجم شمعة الدخول ضعيف ({x['v'] / z['vavg']:.2f} من متوسط 20 شمعة)")
         okE, est, nE = edge(3 if zb else 2 if osb else 1)
         ck['rr'] = okE
         if not okE: notes.append(f"التوقع سالب: نجاح {est['win_rate']}% أقل من التعادل {est['breakeven']}%")
@@ -673,7 +698,8 @@ def run(now, launch=LAUNCH):
                   'entry': round(entry, 6), 'qty': qty, 'value': round(qty * entry, 2), 'value_usd': round(qty * entry * k, 2), 'weight': round(qty * entry * k / eq * 100, 1),
                   'stop0': round(stop, 6), 'stop': stop, 'target': round(tgt, 6), 'tp_pct': round(tp, 2), 'sl_pct': round(sp, 2), 'need_win': need,
                   'lev': L, 'margin': margin / k, 'rr': round(tp / sp, 2), 'risk0': entry - stop, 'atr': round(atrv, 6), 'tf': {t: s_['dir'] for t, s_ in (('M', sM), ('W', sW), ('D', sD))},
-                  'audit': ck, 'notes': notes, 'why': why + (f" · الأخبار {'إيجابية' if nt['label'] == 'pos' else 'محايدة'}" if nt['label'] in ('pos', 'neu') else ''), 'news': nt if nt['label'] != 'none' else None,
+                  'pattern': pat, 'vol_ratio': round(x['v'] / z['vavg'], 2) if x.get('v') and z.get('vavg') else None,
+                  'audit': ck, 'notes': notes, 'why': why + (f" · نمط الشموع: {pat}" if pat else '') + (f" · الأخبار {'إيجابية' if nt['label'] == 'pos' else 'محايدة'}" if nt['label'] in ('pos', 'neu') else ''), 'news': nt if nt['label'] != 'none' else None,
                   'left': qty, 'be': False, 'exits': [], 'fees': fee, 'status': 'open'}
 
     def try_short(a, kind, z, c, T):
