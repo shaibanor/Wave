@@ -1023,6 +1023,20 @@ def prof_report(book, now):
     mon['perf'] = {'closed': len(roll), 'wins': len(wins), 'win_rate': wr, 'since': LAUNCH,
                    'weekly': [[k_, v_[0], v_[1]] for k_, v_ in sorted(wk_.items())][-12:],
                    'versions': [{'name': a_.get('name'), 'from': a_.get('from'), 'to': a_.get('to'), 'win_rate': a_.get('win_rate'), 'closed': a_.get('closed_n'), 'pct': a_.get('pct')} for a_ in (book.get('archive') or []) if a_ and not a_.get('error')]}
+    # profit by day / week / month / year, trade count and holding time (the owner's main scoreboard)
+    per = {'d': {}, 'w': {}, 'm': {}, 'y': {}}; held = []
+    for t in roll:
+        try: d_ = dt.date.fromisoformat(str(t.get('closed'))[:10]); o_ = dt.date.fromisoformat(str(t.get('opened'))[:10])
+        except Exception: continue
+        held.append((d_ - o_).days)
+        for k_, key in (('d', d_.isoformat()), ('w', (d_ - dt.timedelta(days=d_.weekday())).isoformat()), ('m', d_.strftime('%Y-%m')), ('y', str(d_.year))):
+            v_ = per[k_].setdefault(key, [0, 0, 0.0]); v_[0] += 1; v_[1] += 1 if t['win'] else 0; v_[2] += t.get('pnl_usd') or 0
+    keep = {'d': 14, 'w': 12, 'm': 12, 'y': 5}
+    mon['perf']['periods'] = {k_: [[key, v_[0], v_[1], round(v_[2], 2)] for key, v_ in sorted(per[k_].items())][-keep[k_]:] for k_ in per}
+    mon['perf']['hold_days'] = round(sum(held) / len(held), 1) if held else None
+    mon['perf']['pnl_usd'] = round(sum(t.get('pnl_usd') or 0 for t in roll), 2)
+    try: mon['guard'] = json.load(open(os.path.join(ROOT, 'pro', 'guard.json'), encoding='utf-8'))
+    except Exception: mon['guard'] = None
     try: mon['optimizer'] = json.load(open(os.path.join(ROOT, 'pro', 'opt_log.json'), encoding='utf-8'))[-6:]
     except Exception: mon['optimizer'] = []
     lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'

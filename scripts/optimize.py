@@ -36,7 +36,8 @@ KNOBS = [(('trigger', 'rsi_below'), 'حد RSI للدخول', 5, 35, 60),
          (('adaptive', 'max_atr'), 'أقصى هدف (ATR)', 1, 2, 6),
          (('adaptive', 'min_net_pct'), 'أقل ربح صافٍ مقبول %', 0.1, 0.4, 1.2)]
 
-TOGGLES = [(('oversold', 'enabled'), 'صفقات التشبع البيعي'), (('zone', 'enabled'), 'صفقات مناطق الدعم القوية'),
+KNOBS += [(('leverage', 'cx'), 'رافعة العملات (محاكاة)', 1, 1, 5)]
+TOGGLES = [(('short', 'enabled'), 'البيع على المكشوف (محاكاة)'), (('oversold', 'enabled'), 'صفقات التشبع البيعي'), (('zone', 'enabled'), 'صفقات مناطق الدعم القوية'),
            (('park', 'enabled'), 'تشغيل السيولة في بيتكوين وإيثريوم'), (('news_filter',), 'فلتر الأخبار'), (('trigger', 'green_candle'), 'اشتراط شمعة خضراء')]
 
 def candidates():
@@ -45,7 +46,7 @@ def candidates():
         try: cur = get(RO, path)
         except Exception: continue
         for v in (cur - 2 * step, cur - step, cur + step, cur + 2 * step):
-            v = round(v, 4)
+            v = round(v, 4) if isinstance(step, float) else int(round(v))
             if lo <= v <= hi: out.append((path, label, cur, v))
     for path, label in TOGGLES:   # switching a whole setup or filter on or off
         try: cur = get(RO, path)
@@ -69,6 +70,14 @@ def replay(override, start):
             'pf': round(gp / gl, 3) if gl else 99.0}
 
 def main():
+    try: g = json.load(open(os.path.join(ROOT, 'pro', 'guard.json'), encoding='utf-8'))
+    except Exception: g = {}
+    if g.get('state') == 'alert':
+        log = []
+        try: log = json.load(open(LOG, encoding='utf-8'))
+        except Exception: pass
+        log.append({'date': dt.date.today().isoformat(), 'tested': 0, 'changed': False, 'note': 'التحسين موقوف: حارس الأداء أطلق تنبيهًا، ويُستأنف تلقائيًا عند التعافي'})
+        json.dump(log[-52:], open(LOG, 'w', encoding='utf-8'), ensure_ascii=False, indent=1); print('paused by guard'); return
     today = dt.date.today(); recent = (today - dt.timedelta(days=90)).isoformat()
     cands = candidates()
     jobs = [('base', None, {}, FULL_FROM), ('base', None, {}, recent)]

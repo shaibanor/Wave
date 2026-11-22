@@ -1,0 +1,39 @@
+name: guard
+on:
+  schedule:
+    - cron: '37 2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: pro-data
+  cancel-in-progress: false
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet cryptography
+      - run: python scripts/guard.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit
+        run: |
+          git config user.name "shaibanor"
+          git config user.email "shaibanor@users.noreply.github.com"
+          mkdir -p /tmp/g; cp pro/rules.json pro/opt_log.json pro/guard.json /tmp/g/ 2>/dev/null || true
+          for i in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            cp /tmp/g/* pro/ 2>/dev/null || true
+            git add pro/rules.json pro/opt_log.json pro/guard.json
+            if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+            git commit -qm "حارس المحفظة التجريبية"
+            git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
