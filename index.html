@@ -262,7 +262,8 @@ ul.rules{margin:0;padding:0 30px 14px 14px;line-height:1.8;font-size:.9rem}
 .livebox{padding:12px 14px 8px;margin-bottom:12px}
 .lv-t{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .lv-cap{font:700 .95rem var(--f-display)}
-.lv-st{font-size:.76rem;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.lv-st{font-size:.76rem;color:var(--muted);display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.lv-cd{font-size:.7rem;font-weight:600;line-height:1;color:var(--gold2);border:1px solid color-mix(in srgb,var(--gold2) 45%,transparent);background:color-mix(in srgb,var(--gold2) 9%,transparent);border-radius:999px;padding:3px 8px;white-space:nowrap}
 .lv-p{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
 .lv-big{font-size:1.65rem;font-weight:700;padding:0 4px;border-radius:6px}
 .lv-r{margin-inline-start:auto}
@@ -2948,6 +2949,11 @@ html.locked .gate{display:flex}
     if(kind==='ix')kind=(L.ref&&L.ref.id==='TASI')?'sa':'us';
     if(kind==='sa'){const p=part('Asia/Riyadh');return['Sun','Mon','Tue','Wed','Thu'].includes(p.wd)&&p.m>=600&&p.m<900;}
     const p=part('America/New_York');return['Mon','Tue','Wed','Thu','Fri'].includes(p.wd)&&p.m>=570&&p.m<960;}
+  /* minutes left in today's session (Saudi 15:00 Riyadh, US 16:00 New York), shown as a countdown chip */
+  function closeIn(kind){if(kind==='cx')return null;if(kind==='ix')kind=(L.ref&&L.ref.id==='TASI')?'sa':'us';
+    const sa=kind==='sa',f=new Intl.DateTimeFormat('en-US',{timeZone:sa?'Asia/Riyadh':'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+    const g=k=>+((f.find(x=>x.type===k)||{}).value||0),left=(sa?900:960)-((g('hour')%24)*60+g('minute'));return left>0?left:null;}
+  const cdTxt=m=>m>=60?`يغلق بعد ${Math.floor(m/60)}س ${m%60}د`:`يغلق بعد ${m}د`;
 
   /* providers: each returns {prev, pts:[[t,price]], src, upd} on load and on poll */
   const providers={
@@ -2980,7 +2986,7 @@ html.locked .gate{display:flex}
 
   function head(){const el=$('lvHead');if(!el||!L.pts.length)return;const last=L.pts[L.pts.length-1][1],ch=L.prev?(last/L.prev-1)*100:0,cls=ch>=0?'up':'down';
     const old=L.last;L.last=last;
-    const st=L.ref.kind==='cx'?'<span class="pulse live"></span>مباشر · يتحدث كل 10 ثوانٍ':marketOpen(L.ref.kind)?`<span class="pulse live"></span>السوق مفتوح · يتحدث كل 20 دقيقة تقريبًا${L.upd?' · آخر تحديث '+new Date(L.upd).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Riyadh'}):''}`:`<span class="pulse wait"></span>السوق مغلق · آخر جلسة${L.day?' '+L.day:''}`;
+    const st=L.ref.kind==='cx'?'<span class="pulse live"></span>مباشر · يتحدث كل 10 ثوانٍ':marketOpen(L.ref.kind)?`<span class="pulse live"></span>السوق مفتوح · يتحدث كل 20 دقيقة تقريبًا${L.upd?' · آخر تحديث '+new Date(L.upd).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Riyadh'}):''}${(m=>m?`<span class="lv-cd" title="الوقت المتبقي على إغلاق جلسة اليوم">${cdTxt(m)}</span>`:'')(closeIn(L.ref.kind))}`:`<span class="pulse wait"></span>السوق مغلق · آخر جلسة${L.day?' '+L.day:''}`;
     const hi=Math.max(...L.pts.map(p=>p[1])),lo=Math.min(...L.pts.map(p=>p[1]));
     el.innerHTML=`<div class="lv-t"><span class="lv-cap">السعر اللحظي</span><span class="lv-st">${st}</span></div>
       <div class="lv-p"><span class="num lv-big ${old!=null&&old!==last?(last>old?'flash-up':'flash-dn'):''}">${nf(last,dp(last))}</span><span class="num chg ${cls}">${ch>=0?'+':''}${ch.toFixed(2)}%</span>
@@ -7303,5 +7309,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='6c3838ce79';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='0a0d153fee';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
