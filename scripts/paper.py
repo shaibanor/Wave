@@ -94,6 +94,24 @@ def atr(b, n=14):
         a = (a * (n - 1) + tr[i]) / n; out[i] = a
     return out
 
+def adx(b, n=14):
+    """Wilder's ADX: trend strength (not direction), 0-100. Used only by the optional rolling.adx_min filter."""
+    out = [None] * len(b)
+    if len(b) <= 2 * n: return out
+    tr, pdm, mdm = [], [], []
+    for i in range(1, len(b)):
+        x, q = b[i], b[i - 1]; up, dn = x['h'] - q['h'], q['l'] - x['l']
+        tr.append(max(x['h'] - x['l'], abs(x['h'] - q['c']), abs(x['l'] - q['c'])))
+        pdm.append(up if up > dn and up > 0 else 0.0); mdm.append(dn if dn > up and dn > 0 else 0.0)
+    st, sp, sm = sum(tr[:n]), sum(pdm[:n]), sum(mdm[:n]); dx = []
+    for i in range(n, len(tr) + 1):
+        if i > n: st = st - st / n + tr[i - 1]; sp = sp - sp / n + pdm[i - 1]; sm = sm - sm / n + mdm[i - 1]
+        pdi, mdi = (100 * sp / st, 100 * sm / st) if st else (0, 0)
+        dx.append(100 * abs(pdi - mdi) / (pdi + mdi) if pdi + mdi else 0.0)
+        if len(dx) == n: a_ = sum(dx) / n; out[i] = a_
+        elif len(dx) > n: a_ = (a_ * (n - 1) + dx[-1]) / n; out[i] = a_
+    return out
+
 def ind(b):
     c = [x['c'] for x in b]
     return {'e50': ema(c, 50), 'e200': ema(c, 200), 'rsi': rsi(c), 'hist': macd_hist(c), 'atr': atr(b)}
@@ -321,6 +339,7 @@ def prepare(aid, kind, now, launch):
         h4 = [x for x in h4 if now >= h4_close(kind, x['t'])]
         if len(h4) > 60:
             IH = ind(h4)
+            AX = adx(h4) if RO.get('adx_min') else [None] * len(h4)
             for j, x in enumerate(h4):
                 T = h4_close(kind, x['t'])
                 ld = local_date(kind, x['t']) if kind in ('sa', 'us') else day(x['t'])
@@ -328,7 +347,7 @@ def prepare(aid, kind, now, launch):
                 HH, LL = swings(h4, k, max(0, j - LV['lookback']['H4']), j)
                 vs_ = [q['v'] for q in h4[max(0, j - 20):j] if q.get('v')]
                 H4.append({'T': T, 'date': ld, 'bar': x, 'prev': h4[j - 1] if j else None, 'vavg': sum(vs_) / len(vs_) if len(vs_) >= 10 else None,
-                           'sc': score(h4, IH, j, HH, LL), 'atr': IH['atr'][j], 'e50': IH['e50'][j], 'rsi': IH['rsi'][j],
+                           'sc': score(h4, IH, j, HH, LL), 'adx': AX[j], 'atr': IH['atr'][j], 'e50': IH['e50'][j], 'rsi': IH['rsi'][j],
                            'res': [h4[q]['h'] for q in HH], 'sup': [h4[q]['l'] for q in LL],
                            'prevH': [h4[q]['h'] for q in HH if q < j], 'prevL': [h4[q]['l'] for q in LL if q < j]})
     return {'d': d, 'ctx': ctx, 'h4': H4}
@@ -667,6 +686,8 @@ def run(now, launch=LAUNCH):
             ck['traps'] = False; notes.append('لا يوجد نمط شموع انعكاسي يؤكد الدخول')
         if RO.get('vol_confirm') and x.get('v') and z.get('vavg') and x['v'] < RO['vol_confirm'] * z['vavg']:   # liquidity: volume must back the move
             ck['traps'] = False; notes.append(f"حجم شمعة الدخول ضعيف ({x['v'] / z['vavg']:.2f} من متوسط 20 شمعة)")
+        if RO.get('adx_min') and not zb and not osb and (z.get('adx') is None or z['adx'] < RO['adx_min']):   # trend-strength filter: buy pullbacks only in a real 4h trend
+            ck['traps'] = False; notes.append(f"قوة الاتجاه ضعيفة (ADX {z.get('adx') or 0:.0f} أقل من {RO['adx_min']})")
         okE, est, nE = edge(3 if zb else 2 if osb else 1)
         ck['rr'] = okE
         if not okE: notes.append(f"التوقع سالب: نجاح {est['win_rate']}% أقل من التعادل {est['breakeven']}%")
