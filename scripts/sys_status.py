@@ -11,7 +11,7 @@ from agent_log import encrypt  # same key: only the owner code opens it
 REPO = os.environ.get('GITHUB_REPOSITORY', '')
 TOKEN = os.environ.get('GITHUB_TOKEN', '').strip()
 OUT = os.path.join(ROOT, 'vault', 'sys.json')
-WF = ['intraday', 'pro-data', 'resync', 'daily-report', 'health', 'agent-log', 'voice', 'gate', 'qa', 'agent', 'lib']
+WF = ['intraday', 'pro-data', 'resync', 'daily-report', 'health', 'agent-log', 'voice', 'gate', 'qa', 'agent', 'lib', 'optimize', 'guard', 'quick']
 PATHS = {'data': 'data.json', 'live': 'pro/live_status.json', 'pro': 'pro/summary.json', 'radar': 'pro/ext_radar.json',
          'news': 'pro/news.json', 'refs': 'pro/refs.json', 'paper': 'vault/prof.json', 'agent': 'vault/agent_log.json',
          'voice': 'pro/voice', 'cal': 'pro/calendar.json'}

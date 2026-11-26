@@ -8,7 +8,12 @@ last 90 days, and adopts at most ONE change, and only when:
   - over the last 90 days the profit factor is not lower.
 The success rate alone is not the target: it can be raised by shrinking targets and widening stops,
 which wins more often but loses more when it loses.
-Every run is logged in pro/opt_log.json, including weeks with no change."""
+Two more gates guard against fitting the rules to the past:
+  - plateau: a numeric change must keep working one step further in the same direction (a lucky
+    spike that collapses next door is rejected),
+  - activity: the change must not win by simply trading much less (at least 80% of the trades).
+Every run is logged in pro/opt_log.json, including weeks with no change, with every tried change
+and the exact reason it was rejected."""
 import copy, datetime as dt, json, os, subprocess, sys, tempfile
 from concurrent.futures import ThreadPoolExecutor
 
@@ -91,13 +96,31 @@ def main():
         res = list(ex.map(lambda j: replay(j[2], j[3]), jobs))
     M = {}
     for (k, _, _, st), r in zip(jobs, res): M.setdefault(k, {})['full' if st == FULL_FROM else 'rec'] = r
-    B = M['base']; ok = []
+    B = M['base']; ok = []; trials = []
+    idx = {(tuple(c[0]), c[3]): i for i, c in enumerate(cands)}
+    steps = {tuple(k[0]): k[2] for k in KNOBS}
     for i, (path, label, cur, v) in enumerate(cands):
-        F, Rc = M[i]['full'], M[i]['rec']
-        if (F['pf'] >= B['full']['pf'] * 1.03 and F['pct'] >= B['full']['pct'] - 1 and F['dd'] <= B['full']['dd'] + 1
-                and F['win'] >= B['full']['win'] - 1 and Rc['pf'] >= B['rec']['pf']):
-            ok.append((F['pf'], F['pct'], i))
-    entry = {'date': today.isoformat(), 'tested': len(cands), 'before': B, 'rule': 'يُعتمد تغيير واحد فقط إذا ارتفع معامل الربح (مجموع الأرباح ÷ مجموع الخسائر) 3% على الأقل، دون أن ينقص الربح أو تزيد الخسارة القصوى أكثر من نقطة، ودون أن تنزل نسبة النجاح أكثر من نقطة، وثبت ذلك في آخر 90 يومًا'}
+        F, Rc = M[i]['full'], M[i]['rec']; why = []
+        if F['pf'] < B['full']['pf'] * 1.03: why.append('معامل الربح لم يرتفع 3%')
+        if F['pct'] < B['full']['pct'] - 1: why.append('الربح الكلي نقص')
+        if F['dd'] > B['full']['dd'] + 1: why.append('الخسارة القصوى زادت')
+        if F['win'] < B['full']['win'] - 1: why.append('نسبة النجاح نزلت')
+        if Rc['pf'] < B['rec']['pf']: why.append('لم يثبت في آخر 90 يومًا')
+        if F['n'] < 0.8 * B['full']['n']: why.append('قلّل عدد الصفقات كثيرًا')
+        st = steps.get(tuple(path))
+        if not why and st is not None and not isinstance(cur, bool):
+            d = 1 if v > cur else -1
+            rnd = (lambda x: round(x, 4)) if isinstance(st, float) else (lambda x: int(round(x)))
+            j = idx.get((tuple(path), rnd(v + d * st)))          # one step further in the same direction
+            if j is None: j = idx.get((tuple(path), rnd(v - d * st)))   # otherwise the step between (if it is not the current value)
+            if j is not None and M[j]['full']['pf'] < B['full']['pf']:
+                why.append('قمة حادة: القيمة المجاورة تسوء (ليست هضبة)')
+        if not why: ok.append((F['pf'], F['pct'], i))
+        trials.append({'p': label, 'from': cur, 'to': v, 'pf': F['pf'], 'pct': F['pct'], 'dd': F['dd'], 'win': F['win'], 'n': F['n'],
+                       'rpf': Rc['pf'], 'ok': not why, 'why': why})
+    entry = {'date': today.isoformat(), 'tested': len(cands), 'before': B, 'trials': trials,
+             'gates': ['معامل الربح +3%', 'لا نقص في الربح ولا زيادة في الخسارة القصوى', 'نسبة النجاح لا تنزل', 'ثبات في آخر 90 يومًا', 'هضبة لا قمة حادة', 'لا يقل عدد الصفقات عن 80%'],
+             'rule': 'يُعتمد تغيير واحد فقط إذا ارتفع معامل الربح (مجموع الأرباح ÷ مجموع الخسائر) 3% على الأقل، دون أن ينقص الربح أو تزيد الخسارة القصوى أكثر من نقطة، ودون أن تنزل نسبة النجاح أكثر من نقطة، وثبت ذلك في آخر 90 يومًا'}
     if ok:
         _, _, i = max(ok); path, label, cur, v = cands[i]
         put(RO, path, v)

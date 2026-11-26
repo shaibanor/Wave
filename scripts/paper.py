@@ -1084,8 +1084,12 @@ def prof_report(book, now):
     mon['perf']['pnl_usd'] = round(sum(t.get('pnl_usd') or 0 for t in roll), 2)
     try: mon['guard'] = json.load(open(os.path.join(ROOT, 'pro', 'guard.json'), encoding='utf-8'))
     except Exception: mon['guard'] = None
-    try: mon['optimizer'] = json.load(open(os.path.join(ROOT, 'pro', 'opt_log.json'), encoding='utf-8'))[-6:]
-    except Exception: mon['optimizer'] = []
+    try:
+        _ol = json.load(open(os.path.join(ROOT, 'pro', 'opt_log.json'), encoding='utf-8'))
+        mon['optimizer'] = _ol[-6:]
+        mon['opt_stats'] = {'runs': len(_ol), 'weeks': len({e.get('date') for e in _ol}), 'adopted': sum(1 for e in _ol if e.get('changed')),
+                            'tested': sum(e.get('tested') or 0 for e in _ol), 'first': _ol[0].get('date') if _ol else None}
+    except Exception: mon['optimizer'] = []; mon['opt_stats'] = None
     lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'
     return {'v': 1, 'status': lvl, 'points': pts, 'findings': det, 'monitor': mon}
 

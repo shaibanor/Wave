@@ -1,0 +1,49 @@
+name: quick
+on:
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: quick
+  cancel-in-progress: false
+jobs:
+  desk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 32
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet cryptography
+      - uses: actions/cache/restore@v4
+        with:
+          path: .quick
+          key: quick-state-${{ github.run_id }}
+          restore-keys: quick-state-
+      - name: Paper desk (public quotes only, no orders)
+        run: python scripts/quick.py
+        env:
+          QUICK_RUN_SEC: '1500'
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: .quick
+          key: quick-state-${{ github.run_id }}
+      - name: Commit
+        run: |
+          git config user.name "shaibanor"
+          git config user.email "shaibanor@users.noreply.github.com"
+          cp vault/quick.json /tmp/quick.json; cp pro/quick_status.json /tmp/quick_status.json
+          for i in 1 2 3 4; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            cp /tmp/quick.json vault/quick.json; cp /tmp/quick_status.json pro/quick_status.json
+            git add vault/quick.json pro/quick_status.json
+            if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+            git commit -qm "تحديث المحاكاة السريعة"
+            git push origin HEAD:main && exit 0
+            sleep 7
+          done
+          exit 1
