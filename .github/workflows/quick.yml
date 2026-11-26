@@ -1,7 +1,7 @@
 name: quick
 on:
   schedule:
-    - cron: '7,37 * * * *'
+    - cron: '7 6,18 * * *'
   workflow_dispatch:
 permissions:
   contents: write
