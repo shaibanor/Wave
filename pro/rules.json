@@ -1,145 +1,402 @@
 {
-  "version": 4,
-  "name": "Tiko Professor",
-  "direction": "long_only",
-  "hierarchy": [
+ "version": 4,
+ "name": "Tiko Professor",
+ "direction": "long_only",
+ "hierarchy": [
+  "M",
+  "W",
+  "D",
+  "H4"
+ ],
+ "monthly_veto": true,
+ "weekly_veto_for": [
+  "D",
+  "H4"
+ ],
+ "weights": {
+  "M": 0.35,
+  "W": 0.3,
+  "D": 0.2,
+  "H4": 0.15
+ },
+ "horizons": {
+  "H4": {
+   "name": "4 ساعات",
+   "context": [
     "M",
     "W",
-    "D",
-    "H4"
+    "D"
+   ],
+   "stop_atr": 1.2,
+   "min_risk_atr": 0.75,
+   "max_risk_atr": 3.0,
+   "target_cap_atr": 7,
+   "max_hold_days": 10,
+   "min_conf": 55,
+   "exit_on": "D"
+  },
+  "D": {
+   "name": "يومية",
+   "context": [
+    "M",
+    "W"
+   ],
+   "stop_atr": 1.2,
+   "min_risk_atr": 0.75,
+   "max_risk_atr": 3.0,
+   "target_cap_atr": 6,
+   "max_hold_days": 45,
+   "min_conf": 50,
+   "exit_on": "W"
+  },
+  "W": {
+   "name": "أسبوعية",
+   "context": [
+    "M"
+   ],
+   "stop_atr": 1.0,
+   "min_risk_atr": 0.6,
+   "max_risk_atr": 2.5,
+   "target_cap_atr": 4,
+   "max_hold_days": 200,
+   "min_conf": 45,
+   "exit_on": "M"
+  },
+  "M": {
+   "name": "شهرية",
+   "context": [],
+   "stop_atr": 1.0,
+   "min_risk_atr": 0.5,
+   "max_risk_atr": 2.0,
+   "target_cap_atr": 3,
+   "max_hold_days": 400,
+   "min_conf": 40,
+   "exit_on": "M"
+  }
+ },
+ "entry_filters": {
+  "exec_score_min": 0.35,
+  "above_ema50": true,
+  "rsi_max": 75
+ },
+ "levels": {
+  "swing_k": 3,
+  "lookback": {
+   "H4": 180,
+   "D": 250,
+   "W": 156,
+   "M": 120
+  },
+  "stop_buffer_atr": 0.25,
+  "target_below_res_atr": 0.1,
+  "min_room_r": 1.0
+ },
+ "traps": {
+  "failed_breakout_wick": 0.5,
+  "sweep_bonus": 10
+ },
+ "auditor": {
+  "min_rr": 2.0,
+  "checks": [
+   {
+    "id": "monthly",
+    "q": "هل الاتجاه الشهري والأسبوعي ليس هابطًا، واليومي صاعد؟"
+   },
+   {
+    "id": "levels",
+    "q": "هل الوقف بين 3% و6% تحت الدخول، ولا توجد مقاومة 4 ساعات قبل الهدف؟"
+   },
+   {
+    "id": "traps",
+    "q": "هل استُبعدت الفخاخ: اختراق كاذب بذيل علوي، وحدث كبير قريب، ولا يعتمد القرار على خبر؟"
+   },
+   {
+    "id": "rr",
+    "q": "هل التوقع الرياضي موجب؟ نسبة نجاح آخر الصفقات أعلى من نسبة التعادل اللازمة لهذا الهدف والوقف."
+   }
   ],
-  "monthly_veto": true,
-  "weekly_veto_for": [
-    "D",
-    "H4"
+  "fail_action": "cancel"
+ },
+ "news": {
+  "use_as_trigger": false,
+  "policy": "الخبر لا يفتح صفقة. إذا كانت أخبار الأصل في آخر أسبوعين سلبية بوضوح (قراءة الكلمات مرجّحة بحداثة الخبر) لا يدخل البوت فيه حتى تهدأ، والحدث الكبير المعلن يمنع الدخول قبله."
+ },
+ "risk": {
+  "risk_per_trade": 0.01,
+  "max_weight": 0.12,
+  "max_open": 12,
+  "breakeven_at_r": 1.0,
+  "one_trade_per_asset": true
+ },
+ "cycle": {
+  "target_pct": 100,
+  "measure": "equity_double",
+  "on_target": "stop_entries_close_open_report_then_freeze",
+  "freeze_days": 7
+ },
+ "execution": {
+  "fees": {
+   "sa": 0.0015,
+   "us": 0.0005,
+   "cx": 0.001
+  },
+  "slip": 0.0005,
+  "sweep": "SPY"
+ },
+ "mode": "h4_rolling",
+ "rolling": {
+  "name": "مضاربات 4 ساعات متحركة · رأس مال مستثمر بالكامل",
+  "markets": [
+   "sa",
+   "cx",
+   "us"
   ],
-  "weights": {
-    "M": 0.35,
-    "W": 0.3,
-    "D": 0.2,
-    "H4": 0.15
+  "context": {
+   "D": "up",
+   "W": "not_down",
+   "M": "not_down"
   },
-  "horizons": {
-    "H4": {
-      "name": "4 ساعات",
-      "context": [
-        "M",
-        "W",
-        "D"
-      ],
-      "stop_atr": 1.2,
-      "min_risk_atr": 0.75,
-      "max_risk_atr": 3.0,
-      "target_cap_atr": 7,
-      "max_hold_days": 10,
-      "min_conf": 55,
-      "exit_on": "D"
+  "trigger": {
+   "above_ema50": true,
+   "rsi_below": 50,
+   "green_candle": true
+  },
+  "target_pct": 1.0,
+  "stop": {
+   "atr_k": 3.0,
+   "min_pct": 3.0,
+   "max_pct": 6.0
+  },
+  "breakeven_at_target_frac": 0.6,
+  "room_check": true,
+  "max_hold_days": 14,
+  "max_open": 5,
+  "weight": 0.24,
+  "win_rate_goal": 80,
+  "edge_window": 30,
+  "edge_min_trades": 10,
+  "backtest": {
+   "period": "مايو 2025 → نوفمبر 2026",
+   "trades": 141,
+   "win_rate": 80.1,
+   "sum_pct": 60.5,
+   "avg_win_pct": 1.55,
+   "avg_loss_pct": -3.69,
+   "note": "نمو المحفظة كاملة +60.5% مقابل +26% لمؤشر S&P 500. 95% من ربح الصفقات جاء من العملات بالرافعة ×5 (57 صفقة بين يوليو ونوفمبر 2026 فقط، نجاح 93%)، والأسهم الأمريكية 84 صفقة بنجاح 71% وربح صغير. أسوأ صفقة عملات خسرت 32% من هامشها. العينة قصيرة للعملات، فلا تُعامل النتيجة كضمان. أُضيف لاحقًا ارتداد التشبع البيعي في الأسهم الأمريكية (اختبار منفصل أدناه).",
+   "v4": {
+    "period": "مارس 2025 → نوفمبر 2026",
+    "trades": 222,
+    "win_rate": 78.8,
+    "growth_pct": 61.0,
+    "max_dd_pct": 20.1,
+    "recent": "من 1 سبتمبر 2026 حتى الآن (سوق هابط): −5.1% مقابل −2.7% للإصدار السابق و−9.7% لمؤشر S&P 500.",
+    "compare": "الإصدار السابق على نفس الفترة: +55.2% وأقصى تراجع 15% (كان يسحب الأرباح من رأس المال). المبلغ كاملًا في صفقة واحدة: −39%، في صفقتين: −8%، في 6 صفقات: +69% لكن −12.8% في الشهرين الأخيرين. تخفيف شروط الدخول لزيادة عدد الصفقات: حتى −17%. لذلك اعتُمد التوزيع على 8 صفقات مع التراكم.",
+    "note": "الأرقام من اختبار تاريخي اختيرت إعداداته على نفس البيانات، فالنتيجة الحقيقية غالبًا أقل. فلتر الأخبار لا يمكن اختباره تاريخيًا لأن الأخبار المحفوظة حديثة فقط."
+   },
+   "may2025": {
+    "period": "1 مايو 2025 → 27 نوفمبر 2026",
+    "start_usd": 1000000,
+    "end_usd": 1919483,
+    "growth_pct": 91.9,
+    "trades": 112,
+    "win_rate": 83.9,
+    "max_dd_pct": 20.4,
+    "bench_pct": 27.7,
+    "first_double": "18 سبتمبر 2026 (بعد 505 أيام)",
+    "note": "الدورة الأولى ضاعفت رأس المال، والدورة الثانية منذ 25 سبتمبر 2026 عند −4.6% في سوق هابط. اختبار تاريخي اختيرت إعداداته على نفس البيانات، فالنتيجة الحقيقية غالبًا أقل."
+   }
+  },
+  "min_net_target_pct": 0.7,
+  "target_mode": "adaptive",
+  "adaptive_markets": [
+   "cx",
+   "us"
+  ],
+  "adaptive": {
+   "min_net_pct": 0.7,
+   "max_atr": 4,
+   "max_pct": 8,
+   "below_res_atr": 0.1
+  },
+  "leverage": {
+   "cx": 5,
+   "us": 1,
+   "sa": 1
+  },
+  "liq_buffer_pct": 1.0,
+  "dd_brake_pct": 20,
+  "funding_per_8h": 0.0001,
+  "oversold": {
+   "enabled": true,
+   "markets": [
+    "us"
+   ],
+   "rsi_below": 30,
+   "target_pct": 2.0,
+   "stop_pct": 6.0,
+   "backtest": "الأسهم الأمريكية: 60 صفقة، نجاح 88%، +5,608 دولار (آخر 3 أشهر: 8 صفقات، نجاح 88%). على العملات خسر فلم يُفعّل."
+  },
+  "short": {
+   "enabled": false,
+   "markets": [
+    "cx"
+   ],
+   "rsi_above": 50,
+   "backtest": "البيع على المكشوف في العملات: 15 صفقة، نجاح 47%، −26,642 دولار، وأقصى تراجع للمحفظة 32%. في الأسهم الأمريكية: 17 صفقة بلا ربح. لذلك غير مفعّل."
+  },
+  "zone": {
+   "enabled": true,
+   "markets": [
+    "us"
+   ],
+   "min_touches": 3,
+   "min_holds": 2,
+   "min_rate": 0.7,
+   "stop_below_atr": 0.3,
+   "min_stop_pct": 1.0,
+   "max_atr": 4,
+   "min_lower_wick": 0.4,
+   "min_rr": 2.0,
+   "monthly_not_down": true,
+   "scan_markets": [
+    "sa",
+    "us",
+    "cx"
+   ],
+   "backtest": "الأسهم الأمريكية: 23 صفقة، نجاح 61%، متوسط +1.4% للصفقة، +3,456 دولار. العملات والسعودي خسرت بنفس القاعدة (نجاح 43% و18%) فلم تُفعّل فيها، لكن الرادار يعرض مناطقها للمتابعة."
+  },
+  "compound": true,
+  "news_filter": true,
+  "park": {
+   "enabled": true,
+   "markets": [
+    "cx"
+   ],
+   "assets": [
+    "BTC",
+    "ETH"
+   ],
+   "top": 2,
+   "min_usd": 500,
+   "name": "تشغيل السيولة على مدار الساعة",
+   "rule": "أي مبلغ يخرج من صفقة ولا تتوفر له فرصة مؤهلة يدخل فورًا في بيتكوين وإيثريوم (بالتساوي، بلا رافعة) ما دام اتجاههما اليومي صاعدًا والأسبوعي غير هابط والسعر فوق متوسط 50 يومًا؛ ويُسحب منهما أولًا عند ظهور صفقة، ويخرج إلى النقد إذا انكسر الاتجاه. وفي غير ذلك يبقى صندوق SPY كما كان.",
+   "backtest": "مارس 2025 → نوفمبر 2026: النمو +71.8% مقابل +72.5% بدونه، وأقصى تراجع 15.1% مقابل 15.0%، أي أثر محايد مع تشغيل المال ليلًا وفي العطل. التشغيل في أقوى العملات المتحركة عمومًا أعطى +223% لكن 99% من ربحه من عملتين فقط (زي كاش ونير) وتراجع 30%، وتحديد الوزن أو توسيع السلة لم يحسّن النتيجة، فلم يُعتمد لأنه حظ تاريخي لا ميزة ثابتة."
+  },
+  "candle_confirm": true,
+  "vol_confirm": 0,
+  "trail_atr": 0,
+  "partial_tp": 0,
+  "adx_min": 0,
+  "auto_changes": [
+   {
+    "date": "2026-11-22",
+    "param": "candle_confirm+weight+max_open",
+    "from": "off,0.12,8",
+    "to": "on,0.24,5"
+   }
+  ],
+  "research": [
+   {
+    "date": "2026-11-22",
+    "idea": "تأكيد الدخول بنمط شموع يابانية انعكاسي (ابتلاع شرائي، مطرقة، خط الاختراق، شمعة صاعدة قوية) مع رفع حجم الصفقة لأن عدد الصفقات يقل",
+    "result": {
+     "trades": 112,
+     "win": 82.1,
+     "pct": 74.9,
+     "dd": 21.6,
+     "pf": 3.205
     },
-    "D": {
-      "name": "يومية",
-      "context": [
-        "M",
-        "W"
-      ],
-      "stop_atr": 1.2,
-      "min_risk_atr": 0.75,
-      "max_risk_atr": 3.0,
-      "target_cap_atr": 6,
-      "max_hold_days": 45,
-      "min_conf": 50,
-      "exit_on": "W"
+    "base": {
+     "trades": 221,
+     "win": 78.7,
+     "pct": 60.8,
+     "dd": 24.1,
+     "pf": 2.151
     },
-    "W": {
-      "name": "أسبوعية",
-      "context": [
-        "M"
-      ],
-      "stop_atr": 1.0,
-      "min_risk_atr": 0.6,
-      "max_risk_atr": 2.5,
-      "target_cap_atr": 4,
-      "max_hold_days": 200,
-      "min_conf": 45,
-      "exit_on": "M"
+    "last90": {
+     "new": {
+      "win": 78.4,
+      "pct": 6.6,
+      "pf": 3.171
+     },
+     "base": {
+      "win": 78.2,
+      "pct": 5.9,
+      "pf": 1.88
+     }
     },
-    "M": {
-      "name": "شهرية",
-      "context": [],
-      "stop_atr": 1.0,
-      "min_risk_atr": 0.5,
-      "max_risk_atr": 2.0,
-      "target_cap_atr": 3,
-      "max_hold_days": 400,
-      "min_conf": 40,
-      "exit_on": "M"
-    }
-  },
-  "entry_filters": {
-    "exec_score_min": 0.35,
-    "above_ema50": true,
-    "rsi_max": 75
-  },
-  "levels": {
-    "swing_k": 3,
-    "lookback": {
-      "H4": 180,
-      "D": 250,
-      "W": 156,
-      "M": 120
+    "adopted": true,
+    "also_tested": "تأكيد الحجم (أسوأ: +11.8%)، جني جزئي عند الهدف (أسوأ: +34.4%)، وقف متحرك بعد الأمان (أثر ضئيل +0.3)؛ بقيت موقوفة ويعيد المحسّن اختبارها أسبوعيًا"
+   },
+   {
+    "date": "2026-11-24",
+    "idea": "فلتر قوة الاتجاه ADX (وايلدر، 14) على شموع 4 ساعات: لا تُشترى التهدئة إلا إذا كان ADX فوق حد معين (المفتاح rolling.adx_min، صفر = معطّل). يطبَّق على صفقات التهدئة فقط لا على الدعم القوي ولا التشبع البيعي",
+    "source_url": "https://chartschool.stockcharts.com/table-of-contents/technical-indicators-and-overlays/technical-indicators/average-directional-index-adx",
+    "base": {
+     "full": {
+      "trades": 112,
+      "win": 83.0,
+      "pct": 87.6,
+      "dd": 21.0,
+      "pf": 3.478
+     },
+     "last90": {
+      "trades": 37,
+      "win": 78.4,
+      "pct": 11.0,
+      "dd": 21.0,
+      "pf": 3.158
+     }
     },
-    "stop_buffer_atr": 0.25,
-    "target_below_res_atr": 0.1,
-    "min_room_r": 1.0
-  },
-  "traps": {
-    "failed_breakout_wick": 0.5,
-    "sweep_bonus": 10
-  },
-  "auditor": {
-    "min_rr": 2.0,
-    "checks": [
-      {
-        "id": "monthly",
-        "q": "هل الاتجاه الشهري والأسبوعي ليس هابطًا، واليومي صاعد؟"
+    "result": {
+     "adx_10": "مطابق للأساس تمامًا (كل صفقات التهدئة فوق 10 أصلًا)",
+     "adx_15": {
+      "full": {
+       "trades": 101,
+       "win": 83.2,
+       "pct": 68.1,
+       "dd": 21.6,
+       "pf": 3.199
       },
-      {
-        "id": "levels",
-        "q": "هل الوقف بين 3% و6% تحت الدخول، ولا توجد مقاومة 4 ساعات قبل الهدف؟"
-      },
-      {
-        "id": "traps",
-        "q": "هل استُبعدت الفخاخ: اختراق كاذب بذيل علوي، وحدث كبير قريب، ولا يعتمد القرار على خبر؟"
-      },
-      {
-        "id": "rr",
-        "q": "هل التوقع الرياضي موجب؟ نسبة نجاح آخر الصفقات أعلى من نسبة التعادل اللازمة لهذا الهدف والوقف."
+      "last90": {
+       "trades": 34,
+       "win": 76.5,
+       "pct": 8.1,
+       "pf": 2.828
       }
-    ],
-    "fail_action": "cancel"
-  },
-  "news": {
-    "use_as_trigger": false,
-    "policy": "الخبر لا يفتح صفقة. إذا كانت أخبار الأصل في آخر أسبوعين سلبية بوضوح (قراءة الكلمات مرجّحة بحداثة الخبر) لا يدخل البوت فيه حتى تهدأ، والحدث الكبير المعلن يمنع الدخول قبله."
-  },
-  "risk": {
-    "risk_per_trade": 0.01,
-    "max_weight": 0.12,
-    "max_open": 12,
-    "breakeven_at_r": 1.0,
-    "one_trade_per_asset": true
-  },
-  "cycle": {
-    "target_pct": 100,
-    "measure": "equity_double",
-    "on_target": "stop_entries_close_open_report_then_freeze",
-    "freeze_days": 7
-  },
-  "execution": {
-    "fees": {
-      "sa": 0.0015,
-      "us": 0.0005,
-      "cx": 0.001
+     },
+     "adx_20": {
+      "full": {
+       "trades": 73,
+       "win": 80.8,
+       "pct": 46.3,
+       "dd": 18.9,
+       "pf": 2.692
+      },
+      "last90": {
+       "trades": 25,
+       "win": 72.0,
+       "pct": 1.1,
+       "pf": 2.097
+      }
+     },
+     "adx_25": {
+      "full": {
+       "trades": 48,
+       "win": 87.5,
+       "pct": 44.7,
+       "dd": 15.6,
+       "pf": 4.763
+      },
+      "last90": {
+       "trades": 16,
+       "win": 75.0,
+       "pct": 0.1,
+       "pf": 3.083
+      }
+     }
     },
+<<<<<<< Updated upstream
     "slip": 0.0005,
     "sweep": "SPY"
   },
@@ -397,4 +654,14 @@
     ]
   },
   "carry_from_v2": true
+=======
+    "adopted": false,
+    "why": "لم تحقق أي قيمة شرط القبول: 15 و20 أضعفتا معامل الربح، و25 رفعته 37% وخفّضت التراجع لكنها أنقصت النمو 43 نقطة وأضعفت آخر 90 يومًا. الخلاصة: التهدئة في هذا البوت تعمل غالبًا في اتجاهات هادئة (ADX منخفض)، والفلتر يحذف صفقات رابحة. يبقى الكود ويختبره المحسّن أسبوعيًا.",
+    "futures_note": "معرفة فقط، لا شيء مُفعّل: في العقود الدائمة يُدفع التمويل كل 8 ساعات على كامل قيمة المركز لا على الهامش، فبرافعة ×5 يصبح تمويل 0.01% نحو 0.15% يوميًا من الهامش وقد يتجاوز 0.1% لكل 8 ساعات في الأسواق المحمومة؛ وسعر التصفية يُحسب من سعر العلامة (Mark Price) لا آخر صفقة، فالذيول الحادة قد تصفّي المركز قبل الوقف، لذا يجب أن يبقى الوقف أبعد عن التصفية بهامش أمان (المعمول به liq_buffer_pct). ارتفاع ADX مع رافعة يعني تقلبًا أعلى وتصفية أقرب."
+   }
+  ]
+ },
+ "carry_from_v2": false,
+ "start_usd": 1000000.0
+>>>>>>> Stashed changes
 }

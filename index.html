@@ -1933,14 +1933,14 @@ body:has(.vxo.on) :is(#tkGuide,#tkAgent,.rd-av),body:has(.pfo.on) :is(#tkGuide,#
 :root{--hx-bg:#05070A;--hx-bg2:#090D14;--hx-card:#0E141F;--hx-line:#1C2638;--hx-tw:#101724;--hx-cy:#00F0FF;--hx-vi:#7C3AED;--hx-ok:#00E599;--hx-bad:#FF3366;--hx-warn:#FFB020;--hx-t:#E2E8F0;--hx-t2:#64748B;--hx-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'IBM Plex Sans Arabic','Noto Kufi Arabic',sans-serif}
 .hx-start{height:0}
 #hxStart~footer::after{opacity:.18!important}
-#hxStart~*:not(.vxo):not(.qxo):not(.pfo):not(.rdo):not([role=dialog]):not(script){position:relative;color:var(--hx-t);background:var(--hx-bg)!important;box-shadow:0 0 0 100vmax var(--hx-bg)!important;clip-path:inset(0 -100vmax)}
+:is(#rdBox,#hxStart~.vx,#hxStart~footer){position:relative;color:var(--hx-t);background:var(--hx-bg)!important;box-shadow:0 0 0 100vmax var(--hx-bg)!important;clip-path:inset(0 -100vmax)}
 #hxStart~*::selection{background:var(--hx-cy);color:#000}
 #hxStart+*{margin-top:0}
 .tkb+#hxStart{border-top:1px solid var(--hx-line)}
-#hxStart~*:not(.qx-card):not(.vxo):not(.qxo):not(.pfo):not([role=dialog])::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.55;
+:is(#rdBox,#hxStart~.vx,#hxStart~footer)::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.55;
   background:linear-gradient(var(--hx-line) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,var(--hx-line) 1px,transparent 1px) 0 0/28px 28px;
   -webkit-mask:radial-gradient(120% 80% at 50% 30%,#000 30%,transparent 85%);mask:radial-gradient(120% 80% at 50% 30%,#000 30%,transparent 85%)}
-#hxStart~*:not(.vxo):not(.qxo):not(.pfo):not([role=dialog])>*{position:relative;z-index:1}
+:is(#rdBox,#hxStart~.vx,#hxStart~footer)>*:not(.vx-scene):not(.vx-stage){position:relative;z-index:1}
 /* radar / tower header */
 #rdBox .rd-hd h2{font-family:var(--hx-mono);letter-spacing:0;color:var(--hx-t);text-shadow:0 0 14px rgba(0,240,255,.35)}
 #rdBox .rd-hd p{color:var(--hx-t2)}
@@ -2061,7 +2061,6 @@ body:has(.vxo.on) :is(#tkGuide,#tkAgent,.rd-av),body:has(.pfo.on) :is(#tkGuide,#
 
 /* ===== v2: overlays always full screen ===== */
 .vxo,.qxo{position:fixed!important;inset:0!important;clip-path:none!important;box-shadow:none!important;z-index:9000!important}
-.vxo>*,.qxo>*{z-index:auto}
 .vxo-x,.qxo-x{position:fixed!important;z-index:9010!important}
 .lkx-flash.v2{z-index:99999;pointer-events:auto;cursor:pointer}
 .lkx-flash.v2 canvas{opacity:1}
@@ -2103,6 +2102,17 @@ html[data-cool="hold"] #rdBox .o3-side,html[data-cool="stealth"] #rdBox .o3-side
 @media (prefers-reduced-motion:reduce){#rdBox .o3-side,.vxb-in b i{animation:none}}
 html,body{overflow-x:clip}
 .wz-t{display:block;max-width:100%;overflow-x:auto}
+
+.o3-files{flex-wrap:wrap!important;overflow:visible!important}
+.vxo,.qxo,.pfo{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.vxo-in,.qxo-in{box-sizing:border-box;width:min(980px,calc(100% - 20px))!important;margin-inline:auto}
+.qx{padding-inline:6px}
+.pfo .pf-sheet{max-width:calc(100vw - 20px)!important;box-sizing:border-box}
+.vx .vx-stage{width:auto!important;height:auto!important;perspective:none!important;display:flex;justify-content:center}
+.vx-box{transform:none!important}
+html.tk-lock,html.tk-lock body{overflow:hidden!important}
+html.tk-lock #rdAv,html.tk-lock #rdAvL,html.tk-lock #tkGuide,html.tk-lock #tkAgent,html.tk-lock #langTog,html.tk-lock #themeTog,html.tk-lock #bgTog,html.tk-lock .bot-fab{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.vxb-in{position:absolute!important;left:0;right:0;bottom:0;margin:0!important;padding:10px 14px;text-align:start!important;background:linear-gradient(0deg,rgba(3,6,10,.92),rgba(3,6,10,.6) 70%,transparent)}
 .qx-card{position:relative;display:flex;align-items:center;gap:12px;width:min(520px,calc(100% - 32px));margin:6px auto 18px;padding:16px 18px;border-radius:14px;border:1px solid rgba(60,255,154,.45);background:#000;color:#D6FFE8;overflow:hidden;cursor:pointer;text-align:start;box-shadow:0 0 24px rgba(60,255,154,.18),inset 0 0 20px rgba(60,255,154,.08);font-family:var(--f-body)}
 .qx-card canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.45}
 .qx-card::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.3) 2px 3px),linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.45));pointer-events:none}
@@ -2310,6 +2320,14 @@ html.qx-open #rdAv,html.qx-open #rdAvL,html.qx-open #tkGuide,html.qx-open #tkAge
 .vt small.why{margin-top:2px}
 
 .sh-c b{white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+
+.qx-goal{margin:8px 0;padding:10px 12px;border:1px solid rgba(0,240,255,.25);border-radius:10px;background:linear-gradient(90deg,#08121C,#060B12)}
+.qx-gh{display:flex;justify-content:space-between;gap:8px;font-size:.84rem;color:#DDE7F7}.qx-gh span{font:800 1rem ui-monospace,monospace;color:#3CFF9A}
+.qx-gbar{position:relative;height:10px;border-radius:10px;background:#0E1A26;margin:8px 0 6px;overflow:visible}.qx-gbar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,#7C3AED,#00F0FF,#00E599);box-shadow:0 0 12px rgba(0,240,255,.5)}
+.qx-gbar em{position:absolute;top:-4px;width:2px;height:18px;background:#fff;box-shadow:0 0 8px #fff}
+.qx-goal small{color:#7C8AA5;font-size:.72rem}
+.qx-trades li.op{border-color:#00F0FF}.qx-trades li.op b{background:rgba(0,240,255,.15);color:#00F0FF}
+.qx-bt{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px 12px;padding:8px;border:1px dashed rgba(0,240,255,.3);border-radius:8px;font-size:.74rem;color:#C6D4EA}.qx-bt b{flex-basis:100%;color:#00F0FF}.qx-bt i{font-style:normal;color:#fff;font-weight:700}.qx-bt small{flex-basis:100%;color:#7C8AA5}
 
 .bot-lab{direction:rtl;align-self:flex-start;background:rgba(10,23,36,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#F7E7BC;border:1px solid rgba(233,207,143,.45);font:600 .76rem var(--f-body);padding:5px 11px;border-radius:12px 12px 12px 4px;box-shadow:0 6px 18px rgba(0,0,0,.22);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;animation:blab 3.2s ease-in-out infinite}
 .bot-lab i{width:6px;height:6px;border-radius:50%;background:#2FB37A;box-shadow:0 0 0 3px rgba(47,179,122,.25)}
@@ -2829,9 +2847,9 @@ html.locked .gate{display:flex}
     </div>
     <p class="vx-cap">سجل الصفقات <span>· مشفّر</span></p>
   </section>
-  <button type="button" class="qx-card" id="qxOpen" aria-label="فتح مكتب المحاكاة السريعة (مشفّر)"><canvas aria-hidden="true"></canvas>
-    <span class="qx-cin"><b dir="ltr">QUICK&nbsp;DESK<i>_</i></b><strong>مكتب المحاكاة السريعة</strong><small>صعود/هبوط قصير · بالجهتين · ورقي · مشفّر</small></span><span class="qx-clock" aria-hidden="true">🔒</span></button>
-  <div class="qxo" id="qxo" hidden role="dialog" aria-modal="true" aria-label="مكتب المحاكاة السريعة">
+  <button type="button" class="qx-card" id="qxOpen" aria-label="فتح لوحة المحفظة (مشفّرة)"><canvas aria-hidden="true"></canvas>
+    <span class="qx-cin"><b dir="ltr">PORTFOLIO&nbsp;DESK<i>_</i></b><strong>لوحة المحفظة</strong><small>4 ساعات · يومي · أسبوعي · الهدف مضاعفة رأس المال</small></span><span class="qx-clock" aria-hidden="true">🔒</span></button>
+  <div class="qxo" id="qxo" hidden role="dialog" aria-modal="true" aria-label="لوحة المحفظة">
     <button class="qxo-x" id="qxX" aria-label="إغلاق">✕</button>
     <div class="qxo-in" id="qxBody"></div>
   </div>
@@ -4204,9 +4222,15 @@ html.locked .gate{display:flex}
     const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><g fill="rgba(${col},${a})" font-family="monospace" transform="rotate(${rot} ${W/2} ${H/2})">${t}</g>${R(3)?'':`<path d="M0 ${R(H)} H${W}" stroke="rgba(${col},${a})"/>`}</svg>`;
     return`url("data:image/svg+xml,${encodeURIComponent(svg)}")`;}
   for(let i=0;i<42;i++)TILES.push(tile());
-  const GL='#themeTog,#langTog,#bgTog,#tkGuide,#tkAgent,.o3-fchip,.pfo .pf-c,.fx,.ax,.qx-p,.o3-plate,.hq-modes button,.lkx-pad button,.tx-dec i,.o3-folder,.hq-ctl,.fx-key,.sr-agenda li button,.o3-ftab,.hq-rot button,#rdBox .rt-gate,.qx-card,.vx-box,.pf-tabs button,.pfo [data-pt]';
+  const GL='#themeTog,#langTog,#bgTog,#tkGuide,#tkAgent,.lkx-pad button,.tx-dec i';
   function glass(){document.querySelectorAll(GL).forEach(el=>{if(el.dataset.cph)return;el.dataset.cph='1';el.classList.add('cph');el.style.setProperty('--cph',pickA(TILES));});}
-  let gq=0;new MutationObserver(()=>{if(gq)return;gq=setTimeout(()=>{gq=0;glass();},120);}).observe(document.documentElement,{childList:true,subtree:true});
+  new MutationObserver(glass).observe(document.documentElement,{childList:true,subtree:true});
+  /* overlays: freeze the page behind them (iOS ignores overflow:hidden on body for touch scrolling) */
+  let lockY=null;const OV=['vxo','qxo','pfo','rdo'];
+  function scrollLock(){const any=OV.some(id=>{const e=document.getElementById(id);return e&&!e.hidden;}),b=document.body;
+    if(any&&lockY===null){lockY=scrollY;b.style.position='fixed';b.style.top=-lockY+'px';b.style.left='0';b.style.right='0';b.style.width='100%';document.documentElement.classList.add('tk-lock');}
+    else if(!any&&lockY!==null){b.style.position='';b.style.top='';b.style.left='';b.style.right='';b.style.width='';document.documentElement.classList.remove('tk-lock');const y=lockY;lockY=null;scrollTo(0,y);}}
+  new MutationObserver(scrollLock).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['hidden']});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',glass);else glass();
 
   /* ---------- 4. long transitions: many renderers, palettes and overlays combined ---------- */
@@ -4249,7 +4273,7 @@ html.locked .gate{display:flex}
   };
   const NAMES=Object.keys(RND);
   let last=0;
-  function flash(label,ms){if(RM||Date.now()-last<1500)return;last=Date.now();ms=ms&&ms<0?-ms:(LOC?600:8000);
+  function flash(label,ms){if(RM||Date.now()-last<1500)return;last=Date.now();ms=ms&&ms<0?-ms:LOC?600:(ms>0?ms:8000);
     const base=pickA(NAMES);let over=pickA(NAMES);if(over===base)over=NAMES[(NAMES.indexOf(base)+1)%NAMES.length];const P=pickA(PAL),ov=R(4);
     const d=document.createElement('div');d.className='lkx-flash v2 o'+ov;d.setAttribute('aria-hidden','true');
     d.innerHTML=`<canvas></canvas><div class="lkx-fb"><b dir="ltr"></b><div class="lkx-fp"><i></i></div><pre dir="ltr"></pre><small dir="ltr"></small></div><em class="lkx-skip">اضغط للتخطي</em>`;document.body.appendChild(d);
@@ -4696,7 +4720,7 @@ html.locked .gate{display:flex}
 
   /* ---------- live check + repair: read the public run list of every job, and re-run a job on demand ---------- */
   const REPO='shaibanor/Wave',GH='https://api.github.com/repos/'+REPO;
-  const FIXMAP={mgr:[],data:['pro-data','resync'],pf:['pro-data','quick'],prof:['optimize','guard'],stu:['optimize','pro-data'],rad:['intraday'],live:['intraday'],news:['pro-data','daily-report'],
+  const FIXMAP={mgr:[],data:['pro-data','resync'],pf:['pro-data'],prof:['optimize','guard'],stu:['optimize','pro-data'],rad:['intraday'],live:['intraday'],news:['pro-data','daily-report'],
     agt:['agent','agent-test','agent-log'],qa:['qa','health','gate'],ref:['pro-data'],fc:[],vox:['voice']};
   const HOWTO={'pro-data':'يجلب أسعار كل الأصول وأخبارها ويحدّث المنصة. إذا فشل فالسبب غالبًا مصدر أسعار لم يرد مؤقتًا؛ إعادة التشغيل تكفي في أغلب الحالات.',
     'resync':'يطابق الشموع اليومية من مصدرين. إذا فشل أعد تشغيله؛ لا يؤثر على الموقع فورًا.',
@@ -4952,7 +4976,7 @@ html.locked .gate{display:flex}
   /* ---------- interaction ---------- */
   function fit(el){const st=el.querySelector('[data-ostage]'),sc=el.querySelector('[data-oscene]');if(!st||!sc)return;const k=Math.min(1,st.clientWidth/960);sc.style.setProperty('--k',k);st.style.height=Math.round(560*k)+'px';}
   function bind(el,C,rerender){
-    const go=id=>{if(window.LOCKX&&id&&id!==C.agent)LOCKX.flash('DECOMPILE://OFFICE/'+String(id).toUpperCase(),/^(localhost|127\.)/.test(location.hostname)?700:2800);C.agent=id;C.file=null;rerender();const sh=el.closest('.pf-sheet');if(sh)sh.scrollTop=0;};
+    const go=id=>{if(window.LOCKX&&id&&id!==C.agent)LOCKX.flash('DECOMPILE://OFFICE/'+String(id).toUpperCase(),/^(localhost|127\.)/.test(location.hostname)?700:3500);C.agent=id;C.file=null;rerender();const sh=el.closest('.pf-sheet');if(sh)sh.scrollTop=0;};
     let dragged=false;
     el.querySelectorAll('[data-ag]').forEach(b=>b.addEventListener('click',e=>{if(dragged){e.preventDefault();return;}go(b.dataset.ag);}));
     el.querySelectorAll('[data-sback]').forEach(b=>b.addEventListener('click',()=>{C.agent=null;C.file=null;rerender();}));
@@ -5105,8 +5129,8 @@ html.locked .gate{display:flex}
 })();
 
 (function(){
-  /* Quick desk: the encrypted paper book of short "Up or Down" crypto markets (two-sided method).
-     Nothing shows until the vault code decrypts vault/quick.json in this browser. */
+  /* Portfolio desk: a live dashboard of the main 4h book (daily and weekly context, target = double the capital).
+     Nothing shows until the vault code decrypts vault/book.json in this browser. */
   const RAW='';const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $=id=>document.getElementById(id);
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -5123,54 +5147,70 @@ html.locked .gate{display:flex}
     const kek=await S.deriveKey({name:'PBKDF2',salt:b64(K.salt),iterations:K.iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
     let pk;try{pk=await S.decrypt({name:'AES-GCM',iv:b64(K.iv)},kek,b64(K.key));}catch(_){throw new Error('code');}
     PK=await S.importKey('pkcs8',pk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);}
-  async function load(){let X;try{X=await getJSON('vault/quick.json');}catch(_){throw new Error('none');}if(!X||!X.ct)throw new Error('none');const S=crypto.subtle;
+  async function load(){return adapt(await load0());}
+  async function load0(){let X;try{X=await getJSON('vault/book.json');}catch(_){throw new Error('none');}if(!X||!X.ct)throw new Error('none');const S=crypto.subtle;
     const raw=await S.decrypt({name:'RSA-OAEP'},PK,b64(X.wk));const dk=await S.importKey('raw',raw,'AES-GCM',false,['decrypt']);
     return JSON.parse(new TextDecoder().decode(await S.decrypt({name:'AES-GCM',iv:b64(X.iv)},dk,b64(X.ct))));}
 
   function open(){const o=$('qxo');o.hidden=false;document.documentElement.classList.add('qx-open');document.body.style.overflow='hidden';requestAnimationFrame(()=>o.classList.add('on'));
     if(Q){render();return;}
-    LOCKX.tap($('qxBody'),{id:'vault',title:'مكتب المحاكاة السريعة',sub:'رمز سجل الصفقات نفسه يفك هذا المكتب',len:5,tag:'QUICK-DESK',none:'المحاكاة لم تُصدر أول تقرير بعد؛ تعمل كل 30 دقيقة',
-      note:'محاكاة ورقية فقط: لا أوامر حقيقية ولا مفاتيح تداول.',submit:async c=>{await unlock(c);Q=await load();code=c;},ok:()=>{render();poll();}});}
+    LOCKX.tap($('qxBody'),{id:'vault',title:'لوحة المحفظة',sub:'رمز سجل الصفقات نفسه',len:5,tag:'PORTFOLIO',none:'لا توجد بيانات بعد',
+      submit:async c=>{await unlock(c);Q=await load();code=c;},ok:()=>{render();poll();}});}
   function close(){const o=$('qxo');o.classList.remove('on');Q=null;PK=null;document.documentElement.classList.remove('qx-open');document.body.style.overflow='';stopAnim();clearInterval(timer);setTimeout(()=>{o.hidden=true;},250);}
   function poll(){clearInterval(timer);timer=setInterval(async()=>{if($('qxo').hidden||!PK)return;try{const n=await load();if(n&&n.at!==Q.at){Q=n;render();}}catch(_){}},60000);}
   function stopAnim(){anim.forEach(f=>{try{f();}catch(_){}});anim=[];}
 
+  /* ---------- book -> dashboard shape ---------- */
+  const MK={us:'US',cx:'CRYPTO',sa:'SA'};const ts=d=>Math.floor(Date.parse(String(d).length<=10?d+'T00:00:00Z':d)/1000);
+  function adapt(b){const T=b.totals||{},C=b.cycle||{},cl=(b.closed||[]).slice().sort((x,y)=>ts(x.closed)-ts(y.closed)),op=b.open||[];
+    const edge=[];let w=[];cl.forEach(c=>{w.push(c.pnl_usd>0?1:0);if(w.length>12)w.shift();edge.push([ts(c.closed),c.asset,w.reduce((a,x)=>a+x,0)/w.length,(c.need_win||50)/100]);});
+    const trade=(c,isOpen)=>({t:ts(isOpen?(c.opened_at||c.opened):c.closed),a:c.asset,name:c.name,kind:c.kind,side:isOpen?'open':(c.pnl_usd>0?'up':'dn'),p:isOpen?c.entry:c.exit,q:c.qty,usd:isOpen?c.value_usd:c.pnl_usd,pct:c.pnl_pct,why:c.why||'',setup:c.setup,h:c.held_days});
+    const recent=cl.slice(-40).map(c=>trade(c,false)).concat(op.map(c=>trade(c,true)));
+    const trace=[];cl.slice(-20).forEach(c=>{trace.push({t:ts(c.opened_at||c.opened),k:'entry',m:`${c.asset} @ ${nf(c.entry,2)} · ${c.setup||''} · RR ${nf(c.rr,2)}`});trace.push({t:ts(c.closed),k:c.pnl_usd>0?'win':'loss',m:`${c.asset} exit ${nf(c.exit,2)} · ${(c.pnl_pct>0?'+':'')+nf(c.pnl_pct,2)}% · ${nf(c.held_days,1)}d`});});
+    op.forEach(c=>trace.push({t:ts(c.opened_at||c.opened),k:'open',m:`${c.asset} @ ${nf(c.entry,2)} · stop ${nf(c.stop,2)} · target ${nf(c.target,2)}`}));
+    trace.sort((a,b)=>a.t-b.t);
+    return{at:ts(b.updated),since:ts(b.launch),eq0:T.start_usd,equity:T.equity_usd,pnl:T.pnl_usd,pct:T.pct,win_rate:T.win_rate,closed:T.closed_n,openN:T.open_n,
+      cycle:C,goal:C.target_pct||100,prog:C.progress_pct,curve:(b.curve||[]).map(x=>[ts(x[0]),x[1]]),edge,recent,trace:trace.slice(-60),open:op,settled:cl.slice(-80).reverse(),
+      bt:((b.rules||{}).rolling||{}).backtest||null,bench:T.bench_pct,util:T.util};}
+
   /* ---------- the dashboard ---------- */
   const COL={BTC:'#F7931A',ETH:'#8C8CFF',SOL:'#14F195',XRP:'#4FC3F7'};
-  function render(){stopAnim();const q=Q,up=(q.pnl||0)>=0,age=Math.round((Date.now()/1000-q.at)/60),stale=age>75;
-    const tr=(q.recent||[]).slice().reverse(),st=(q.settled||[]).slice().reverse();
+  function render(){stopAnim();const q=Q,up=(q.pnl||0)>=0,stale=(Date.now()/1000-q.at)/3600>30;
+    const tr=(q.recent||[]).slice().reverse(),st=q.settled||[],gp=Math.max(0,Math.min(100,q.pct/q.goal*100)),cp=q.prog;
+    const B=q.bt&&q.bt.may2025;
     $('qxBody').innerHTML=`<div class="qx" id="qxRoot">
       <canvas class="qx-wires" id="qxWires" aria-hidden="true"></canvas>
-      <header class="qx-h"><div class="qx-logo">QD</div><div><b dir="ltr">tiko // QUICK DESK</b><small dir="ltr">TWO-SIDED · UP ⇄ DOWN · ${esc(q.kind||'—')} · PAPER ONLY · NEVER SELL</small></div>
-        <div class="qx-hk"><span><i>رأس المال</i><b class="num">${usd(q.equity)}</b></span><span><i>مطابق</i><b class="num">${q.matched_pct!=null?nf(q.matched_pct,1)+'%':'—'}</b></span><span><i>تكلفة الزوج</i><b class="num">${q.vwap_pair!=null?'$'+nf(q.vwap_pair,4):'—'}</b></span><span class="${stale?'st':'lv'}"><i>${stale?'متوقف':'يعمل'}</i><b class="num" id="qxClock" dir="ltr">--:--:--</b></span></div></header>
-      <div class="qx-feed" dir="ltr"><span class="qx-live">● LIVE FEED</span><div class="qx-tape"><i>${(q.trace||[]).slice(-14).map(x=>esc(x.m)).join(' · ')}</i></div></div>
-      ${stale?`<p class="qx-warn">آخر تقرير ${ago(q.at)}؛ قد تكون المهمة المجدولة متأخرة.</p>`:''}
+      <header class="qx-h"><div class="qx-logo">TK</div><div><b dir="ltr">tiko // PORTFOLIO DESK</b><small dir="ltr">H4 ENTRY · 1D TREND · 1W FILTER · TARGET ×2</small></div>
+        <div class="qx-hk"><span><i>رأس المال</i><b class="num">${usd(q.equity)}</b></span><span><i>نجاح الصفقات</i><b class="num">${q.win_rate!=null?nf(q.win_rate,1)+'%':'—'}</b></span><span><i>مستثمر</i><b class="num">${nf(q.util,0)}%</b></span><span class="${stale?'st':'lv'}"><i>${stale?'متأخر':'محدّث'}</i><b class="num" id="qxClock" dir="ltr">--:--:--</b></span></div></header>
+      <div class="qx-feed" dir="ltr"><span class="qx-live">● LIVE</span><div class="qx-tape"><i>${(q.trace||[]).slice(-14).map(x=>esc(x.m)).join(' · ')}</i></div></div>
+      <div class="qx-goal"><div class="qx-gh"><b>الهدف: مضاعفة رأس المال (+${q.goal}%)</b><span class="num">${nf(q.pct,2)}%</span></div><div class="qx-gbar"><i style="width:${gp}%"></i><em style="left:${gp}%"></em></div>
+        <small>من ${usd(q.eq0)} إلى ${usd(q.eq0*(1+q.goal/100))}${cp!=null&&q.cycle&&q.cycle.n>1?` · الدورة ${q.cycle.n}: ${nf(cp,2)}%`:''}</small></div>
+      ${stale?`<p class="qx-warn">آخر تحديث ${ago(q.at)}.</p>`:''}
       <div class="qx-grid">
-        <section class="qx-p qx-wal"><h4>المحفظة <small dir="ltr">PAPER · ${esc(new Date(q.since*1000).toISOString().slice(0,10))}</small></h4>
+        <section class="qx-p qx-wal"><h4>المحفظة <small dir="ltr">SINCE ${esc(new Date(q.since*1000).toISOString().slice(0,10))}</small></h4>
           <div class="qx-pnl ${up?'up':'dn'}" dir="ltr">${sg(q.pnl)}</div><small class="qx-sub">الربح منذ البداية · من ${usd(q.eq0)}</small>
-          <div class="qx-kv"><div><i>صفقات/ساعة</i><b class="num">${nf(q.trades_hr,1)}</b></div><div><i>نجاح النوافذ</i><b class="num">${q.win_rate!=null?nf(q.win_rate,1)+'%':'—'}</b></div><div><i>بالجهتين</i><b class="num">${q.both_sided!=null?nf(q.both_sided,1)+'%':'—'}</b></div>
-            <div><i>صفقات</i><b class="num">${q.trades}</b></div><div><i>نوافذ مُسوّاة</i><b class="num">${q.windows}</b></div><div><i>مفتوحة</i><b class="num">${(q.open||[]).length}</b></div></div></section>
-        <section class="qx-p qx-osc"><h4>مذبذب الأفضلية <small dir="ltr">MODEL vs BOOK</small></h4><canvas id="qxOsc"></canvas><small class="qx-sub">فوق الصفر: احتمال الصعود في نموذجنا أعلى من سعر السوق</small></section>
-        <section class="qx-p qx-torus"><h4>القشرة العصبية <small dir="ltr">FAIR-P TORUS</small></h4><canvas id="qxTorus"></canvas><div class="qx-sig" id="qxSig" dir="ltr"></div></section>
-        <section class="qx-p qx-lv"><h4>الصفقات الحية <small dir="ltr">BUY ONLY · NO SELL</small></h4><ol class="qx-trades" id="qxTrades">${tr.slice(0,9).map(row).join('')||'<li class="qx-e">لا صفقات بعد</li>'}</ol></section>
+          <div class="qx-kv"><div><i>صفقات مغلقة</i><b class="num">${q.closed}</b></div><div><i>مفتوحة</i><b class="num">${q.openN}</b></div><div><i>نجاح</i><b class="num">${q.win_rate!=null?nf(q.win_rate,1)+'%':'—'}</b></div>
+            <div><i>النمو</i><b class="num">${nf(q.pct,2)}%</b></div><div><i>S&P 500</i><b class="num">${q.bench!=null?nf(q.bench,1)+'%':'—'}</b></div><div><i>متبقٍ للهدف</i><b class="num">${nf(Math.max(0,q.goal-q.pct),1)}%</b></div></div></section>
+        <section class="qx-p qx-osc"><h4>النجاح الفعلي مقابل المطلوب <small dir="ltr">EDGE</small></h4><canvas id="qxOsc"></canvas><small class="qx-sub">الأصفر: نسبة نجاح آخر 12 صفقة · الأبيض: النسبة التي تحتاجها كل صفقة لتتعادل · الأخضر فوق الصفر = ميزة</small></section>
+        <section class="qx-p qx-torus"><h4>نواة القرار <small dir="ltr">DECISION CORE</small></h4><canvas id="qxTorus"></canvas><div class="qx-sig" id="qxSig" dir="ltr"></div></section>
+        <section class="qx-p qx-lv"><h4>الصفقات <small dir="ltr">OPEN + LATEST EXITS</small></h4><ol class="qx-trades" id="qxTrades">${tr.slice(0,9).map(row).join('')||'<li class="qx-e">لا صفقات بعد</li>'}</ol></section>
         <section class="qx-p qx-eq"><h4>منحنى رأس المال</h4><canvas id="qxEq"></canvas></section>
-        <section class="qx-p qx-heat"><h4>وصول التنفيذ <small dir="ltr">FILL ARRIVAL</small></h4><div id="qxHeat" class="qx-hm"></div></section>
+        <section class="qx-p qx-heat"><h4>نشاط الأسواق <small dir="ltr">LAST 90 DAYS</small></h4><div id="qxHeat" class="qx-hm"></div></section>
         <section class="qx-p qx-trace"><h4>سجل القرار <small dir="ltr">DECISION TRACE</small></h4><pre id="qxTrace" dir="ltr"></pre></section>
-        <section class="qx-p qx-phase"><h4>طور المخزون <small dir="ltr">INVENTORY PHASE</small></h4><canvas id="qxPhase"></canvas><small class="qx-sub">كل نقطة نافذة: يمين/يسار = الفائض المتبقي بعد المطابقة · أعلى/أسفل = الربح</small></section>
-        <section class="qx-p qx-set"><h4>التسويات <small dir="ltr">SETTLED</small></h4><div class="qx-scroll"><table class="qx-t"><tr><th>الوقت</th><th>الأصل</th><th>الفائز</th><th>صعود/هبوط</th><th>التكلفة</th><th>الربح</th></tr>
-          ${st.slice(0,40).map(x=>`<tr><td dir="ltr">${hm(x.t)}</td><td>${esc(x.a)}</td><td class="${x.win==='up'?'up':'dn'}">${x.win==='up'?'صعود':'هبوط'}</td><td class="num" dir="ltr">${nf(x.up,0)}/${nf(x.dn,0)}</td><td class="num">${usd(x.cost)}</td><td class="num ${x.pnl>=0?'up':'dn'}">${sg(x.pnl)}</td></tr>`).join('')||'<tr><td colspan="6">لا تسويات بعد</td></tr>'}</table></div></section>
-        <section class="qx-p qx-rules"><h4>القواعد والافتراضات</h4><ul>
-          <li>زوج كامل: شراء الصعود والهبوط معًا فقط إذا كانت التكلفة مع الرسوم ≤ <b class="num">$${nf(q.rules.set_max,3)}</b>؛ أحدهما يدفع $1 دائمًا.</li>
-          <li>مطابقة: لا تُشترى الجهة الثانية إلا إذا بقي الزوج أقل من $1.</li>
-          <li>جهة واحدة: فقط إذا كان السعر أقل من احتمالنا العادل بـ <b class="num">${nf(q.rules.edge*100,0)}</b> سنتًا، وبحجم صغير.</li>
-          <li>الحجم: <b class="num">${nf(q.rules.clip*100,1)}%</b> من رأس المال للشراء الواحد، وبحد <b class="num">${nf(q.rules.max_mkt*100,0)}%</b> لكل نافذة.</li>
-          <li>الرسوم مفترضة <b class="num">${nf(q.rules.fee*100,1)}%</b> من المبلغ المدفوع، والتنفيذ عند أفضل سعر بيع وبالكمية المعروضة فقط.</li>
-          <li>ورقي بالكامل: لا يُرسل أي أمر حقيقي، ولا يحتاج أي مفتاح.</li></ul>
-          <div class="qx-ev">${(q.events||[]).slice(-5).reverse().map(e=>`<p class="${e.lv}"><span dir="ltr">${hm(e.t)}</span>${esc(e.m)}</p>`).join('')}</div>
-          <small class="qx-sub">آخر تحديث ${ago(q.at)} · ${q.runs} تشغيل · ${q.polls} قراءة</small></section>
+        <section class="qx-p qx-phase"><h4>خريطة الصفقات <small dir="ltr">HOLD × RESULT</small></h4><canvas id="qxPhase"></canvas><small class="qx-sub">كل نقطة صفقة: يمين = أيام أطول · أعلى = ربح أكبر</small></section>
+        <section class="qx-p qx-set"><h4>الصفقات المغلقة <small dir="ltr">CLOSED</small></h4><div class="qx-scroll"><table class="qx-t"><tr><th>الإغلاق</th><th>الأصل</th><th>النوع</th><th>الأيام</th><th>%</th><th>الربح</th></tr>
+          ${st.slice(0,60).map(x=>`<tr><td dir="ltr">${esc(String(x.closed||'').slice(0,10))}</td><td>${esc(x.name||x.asset)}</td><td>${esc(MK[x.kind]||x.kind)}</td><td class="num">${nf(x.held_days,1)}</td><td class="num ${x.pnl_usd>=0?'up':'dn'}">${nf(x.pnl_pct,2)}</td><td class="num ${x.pnl_usd>=0?'up':'dn'}">${sg(x.pnl_usd)}</td></tr>`).join('')||'<tr><td colspan="6">لا صفقات مغلقة بعد</td></tr>'}</table></div></section>
+        <section class="qx-p qx-rules"><h4>طريقة العمل</h4><ul>
+          <li>الدخول على شموع 4 ساعات فقط بعد تهدئة فوق متوسط 50، مع تأكيد نمط شموع انعكاسي.</li>
+          <li>الاتجاه اليومي يجب أن يكون صاعدًا، والأسبوعي والشهري غير هابطين.</li>
+          <li>حتى 5 صفقات معًا، ورأس المال مستثمر بالكامل ويتراكم الربح.</li>
+          <li>الوقف بين 3% و6%، ونقله للتعادل عند 60% من الهدف، وحد أقصى للمدة.</li>
+          <li>الدورة تنتهي عند مضاعفة رأس المال، ثم تجميد أسبوع وبدء دورة جديدة.</li></ul>
+          ${B?`<div class="qx-bt"><b>القياس من مايو 2025</b><span>النمو <i class="num">+${nf(B.growth_pct,1)}%</i></span><span>صفقات <i class="num">${B.trades}</i></span><span>نجاح <i class="num">${nf(B.win_rate,1)}%</i></span><span>أقصى تراجع <i class="num">${nf(B.max_dd_pct,1)}%</i></span><span>المضاعفة الأولى <i class="num">${esc(B.first_double||'—')}</i></span><small>${esc(B.note||'')}</small></div>`:''}
+          <small class="qx-sub">آخر تحديث ${ago(q.at)}</small></section>
       </div></div>`;
     clock();osc();eq();phase();heat();torus();traceType();replay(tr);}
-  function row(t){return`<li class="${t.side}"><b>${t.side==='up'?'BUY UP':'BUY DOWN'}</b><span dir="ltr">${esc(t.a.toUpperCase())} · @ ${nf(t.p,2)} · ${nf(t.q,0)} sh · $${nf(t.usd,2)}</span><small>${esc(t.why)}</small><em dir="ltr">${hm(t.t)}</em></li>`;}
+  function row(t){const o=t.side==='open';return`<li class="${o?'op':t.side}"><b>${o?'OPEN':t.side==='up'?'WIN':'LOSS'}</b><span dir="ltr">${esc(t.a)} · @ ${nf(t.p,2)}${o?' · $'+nf(t.usd,0):' · '+(t.pct>0?'+':'')+nf(t.pct,2)+'%'}</span><small>${esc(t.name||'')}${t.h!=null&&!o?' · '+nf(t.h,1)+' يوم':''}</small><em dir="ltr">${new Date(t.t*1000).toISOString().slice(5,10)}</em></li>`;}
 
   function cv(id,h){const c=$(id);if(!c)return null;const d=Math.min(2,devicePixelRatio||1),W=c.clientWidth||300,H=h||c.clientHeight||160;c.width=W*d;c.height=H*d;c.style.height=H+'px';const g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);return{g,W,H};}
   function clock(){const f=()=>{const e=$('qxClock');if(!e)return false;e.textContent=new Date().toISOString().slice(11,19)+' UTC';return true;};f();const i=setInterval(()=>{if(!f())clearInterval(i);},1000);anim.push(()=>clearInterval(i));}
@@ -5180,21 +5220,20 @@ html.locked .gate{display:flex}
     E.forEach((e,i)=>{const v=Math.max(-.25,Math.min(.25,e[2]-e[3]));g.fillStyle=v>=0?'rgba(45,220,140,.75)':'rgba(255,72,90,.75)';g.fillRect(x(i),v>=0?mid-v*k:mid,Math.max(1,W/E.length),Math.abs(v)*k);});
     g.strokeStyle='rgba(255,220,120,.9)';g.lineWidth=1.4;g.beginPath();E.forEach((e,i)=>{const y=H-e[2]*H;i?g.lineTo(x(i),y):g.moveTo(x(i),y);});g.stroke();
     g.strokeStyle='rgba(255,255,255,.55)';g.beginPath();E.forEach((e,i)=>{const y=H-e[3]*H;i?g.lineTo(x(i),y):g.moveTo(x(i),y);});g.stroke();
-    g.fillStyle='#ffdc78';g.font='10px ui-monospace,monospace';g.fillText('fair P(UP)',6,12);g.fillStyle='#fff';g.fillText('book mid',76,12);}
+    g.fillStyle='#ffdc78';g.font='10px ui-monospace,monospace';g.fillText('win rate',6,12);g.fillStyle='#fff';g.fillText('break-even',70,12);}
   function eq(){const C=cv('qxEq',140);if(!C)return;const {g,W,H}=C,P=(Q.curve||[]).map(x=>x[1]);if(P.length<2){g.fillStyle='#6c8';g.font='12px sans-serif';g.fillText('يتكوّن مع التشغيلات',W/2-50,H/2);return;}
     const lo=Math.min(...P,Q.eq0),hi=Math.max(...P,Q.eq0),y=v=>H-6-(v-lo)/(hi-lo||1)*(H-12),x=i=>i/(P.length-1)*W;
     const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'rgba(60,255,154,.35)');gr.addColorStop(1,'rgba(60,255,154,0)');g.fillStyle=gr;g.beginPath();g.moveTo(0,H);P.forEach((v,i)=>g.lineTo(x(i),y(v)));g.lineTo(W,H);g.fill();
     g.strokeStyle='#3CFF9A';g.lineWidth=1.8;g.beginPath();P.forEach((v,i)=>i?g.lineTo(x(i),y(v)):g.moveTo(0,y(v)));g.stroke();g.setLineDash([4,4]);g.strokeStyle='rgba(255,255,255,.35)';g.beginPath();g.moveTo(0,y(Q.eq0));g.lineTo(W,y(Q.eq0));g.stroke();g.setLineDash([]);}
-  function phase(){const C=cv('qxPhase',180);if(!C)return;const {g,W,H}=C,S=Q.settled||[];g.strokeStyle='rgba(60,255,154,.15)';g.beginPath();g.moveTo(W/2,0);g.lineTo(W/2,H);g.moveTo(0,H/2);g.lineTo(W,H/2);g.stroke();
-    for(let i=1;i<=4;i++){g.strokeStyle=`rgba(255,200,80,${.25-i*.04})`;g.setLineDash([5,5]);g.beginPath();g.moveTo(W/2,H/2);g.lineTo(W,H/2-i*H/10);g.moveTo(W/2,H/2);g.lineTo(0,H/2+i*H/10);g.stroke();}g.setLineDash([]);
-    if(!S.length)return;const rx=Math.max(1,...S.map(s=>Math.abs(s.up-s.dn))),ry=Math.max(1,...S.map(s=>Math.abs(s.pnl)));
-    S.forEach(s=>{const X=W/2+(s.up-s.dn)/rx*(W/2-8),Y=H/2-s.pnl/ry*(H/2-8);g.fillStyle=s.pnl>=0?'rgba(60,255,154,.85)':'rgba(255,80,96,.85)';g.beginPath();g.arc(X,Y,3,0,7);g.fill();});
-    g.fillStyle='#9fd';g.font='10px ui-monospace,monospace';g.fillText('long UP →',W-70,H-6);g.fillText('← long DOWN',6,H-6);}
-  function heat(){const el=$('qxHeat');if(!el)return;const T=Q.recent||[],now=Q.at,rows=[];['BTC','ETH','SOL','XRP'].forEach(A=>['up','dn'].forEach(sd=>rows.push([A,sd])));
-    const B=24,span=6*3600,bk=t=>Math.min(B-1,Math.max(0,Math.floor((t-(now-span))/(span/B))));
-    el.innerHTML=rows.map(([A,sd])=>{const c=new Array(B).fill(0);T.filter(t=>t.a.toUpperCase()===A&&t.side===sd&&t.t>now-span).forEach(t=>c[bk(t.t)]+=t.usd);const mx=Math.max(1,...c);
-      return`<div class="qx-hr"><b dir="ltr">${A} ${sd==='up'?'UP':'DN'}</b>${c.map(v=>`<i style="--a:${v?(.25+.75*v/mx).toFixed(2):0}"></i>`).join('')}</div>`;}).join('')+`<small class="qx-sub" dir="ltr">−6h ··· now</small>`;}
-  function traceType(){const el=$('qxTrace');if(!el)return;const L=(Q.trace||[]).slice(-28).map(x=>`${hm(x.t).slice(3)}  ${x.k.padEnd(6)} ${x.m}`);if(RM){el.textContent=L.join('\n');return;}
+  function phase(){const C=cv('qxPhase',180);if(!C)return;const {g,W,H}=C,S=Q.settled||[];g.strokeStyle='rgba(60,255,154,.15)';g.beginPath();g.moveTo(0,H/2);g.lineTo(W,H/2);g.stroke();
+    if(!S.length)return;const mx=Math.max(1,...S.map(s=>s.held_days||0)),ry=Math.max(1,...S.map(s=>Math.abs(s.pnl_pct||0)));
+    S.forEach(s=>{const X=6+(s.held_days||0)/mx*(W-12),Y=H/2-(s.pnl_pct||0)/ry*(H/2-8);g.fillStyle=s.pnl_usd>=0?'rgba(60,255,154,.85)':'rgba(255,80,96,.85)';g.beginPath();g.arc(X,Y,3,0,7);g.fill();});
+    g.fillStyle='#9fd';g.font='10px ui-monospace,monospace';g.fillText('days →',W-50,H-6);g.fillText('+%',4,12);}
+  function heat(){const el=$('qxHeat');if(!el)return;const T=(Q.recent||[]).filter(t=>t.side!=='open'),now=Q.at,rows=[];['us','cx','sa'].forEach(A=>['up','dn'].forEach(sd=>rows.push([A,sd])));
+    const B=24,span=90*86400,bk=t=>Math.min(B-1,Math.max(0,Math.floor((t-(now-span))/(span/B))));
+    el.innerHTML=rows.map(([A,sd])=>{const c=new Array(B).fill(0);T.filter(t=>t.kind===A&&t.side===sd&&t.t>now-span).forEach(t=>c[bk(t.t)]+=Math.abs(t.usd));const mx=Math.max(1,...c);
+      return`<div class="qx-hr"><b dir="ltr">${MK[A]} ${sd==='up'?'WIN':'LOSS'}</b>${c.map(v=>`<i style="--a:${v?(.25+.75*v/mx).toFixed(2):0}"></i>`).join('')}</div>`;}).join('')+`<small class="qx-sub" dir="ltr">−90d ··· now</small>`;}
+  function traceType(){const el=$('qxTrace');if(!el)return;const L=(Q.trace||[]).slice(-28).map(x=>`${new Date(x.t*1000).toISOString().slice(5,16).replace('T',' ')}  ${x.k.padEnd(6)} ${x.m}`);if(RM){el.textContent=L.join('\n');return;}
     let i=0;el.textContent='';const tick=setInterval(()=>{if(!el.isConnected||i>=L.length){clearInterval(tick);return;}el.textContent+=(i?'\n':'')+L[i++];el.scrollTop=el.scrollHeight;},70);anim.push(()=>clearInterval(tick));}
 
   /* the torus: a rotating cloud of threads; each replayed trade shoots a wire to its row */
@@ -5219,14 +5258,14 @@ html.locked .gate{display:flex}
       if(k<1)requestAnimationFrame(step);else setTimeout(()=>{if(cvw.isConnected)g.clearRect(0,0,cvw.width,cvw.height);},900);};requestAnimationFrame(step);}
   function replay(tr){const L=$('qxTrades'),sig=$('qxSig');if(!L||!tr.length)return;let i=Math.min(tr.length,9)-1;
     const tick=()=>{if(!L.isConnected)return;const t=tr[i];i=(i-1+Math.min(tr.length,9))%Math.min(tr.length,9);const li=document.createElement('li');li.innerHTML=row(t).replace(/^<li class="[^"]*">|<\/li>$/g,'');li.className=t.side+' nw';
-      L.prepend(li);while(L.children.length>9)L.lastChild.remove();if(FIRE)FIRE();if(sig)sig.textContent=`SIGNAL · ${t.a.toUpperCase()} ${t.side==='up'?'UP':'DOWN'} @ ${nf(t.p,2)} · ${t.why}`;
-      wire(li,t.side==='up'?'#3CFF9A':'#FF4F6A');};
+      L.prepend(li);while(L.children.length>9)L.lastChild.remove();if(FIRE)FIRE();if(sig)sig.textContent=`${t.side==='open'?'OPEN':t.side==='up'?'WIN':'LOSS'} · ${t.a} @ ${nf(t.p,2)} · ${t.setup||''}`;if(0)sig.textContent=`${t.a.toUpperCase()} ${t.side==='up'?'UP':'DOWN'} @ ${nf(t.p,2)} · ${t.why}`;
+      wire(li,t.side==='dn'?'#FF4F6A':t.side==='open'?'#00F0FF':'#3CFF9A');};
     const iv=setInterval(tick,RM?999999:3200);anim.push(()=>clearInterval(iv));setTimeout(tick,900);}
 
   function mount(){const b=$('qxOpen');if(!b||!$('qxo'))return;b.addEventListener('click',open);$('qxX').addEventListener('click',close);
     addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('qxo').hidden)close();});let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(Q&&!$('qxo').hidden&&$('qxRoot'))render();},250);});
     const c=b.querySelector('canvas');if(c&&window.LOCKX)LOCKX.rain(c,{fade:.12,size:11,slow:true,alpha:.55});
-    if(/^(localhost|127\.)/.test(location.hostname))window.__qxTest=d=>{Q=d;const o=$('qxo');o.hidden=false;o.classList.add('on');render();};}
+    if(/^(localhost|127\.)/.test(location.hostname))window.__qxTest=d=>{Q=adapt(d);const o=$('qxo');o.hidden=false;o.classList.add('on');render();};}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -8238,5 +8277,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='9bfd85c385';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='a15723c651';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>

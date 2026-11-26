@@ -30,7 +30,7 @@ except Exception:
 LAUNCH = os.environ.get('PAPER2_LAUNCH', '2026-11-21')   # third version (compounding, fully invested) starts here
 MODE = R.get('mode', 'multi'); RO = R.get('rolling', {}); ZRULE = RO.get('zone', {})
 V1_END = dt.datetime(2026, 11, 8, 21, 0, tzinfo=dt.timezone.utc)  # the first version's record is frozen here
-START_USD = 87000.0
+START_USD = float(R.get('start_usd', 87000.0))
 SAR = 3.75
 EX = R['execution']; FEE = EX['fees']; SLIP = EX['slip']; SWEEP = EX['sweep']
 RK = R['risk']; HZ = R['horizons']; LV = R['levels']; TR = R['traps']; AU = R['auditor']; CY = R['cycle']; EF = R['entry_filters']
