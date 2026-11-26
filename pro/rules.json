@@ -163,7 +163,7 @@
     },
     "target_pct": 1.0,
     "stop": {
-      "atr_k": 3.0,
+      "atr_k": 2.5,
       "min_pct": 3.0,
       "max_pct": 6.0
     },
@@ -281,6 +281,12 @@
         "param": "candle_confirm+weight+max_open",
         "from": "off,0.12,8",
         "to": "on,0.24,5"
+      },
+      {
+        "date": "2026-11-26",
+        "param": "stop.atr_k",
+        "from": 3.0,
+        "to": 2.5
       }
     ],
     "research": [
