@@ -1090,6 +1090,7 @@ def prof_report(book, now):
         mon['opt_stats'] = {'runs': len(_ol), 'weeks': len({e.get('date') for e in _ol}), 'adopted': sum(1 for e in _ol if e.get('changed')),
                             'tested': sum(e.get('tested') or 0 for e in _ol), 'first': _ol[0].get('date') if _ol else None}
     except Exception: mon['optimizer'] = []; mon['opt_stats'] = None
+    mon['rules_now'] = {k: v for k, v in R.get('rolling', {}).items() if k != 'auto_changes'}
     lvl = 'bad' if any(p_['lv'] == 'bad' for p_ in pts) else 'warn' if any(p_['lv'] == 'warn' for p_ in pts) else 'ok'
     return {'v': 1, 'status': lvl, 'points': pts, 'findings': det, 'monitor': mon}
 

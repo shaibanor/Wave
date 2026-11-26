@@ -2,6 +2,40 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<script>(function(){
+  /* Keeps the phone cool: one shared frame clock with a frame budget (30 fps on phones), a cheap
+     "is it on screen" check for every animated canvas, and a cool mode the owner can switch. */
+  const W=window,raf0=W.requestAnimationFrame.bind(W);
+  const MOB=matchMedia('(pointer:coarse)').matches||innerWidth<900;
+  const MODES={calibrate:MOB?30:60,stealth:MOB?20:30,hold:6};
+  let mode='calibrate';try{mode=localStorage.getItem('tk-cool')||'calibrate';}catch(_){}
+  if(!MODES[mode])mode='calibrate';
+  let q=new Map(),id=0,ticking=false,last=0;
+  function tick(t){ticking=false;if(!q.size)return;const iv=1000/MODES[mode];
+    if(t-last<iv-3){ticking=true;raf0(tick);return;}last=t;const cur=q;q=new Map();
+    cur.forEach(f=>{try{f(t);}catch(e){setTimeout(()=>{throw e;});}});}
+  W.requestAnimationFrame=function(f){const k=++id;q.set(k,f);if(!ticking){ticking=true;raf0(tick);}return k;};
+  W.cancelAnimationFrame=function(k){q.delete(k);};
+  const seen=new WeakMap();let io=null;try{io=new IntersectionObserver(es=>es.forEach(e=>seen.set(e.target,e.isIntersecting)),{rootMargin:'60px'});}catch(_){}
+  W.TKVIS=el=>{if(!el||!io)return true;if(!seen.has(el)){seen.set(el,true);io.observe(el);}return seen.get(el)&&!document.hidden;};
+  W.TKCOOL={get mode(){return mode;},fps:()=>MODES[mode],set(m){if(!MODES[m])return;mode=m;try{localStorage.setItem('tk-cool',m);}catch(_){}
+    document.documentElement.dataset.cool=m;dispatchEvent(new CustomEvent('tk-cool',{detail:m}));}};
+  document.documentElement.dataset.cool=mode;
+})();
+(function(){
+  /* sections that are off screen pause their CSS animations; phones skip live blur, which costs heat */
+  const st=document.createElement('style');st.textContent='.tk-off,.tk-off *,.tk-off *::before,.tk-off *::after{animation-play-state:paused!important}'+
+    '@media (pointer:coarse){*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}'+
+    'html[data-cool="hold"] *,html[data-cool="hold"] *::before,html[data-cool="hold"] *::after{animation-play-state:paused!important}';
+  document.head.appendChild(st);
+  function arm(){let io;try{io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('tk-off',!e.isIntersecting)),{rootMargin:'120px'});}catch(_){return;}
+    const pick=()=>{const root=document.querySelector('.wrap')||document.querySelector('main')||document.body;[...root.children].forEach(el=>{if(el.dataset.tkio||/^(SCRIPT|STYLE|LINK)$/.test(el.tagName))return;
+      const s=getComputedStyle(el);if(s.position==='fixed')return;el.dataset.tkio='1';io.observe(el);});};
+    pick();new MutationObserver(pick).observe(document.querySelector('.wrap')||document.body,{childList:true});
+    let vio;try{vio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;try{if(e.isIntersecting&&!document.hidden&&document.documentElement.dataset.cool!=='hold')v.play().catch(()=>{});else v.pause();}catch(_){}}));document.querySelectorAll('video').forEach(v=>vio.observe(v));}catch(_){}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arm);else arm();
+})();
+</script>
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("wave-theme")||"dark";}catch(e){document.documentElement.dataset.theme="dark";}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="description" content="قراءة يومية وأسبوعية للأسهم السعودية والأمريكية والعملات الرقمية والسلع، مع توقع إغلاق الأسبوع ونسبة دقته، ومنصة شارت وأدوات تحليل.">
@@ -1895,6 +1929,135 @@ body:has(.vxo.on) :is(#tkGuide,#tkAgent,.rd-av),body:has(.pfo.on) :is(#tkGuide,#
 .rh-ph{z-index:2;background:#000;border-color:rgba(var(--rc),.6);color:#3CFF9A;text-shadow:0 0 8px rgba(60,255,154,.6)}
 .rh-hint{z-index:2}
 @media (prefers-reduced-motion:reduce){.rh-cur{animation:none}}
+/* ================= HX: the engineering identity (tower and everything below it) ================= */
+:root{--hx-bg:#05070A;--hx-bg2:#090D14;--hx-card:#0E141F;--hx-line:#1C2638;--hx-tw:#101724;--hx-cy:#00F0FF;--hx-vi:#7C3AED;--hx-ok:#00E599;--hx-bad:#FF3366;--hx-warn:#FFB020;--hx-t:#E2E8F0;--hx-t2:#64748B;--hx-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'IBM Plex Sans Arabic','Noto Kufi Arabic',sans-serif}
+.hx-start{height:0}
+#hxStart~footer::after{opacity:.18!important}
+#hxStart~*{position:relative;color:var(--hx-t);background:var(--hx-bg)!important;box-shadow:0 0 0 100vmax var(--hx-bg)!important;clip-path:inset(0 -100vmax)}
+#hxStart~*::selection{background:var(--hx-cy);color:#000}
+#hxStart+*{margin-top:0}
+.tkb+#hxStart{border-top:1px solid var(--hx-line)}
+#hxStart~*:not(.qx-card)::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.55;
+  background:linear-gradient(var(--hx-line) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,var(--hx-line) 1px,transparent 1px) 0 0/28px 28px;
+  -webkit-mask:radial-gradient(120% 80% at 50% 30%,#000 30%,transparent 85%);mask:radial-gradient(120% 80% at 50% 30%,#000 30%,transparent 85%)}
+#hxStart~*>*{position:relative;z-index:1}
+/* radar / tower header */
+#rdBox .rd-hd h2{font-family:var(--hx-mono);letter-spacing:0;color:var(--hx-t);text-shadow:0 0 14px rgba(0,240,255,.35)}
+#rdBox .rd-hd p{color:var(--hx-t2)}
+#rdBox .rd-k{background:rgba(0,240,255,.12)!important;color:var(--hx-cy)!important;border:1px solid rgba(0,240,255,.45)!important;font-family:var(--hx-mono)}
+#rdBox .rd-logo{filter:hue-rotate(160deg) saturate(1.3) drop-shadow(0 0 10px rgba(0,240,255,.5))}
+.hq-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:12px 4px 4px;padding:8px 10px;border:1px solid var(--hx-line);border-radius:10px;background:linear-gradient(90deg,var(--hx-card),var(--hx-bg2));font:600 10.5px var(--hx-mono)}
+.hq-tele{display:flex;gap:12px;flex-wrap:wrap;color:var(--hx-t2)}.hq-tele span:first-child{color:var(--hx-cy)}.hq-fps{color:var(--hx-ok)}
+.hq-modes{display:flex;gap:4px}
+.hq-modes button{font:700 10.5px var(--hx-mono);letter-spacing:.08em;padding:6px 10px;border-radius:6px;border:1px solid var(--hx-line);background:var(--hx-bg);color:var(--hx-t2);cursor:pointer}
+.hq-modes button[aria-pressed="true"]{color:#000;background:var(--hx-cy);border-color:var(--hx-cy);box-shadow:0 0 14px rgba(0,240,255,.5)}
+.hq-modes button[data-mode="stealth"][aria-pressed="true"]{background:var(--hx-vi);border-color:var(--hx-vi);color:#fff;box-shadow:0 0 14px rgba(124,58,237,.6)}
+.hq-modes button[data-mode="hold"][aria-pressed="true"]{background:var(--hx-warn);border-color:var(--hx-warn)}
+/* tower body in the new palette */
+#rdBox .o3-sky{background:radial-gradient(70% 50% at 50% 30%,rgba(124,58,237,.16),transparent 70%),linear-gradient(180deg,#04060A,#070B12)!important}
+#rdBox .hq-grid{opacity:.5;filter:hue-rotate(10deg)}
+#rdBox .o3-w{background-color:var(--hx-tw)!important}
+#rdBox .o3-fl{position:relative}
+#rdBox .o3-fl[data-layer]::before{content:attr(data-layer);position:absolute;top:-17px;inset-inline-start:2px;z-index:5;font:700 9.5px/1 var(--hx-mono);color:var(--hx-cy);background:#000;border:1px solid rgba(0,240,255,.5);padding:3px 7px;border-radius:4px;box-shadow:0 0 12px rgba(0,240,255,.35);white-space:nowrap}
+#rdBox .rt-sysfl[data-layer]::before{color:#C4B5FD;border-color:rgba(124,58,237,.7);box-shadow:0 0 12px rgba(124,58,237,.45)}
+#rdBox .o3-num{font-family:var(--hx-mono);color:var(--hx-cy)!important}
+#rdBox .o3-plate{font-family:var(--hx-mono);background:rgba(5,7,10,.88)!important;border:1px solid var(--hx-line)!important;color:var(--hx-t)!important}
+#rdBox .o3-tag b{color:var(--hx-cy)!important;font-family:var(--hx-mono)}
+#rdBox .hq-fs{background:linear-gradient(90deg,transparent,var(--hx-cy),transparent)!important;opacity:.7}
+#rdBox .rt-sysfl .hq-fs{background:linear-gradient(90deg,transparent,var(--hx-vi),transparent)!important}
+#rdBox .rt-gate{background:linear-gradient(160deg,rgba(124,58,237,.22),rgba(5,7,10,.95) 55%)!important;border:1px solid rgba(124,58,237,.7)!important;box-shadow:0 0 24px rgba(124,58,237,.35),inset 0 0 18px rgba(0,240,255,.08)!important;font-family:var(--hx-mono)}
+#rdBox .rt-gate b{color:#EDE9FE}#rdBox .rt-gate small{color:var(--hx-t2)}
+#rdBox .hq-sign{border-color:rgba(0,240,255,.6)!important;background:rgba(5,7,10,.9)!important;box-shadow:0 0 18px rgba(0,240,255,.3)!important}
+#rdBox .hq-sign small,#rdBox .hq-lt small{font-family:var(--hx-mono);color:var(--hx-cy)!important}
+#rdBox .hq-rot button{font-family:var(--hx-mono);background:var(--hx-card)!important;border:1px solid var(--hx-line)!important;color:var(--hx-t)!important}
+#rdBox .rt-hint{color:var(--hx-t2);font-family:var(--hx-mono);font-size:11.5px}
+/* blueprint dissolve beside the tower (like the lock turning into code) */
+#rdBox .rt-stage::before{content:"0x4D 0x65 0x63 0x68 · class TowerMechanism { private: Layer intake, verify, exec; } · SHAFT_DIAM 12.5mm · 0110 1001 0111 · ";position:absolute;inset:6% -2% auto auto;width:46%;z-index:0;pointer-events:none;
+  font:600 10px/1.65 var(--hx-mono);color:rgba(0,240,255,.22);word-break:break-all;transform:perspective(500px) rotateY(-24deg);-webkit-mask:linear-gradient(90deg,transparent,#000 40%);mask:linear-gradient(90deg,transparent,#000 40%)}
+/* vault, quick desk, ads and footer in the same language */
+#hxStart~.vx .vx-cap{font-family:var(--hx-mono);color:var(--hx-t2)}#hxStart~.vx .vx-cap span{color:var(--hx-cy)}
+#hxStart~.vx .vx-halo{background:radial-gradient(circle,rgba(0,240,255,.25),transparent 65%)!important}
+#hxStart~.adslot .ad-card{background:var(--hx-card)!important;border:1px solid var(--hx-line)!important;color:var(--hx-t)!important;box-shadow:inset 0 0 0 1px rgba(0,240,255,.05)!important}
+#hxStart~.adslot .ad-card b,#hxStart~.adslot .ad-card strong{color:var(--hx-t)!important}
+#hxStart~.adslot .ad-card small,#hxStart~.adslot .ad-card p{color:var(--hx-t2)!important}
+#hxStart~footer{font-family:inherit;border-top:1px solid var(--hx-line)}
+#hxStart~footer *{border-color:var(--hx-line)!important}
+#hxStart~footer a{color:var(--hx-cy)!important}
+#hxStart~footer p,#hxStart~footer small,#hxStart~footer li{color:var(--hx-t2)!important}
+#hxStart~footer h2,#hxStart~footer h3,#hxStart~footer b,#hxStart~footer strong{color:var(--hx-t)!important}
+#hxStart~footer .alert,#hxStart~footer [class*="warn"],#hxStart~footer [class*="disc"]{background:linear-gradient(90deg,rgba(255,51,102,.08),transparent)!important;border-inline-start:2px solid var(--hx-bad)!important;font-family:var(--hx-mono);font-size:.82em}
+#hxStart~footer::before{content:"// END OF TRANSMISSION · TIKO SECURE SURFACE · " attr(data-x);display:block;font:600 10px var(--hx-mono);color:var(--hx-t2);letter-spacing:.1em;padding:10px 0 0;text-align:center}
+/* system radar sheet (inside the offices) */
+.pfo .pf-sheet{background:linear-gradient(180deg,#070B12,#05070A)!important;border-color:var(--hx-line)!important}
+.pfo .pf-top b{font-family:var(--hx-mono);color:var(--hx-cy)!important;letter-spacing:0}
+.pfo .pf-c{background:var(--hx-card)!important;border:1px solid var(--hx-line)!important}.pfo .pf-c span{color:var(--hx-t2)!important}.pfo .pf-c b{color:var(--hx-t)!important;font-family:var(--hx-mono)}
+.pfo .pf-t th,.pfo .pf-t td{border-color:var(--hx-line)!important}
+/* repair console */
+.fx-live{font:600 11px var(--hx-mono);color:var(--hx-ok);margin:0 0 8px}
+.fx-list{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:8px}
+.fx{border:1px solid var(--hx-line);border-radius:10px;padding:10px;background:var(--hx-card);border-inline-start:3px solid var(--hx-ok)}
+.fx.bad{border-inline-start-color:var(--hx-bad);box-shadow:0 0 18px rgba(255,51,102,.15)}.fx.run{border-inline-start-color:var(--hx-cy)}.fx.off{border-inline-start-color:var(--hx-t2)}
+.fx-h{display:flex;align-items:center;gap:8px}.fx-h i{width:9px;height:9px;border-radius:50%;background:var(--hx-ok);box-shadow:0 0 8px var(--hx-ok)}.fx.bad .fx-h i{background:var(--hx-bad);box-shadow:0 0 8px var(--hx-bad)}.fx.run .fx-h i{background:var(--hx-cy)}
+.fx-h b{color:var(--hx-t)}.fx-h em{margin-inline-start:auto;font:600 11px var(--hx-mono);font-style:normal;color:var(--hx-t2)}.fx.bad .fx-h em{color:var(--hx-bad)}
+.fx p{margin:6px 0 4px;font-size:.82rem;line-height:1.7;color:#C9D4E3}.fx small{color:var(--hx-t2);font-size:.72rem}
+.fx-b{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.fx-b a{font-size:.76rem;color:var(--hx-cy);padding:6px 8px;border:1px solid var(--hx-line);border-radius:6px;text-decoration:none}
+.fx-run{font:800 12px var(--hx-mono);letter-spacing:0;padding:8px 12px;border-radius:7px;border:1px solid var(--hx-ok);background:rgba(0,229,153,.12);color:var(--hx-ok);cursor:pointer;box-shadow:0 0 12px rgba(0,229,153,.25)}
+.fx.bad .fx-run{border-color:var(--hx-bad);background:rgba(255,51,102,.14);color:#FF8FA9;box-shadow:0 0 14px rgba(255,51,102,.35)}
+.fx-run:disabled{opacity:.5}
+.fx-o{display:block;margin-top:6px;font:600 11.5px/1.6 var(--hx-mono);color:var(--hx-t2)}.fx-o.ok{color:var(--hx-ok)}.fx-o.bad{color:var(--hx-warn)}
+.fx-key{border:1px dashed var(--hx-line);border-radius:10px;padding:10px;background:rgba(0,240,255,.03)}.fx-key summary{cursor:pointer;color:var(--hx-cy);font-weight:700}
+.fx-steps{margin:8px 0;padding-inline-start:18px;font-size:.8rem;line-height:1.8;color:#C9D4E3}.fx-steps a{color:var(--hx-cy)}
+.fx-tk{display:flex;gap:6px;flex-wrap:wrap}.fx-tk input{flex:1;min-width:180px;padding:8px;border-radius:6px;border:1px solid var(--hx-line);background:#000;color:var(--hx-t);font-family:var(--hx-mono)}
+.fx-tk button{padding:8px 12px;border-radius:6px;border:1px solid var(--hx-cy);background:transparent;color:var(--hx-cy);cursor:pointer}
+.o3-fixw{width:120px;height:74px;border-radius:10px;border:2px solid var(--hx-ok);background:#000;color:var(--hx-ok);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;box-shadow:0 0 22px rgba(0,229,153,.4)}
+.o3-fixw b{font:900 20px var(--hx-mono);letter-spacing:.08em}.o3-fixw i{font:600 12px var(--hx-mono);font-style:normal}
+.o3-fixw.bad{border-color:var(--hx-bad);color:var(--hx-bad);box-shadow:0 0 26px rgba(255,51,102,.55);animation:fxPulse 1.6s ease-in-out infinite}
+@keyframes fxPulse{50%{box-shadow:0 0 8px rgba(255,51,102,.3)}}
+/* learning axes */
+.ax-list{list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.ax{border:1px solid var(--hx-line);border-radius:9px;padding:9px 10px;background:var(--hx-card);border-inline-start:3px solid var(--hx-t2)}
+.ax.adopted{border-inline-start-color:var(--hx-ok)}.ax.studied{border-inline-start-color:var(--hx-warn)}.ax.pass{border-inline-start-color:var(--hx-cy)}
+.ax-h{display:flex;gap:8px;align-items:center}.ax-h b{color:var(--hx-t);font-size:.86rem}.ax-h em{margin-inline-start:auto;font:700 10.5px var(--hx-mono);font-style:normal;color:var(--hx-t2)}
+.ax.adopted .ax-h em{color:var(--hx-ok)}.ax.studied .ax-h em{color:var(--hx-warn)}
+.ax>small{display:block;color:var(--hx-t2);font-size:.74rem;margin-top:3px}
+.ax-k{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:.74rem;color:var(--hx-t2)}.ax-k b{color:var(--hx-t);margin-inline-start:4px}
+.ax-w{display:block;margin-top:4px;font-size:.72rem;color:var(--hx-warn)}.ax-w.ok{color:var(--hx-ok)}
+.o3-axw{border-color:#2b4a7a;background:linear-gradient(180deg,#14203a,#0b1222);color:#9CC3FF}
+/* tap lock */
+.tapx{min-height:min(720px,92vh);touch-action:manipulation;-webkit-user-select:none;user-select:none;cursor:crosshair}
+.pfo .tapx{min-height:calc(100vh - 140px)}
+.tx-cols{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;z-index:0;opacity:.32;overflow:hidden;pointer-events:none}
+.tx-cols pre{margin:0;font:500 10px/1.5 var(--hx-mono);color:#00F0FF;white-space:pre;animation:txScroll 38s linear infinite}
+.tx-cols pre:nth-child(2){color:#7C3AED;animation-duration:52s;animation-direction:reverse}.tx-cols pre:nth-child(3){color:#00E599;animation-duration:44s}
+@keyframes txScroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.tx-hud{position:absolute;top:10px;left:10px;right:10px;z-index:3;display:flex;flex-wrap:wrap;gap:6px 12px;font:600 9.5px var(--hx-mono);color:var(--hx-t2);pointer-events:none}.tx-hud span:first-child{color:var(--hx-cy)}.tx-lat{color:var(--hx-ok)}
+.tx-dec{position:absolute;inset:0;z-index:3;pointer-events:none}
+.tx-dec i{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);font:700 10px var(--hx-mono);font-style:normal;letter-spacing:.08em;color:var(--hx-t2);border:1px solid var(--hx-line);background:rgba(5,7,10,.82);padding:6px 9px;border-radius:5px;box-shadow:inset 0 0 10px rgba(0,240,255,.06)}
+.tx-dec i:nth-child(3n){color:var(--hx-cy);border-color:rgba(0,240,255,.35)}.tx-dec i:nth-child(4n){color:#A78BFA;border-color:rgba(124,58,237,.45)}.tx-dec i:nth-child(5n){color:var(--hx-ok)}
+.tx-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:150px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.tx-core b{font:800 12px var(--hx-mono);letter-spacing:.16em;color:var(--hx-cy);text-shadow:0 0 10px rgba(0,240,255,.7)}.tx-core em{font-style:normal;font-size:.78rem;color:var(--hx-t)}
+.tx-ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(0,240,255,.5);animation:txSpin 18s linear infinite}
+.tx-ring.r2{inset:14px;border-style:solid;border-color:rgba(124,58,237,.55);border-width:2px 0;animation-duration:9s;animation-direction:reverse}
+.tx-ring.r3{inset:30px;border:1px solid rgba(0,229,153,.45);box-shadow:0 0 24px rgba(0,229,153,.25),inset 0 0 18px rgba(0,240,255,.15)}
+@keyframes txSpin{to{transform:rotate(360deg)}}
+.tx-log{position:absolute;left:12px;right:12px;bottom:12px;z-index:4;margin:0;max-height:110px;overflow:hidden;font:500 10.5px/1.55 var(--hx-mono);color:#7CF5C8;background:rgba(0,0,0,.72);border:1px solid var(--hx-line);border-radius:7px;padding:6px 9px;pointer-events:none}
+.tx-log .dim{color:var(--hx-t2)}
+.tx-sp{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.tx-sp span{position:absolute;transform:translate(-50%,-50%);font:800 12px var(--hx-mono);color:var(--hx-cy);text-shadow:0 0 10px var(--hx-cy);white-space:nowrap;animation:txSpark 1.1s ease-out forwards}
+.tx-sp span:nth-child(2n){color:#C4B5FD;text-shadow:0 0 10px var(--hx-vi)}.tx-sp span:nth-child(3n){color:var(--hx-ok);text-shadow:0 0 10px var(--hx-ok)}
+@keyframes txSpark{from{opacity:1;transform:translate(-50%,-50%) scale(.8)}to{opacity:0;transform:translate(-50%,-160%) scale(1.25)}}
+.tx-legacy{position:absolute;inset:0;z-index:10;background:#000}
+.tx-bind{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:100%;padding:24px;text-align:center;color:var(--hx-t)}
+.tx-bind b{font-size:1.1rem;color:var(--hx-cy)}.tx-bind p{margin:0;color:#C9D4E3;line-height:1.8;font-size:.86rem;max-width:340px}
+.tx-q{display:grid;grid-template-columns:1fr 1fr;width:min(320px,80vw);aspect-ratio:1;gap:4px}.tx-q i{display:grid;place-items:center;border:1px dashed var(--hx-line);border-radius:10px;font-style:normal;font-size:1.6rem;color:var(--hx-t2)}
+.tx-bind output{font:600 12px var(--hx-mono);color:var(--hx-ok)}.tx-bind button{padding:8px 14px;border-radius:7px;border:1px solid var(--hx-line);background:transparent;color:var(--hx-t2)}
+/* slow boot transition */
+.lkx-flash{transition:opacity .35s}
+.lkx-fb{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:12px;width:min(420px,86vw)}
+.lkx-fp{width:100%;height:4px;border-radius:4px;background:#10202a;overflow:hidden}.lkx-fp i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--hx-vi),var(--hx-cy),var(--hx-ok));box-shadow:0 0 12px var(--hx-cy)}
+.lkx-fb pre{margin:0;width:100%;min-height:120px;font:500 11px/1.6 var(--hx-mono);color:#7CF5C8;background:rgba(0,0,0,.75);border:1px solid rgba(0,240,255,.25);border-radius:6px;padding:8px 10px}
+.lkx-fb small{font:600 10.5px var(--hx-mono);color:var(--hx-t2)}
+@media (prefers-reduced-motion:reduce){.tx-cols pre,.tx-ring,.o3-fixw.bad{animation:none}}
 .qx-card{position:relative;display:flex;align-items:center;gap:12px;width:min(520px,calc(100% - 32px));margin:6px auto 18px;padding:16px 18px;border-radius:14px;border:1px solid rgba(60,255,154,.45);background:#000;color:#D6FFE8;overflow:hidden;cursor:pointer;text-align:start;box-shadow:0 0 24px rgba(60,255,154,.18),inset 0 0 20px rgba(60,255,154,.08);font-family:var(--f-body)}
 .qx-card canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.45}
 .qx-card::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.3) 2px 3px),linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.45));pointer-events:none}
@@ -2591,7 +2754,7 @@ html.locked .gate{display:flex}
     </div>
   </section>
 
-<div class="tkb" aria-hidden="true"><div class="tkb-r"><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span></div><div class="tkb-r rev"><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span></div></div>  <section class="tvl" aria-label="منصة تيكودينغ شارت">
+  <section class="tvl" aria-label="منصة تيكودينغ شارت">
     <button class="tvl-card" id="tvOpen" type="button">
       <span class="tvl-ic" aria-hidden="true"><svg viewBox="0 0 64 40"><path d="M2 32 L14 24 L22 28 L34 14 L44 20 L62 4" fill="none" stroke="#2962FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g fill="#089981"><rect x="10" y="18" width="4" height="10" rx="1"/><rect x="30" y="10" width="4" height="12" rx="1"/><rect x="50" y="6" width="4" height="10" rx="1"/></g><g fill="#F23645"><rect x="20" y="22" width="4" height="9" rx="1"/><rect x="40" y="16" width="4" height="8" rx="1"/></g></svg></span>
       <span class="tvl-t"><b>تيكودينغ شارت</b><small>منصة الشارت الكاملة: 19 مؤشرًا، أدوات رسم، قائمة متابعة، وتحليل ذكي يجمع الأرقام والأخبار</small></span>
@@ -2612,7 +2775,7 @@ html.locked .gate{display:flex}
       <span class="tvl-go">افتح المنصة</span>
     </button>
   </section>
-<div class="adslot ad-wide" data-ad="mid"></div>  <section class="vx" aria-label="سجل الصفقات">
+<div class="tkb" aria-hidden="true"><div class="tkb-r"><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span></div><div class="tkb-r rev"><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span><span class="tkb-s"><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span><span class="tkb-i"><img class="tkb-t" alt=""><b>منصة تيكو</b><i>TIKO</i><em>الأسهم · العملات · السلع</em></span></span></div></div><div class="hx-start" id="hxStart" aria-hidden="true"></div><div class="adslot ad-wide" data-ad="mid"></div>  <section class="vx" aria-label="سجل الصفقات">
     <div class="vx-stage">
       <div class="vx-halo" aria-hidden="true"></div>
       <div class="vx-room" id="vxCube" role="button" tabindex="0" aria-label="فتح سجل الصفقات: مكتب المحفظة التجريبية">
@@ -2692,7 +2855,7 @@ html.locked .gate{display:flex}
   const c=document.getElementById('waves');if(!c)return;const x=c.getContext('2d');
   const still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;let w,h,t=0;
   function size(){const r=c.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);w=r.width;h=r.height;c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0);}
-  function draw(){x.clearRect(0,0,w,h);
+  function draw(){if(!still&&window.TKVIS&&!TKVIS(c)){requestAnimationFrame(draw);return;}x.clearRect(0,0,w,h);
     for(let k=0;k<7;k++){x.beginPath();const base=h*(.52+k*.07),amp=6+k*2.2,len=w/(1.1+k*.12),ph=t*(.35+k*.05)+k;
       for(let i=0;i<=w;i+=6){const y=base+Math.sin(i/len*6.283+ph)*amp+Math.sin(i/(len*.53)*6.283-ph*.7)*amp*.35;i?x.lineTo(i,y):x.moveTo(i,y);}
       x.strokeStyle=`rgba(201,165,92,${.05+k*.022})`;x.lineWidth=1;x.stroke();}
@@ -3124,7 +3287,7 @@ html.locked .gate{display:flex}
     const fmtT=t=>new Date(t*1000).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Riyadh'});
     g.fillStyle=css('--muted');g.font='10px JetBrains Mono, monospace';g.textAlign='left';g.fillText(fmtT(t0),8,H-4);g.textAlign='right';g.fillText(fmtT(t1),W-padR,H-4);}
   function loop(){cancelAnimationFrame(L.raf);const start=performance.now();
-    const step=now=>{const prog=L.anim?Math.min(1,(now-start)/650):1;draw(prog);if(prog>=1)L.anim=null;if(!RM)L.raf=requestAnimationFrame(step);};L.raf=requestAnimationFrame(step);}
+    let lastD=0;const step=now=>{const cvx=document.getElementById('lvCanvas');if(!L.anim&&((window.TKVIS&&cvx&&!TKVIS(cvx))||now-lastD<90)){if(!RM)L.raf=requestAnimationFrame(step);return;}lastD=now;const prog=L.anim?Math.min(1,(now-start)/650):1;draw(prog);if(prog>=1)L.anim=null;if(!RM)L.raf=requestAnimationFrame(step);};L.raf=requestAnimationFrame(step);}
 
   function head(){const el=$('lvHead');if(!el||!L.pts.length)return;const last=L.pts[L.pts.length-1][1],ch=L.prev?(last/L.prev-1)*100:0,cls=ch>=0?'up':'down';
     const old=L.last;L.last=last;
@@ -3791,7 +3954,7 @@ html.locked .gate{display:flex}
   /* code rain on a canvas; stops by itself when the canvas leaves the page */
   function rain(cv,o){o=o||{};if(!cv||!cv.getContext)return()=>{};const g=cv.getContext('2d'),col=o.color||'0,255,140',fs=o.size||14;let W=0,H=0,cols=[],raf=0,alive=true,last=0;
     const fit=()=>{const d=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=Math.max(1,W*d);cv.height=Math.max(1,H*d);g.setTransform(d,0,0,d,0,0);cols=Array.from({length:Math.ceil(W/fs)},()=>Math.random()*-H/fs);g.fillStyle='#000';g.fillRect(0,0,W,H);};
-    const frame=t=>{if(!alive)return;if(!cv.isConnected){alive=false;return;}raf=requestAnimationFrame(frame);if(t-last<(o.slow?70:45))return;last=t;
+    const frame=t=>{if(!alive)return;if(!cv.isConnected){alive=false;return;}raf=requestAnimationFrame(frame);if(t-last<(o.slow?70:45))return;if(window.TKVIS&&!TKVIS(cv))return;last=t;
       if(Math.abs(cv.clientWidth-W)>2||Math.abs(cv.clientHeight-H)>2)fit();
       g.fillStyle=`rgba(0,0,0,${o.fade||.09})`;g.fillRect(0,0,W,H);g.font=`${fs}px ui-monospace,Menlo,monospace`;
       for(let i=0;i<cols.length;i++){const y=cols[i]*fs;g.fillStyle=Math.random()<.04?'rgba(220,255,235,.95)':`rgba(${col},${o.alpha||.75})`;g.fillText(pick(),i*fs,y);
@@ -3839,11 +4002,67 @@ html.locked .gate{display:flex}
     return{root};}
 
   /* a short black/green transition when a big screen opens */
-  let lastFlash=0;
-  function flash(label){if(RM||Date.now()-lastFlash<900)return;lastFlash=Date.now();const d=document.createElement('div');d.className='lkx-flash';d.setAttribute('aria-hidden','true');
-    d.innerHTML=`<canvas></canvas><b dir="ltr"></b>`;document.body.appendChild(d);rain(d.querySelector('canvas'),{fade:.2,size:13});decode(d.querySelector('b'),label||'DECRYPTING…',360);
-    setTimeout(()=>d.classList.add('out'),380);setTimeout(()=>d.remove(),760);}
-  const WATCH={rdo:'SCAN://TIKO-RADAR',vxo:'OPEN://TRADES-LOG',pfo:'OPEN://SYSTEM-RADAR',txApp:'OPEN://TIKODING-CHART',qxo:'OPEN://QUICK-DESK'};
+  /* a slow, deliberate boot sequence (about 4 s) when a big screen opens; taps pass through to what is under it */
+  let lastFlash=0;const LOC=/^(localhost|127\.)/.test(location.hostname);
+  function flash(label,ms){if(RM||Date.now()-lastFlash<1500)return;lastFlash=Date.now();ms=ms||(LOC?900:4200);const d=document.createElement('div');d.className='lkx-flash';d.setAttribute('aria-hidden','true');
+    const hex=()=>'0x'+Math.floor(Math.random()*0xFFFFFF).toString(16).toUpperCase().padStart(6,'0');
+    d.innerHTML=`<canvas></canvas><div class="lkx-fb"><b dir="ltr"></b><div class="lkx-fp"><i></i></div><pre dir="ltr"></pre><small dir="ltr"></small></div>`;document.body.appendChild(d);
+    rain(d.querySelector('canvas'),{fade:.14,size:13,slow:true});decode(d.querySelector('b'),label||'DECRYPTING…',Math.min(1400,ms*.35));
+    const pre=d.querySelector('pre'),bar=d.querySelector('.lkx-fp i'),sm=d.querySelector('small'),steps=['mount secure channel','verify signature · sha-256','load bytecode segments','map memory '+hex()+'..'+hex(),'decompile handlers','attach telemetry','render surface'];
+    const t0=performance.now();let k=0;const iv=setInterval(()=>{const p=Math.min(1,(performance.now()-t0)/ms);bar.style.width=(p*100).toFixed(1)+'%';sm.textContent=`${hex()} · ${(Math.random()*90+10).toFixed(1)}µs · ${Math.round(p*100)}%`;
+      if(p*steps.length>k&&k<steps.length){pre.textContent+=(k?'\n':'')+'> '+steps[k]+' … ok';k++;}if(p>=1)clearInterval(iv);},90);
+    setTimeout(()=>d.classList.add('out'),ms-350);setTimeout(()=>{clearInterval(iv);d.remove();},ms+50);}
+
+  /* ---------- tap-pattern lock: four hidden quarters, decoys everywhere ---------- */
+  const enc=new TextEncoder(),b64e=u=>btoa(String.fromCharCode(...new Uint8Array(u))),b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  async function pkey(pat,salt){const km=await crypto.subtle.importKey('raw',enc.encode('tk-pattern|'+pat),'PBKDF2',false,['deriveKey']);
+    return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:160000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+  const PK=id=>'tk-pat-'+id,LSg=k=>{try{return localStorage.getItem(k);}catch(_){return null;}},LSs=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v);}catch(_){}};
+  async function bindPat(id,pat,code){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),k=await pkey(pat,salt);
+    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,enc.encode(code));LSs(PK(id),JSON.stringify({s:b64e(salt),iv:b64e(iv),ct:b64e(ct)}));}
+  async function openPat(id,pat){const j=JSON.parse(LSg(PK(id))||'null');if(!j)return null;try{const k=await pkey(pat,b64d(j.s));return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(j.iv)},k,b64d(j.ct)));}catch(_){return null;}}
+  const taps=g=>g?g.split('.').reduce((a,x)=>a+(parseInt(x.slice(2))||0),0):0;
+  const groups=seq=>{const g=[];seq.forEach(q=>{const l=g[g.length-1];if(l&&l[0]===q)l[1]++;else g.push([q,1]);});return g.map(x=>x[0]+x[1]).join('.');};
+  const WORDS=['ACK','SYN','0xFF','NULL','ROOT','⟁','Σ','Δ','KEY?','PING','ECHO','HASH','XOR','ψ','λ','تحقق','مفتاح','عقدة','قناة','نبض','JMP','MOV','RET','CALL','0x1F','SEG','IRQ','BUS','TTL','NOP'];
+  const DECOY=['AUTH','SYNC','0x3F','NODE-7','KEY','SEED','HASH','ΣΔ','TRACE','PORT','ARM','RSA','XOR','ENTROPY','ROUTE','VOID'];
+  function tap(box,o){if(!box)return;const id=o.id||'vault',hasPat=()=>!!LSg(PK(id));let seq=[],idle=0,busy=false,lpT=0;
+    const hex=()=>Math.floor(Math.random()*65536).toString(16).padStart(4,'0').toUpperCase();
+    const col=()=>Array.from({length:26},()=>`${hex()} ${hex()} ${['MOV','XOR','JMP','CMP','LEA','CALL','RET','PUSH'][Math.random()*8|0]} r${Math.random()*16|0}, 0x${hex()}`).join('\n');
+    box.innerHTML=`<div class="lkx tapx${o.cls?' '+o.cls:''}"><canvas class="lkx-rain" aria-hidden="true"></canvas>
+      <div class="tx-cols" aria-hidden="true"><pre>${col()}</pre><pre>${col()}</pre><pre>${col()}</pre></div><div class="lkx-scan" aria-hidden="true"></div>
+      <div class="tx-hud" dir="ltr" aria-hidden="true"><span>SEC_CH ${hex()}:${hex()}</span><span class="tx-lat">Δt 0.00µs</span><span>NODE ${o.tag||'VAULT'}</span><span>RSA-OAEP · AES-GCM · PBKDF2</span></div>
+      <div class="tx-dec" aria-hidden="true">${DECOY.map((w,i)=>`<i style="--x:${[8,30,62,84,14,46,78,12,72,90,6,38,70,18,50,82][i]}%;--y:${[16,10,14,20,34,30,36,52,64,56,70,66,74,86,88,84][i]}%">${w}</i>`).join('')}</div>
+      <div class="tx-core" role="img" aria-label="${esc(o.title||'')}"><span class="tx-ring r1"></span><span class="tx-ring r2"></span><span class="tx-ring r3"></span><b dir="ltr">${esc(o.tag||'VAULT')}</b><em>${esc(o.title||'')}</em></div>
+      <pre class="tx-log" dir="ltr" aria-live="polite"></pre><div class="tx-sp" aria-hidden="true"></div><div class="tx-legacy" hidden></div></div>`;
+    const root=box.querySelector('.tapx'),sp=root.querySelector('.tx-sp'),log=root.querySelector('.tx-log'),lat=root.querySelector('.tx-lat');
+    rain(root.querySelector('.lkx-rain'),{fade:.1,size:12,slow:true,alpha:.6});
+    const say=(t,c)=>{const d=document.createElement('div');d.className='lkx-l '+(c||'');d.textContent='> '+t;log.appendChild(d);while(log.children.length>6)log.firstChild.remove();};
+    say(`session ${hex()}${hex()} · awaiting input`);say(hasPat()?'channel armed':'channel idle');
+    const spark=(x,y)=>{const s=document.createElement('span');s.textContent=WORDS[Math.random()*WORDS.length|0]+(Math.random()<.5?' '+hex():'');s.style.left=x+'px';s.style.top=y+'px';sp.appendChild(s);setTimeout(()=>s.remove(),1100);
+      lat.textContent=`Δt ${(Math.random()*40+2).toFixed(2)}µs`;if(Math.random()<.35)say(`${['probe','route','hash','sync','xor'][Math.random()*5|0]} ${hex()}:${hex()}`);};
+    const legacy=()=>{const L=root.querySelector('.tx-legacy');L.hidden=false;
+      pad(L,{title:o.title,sub:hasPat()?'الرمز الاحتياطي · بعده يمكنك تغيير النمط':'الرمز الحالي مرة واحدة على هذا الجهاز، ثم سجّل نمط اللمس',len:o.len||0,tag:o.tag,cls:'lkx-wide',
+        submit:async c=>{await o.submit(c);L.dataset.code=c;},ok:()=>bindFlow(L.dataset.code)});};
+    const bindFlow=code=>{const L=root.querySelector('.tx-legacy');let first=null,cur=[],t=0;
+      L.innerHTML=`<div class="tx-bind"><b>ربط نمط اللمس بهذا الجهاز</b><p>اضغط الأرباع الأربعة بنمطك (مثلًا: أسفل يمين ×3 ثم أعلى يسار ×2 …) ثم توقّف ثانيتين. أعِد النمط نفسه للتأكيد.</p><div class="tx-q"><i>↖</i><i>↗</i><i>↙</i><i>↘</i></div><output>بانتظار النمط الأول…</output><button type="button" data-skip>تخطي والدخول الآن</button></div>`;
+      const out=L.querySelector('output'),bx=L.querySelector('.tx-bind');
+      L.querySelector('[data-skip]').onclick=e=>{e.stopPropagation();o.ok&&o.ok();};
+      bx.addEventListener('pointerdown',e=>{if(e.target.closest('[data-skip]'))return;const r=bx.getBoundingClientRect(),q=(e.clientY-r.top<r.height/2?'T':'B')+(e.clientX-r.left<r.width/2?'L':'R');cur.push(q);out.textContent='• '.repeat(cur.length);
+        clearTimeout(t);t=setTimeout(async()=>{const g=groups(cur);cur=[];if(taps(g)<4){out.textContent='النمط قصير جدًا؛ أعد المحاولة بأربع ضغطات على الأقل.';return;}
+          if(!first){first=g;out.textContent='أعد النمط نفسه للتأكيد…';return;}
+          if(first!==g){first=null;out.textContent='النمطان مختلفان؛ ابدأ من جديد.';return;}
+          await bindPat(id,g,code);out.textContent='✓ تم الربط. من الآن يفتح هذا القفل بالنمط فقط على هذا الجهاز.';setTimeout(()=>o.ok&&o.ok(),1200);},1700);});};
+    const attempt=async()=>{const g=groups(seq);seq=[];if(busy||taps(g)<4)return;busy=true;
+      say('verify '+hex()+hex()+' …');const code=hasPat()?await openPat(id,g):null;
+      if(code){try{say('key unwrapped','ok');await o.submit(code);say('ACCESS GRANTED','ok');root.classList.add('okx');setTimeout(()=>o.ok&&o.ok(),RM?0:900);}catch(e){say(e&&e.message==='none'?(o.none||'no data yet'):'remote refused','bad');}}
+      else say(`checksum ${hex()} ≠ ${hex()}`,'dim');busy=false;};
+    root.addEventListener('pointerdown',e=>{if(e.target.closest('.tx-legacy:not([hidden])'))return;const r=root.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+      spark(x,y);seq.push((y<r.height/2?'T':'B')+(x<r.width/2?'L':'R'));if(seq.length>60)seq=seq.slice(-60);clearTimeout(idle);idle=setTimeout(attempt,1600);
+      if(e.target.closest('.tx-core')){clearTimeout(lpT);lpT=setTimeout(()=>{seq=[];clearTimeout(idle);legacy();},1300);}});
+    ['pointerup','pointercancel','pointerleave'].forEach(ev=>root.addEventListener(ev,()=>clearTimeout(lpT)));
+    return{root};}
+
+  const WATCH={rdo:'SCAN://TIKO-RADAR',nhApp:'OPEN://TURTLE-NEWS',ovApp:'OPEN://FULL-ANALYSIS',vxo:'OPEN://TRADES-LOG',pfo:'OPEN://SYSTEM-RADAR',txApp:'OPEN://TIKODING-CHART',qxo:'OPEN://QUICK-DESK'};
   new MutationObserver(ms=>{for(const m of ms){const el=m.target;if(el.id&&WATCH[el.id]&&m.oldValue!==null&&!el.hidden)flash(WATCH[el.id]);}})
     .observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['hidden'],attributeOldValue:true});
 
@@ -3853,7 +4072,7 @@ html.locked .gate{display:flex}
     document.querySelectorAll('main h2, .sec h2, h2.sec-t, .hx-dec').forEach(h=>io.observe(h));}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',heads);else setTimeout(heads,0);
 
-  window.LOCKX={rain,decode,term,pad,flash};
+  window.LOCKX={rain,decode,term,pad,flash,tap};
 })();
 
 (function(){
@@ -3907,7 +4126,7 @@ html.locked .gate{display:flex}
   function open(){const o=$('vxo');o.hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>o.classList.add('on'));
     if(BOOK){renderBook();return;}pin='';renderPin();setTimeout(()=>{const i=$('vxIn');if(i)i.focus();},60);}
   function close(){const o=$('vxo');o.classList.remove('on');document.body.style.overflow='';setTimeout(()=>{o.hidden=true;},260);}
-  function renderPin(msg){if(window.LOCKX){LOCKX.pad($('vxBody'),{title:'سجل الصفقات',sub:msg||'اكتب الرمز لفتح السجل',len:5,tag:'TRADES-LOG',
+  function renderPin(msg){if(window.LOCKX){LOCKX.tap($('vxBody'),{id:'vault',title:'سجل الصفقات',sub:msg||'اكتب الرمز لفتح السجل',len:5,tag:'TRADES-LOG',
       submit:async c=>{BOOK=await decrypt(c);},ok:()=>renderBook()});return;}
     $('vxBody').innerHTML=`<div class="vp">
       <div class="vp-ring"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 28v-8a12 12 0 0 1 24 0v8" fill="none" stroke="url(#vg)" stroke-width="5" stroke-linecap="round"/><rect x="12" y="27" width="40" height="30" rx="7" fill="url(#vg)"/><circle cx="32" cy="40" r="4" fill="#07111B"/><rect x="30.5" y="41" width="3" height="8" rx="1.5" fill="#07111B"/><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7E7BC"/><stop offset=".5" stop-color="#C9A55C"/><stop offset="1" stop-color="#8E6A2C"/></linearGradient></defs></svg></div>
@@ -4035,6 +4254,8 @@ html.locked .gate{display:flex}
   function ago(x){const t=ts(x);if(!t)return'—';const m=Math.max(0,Math.round((now()-t)/6e4));
     if(m<1)return'الآن';if(m<60)return`قبل ${m} د`;const h=Math.round(m/60);if(h<24)return`قبل ${h} س`;const d=Math.round(h/24);return d===1?'قبل يوم':d===2?'قبل يومين':`قبل ${d} أيام`;}
   const hrs=x=>{const t=ts(x);return t?(now()-t)/H:Infinity;};
+  /* lateness is judged at the moment of the snapshot (or now, after a live check), so an old snapshot never paints false reds */
+  let REFT=0;const hrsAt=x=>{const t=ts(x);return t?((REFT||now())-t)/H:Infinity;};
   const RANK={bad:3,warn:2,off:1,ok:0};
   const LBL={ok:'يعمل',warn:'متأخر',bad:'متعطل',off:'موقوف'};
   const worst=a=>a.filter(Boolean).reduce((w,s)=>RANK[s]>RANK[w]?s:w,'ok');
@@ -4043,10 +4264,10 @@ html.locked .gate{display:flex}
   function job(S,name,maxH){const w=S&&S.wf&&S.wf[name];if(!w)return{s:'off',why:'لا توجد بيانات تشغيل'};
     if(w.state==='off')return{s:'off',why:'موقوف يدويًا',w};
     const L=w.last||{};if(L.c==='failure'||L.c==='timed_out')return{s:'bad',why:`فشل آخر تشغيل ${ago(L.at)}`,w};
-    const a=hrs(w.ok_at);if(a>maxH*2)return{s:'bad',why:`آخر نجاح ${ago(w.ok_at)}، والمفترض كل ${fmtH(maxH/2)}`,w};
+    const a=hrsAt(w.ok_at);if(a>maxH*2)return{s:'bad',why:`آخر نجاح ${ago(w.ok_at)}، والمفترض كل ${fmtH(maxH/2)}`,w};
     if(a>maxH)return{s:'warn',why:`آخر نجاح ${ago(w.ok_at)}`,w};return{s:'ok',why:`آخر نجاح ${ago(w.ok_at)}`,w};}
   function file(S,key,maxH,label){const c=S&&S.commits&&S.commits[key];if(!c)return{s:'warn',why:`لا يوجد تحديث مسجل لـ${label}`};
-    const a=hrs(c.at);return{s:a>maxH*2?'bad':a>maxH?'warn':'ok',why:`آخر تحديث لـ${label} ${ago(c.at)}`,at:c.at};}
+    const a=hrsAt(c.at);return{s:a>maxH*2?'bad':a>maxH?'warn':'ok',why:`آخر تحديث لـ${label} ${ago(c.at)}`,at:c.at};}
   const fmtH=h=>h>=48?`${Math.round(h/24)} أيام`:h>=24?'يوم':`${Math.round(h)} ساعات`;
   const sum=(S,names,k)=>names.reduce((a,n)=>{const w=S&&S.wf&&S.wf[n];if(w&&w[k]){a[0]+=w[k][0];a[1]+=w[k][1];}return a;},[0,0]);
 
@@ -4056,7 +4277,7 @@ html.locked .gate{display:flex}
       role:'يتابع كل الوكلاء ويجمع حالتهم في تقرير واحد، ويرفع لك فقط ما يحتاج قرارك.',
       tasks:['متابعة حالة كل مكتب كل ساعتين','إصدار الحالة العامة للنظام','ترتيب أولويات الاجتماع اليومي','رفع التنبيهات التي تحتاج تدخلك'],
       tab:'pts'},
-    {id:'data',name:'مدير البيانات',en:'DATA',office:'البيانات',floor:1,shirt:'#1F6F5C',
+    {id:'data',name:'مدير البيانات',en:'DATA',office:'البيانات',floor:2,shirt:'#1F6F5C',
       role:'مسؤول عن أسعار الأسهم السعودية والأمريكية والعملات والسلع: جلبها يوميًا والتأكد من سلامتها ونشرها للموقع.',
       tasks:['جلب الشموع اليومية لكل الأصول','نشر ملف البيانات للموقع يوميًا','مزامنة الشموع وسد الفجوات','رفض أي سعر غير منطقي قبل نشره'],
       jobs:[['pro-data',8],['resync',30]],tab:'mon'},
@@ -4068,7 +4289,11 @@ html.locked .gate{display:flex}
       role:'يدرّس بوت المحفظة (الطالب) كل أسبوع: يجرّب تعديلات صغيرة على قواعده ويعيد تشغيلها على التاريخ الكامل وعلى آخر 90 يومًا، ولا يعتمد إلا تعديلًا واحدًا يجتاز كل البوابات. يسجّل كل ما رفضه وسبب الرفض، ويراقبه الحارس يوميًا ويتراجع عن أي تعديل يُضعف الأداء. في مكتبه مكتب صغير للطالب ورتبته التعليمية.',
       tasks:['الدراسة الأسبوعية كل خميس ليلًا','اختبار كل تعديل على التاريخ الكامل وآخر 90 يومًا مع الرسوم والانزلاق','بوابة الهضبة: رفض التحسن الذي يختفي عند خطوة مجاورة','تسجيل كل تعديل مرفوض وسبب رفضه','الحارس اليومي: التراجع عن أي تعديل يُضعف الأداء','قياس رتبة الطالب ورفعها عند اجتياز شروطها'],
       jobs:[['optimize',8*24],['guard',30]],tab:'mon'},
-    {id:'rad',name:'محلل الرادار',en:'RADAR',office:'الرادار',floor:2,shirt:'#1C5F8A',
+    {id:'stu',name:'الطالب',en:'STUDENT',office:'مكتب الطالب',floor:1,shirt:'#2B6CB0',hat:'#3A2A1E',
+      role:'بوت المحفظة التجريبية بصفته طالبًا: يتعلّم من دراسة البروفيسور الأسبوعية، وتُقاس مرحلته التعليمية من نتائجه الفعلية، وترتفع رتبته فقط عند اجتياز كل شروط المرحلة التالية.',
+      tasks:['تطبيق القواعد المعتمدة على كل إغلاق 4 ساعات','تجربة كل محور تعلّم في الدراسة الأسبوعية','الحفاظ على الخسارة القصوى ضمن الحد','رفع الرتبة عند اجتياز الشروط'],
+      jobs:[['pro-data',8]],tab:'mon'},
+    {id:'rad',name:'محلل الرادار',en:'RADAR',office:'الرادار',floor:3,shirt:'#1C5F8A',
       role:'يمسح الأصول بحثًا عن الفرص، ويقيّم كل صفقة قبل عرضها (A/B/C)، ويسجل النتائج ليتعلم من الأخطاء.',
       tasks:['مسح الأسواق وعرض الفرص','تقييم الصفقة ورفض الضعيف قبل العرض','رادار أرض وسماء للعملات المتذبذبة','تسجيل النتائج وتشخيص أسباب الفشل'],
       jobs:[['intraday',3]],tab:'rl'},
@@ -4080,7 +4305,7 @@ html.locked .gate{display:flex}
       role:'يجمع أخبار كل أصل من مصادر موثوقة، ويستبعد الأخبار غير المرتبطة، ويتابع التقويم الاقتصادي.',
       tasks:['جمع أخبار كل أصل','فلترة الأخبار غير المرتبطة','متابعة مواعيد التضخم والوظائف والفائدة'],
       jobs:[['pro-data',8]],tab:'mon'},
-    {id:'agt',name:'الوكيل الصوتي',en:'AGENT',office:'ناقش الوكيل',floor:3,shirt:'#0E7C86',
+    {id:'agt',name:'الوكيل الصوتي',en:'AGENT',office:'ناقش الوكيل',floor:4,shirt:'#0E7C86',
       role:'يرد على زوار الموقع بصوتك، ويسجل المحادثات مشفرة، ويرصد الأسئلة التي تحتاج تدخلك.',
       tasks:['الرد على الزوار بصوتك','سحب المحادثات وتشفيرها كل ساعتين','رصد المحادثات التي تتطلب تدخلًا','قياس رضا العميل'],
       jobs:[['agent-log',5]],tab:'ag'},
@@ -4100,9 +4325,9 @@ html.locked .gate{display:flex}
       role:'يولّد مقاطع الشرح الصوتي بصوتك كل أسبوع ويصحح النطق.',
       tasks:['توليد مقاطع الشرح الجديدة','تصحيح نطق الأسماء والأرقام'],
       jobs:[['voice',8*24]],tab:'pts'},
-    {id:'meet',name:'الاجتماع اليومي',en:'MEETING ROOM',office:'غرفة الاجتماعات',floor:4,room:1,
+    {id:'meet',name:'الاجتماع اليومي',en:'MEETING ROOM',office:'غرفة الاجتماعات',floor:5,room:1,
       role:'يجمع تقارير كل المكاتب في قائمة واحدة مرتبة: ما يحتاج قرارك أولًا، ثم المتأخر، ثم الموقوف.',tasks:[]},
-    {id:'lobby',name:'الاستقبال',en:'LOBBY',office:'الاستقبال',floor:5,room:1,
+    {id:'lobby',name:'الاستقبال',en:'LOBBY',office:'الاستقبال',floor:6,room:1,
       role:'بوابة الموقع: هل هو مفتوح للزوار أم مغلق، وحالة رمز الدخول.',tasks:[]}];
 
   /* ---------- the student (paper bot) and its educational rank ---------- */
@@ -4143,6 +4368,7 @@ html.locked .gate{display:flex}
     const f=M.fresh||[];if(f.length){const late=f.filter(x=>x.lag>=3).length,j=jobRate(S,['pro-data','resync']);r.data={v:pc(f.length-late,f.length),n:f.length,unit:'أصل',basis:'الأصول التي بياناتها محدثة دون تأخير',trend:j.trend};}
     const fc=fcRate(C.dj);if(fc)r.fc=fc;
     {const O=M.optimizer||[],ad=O.filter(e=>e.changed),gd=M.guard,rb=gd&&gd.rolled_back?1:0;if(O.length)r.prof={v:ad.length?pc(ad.length-rb,ad.length):null,n:ad.length,unit:'تعديل',basis:'التعديلات المعتمدة التي صمدت دون تراجع الحارس',trend:O.filter(e=>e.tested).map(e=>[e.date.slice(5),e.trials?pc(e.trials.filter(t=>t.ok).length,e.trials.length):null]).filter(t=>t[1]!=null)};}
+    {const sd=student(M);if((M.optimizer||[]).length)r.stu={v:sd.next?sd.next.pct:100,n:sd.next?sd.next.c.length:0,unit:'شرط',basis:`شروط الرتبة التالية «${sd.next?sd.next.n:sd.name}» المستوفاة`,trend:[]};}
     const it=(A&&A.items)||[];if(it.length)r.agt={v:pc(it.filter(x=>!x.fu).length,it.length),n:it.length,unit:'محادثة',basis:'المحادثات التي انتهت دون حاجة لتدخلك',trend:[]};
     const cs=(M.refs&&M.refs.coins)||[];if(cs.length)r.ref={v:pc(cs.filter(c=>c.dev_pct==null||Math.abs(c.dev_pct)<=1.5).length,cs.length),n:cs.length,unit:'عملة',basis:'العملات المطابقة للمرجع العالمي ضمن 1.5%',trend:[]};
     AG.forEach(a=>{if(r[a.id]||a.room||a.id==='mgr')return;const js=(a.jobs||[]).map(x=>x[0]);if(js.length)r[a.id]=jobRate(S,js);});
@@ -4150,7 +4376,7 @@ html.locked .gate{display:flex}
     r.mgr={v:vs.length?Math.round(vs.reduce((s,x)=>s+x.v,0)/vs.length*10)/10:null,n:vs.length,unit:'مكتب',basis:'متوسط نسب نجاح المكاتب التي لها بيانات',trend:[]};
     Object.keys(out).forEach(k=>{if(out[k])out[k].rate=r[k]||null;});return r;}
 
-  function evaluate(C){const S=C.sys,R=C.rep||{},M=R.monitor||{},A=C.agl,out={};
+  function evaluate(C){const S=C.sys,R=C.rep||{},M=R.monitor||{},A=C.agl,out={};REFT=S&&S.live?now():(S&&S.at?ts(S.at):now());
     for(const a of AG){if(a.room)continue;const js=(a.jobs||[]).map(([n,h])=>Object.assign({n},job(S,n,h)));
       let st=js.length?worst(js.map(j=>j.s)):'ok';const facts=[],kpi=[];let nowTxt='',act='';
       const offAll=js.length&&js.every(j=>j.s==='off');
@@ -4172,6 +4398,8 @@ html.locked .gate{display:flex}
         nowTxt=L?(L.changed?`اعتمد «${L.param}» ${L.from}→${L.to} ورفض ${rj??'—'}`:(L.tested?`درس ${L.tested} تعديلًا ورفضها كلها`:(L.note||'موقوف'))):'ينتظر أول دراسة أسبوعية';
         if(gd&&gd.state==='alert'){st='bad';act='الحارس أطلق تنبيهًا: '+((gd.reasons||[])[0]||'')+(gd.rolled_back?` · تراجع عن «${gd.rolled_back.param}»`:'')+' · الدراسة متوقفة حتى التعافي';}
         if(sd.next)facts.push(`الرتبة التالية «${sd.next.n}»: تحقق ${sd.next.c.filter(c=>c.ok).length} من ${sd.next.c.length} شروط`);}
+      if(a.id==='stu'){const sd=student(M);kpi.push(['الرتبة',sd.name],['المرحلة',`${sd.lv+1} / ${sd.max+1}`],['التقدم للرتبة التالية',sd.next?sd.next.pct+'%':'أعلى رتبة'],['معامل الربح',sd.x.pf??'—'],['نسبة النجاح',sd.x.win!=null?sd.x.win+'%':'—'],['أسابيع الدراسة',sd.x.w??'—']);
+        nowTxt=sd.next?`يدرس للوصول إلى «${sd.next.n}» (${sd.next.c.filter(c=>c.ok).length}/${sd.next.c.length})`:'بلغ أعلى رتبة';}
       if(a.id==='rad'){const f=file(S,'radar',8,'مسح الرادار'),L=window.RLOG?RLOG.stats():null;st=worst([st,f.s==='bad'?'warn':f.s]);facts.push(f.why);
         kpi.push(['آخر مسح',ago(f.at)],['صفقات مسجلة',L?L.n:'—'],['نسبة النجاح',L&&L.rate!=null?L.rate.toFixed(0)+'%':'—'],['مفتوحة الآن',L?L.open:'—']);
         nowTxt=L&&L.open?`يتابع ${L.open} صفقة من سجل الرادار`:'يمسح الأسواق وينتظر فرصة تجتاز التقييم';
@@ -4207,7 +4435,7 @@ html.locked .gate{display:flex}
     const items=[];AG.forEach(a=>{const v=out[a.id];if(!v||a.room||a.id==='mgr')return;if(v.s!=='ok')items.push({a,v});});
     items.sort((x,y)=>RANK[y.v.s]-RANK[x.v.s]);out.meet={s:items.length?worst(items.map(i=>i.v.s)):'ok',now:items.length?`${items.length} بنود على جدول الأعمال`:'لا بنود: كل المكاتب تعمل',items,facts:[],kpi:[]};
     rates(C,out);return out;}
-  const JN={'pro-data':'تحديث بيانات المنصة','resync':'مزامنة الشموع','intraday':'التحديث اللحظي','agent-log':'سحب المحادثات','health':'فحص الموقع','gate':'بوابة الجودة','daily-report':'التقرير اليومي','voice':'توليد الصوت','qa':'اختبار الصفحة','optimize':'الدراسة الأسبوعية','guard':'حارس الأداء','quick':'المحاكاة السريعة'};
+  const JN={'pro-data':'تحديث بيانات المنصة','resync':'مزامنة الشموع','intraday':'التحديث اللحظي','agent-log':'سحب المحادثات','health':'فحص الموقع','gate':'بوابة الجودة','daily-report':'التقرير اليومي','voice':'توليد الصوت','qa':'اختبار الصفحة','optimize':'الدراسة الأسبوعية','guard':'حارس الأداء','quick':'المحاكاة السريعة','agent':'بناء الوكيل الصوتي','agent-test':'اختبار الوكيل الصوتي','lib':'تحديث المكتبات'};
 
   /* ---------- drawing ---------- */
   const LIGHT={ok:'#3BE08A',warn:'#FFC93C',bad:'#FF4D4D',off:'#7D8794'};
@@ -4265,7 +4493,34 @@ html.locked .gate{display:flex}
       sc.addEventListener('pointermove',e=>{const r=sc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;bd.style.setProperty('--ry',(x*8)+'deg');bd.style.setProperty('--rx',(-y*5)+'deg');});
       sc.addEventListener('pointerleave',()=>{bd.style.removeProperty('--ry');bd.style.removeProperty('--rx');});}}
 
-  window.SYSR={html:C=>{if(window.OFFICE3D)return OFFICE3D.render(C);if(C.agent){C._st=evaluate(C);return detail(C,C.agent);}return html(C);},bind:(el,C,r)=>window.OFFICE3D?OFFICE3D.bind(el,C,r):bind(el,C,r),_u:{AG,JN,ago,LIGHT,LBL,student},evaluate,agents:AG,
+  /* ---------- live check + repair: read the public run list of every job, and re-run a job on demand ---------- */
+  const REPO='shaibanor/Wave',GH='https://api.github.com/repos/'+REPO;
+  const FIXMAP={mgr:[],data:['pro-data','resync'],pf:['pro-data','quick'],prof:['optimize','guard'],stu:['optimize','pro-data'],rad:['intraday'],live:['intraday'],news:['pro-data','daily-report'],
+    agt:['agent','agent-test','agent-log'],qa:['qa','health','gate'],ref:['pro-data'],fc:[],vox:['voice']};
+  const HOWTO={'pro-data':'يجلب أسعار كل الأصول وأخبارها ويحدّث المنصة. إذا فشل فالسبب غالبًا مصدر أسعار لم يرد مؤقتًا؛ إعادة التشغيل تكفي في أغلب الحالات.',
+    'resync':'يطابق الشموع اليومية من مصدرين. إذا فشل أعد تشغيله؛ لا يؤثر على الموقع فورًا.',
+    'intraday':'يحدّث الأسعار اللحظية كل ربع ساعة أثناء الجلسات. التأخير خارج الجلسات طبيعي، والفشل المتكرر يعني مصدرًا محجوبًا.',
+    'agent':'يعيد بناء الوكيل الصوتي وإعداداته. شغّله إذا توقف الوكيل عن الرد أو تغيّرت تعليماته.',
+    'agent-test':'يختبر الوكيل الصوتي بمحادثة تجريبية ويتأكد أنه يرد. شغّله بعد أي إصلاح للوكيل.',
+    'agent-log':'يسحب سجل محادثات الوكيل ويحدّث رادار النظام نفسه (هذه الشاشة).',
+    'qa':'يفتح الصفحة في متصفح آلي ويبحث عن أخطاء. الفشل يعني خطأ ظاهرًا في الصفحة.',
+    'health':'يفحص أن الموقع يفتح وأن بياناته حديثة.','gate':'بوابة الجودة قبل النشر.',
+    'voice':'يولّد مقاطع الشرح الصوتي أسبوعيًا. يحتاج مفتاح ElevenLabs المحفوظ في أسرار GitHub.',
+    'optimize':'الدراسة الأسبوعية للبروفيسور: تجرب التعديلات وتسجل المرفوض.','guard':'الحارس اليومي: يتراجع عن أي تعديل يُضعف الأداء.',
+    'quick':'جلسة المحاكاة السريعة (ورقية).','daily-report':'التقرير اليومي للتداول التجريبي.','lib':'تحديث المكتبات.'};
+  const TK={get(){try{return localStorage.getItem('tk-gh')||'';}catch(_){return'';}},set(v){try{v?localStorage.setItem('tk-gh',v.trim()):localStorage.removeItem('tk-gh');}catch(_){}}};
+  async function live(S){if(!S)return S;try{const r=await fetch(GH+'/actions/runs?per_page=100',{cache:'no-store',headers:TK.get()?{Authorization:'Bearer '+TK.get()}:{}});if(!r.ok)return S;
+      const j=await r.json(),by={};(j.workflow_runs||[]).forEach(x=>{const n=(x.path||'').split('/').pop().replace(/\.yml$/,'');(by[n]=by[n]||[]).push(x);});
+      S.wf=S.wf||{};Object.entries(by).forEach(([n,rs])=>{const w=S.wf[n]=S.wf[n]||{state:'on',days:[],d1:[0,0],d7:[0,0]};const L=rs[0],ok=rs.find(x=>x.conclusion==='success');
+        const dur=x=>x.run_started_at&&x.updated_at&&x.status==='completed'?Math.round((Date.parse(x.updated_at)-Date.parse(x.run_started_at))/1000):null;
+        w.last={st:L.status,c:L.conclusion,at:L.created_at,ev:L.event,dur:dur(L),url:L.html_url,id:L.id};if(ok)w.ok_at=ok.created_at;
+        w.runs=rs.slice(0,8).map(x=>({at:x.created_at,c:x.conclusion||x.status,dur:dur(x),ev:x.event,url:x.html_url}));});
+      S.live=Date.now();}catch(_){}return S;}
+  async function dispatch(name){const t=TK.get();if(!t)return{ok:false,need:true};
+    try{const r=await fetch(`${GH}/actions/workflows/${name}.yml/dispatches`,{method:'POST',headers:{Authorization:'Bearer '+t,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify({ref:'main'})});
+      if(r.status===204)return{ok:true};return{ok:false,msg:r.status===401||r.status===403?'المفتاح غير صالح أو لا يملك صلاحية تشغيل المهام':r.status===404?'المهمة غير موجودة':'رفض GitHub الطلب ('+r.status+')'};}
+    catch(_){return{ok:false,msg:'تعذر الاتصال بـ GitHub'};}}
+  window.SYSR={html:C=>{if(window.OFFICE3D)return OFFICE3D.render(C);if(C.agent){C._st=evaluate(C);return detail(C,C.agent);}return html(C);},bind:(el,C,r)=>window.OFFICE3D?OFFICE3D.bind(el,C,r):bind(el,C,r),_u:{AG,JN,ago,LIGHT,LBL,student,FIXMAP,HOWTO,TK,REPO,dispatch,live},evaluate,agents:AG,
     status:C=>{const s=evaluate(C);return s.mgr.s;}};
 })();
 
@@ -4287,6 +4542,7 @@ html.locked .gate{display:flex}
     rad:{prop:'radar',wall:'#10232c',floor:'tile',accent:'#3BE0C8',title:'غرفة الرصد'},
     live:{prop:'ticker',wall:'#1c1830',floor:'tile',accent:'#C49BFF',title:'غرفة الأسعار'},
     news:{prop:'tv',wall:'#2c1a1d',floor:'wood',accent:'#FF8A6B',title:'غرفة الأخبار'},
+    stu:{prop:'board',wall:'#14203a',floor:'carpet',accent:'#7FB2FF',title:'مكتب الطالب'},
     prof:{prop:'board',wall:'#17241d',floor:'carpet',accent:'#7FE0A0',title:'قاعة البروفيسور'},
     fc:{prop:'globe',wall:'#221a33',floor:'carpet',accent:'#B79CFF',title:'مختبر التوقع'},
     agt:{prop:'mic',wall:'#122a2c',floor:'carpet',accent:'#4FD1E0',title:'كابينة الوكيل'},
@@ -4312,7 +4568,8 @@ html.locked .gate{display:flex}
   function room3d(a,v){const s=v?v.s:'off',L=LOOK[a.id]||{};let inner='';
     if(a.id==='meet'){const n=v&&v.items?v.items.length:0;inner=`<span class="o3-board">DAILY<br><b>${n}</b> بنود</span><span class="o3-mtable"></span>${'<i class="o3-chair"></i>'.repeat(5)}`;}
     else if(a.id==='lobby'){inner=`<span class="o3-door ${s}"><b>${s==='off'?'مغلق':'مفتوح'}</b></span><span class="o3-rdesk"></span>`;}
-    else if(a.id==='prof'){const sd=v&&v._sd;inner=`<span class="o3-lamp"></span><span class="o3-chalk"><i>∑ PF · p&lt;5%</i></span><span class="o3-mini">${orb(s)}${person(a,s,'')}<span class="o3-desk"></span></span><span class="o3-kid">${person({shirt:'#2B6CB0',hat:'#3A2A1E'},'ok','')}<b>${sd?'🎓'+(sd.lv+1):'🎓'}</b><span class="o3-kdesk"></span></span>`;}
+    else if(a.id==='prof'){inner=`<span class="o3-lamp"></span><span class="o3-chalk"><i>∑ PF · p&lt;5%</i></span><span class="o3-mini">${orb(s)}${person(a,s,'')}<span class="o3-desk"></span></span>`;}
+    else if(a.id==='stu'){const sd=v&&v._sd;inner=`<span class="o3-lamp"></span><span class="o3-chalk"><i>RANK ${sd?sd.lv+1:'?'} / ${sd?sd.max+1:6}</i></span><span class="o3-mini">${orb(s)}${person(a,s,'')}<span class="o3-desk"></span></span><span class="o3-kid"><b>🎓${sd?sd.lv+1:''}</b></span>`;}
     else inner=`<span class="o3-lamp"></span>${mini(a,s)}<span class="o3-mini">${orb(s)}${person(a,s,a.id==='agt'?'head':'')}<span class="o3-mon ${s}"><i></i><i></i><i></i><i></i></span><span class="o3-desk"></span></span>`;
     return`<button type="button" class="o3-room ${s}${a.room?' wide':''}" data-ag="${a.id}" style="--wall:${L.wall||'#2a1d14'};--acc:${L.accent||'#F6E27A'}" aria-label="${esc(a.name)}: ${LBL[s]}">
       <span class="o3-w o3-back"></span><span class="o3-w o3-l"></span><span class="o3-w o3-r"></span><span class="o3-w o3-f ${L.floor||'wood'}"></span>
@@ -4369,7 +4626,9 @@ html.locked .gate{display:flex}
       if(log.length)F.push({id:'log',t:'سجل العمل',ic:'🗂',h:`<ol class="o3-log">${log.slice(0,12).map(r=>`<li class="${r.c}"><i></i><b>${esc(U().JN[r.n]||r.n)}</b><span>${r.c==='success'?'نجح':r.c==='failure'?'فشل':r.c==='cancelled'?'أُلغي':esc(r.c)}${r.dur!=null?' · '+Math.max(1,Math.round(r.dur/60))+' د':''}${r.ev==='workflow_dispatch'?' · تشغيل يدوي':''}</span><small>${U().ago(r.at)}</small></li>`).join('')}</ol>`});}
     if(v.facts&&v.facts.length)F.push({id:'reports',t:a.id==='mgr'?'تقرير شيبان':'التقارير',ic:'📄',h:`<ul class="sr-facts">${v.facts.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`});
     const sp=special(C,a,v);if(sp)F.push(sp);
-    if(a.id==='prof'){F.push(studentFile(C));F.push(rejectsFile(C,v));}
+    if(a.id==='prof')F.push(rejectsFile(C,v));
+    if(a.id==='stu')F.push(axesFile(C));
+    {const fx=fixFile(C,a,v);if(fx)F.push(fx);}
     F.push({id:'inbox',t:'صندوق الوارد',ic:'📥',h:v.act?`<div class="sr-act"><span>الإجراء المقترح</span><b>${esc(v.act)}</b></div>`:'<p class="pf-e">لا يوجد ما يحتاج تدخلك في هذا المكتب.</p>'});
     if(a.role)F.push({id:'role',t:'المسؤوليات',ic:'🪪',h:`<p class="sr-role">${esc(a.role)}</p>${a.tab?`<button type="button" class="pf-go sr-open" data-pt="${a.tab}">افتح التقرير الكامل</button>`:''}`});
     return F;}
@@ -4394,7 +4653,45 @@ html.locked .gate{display:flex}
     return{id:'special',t:'سبورة الدراسة',ic:'🧪',h:`${st?`<div class="pf-g"><div class="pf-c"><span>جلسات الدراسة</span><b class="num">${st.runs}</b></div><div class="pf-c"><span>تعديلات جُرّبت</span><b class="num">${st.tested}</b></div><div class="pf-c"><span>اعتُمد</span><b class="num">${st.adopted}</b></div><div class="pf-c"><span>منذ</span><b class="num">${esc(st.first||'—')}</b></div></div>`:''}
       ${O.length?`<ol class="o3-log">${O.map(e=>`<li class="${e.changed?'success':e.tested?'neutral':'failure'}"><i></i><b>${esc(e.date)} · ${e.changed?`اعتمد «${esc(e.param)}» ${f2(e.from)}→${f2(e.to)}`:e.tested?`رفض ${e.tested} تعديلًا`:'موقوف'}</b><span>${e.before&&e.before.full?`قبل: نجاح ${f2(e.before.full.win)}% · معامل ربح ${f2(e.before.full.pf)} · خسارة قصوى ${f2(e.before.full.dd)}%`:esc(e.note||'')}${e.after&&e.after.full?` ← بعد: نجاح ${f2(e.after.full.win)}% · معامل ربح ${f2(e.after.full.pf)}`:''}</span><small>${e.trials?`${e.trials.filter(t=>t.ok).length} اجتاز / ${e.trials.length}`:''}</small></li>`).join('')}</ol>`:'<p class="pf-e">لم تُسجل دراسة بعد.</p>'}
       <p class="pf-e">المنهج: تعديل واحد في كل مرة، يُختبر على كامل التاريخ وعلى آخر 90 يومًا مع الرسوم والانزلاق، ويُرفض كل تحسن يظهر في نقطة واحدة ويختفي بجانبها.</p>`};}
-  function special(C,a,v){if(a.id==='prof')return journal(C);const R=C.rep||{},M=R.monitor||{},st=C._st;
+  /* ---------- the student's learning axes ---------- */
+  const AXES=[['حد RSI للدخول','trigger.rsi_below','متى يعدّ السعر متشبعًا بيعًا بما يكفي للدخول'],['مسافة الوقف (ATR)','stop.atr_k','بُعد وقف الخسارة بمضاعفات متوسط المدى الحقيقي'],
+    ['نقل الوقف للتعادل عند نسبة من الهدف','breakeven_at_target_frac','متى يُنقل الوقف إلى سعر الدخول لحماية رأس المال'],['أقصى مدة للصفقة (أيام)','max_hold_days','إغلاق الصفقة التي لم تتحرك بعد مدة'],
+    ['أقصى هدف (ATR)','adaptive.max_atr','سقف الهدف حسب تذبذب الأصل'],['أقل ربح صافٍ مقبول %','adaptive.min_net_pct','رفض الصفقة التي لا يغطي ربحها الرسوم والانزلاق'],
+    ['رافعة العملات (محاكاة)','leverage.cx','حجم الرافعة في المحاكاة، ولا تتجاوز 5'],['وقف متحرك بعد الأمان (ATR)','trail_atr','ملاحقة السعر بالوقف بعد أن تصبح الصفقة آمنة'],
+    ['جني جزئي عند الهدف (نسبة)','partial_tp','بيع جزء من الصفقة عند الهدف الأول'],['تأكيد الحجم (من متوسط 20 شمعة)','vol_confirm','اشتراط حجم تداول أعلى من المعتاد عند الدخول'],
+    ['فلتر قوة الاتجاه ADX على 4 ساعات','adx_min','الدخول فقط إذا كان للاتجاه قوة كافية'],['تأكيد نمط الشموع اليابانية','candle_confirm','شمعة انعكاس (مطرقة، ابتلاع…) تؤكد الدخول'],
+    ['البيع على المكشوف (محاكاة)','short.enabled','صفقات الهبوط في المحاكاة'],['صفقات التشبع البيعي','oversold.enabled','نوع دخول عند الهبوط الحاد'],
+    ['صفقات مناطق الدعم القوية','zone.enabled','الدخول من مناطق لمسها السعر مرات كثيرة'],['تشغيل السيولة في بيتكوين وإيثريوم','park.enabled','استثمار النقد الخامل مؤقتًا'],
+    ['فلتر الأخبار','news_filter','تجنب الدخول قبل الأخبار السلبية'],['اشتراط شمعة خضراء','trigger.green_candle','انتظار شمعة صاعدة قبل الدخول']];
+  const dig=(o,p)=>p.split('.').reduce((x,k)=>x&&x[k]!==undefined?x[k]:undefined,o);
+  function axesFile(C){const M=(C.rep||{}).monitor||{},O=M.optimizer||[],RN=M.rules_now||null,T={};
+    O.forEach(e=>(e.trials||[]).forEach(t=>{const o=T[t.p]=T[t.p]||{n:0,ok:0,best:null,why:{}};o.n++;if(t.ok)o.ok++;if(o.best==null||t.pf>o.best.pf)o.best=t;(t.why||[]).forEach(w=>o.why[w]=(o.why[w]||0)+1);}));
+    const ad={};O.filter(e=>e.changed).forEach(e=>{ad[e.param]=e;});
+    const rows=AXES.map(([lb,path,ds])=>{const t=T[lb],cur=RN?dig(RN,path):undefined,top=t?Object.entries(t.why).sort((a,b)=>b[1]-a[1])[0]:null,A=ad[lb];
+      const st=A?'adopted':t?(t.ok?'pass':'studied'):'queued';
+      return`<li class="ax ${st}"><div class="ax-h"><b>${esc(lb)}</b><em>${st==='adopted'?'تعلّمه واعتُمد':st==='pass'?'اجتاز وينتظر':st==='studied'?'درسه ورُفض':'في الطابور'}</em></div><small>${esc(ds)}</small>
+        <div class="ax-k"><span>القيمة الحالية <b class="num">${cur===undefined?'—':esc(String(cur))}</b></span><span>مرات التجربة <b class="num">${t?t.n:0}</b></span><span>أفضل معامل ربح <b class="num">${t&&t.best?f2(t.best.pf)+' عند '+f2(t.best.to):'—'}</b></span></div>
+        ${top?`<small class="ax-w">أكثر سبب للرفض: ${esc(top[0])}</small>`:''}${A?`<small class="ax-w ok">اعتُمد ${esc(A.date)}: ${f2(A.from)}→${f2(A.to)}</small>`:''}</li>`;}).join('');
+    const n=k=>AXES.filter(([lb])=>k(lb)).length;
+    return{id:'axes',t:'محاور التعلّم',ic:'📚',h:`<div class="pf-g"><div class="pf-c"><span>محاور التعلّم</span><b class="num">${AXES.length}</b></div><div class="pf-c"><span>دُرست</span><b class="num">${n(lb=>T[lb])}</b></div><div class="pf-c"><span>اعتُمد منها</span><b class="num">${n(lb=>ad[lb])}</b></div><div class="pf-c"><span>في الطابور</span><b class="num">${n(lb=>!T[lb])}</b></div></div>
+      <ol class="ax-list">${rows}</ol><p class="pf-e">كل محور قاعدة واحدة من قواعد المحفظة. يجرّب البروفيسور قيمًا مجاورة للقيمة الحالية كل أسبوع، ولا يعتمد إلا ما يجتاز كل البوابات.</p>`};}
+
+  /* ---------- repair console ---------- */
+  function fixRows(C,ids){const S=C.sys||{},seen=new Set(),out=[];
+    ids.forEach(id=>(U().FIXMAP[id]||[]).forEach(n=>{if(seen.has(n))return;seen.add(n);const w=S.wf&&S.wf[n],L=w&&w.last;
+      const st=!w?'off':w.state==='off'?'off':L&&(L.c==='failure'||L.c==='timed_out'||L.c==='cancelled')?'bad':L&&L.st&&L.st!=='completed'?'run':'ok';out.push({n,w,L,st});}));return out;}
+  function fixList(rows,all){const tk=!!U().TK.get(),R=U().REPO;
+    return`<ol class="fx-list">${rows.filter(r=>all||r.st!=='ok').map(r=>`<li class="fx ${r.st}"><div class="fx-h"><i></i><b>${esc(U().JN[r.n]||r.n)}</b><em>${r.st==='bad'?'فشل آخر تشغيل':r.st==='run'?'يعمل الآن':r.st==='off'?'لا بيانات':'سليم'}</em></div>
+      <p>${esc(U().HOWTO[r.n]||'')}</p><small>${r.L?`آخر تشغيل ${U().ago(r.L.at)}${r.L.dur!=null?' · '+Math.max(1,Math.round(r.L.dur/60))+' د':''}`:''}${r.w&&r.w.ok_at?` · آخر نجاح ${U().ago(r.w.ok_at)}`:''}</small>
+      <div class="fx-b"><button type="button" class="fx-run" data-fix="${r.n}">⚡ FIX · إعادة التشغيل</button>${r.L&&r.L.url?`<a href="${esc(r.L.url)}" target="_blank" rel="noopener">سجل آخر تشغيل</a>`:''}<a href="https://github.com/${R}/actions/workflows/${r.n}.yml" target="_blank" rel="noopener">صفحة المهمة</a></div><output class="fx-o" data-fxo="${r.n}"></output></li>`).join('')||'<li class="fx ok"><div class="fx-h"><i></i><b>لا أعطال</b><em>كل المهام سليمة</em></div></li>'}</ol>
+      <details class="fx-key"${tk?'':' open'}><summary>${tk?'مفتاح الإصلاح محفوظ على هذا الجهاز':'فعّل زر FIX مرة واحدة'}</summary>
+        <ol class="fx-steps"><li>افتح <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">صفحة إنشاء مفتاح في GitHub</a>.</li><li>Repository access: اختر <b>Only select repositories</b> ثم <b>Wave</b>.</li><li>Permissions → Repository → <b>Actions: Read and write</b>، ثم Generate token وانسخه.</li><li>الصقه هنا واضغط حفظ. يبقى على هذا الجهاز فقط ولا يُرفع لأي مكان.</li></ol>
+        <div class="fx-tk"><input type="password" data-tk placeholder="github_pat_…" dir="ltr" autocomplete="off"><button type="button" data-tk-save>حفظ</button>${tk?'<button type="button" data-tk-del>حذف المفتاح</button>':''}</div></details>`;}
+  function fixFile(C,a,v){const ids=a.id==='mgr'?Object.keys(U().FIXMAP):[a.id];if(a.id!=='mgr'&&!(U().FIXMAP[a.id]||[]).length)return null;const rows=fixRows(C,ids),bad=rows.filter(r=>r.st!=='ok');
+    const S=C.sys||{},why=a.id==='mgr'?U().AG.filter(x=>!x.room&&x.id!=='mgr'&&C._st[x.id]&&C._st[x.id].s!=='ok').map(x=>`<li class="${C._st[x.id].s}"><button type="button" data-ag="${x.id}"><i style="--c:${LIGHT[C._st[x.id].s]}"></i><b>${esc(x.name)}</b><span>${esc(C._st[x.id].act||C._st[x.id].now||'')}</span></button></li>`).join(''):'';
+    return{id:'fix',t:a.id==='mgr'?'غرفة الأعطال والإصلاح':'الإصلاح',ic:'🛠',bad:bad.length,h:`<p class="fx-live">${S.live?`فحص مباشر من GitHub ${U().ago(S.live)}`:`آخر رصد مسجل ${U().ago(S.at)} · يتم الآن فحص مباشر`}</p>
+      ${a.id==='mgr'?`<h4>المكاتب التي ليست خضراء</h4>${why?`<ol class="sr-agenda">${why}</ol>`:'<p class="pf-e">كل المكاتب خضراء.</p>'}<h4>المهام الآلية</h4>`:''}${fixList(rows,a.id!=='mgr')}`};}
+  function special(C,a,v){if(a.id==='prof')return journal(C);if(a.id==='stu')return Object.assign(studentFile(C),{id:'special'});const R=C.rep||{},M=R.monitor||{},st=C._st;
     if(a.id==='mgr')return{id:'special',t:'لوحة المكاتب',ic:'🏢',h:`<div class="sr-roll">${U().AG.filter(x=>!x.room&&x.id!=='mgr').map(x=>{const s=st[x.id];return`<button type="button" data-ag="${x.id}"><i style="--c:${LIGHT[s.s]}"></i>${esc(x.name)}<small>${esc(s.now||'')}</small></button>`;}).join('')}</div>`};
     if(a.id==='data'){const f=(M.fresh||[]).slice().sort((x,y)=>y.lag-x.lag);return f.length?{id:'special',t:'سجل الأصول',ic:'🗄',h:`<table class="pf-t"><tr><th>الأصل</th><td>السوق</td><td>آخر يوم</td><td>التأخر</td></tr>${f.slice(0,24).map(x=>`<tr class="${x.lag>=3?'pf-warn':''}"><th>${esc(x.name)}</th><td>${esc(x.market||'')}</td><td class="num">${esc(x.d)}</td><td class="num">${x.lag} ي</td></tr>`).join('')}</table>`}:null;}
     if(a.id==='pf'){const o=M.open||[],out=(M.outcomes||[]).slice(-8).reverse();return{id:'special',t:'الخزنة: الصفقات',ic:'🔐',h:`<h4>مفتوحة</h4>${o.length?`<table class="pf-t"><tr><th>الأصل</th><td>الدخول</td><td>الآن</td><td>الهدف</td><td>الوقف</td><td>$</td></tr>${o.map(t=>`<tr><th>${esc(t.name)}</th><td class="num">${fmt(t.entry,2)}</td><td class="num">${fmt(t.now,2)}</td><td class="num">${fmt(t.target,2)}</td><td class="num">${fmt(t.stop,2)}</td><td class="num ${t.upnl_usd<0?'neg':'pos'}">${fmt(t.upnl_usd,1)}</td></tr>`).join('')}</table>`:'<p class="pf-e">لا صفقات مفتوحة.</p>'}<h4>آخر النتائج</h4>${out.length?`<div class="o3-dots">${out.map(x=>`<span class="${x.win?'w':'l'}" title="${esc(x.asset)}">${esc(x.asset)}<b class="num">${x.pnl_pct>0?'+':''}${fmt(x.pnl_pct,1)}%</b></span>`).join('')}</div>`:'<p class="pf-e">لا نتائج بعد.</p>'}`};}
@@ -4432,7 +4729,9 @@ html.locked .gate{display:flex}
       <span class="o3-obj o3-odesk" style="--x:50%;--z:200"><i></i></span>
       <button type="button" class="o3-obj o3-tray" data-file="inbox" style="--x:30%;--z:215" aria-label="صندوق الوارد">${v.act?'<b>1</b>':''}</button>`:''}
       <span class="o3-obj o3-cab" style="--x:86%;--z:130">${['tasks','reports','log','role'].filter(has).map(id=>`<button type="button" data-file="${id}"><i></i>${esc((F.find(f=>f.id===id)||{}).t)}</button>`).join('')}</span>
-      ${a.id==='prof'?`<button type="button" class="o3-obj o3-kidw" data-file="student" style="--x:20%;--z:170" aria-label="مكتب الطالب">${person({shirt:'#2B6CB0',hat:'#3A2A1E'},'ok','')}<span class="o3-kdesk"></span><b>🎓 ${esc(U().student((C.rep||{}).monitor||{}).name)}</b></button><button type="button" class="o3-obj o3-rejw" data-file="rejects" style="--x:76%;--z:150" aria-label="المرفوض والأخطاء"><b>⛔</b><i>المرفوض</i></button>`:''}
+      ${a.id==='prof'?`<button type="button" class="o3-obj o3-kidw" data-ag="stu" style="--x:20%;--z:170" aria-label="مكتب الطالب">${person({shirt:'#2B6CB0',hat:'#3A2A1E'},'ok','')}<span class="o3-kdesk"></span><b>🎓 ${esc(U().student((C.rep||{}).monitor||{}).name)} ←</b></button><button type="button" class="o3-obj o3-rejw" data-file="rejects" style="--x:76%;--z:150" aria-label="المرفوض والأخطاء"><b>⛔</b><i>المرفوض</i></button>`:''}
+      ${a.id==='stu'?`<button type="button" class="o3-obj o3-rejw o3-axw" data-file="axes" style="--x:76%;--z:150" aria-label="محاور التعلّم"><b>📚</b><i>المحاور</i></button><button type="button" class="o3-obj o3-kidw" data-ag="prof" style="--x:20%;--z:170" aria-label="مكتب البروفيسور">${person({shirt:'#2F3B33',hat:'#D8D8D8'},'ok','')}<span class="o3-kdesk"></span><b>→ البروفيسور</b></button>`:''}
+      ${F.some(f=>f.id==='fix')?`<button type="button" class="o3-obj o3-fixw ${(F.find(f=>f.id==='fix').bad)?'bad':'ok'}" data-file="fix" style="--x:62%;--y:52%;--z:60" aria-label="الإصلاح"><b>⚡ FIX</b><i>${(F.find(f=>f.id==='fix').bad)||0} عطل</i></button>`:''}
       <span class="o3-obj o3-plant" style="--x:6%;--z:220"></span>
     </div></div></div>`;}
 
@@ -4447,12 +4746,12 @@ html.locked .gate{display:flex}
       ${open?`<section class="o3-folder" data-folder><div class="o3-ftab"><span class="hq-fi">${HQ(open.ic)||open.ic}</span> ${esc(open.t)}<button type="button" class="o3-fx" data-fclose aria-label="إغلاق الملف">×</button></div><div class="o3-paper">${open.h}</div></section>`:'<p class="pf-note">اضغط أي شيء في المكتب: الشاشة، الكمبيوتر، الدولاب، لوحة المهام، صندوق الوارد، لتفتح ملفه.</p>'}
     </div>`;}
 
-  function render(C){const st=SYSR.evaluate(C);C._st=st;try{if(st.prof)st.prof._sd=U().student((C.rep||{}).monitor||{});}catch(_){}return C.agent?office(C,C.agent,st):building(C,st);}
+  function render(C){const st=SYSR.evaluate(C);C._st=st;try{const sd=U().student((C.rep||{}).monitor||{});if(st.prof)st.prof._sd=sd;if(st.stu)st.stu._sd=sd;}catch(_){}return C.agent?office(C,C.agent,st):building(C,st);}
 
   /* ---------- interaction ---------- */
   function fit(el){const st=el.querySelector('[data-ostage]'),sc=el.querySelector('[data-oscene]');if(!st||!sc)return;const k=Math.min(1,st.clientWidth/960);sc.style.setProperty('--k',k);st.style.height=Math.round(560*k)+'px';}
   function bind(el,C,rerender){
-    const go=id=>{C.agent=id;C.file=null;rerender();const sh=el.closest('.pf-sheet');if(sh)sh.scrollTop=0;};
+    const go=id=>{if(window.LOCKX&&id&&id!==C.agent)LOCKX.flash('DECOMPILE://OFFICE/'+String(id).toUpperCase(),/^(localhost|127\.)/.test(location.hostname)?700:2800);C.agent=id;C.file=null;rerender();const sh=el.closest('.pf-sheet');if(sh)sh.scrollTop=0;};
     let dragged=false;
     el.querySelectorAll('[data-ag]').forEach(b=>b.addEventListener('click',e=>{if(dragged){e.preventDefault();return;}go(b.dataset.ag);}));
     el.querySelectorAll('[data-sback]').forEach(b=>b.addEventListener('click',()=>{C.agent=null;C.file=null;rerender();}));
@@ -4468,6 +4767,13 @@ html.locked .gate{display:flex}
         if(!hit)return;e.preventDefault();if(hit.dataset.file)openFile(hit.dataset.file);else go(hit.dataset.ag);});
       os.addEventListener('click',e=>e.preventDefault());}
     el.querySelectorAll('[data-fclose]').forEach(b=>b.addEventListener('click',()=>{C.file=null;rerender();}));
+    el.querySelectorAll('[data-fix]').forEach(b=>b.addEventListener('click',async()=>{const n=b.dataset.fix,o=el.querySelector(`[data-fxo="${n}"]`);b.disabled=true;if(o)o.textContent='> dispatch '+n+'.yml …';
+      const r=await U().dispatch(n);b.disabled=false;if(!o)return;
+      if(r.ok){o.className='fx-o ok';o.textContent='✓ بدأ التشغيل الآن على GitHub. يظهر في السجل خلال دقيقة، وتتحدث الحالة هنا تلقائيًا.';setTimeout(()=>{if(C.sys)U().live(C.sys).then(()=>rerender());},45000);}
+      else if(r.need){o.className='fx-o bad';o.textContent='يحتاج مفتاح الإصلاح أولًا (الخطوات أسفل القائمة)، أو افتح «صفحة المهمة» واضغط Run workflow.';const d=el.querySelector('.fx-key');if(d)d.open=true;}
+      else{o.className='fx-o bad';o.textContent='✗ '+r.msg;}}));
+    el.querySelectorAll('[data-tk-save]').forEach(b=>b.addEventListener('click',()=>{const i=el.querySelector('[data-tk]');if(i&&i.value.trim().length>20){U().TK.set(i.value);rerender();}}));
+    el.querySelectorAll('[data-tk-del]').forEach(b=>b.addEventListener('click',()=>{U().TK.set('');rerender();}));
     fit(el);if(C._ro)C._ro.disconnect();const so=el.querySelector('[data-ostage]');if(so&&window.ResizeObserver){C._ro=new ResizeObserver(()=>fit(el));C._ro.observe(so);}
     const stg=el.querySelector('[data-o3stage]'),w=el.querySelector('[data-o3world]');
     if(stg&&w){const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let ry=C._ry??(innerWidth<620?-15:-28),rx=C._rx??-5,sx=0,sy=0,b0=0,c0=0,down=false;
@@ -4568,6 +4874,7 @@ html.locked .gate{display:flex}
         <h4>حداثة البيانات</h4><table class="pf-t">${(M.fresh||[]).map(f=>`<tr class="${f.lag>=3?'pf-warn':''}"><th>${esc(f.name)}</th><td>${esc(f.market)}</td><td class="num">${esc(f.d)}</td><td class="num">${f.h4?esc(f.h4):'—'}</td></tr>`).join('')}</table>`;}
     if(tab==='rl')body=window.RLOG?RLOG.html():'<p class="pf-e">السجل غير متاح.</p>';
     if(tab==='ag')body=agHTML();
+    if(tab==='of'&&SYS&&window.SYSR&&SYSR._u.live&&!SYS._lv&&(!SYS._lt||Date.now()-SYS._lt>90000)){SYS._lv=1;SYS._lt=Date.now();SYSR._u.live(SYS).then(()=>{SYS._lv=0;if(tab==='of'&&!document.getElementById('pfo').hidden)render();});}
     if(tab==='of'){Object.assign(SRC,{rep:R,sys:SYS,agl:AGL});body=window.SYSR?SYSR.html(SRC):'<p class="pf-e">غير متاح.</p>';}
     el.innerHTML=head+`<div class="pf-tb">${body}</div>`;
     if(tab==='of'&&window.SYSR)SYSR.bind(el,SRC,render);
@@ -4575,7 +4882,7 @@ html.locked .gate{display:flex}
     if(tab==='rl'&&window.RLOG){RLOG.bind(el,render);if(!RLBUSY){RLBUSY=1;RLOG.evaluate().then(n=>{RLBUSY=0;if(n&&tab==='rl'&&!document.getElementById('pfo').hidden)render();});}}}
   let RLBUSY=0;
 
-  function pinView(msg){if(window.LOCKX){LOCKX.pad(document.getElementById('pfBody'),{title:'رادار النظام',sub:msg||'مكتب شيبان والبوتات · اكتب الرمز ثم ⏎',len:0,tag:'SYSTEM-RADAR',cls:'lkx-wide',
+  function pinView(msg){if(window.LOCKX){LOCKX.tap(document.getElementById('pfBody'),{id:'radar',title:'رادار النظام',sub:msg||'مكتب شيبان والبوتات · اكتب الرمز ثم ⏎',len:0,tag:'SYSTEM-RADAR',cls:'lkx-wide',
       submit:async c=>{REP=await decrypt(c);try{window.RLOG&&RLOG.setOwner(true);}catch(_){}},ok:()=>{tab='of';SRC.agent=null;render();}});return;}
     document.getElementById('pfBody').innerHTML=`<div class="pf-pin"><p>أدخل الرمز</p>
     <input id="pfIn" type="password" inputmode="numeric" autocomplete="off" maxlength="10" aria-label="الرمز" dir="ltr">
@@ -4621,7 +4928,7 @@ html.locked .gate{display:flex}
 
   function open(){const o=$('qxo');o.hidden=false;document.documentElement.classList.add('qx-open');document.body.style.overflow='hidden';requestAnimationFrame(()=>o.classList.add('on'));
     if(Q){render();return;}
-    LOCKX.pad($('qxBody'),{title:'مكتب المحاكاة السريعة',sub:'رمز سجل الصفقات نفسه يفك هذا المكتب',len:5,tag:'QUICK-DESK',none:'المحاكاة لم تُصدر أول تقرير بعد؛ تعمل كل 30 دقيقة',
+    LOCKX.tap($('qxBody'),{id:'vault',title:'مكتب المحاكاة السريعة',sub:'رمز سجل الصفقات نفسه يفك هذا المكتب',len:5,tag:'QUICK-DESK',none:'المحاكاة لم تُصدر أول تقرير بعد؛ تعمل كل 30 دقيقة',
       note:'محاكاة ورقية فقط: لا أوامر حقيقية ولا مفاتيح تداول.',submit:async c=>{await unlock(c);Q=await load();code=c;},ok:()=>{render();poll();}});}
   function close(){const o=$('qxo');o.classList.remove('on');document.documentElement.classList.remove('qx-open');document.body.style.overflow='';stopAnim();clearInterval(timer);setTimeout(()=>{o.hidden=true;},250);}
   function poll(){clearInterval(timer);timer=setInterval(async()=>{if($('qxo').hidden||!PK)return;try{const n=await load();if(n&&n.at!==Q.at){Q=n;render();}}catch(_){}},60000);}
@@ -5883,7 +6190,7 @@ html.locked .gate{display:flex}
     document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();})();
   (function logos(){const go=()=>{const L=[...document.querySelectorAll('canvas.tlogo')];if(!L.length)return;const d=Math.min(2.5,devicePixelRatio||1);
       L.forEach(c=>{const s=c.getBoundingClientRect().width||parseInt(getComputedStyle(c).width)||96;c.width=c.height=Math.round(s*d);});
-      let last=0;const f=now=>{if(now-last>40&&!document.hidden){last=now;L.forEach(c=>{if(!c.offsetParent&&!c.closest('.gate'))return;const g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,c.width,c.height);drawOrig(g,c.width,RM?0:now/1000);});}requestAnimationFrame(f);};requestAnimationFrame(f);};
+      let last=0;const f=now=>{if(now-last>40&&!document.hidden){last=now;L.forEach(c=>{if(!c.offsetParent&&!c.closest('.gate'))return;if(window.TKVIS&&!TKVIS(c))return;const g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,c.width,c.height);drawOrig(g,c.width,RM?0:now/1000);});}requestAnimationFrame(f);};requestAnimationFrame(f);};
     document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();})();
 
   /* mascot: cycles moves, and changes outfit every few moves (a new outfit on each visit too) */
@@ -5898,7 +6205,7 @@ html.locked .gate{display:flex}
     function next(t){M.n++;if(M.n%4===0){si=(si+1)%SK.length;M.skin=SK[si];M.swap=t;try{localStorage.setItem('tiko-skin',si);}catch(_){}}
       const L=MOVES.filter(m=>m!==M.move);M.move=M.n%2?L[Math.floor(Math.random()*L.length)]:'idle';M.t0=t;M.dur=M.move==='idle'?2.4+Math.random()*1.6:2.6;}
     let raf=0,t0=performance.now(),last=0;
-    const frame=now=>{raf=0;if(now-last<33){raf=requestAnimationFrame(frame);return;}last=now;const t=(now-t0)/1000;look.x+=(look.tx-look.x)*.12;look.y+=(look.ty-look.y)*.12;happy=Math.max(0,happy-.02);
+    const frame=now=>{raf=0;if(now-last<50){raf=requestAnimationFrame(frame);return;}last=now;const t=(now-t0)/1000;look.x+=(look.tx-look.x)*.12;look.y+=(look.ty-look.y)*.12;happy=Math.max(0,happy-.02);
       if(t-M.t0>M.dur)next(t);const o={skin:M.skin,move:M.move,mp:(t-M.t0)/M.dur};
       g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);draw(g,84*d,t,o);
       const sw=t-M.swap;if(M.swap&&sw<.6){const r=(10+sw*90)*d,a=1-sw/.6;g.setTransform(1,0,0,1,0,0);g.strokeStyle=`rgba(255,255,255,${a})`;g.lineWidth=2*d;g.beginPath();g.arc(cv.width/2,cv.height/2,r,0,7);g.stroke();g.fillStyle=`rgba(255,255,255,${a*.35})`;g.fillRect(0,0,cv.width,cv.height);}
@@ -5990,7 +6297,7 @@ html.locked .gate{display:flex}
   function resize(){DPR=Math.min(innerWidth<700?1:1.5,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+'px';cv.style.height=H+'px';g.setTransform(DPR,0,0,DPR,0,0);theme();col();sprites();build();}
 
   let lastF=0,sy=scrollY,sv=0,zoff=0;const MOB=innerWidth<700||matchMedia('(hover:none)').matches;
-  function frame(now){raf=0;if(MOB&&now-lastF<31){raf=requestAnimationFrame(frame);return;}lastF=now;const dt=Math.max(0,Math.min(.05,(now-t0)/1000));t0=now;const T=now/1000;
+  function frame(now){raf=0;if(MOB&&now-lastF<48){raf=requestAnimationFrame(frame);return;}lastF=now;const dt=Math.max(0,Math.min(.05,(now-t0)/1000));t0=now;const T=now/1000;
     const y=scrollY||0,dy=y-sy,HH=Math.max(1,H);sy=y;sv+=(Math.max(-1,Math.min(1,dy/(HH*.08)))-sv)*.18;if(!isFinite(sv))sv=0;zoff=(zoff+dt*.02+Math.min(.2,Math.abs(dy)/HH*.35))%1;if(!isFinite(zoff))zoff=0;const boost=1+Math.abs(sv)*2.2;
     mouse.x+=(mouse.tx-mouse.x)*.06;mouse.y+=(mouse.ty-mouse.y)*.06;
     g.clearRect(0,0,W,H);
@@ -6504,7 +6811,7 @@ html.locked .gate{display:flex}
   function open(){const o=$('nhApp');o.hidden=false;requestAnimationFrame(()=>o.classList.add('on'));document.documentElement.classList.add('ov-open');const c=$('nhTurtle'),dd=Math.min(2.5,devicePixelRatio||1);c.width=c.height=Math.round(140*dd);t0=performance.now();if(!raf)raf=requestAnimationFrame(swim);load();}
   function close(){const o=$('nhApp');o.classList.remove('on');document.documentElement.classList.remove('ov-open');setTimeout(()=>{o.hidden=true;},300);}
   function init(){const b=$('nhOpen');if(!b)return;
-    const mc=$('nhMini');if(mc&&window.TURTLE){const mg=mc.getContext('2d');let lt=0;const ml=now=>{if(now-lt>50&&!document.hidden){lt=now;mg.setTransform(1,0,0,1,0,0);mg.clearRect(0,0,128,128);TURTLE.draw(mg,128,now/1000);}requestAnimationFrame(ml);};requestAnimationFrame(ml);}b.addEventListener('click',open);$('nhX').addEventListener('click',close);
+    const mc=$('nhMini');if(mc&&window.TURTLE){const mg=mc.getContext('2d');let lt=0;const ml=now=>{if(now-lt>80&&!document.hidden&&(!window.TKVIS||TKVIS(mc))){lt=now;mg.setTransform(1,0,0,1,0,0);mg.clearRect(0,0,128,128);TURTLE.draw(mg,128,now/1000);}requestAnimationFrame(ml);};requestAnimationFrame(ml);}b.addEventListener('click',open);$('nhX').addEventListener('click',close);
     document.querySelectorAll('[data-nhm]').forEach(x=>x.addEventListener('click',()=>{mk=x.dataset.nhm;draw();}));
     document.querySelectorAll('[data-nhc]').forEach(x=>x.addEventListener('click',()=>{cf=x.dataset.nhc;draw();}));
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('nhApp').hidden)close();});}
@@ -7001,7 +7308,7 @@ html.locked .gate{display:flex}
     function poly(pts,front,col,a,w){g.strokeStyle=`rgba(${col},${a})`;g.lineWidth=w;g.beginPath();let on=false;for(const p of pts){if((p.z>=-.05)===front){on?g.lineTo(p.x,p.y):g.moveTo(p.x,p.y);on=true;}else on=false;}g.stroke();}
     function frame(now){raf=0;if(Math.abs(cv.clientWidth-W)>1||Math.abs(cv.clientHeight-H)>1)fit();if(!W||!H)return;
       const zoomed=window.visualViewport&&visualViewport.scale>1.05,ovr=!opt.hud&&!opt.av&&document.documentElement.classList.contains('ov-open');
-      if(ovr||(zoomed&&!opt.hud&&!opt.av)){return;}if((!opt.hud||zoomed)&&now-lastF<32){raf=requestAnimationFrame(frame);return;}lastF=now;
+      if(ovr||(zoomed&&!opt.hud&&!opt.av)){return;}if((!opt.hud||zoomed)&&now-lastF<(opt.hud?32:55)){raf=requestAnimationFrame(frame);return;}lastF=now;
       const t=(now-t0)/1000,m=getMode(),scan=m==='scan';
       if(!drag){yaw+=RM?0:(scan?.022:.006)+vy;pitch+=vp;vy*=.94;vp*=.9;pitch+=(.38-pitch)*.01;}
       const zt=lock?1.18:1;zoom+=(zt-zoom)*.06;
@@ -7387,11 +7694,12 @@ html.locked .gate{display:flex}
       <span class="o3-glass"></span><span class="o3-tag"><b>${L(D.tag,D.tagEn)}</b></span><span class="o3-plate"><span class="rt-full">${L(D.ar,D.en)}</span><span class="rt-short">${L(D.ar.replace(/^رادار /,''),D.en.replace(/ radar$/i,''))}</span></span></button>`;}
   /* the system radar wing: its offices are visible from outside (names and motion), but every door needs the code */
   const SYSW=[[['mgr','شيبان','Sheban','MANAGER','#2B4C7E','wall']],
-    [['data','مدير البيانات','Data manager','DATA','#1F6F5C','rack'],['pf','مدير المحفظة','Portfolio manager','FINANCE','#7A4A1E','safe']],
-    [['rad','محلل الرادار','Radar analyst','RADAR','#1C5F8A','radar'],['live','الأسعار اللحظية','Live prices','LIVE','#5B3D8F','tick'],['news','محرر الأخبار','News editor','NEWS','#8A2F3B','tv']],
-    [['agt','الوكيل الصوتي','Voice agent','AGENT','#0E7C86','mic'],['qa','مدير الجودة','Quality manager','QUALITY','#3D6B2E','shield'],['ref','المرجع العالمي','Global reference','REFERENCE','#6E5A1E','globe']],
-    [['vox','استوديو الصوت','Voice studio','VOICE','#4A4A7A','mic'],['meet','الاجتماع اليومي','Daily meeting','MEETING','#7A3018','meet']]];
-  const XI={wall:'wall',rack:'rack',safe:'safe',radar:'radar',tick:'tick',tv:'tv',mic:'mic',shield:'shield',globe:'globe'};
+    [['pf','مدير المحفظة','Portfolio manager','FINANCE','#7A4A1E','safe'],['prof','البروفيسور','Professor','PROFESSOR','#2F3B33','log'],['stu','الطالب','Student','STUDENT','#2B6CB0','candles']],
+    [['data','مدير البيانات','Data manager','DATA','#1F6F5C','rack'],['live','الأسعار اللحظية','Live prices','LIVE','#5B3D8F','tick'],['news','محرر الأخبار','News editor','NEWS','#8A2F3B','tv']],
+    [['rad','محلل الرادار','Radar analyst','RADAR','#1C5F8A','radar'],['ref','المرجع العالمي','Global reference','REFERENCE','#6E5A1E','globe'],['qa','مدير الجودة','Quality manager','QUALITY','#3D6B2E','shield']],
+    [['agt','الوكيل الصوتي','Voice agent','AGENT','#0E7C86','mic'],['fc','مختبر التوقع','Forecast lab','FORECAST','#5B3F8C','swing'],['vox','استوديو الصوت','Voice studio','VOICE','#4A4A7A','mic']],
+    [['meet','الاجتماع اليومي','Daily meeting','MEETING','#7A3018','meet']]];
+  const XI={wall:'wall',rack:'rack',safe:'safe',radar:'radar',tick:'tick',tv:'tv',mic:'mic',shield:'shield',globe:'globe',log:'log',candles:'candles',swing:'swing'};
   const hex2rgb=h=>[1,3,5].map(k=>parseInt(h.slice(k,k+2),16)).join(',');
   /* a bright holo wall screen per office: icon of the job, live-looking bars and a trace line */
   const holo=(ic,wide)=>`<span class="hq-wall${wide?' w':''}"><span class="hq-wi">${HQ(ic)}</span><span class="hq-eq"><i></i><i></i><i></i><i></i><i></i>${wide?'<i></i><i></i><i></i>':''}</span><svg class="hq-tr" viewBox="0 0 60 16" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12 L8 9 L15 11 L23 5 L31 8 L39 3 L47 7 L60 2"/></svg></span>`;
@@ -7402,12 +7710,15 @@ html.locked .gate{display:flex}
       <span class="o3-in">${inner}</span><span class="o3-glass"></span><span class="hq-laser" aria-hidden="true"></span>
       <span class="o3-tag"><b>${EN}</b></span><span class="o3-plate"><span class="hq-pl">${LK()}</span>${L(ar,en)}</span></button>`;}
   function tower(){const fl=[['cx','bn','vol'],['us','sa','cmd']],N=fl.length+SYSW.length;
-    return`<div class="o3-stage rt-stage hq" data-o3stage><div class="o3-sky"><i class="o3-stars"></i><i class="hq-grid"></i><i class="hq-beam b1"></i><i class="hq-beam b2"></i><i class="hq-beam b3"></i></div>
+    const md=window.TKCOOL?TKCOOL.mode:'calibrate';
+    return`<div class="hq-ctl" dir="ltr"><div class="hq-tele"><span>TIKO://TOWER</span><span>FLOORS ${N}</span><span>OFFICES ${SYSW.flat().length+6}</span><span class="hq-fps">FPS ${window.TKCOOL?TKCOOL.fps():60}</span></div>
+      <div class="hq-modes" role="group" aria-label="${L('وضع التشغيل','Run mode')}">${[['stealth','STEALTH',L('حركة أقل وحرارة أقل','less motion, cooler')],['calibrate','CALIBRATE',L('الوضع الكامل','full mode')],['hold','HOLD',L('تجميد الحركة','freeze motion')]].map(([k,n,t])=>`<button type="button" data-mode="${k}" aria-pressed="${md===k}" title="${t}">${n}</button>`).join('')}</div></div>
+      <div class="o3-stage rt-stage hq" data-o3stage><div class="o3-sky"><i class="o3-stars"></i><i class="hq-grid"></i><i class="hq-beam b1"></i><i class="hq-beam b2"></i><i class="hq-beam b3"></i></div>
       <div class="o3-world" data-o3world><div class="o3-sway"><div class="o3-bld">
         <div class="o3-roof hq-crown"><i class="hq-spire"></i><span class="o3-sign hq-sign"><span class="hq-logo">${HQ('tower')}</span><span>${L('برج تيكو','Tiko Tower')}<small>TIKO TOWER · HQ</small></span></span><span class="o3-sign hq-sign hq-bsign" aria-hidden="true"><span class="hq-logo">${HQ('tower')}</span><span>${L('برج تيكو','Tiko Tower')}<small>TIKO TOWER · HQ</small></span></span><span class="o3-rtop"></span></div>
-        ${fl.map((r,i)=>`<div class="o3-fl n3"><span class="o3-num">F${N-i}</span>${r.map(k=>rroom(RD(k))).join('')}<i class="hq-fs l"></i><i class="hq-fs r"></i></div>`).join('')}
+        ${fl.map((r,i)=>`<div class="o3-fl n3"${i?'':` data-layer="L1 · SIGNAL INTAKE · ${L('استقبال الإشارات','signal intake')}"`}><span class="o3-num">F${N-i}</span>${r.map(k=>rroom(RD(k))).join('')}<i class="hq-fs l"></i><i class="hq-fs r"></i></div>`).join('')}
         <div class="rt-gate" data-sysr role="button" tabindex="0" aria-label="${L('رادار النظام: مقفل بالشيفرة','System radar: locked by code')}"><span class="rt-lock">${LK()}</span><b>${L('جناح رادار النظام','System radar wing')}</b><small>${L('مقفل · الدخول بالشيفرة فقط','Locked · code only')}</small></div>
-        ${SYSW.map((r,i)=>`<div class="o3-fl n${r.length} rt-sysfl"><span class="o3-num">F${SYSW.length-i}</span>${r.map(x=>sroom(x,r.length===1)).join('')}<i class="hq-fs l"></i><i class="hq-fs r"></i></div>`).join('')}
+        ${SYSW.map((r,i)=>`<div class="o3-fl n${r.length} rt-sysfl"${i===0?` data-layer="L2 · REVERSE VERIFY · ${L('التحقق الهندسي العكسي','reverse verification')}"`:i===3?` data-layer="L3 · EXEC & MONITOR · ${L('التنفيذ والمراقبة','execution & monitoring')}"`:''}><span class="o3-num">F${SYSW.length-i}</span>${r.map(x=>sroom(x,r.length===1)).join('')}<i class="hq-fs l"></i><i class="hq-fs r"></i></div>`).join('')}
         <div class="hq-lobby" aria-hidden="true"><span class="hq-lt">${L('مقر تيكو','Tiko HQ')}<small>TIKO HQ</small></span><span class="hq-doors"><i></i><i></i></span></div>
         <span class="o3-side"></span></div></div><div class="o3-plaza"></div></div></div>
       <div class="hq-rot" role="group" aria-label="${L('تدوير البرج','Turn the tower')}"><button type="button" data-rot="1" aria-label="${L('تدوير يمين','Turn right')}">⟳</button><button type="button" data-rot="0" aria-label="${L('الواجهة','Front')}">${L('الواجهة','Front')}</button><button type="button" data-rot="-1" aria-label="${L('تدوير يسار','Turn left')}">⟲</button></div>
@@ -7421,12 +7732,13 @@ html.locked .gate{display:flex}
     const box=st.parentElement.querySelector('.hq-rot');
     if(box)box.addEventListener('click',e=>{const b=e.target.closest('[data-rot]');if(!b)return;const d=+b.dataset.rot;
       ry=d?ry+d*90:Math.round(ry/360)*360+(innerWidth<620?-15:-28);set();});}
-  function mount(){const anchor=document.querySelector('section.tvl');if(!anchor||document.getElementById('rdBox'))return;
+  function mount(){const hs=document.getElementById('hxStart'),anchor=hs?hs.nextElementSibling||hs:document.querySelector('section.tvl');if(!anchor||document.getElementById('rdBox'))return;
     const lg=(window.TURTLE&&TURTLE.markURL)?TURTLE.markURL():'';
-    anchor.insertAdjacentHTML('beforebegin',`<section class="rd" id="rdBox" aria-label="رادار تيكو"><header class="rd-hd">${lg?`<img class="rd-logo" src="${lg}" alt="" width="44" height="44">`:''}<div><span class="rd-k">جديد</span><h2>رادار تيكو</h2>
+    (hs&&anchor===hs?hs:anchor).insertAdjacentHTML(hs&&anchor===hs?'afterend':'beforebegin',`<section class="rd" id="rdBox" aria-label="رادار تيكو"><header class="rd-hd">${lg?`<img class="rd-logo" src="${lg}" alt="" width="44" height="44">`:''}<div><span class="rd-k">جديد</span><h2>رادار تيكو</h2>
       <p>اضغط أي رادار ليفحص سوقه بالسعر اللحظي: صفقة لا تتجاوز 4 ساعات، مع سعر الشراء ووقته، وسعر البيع، والوقف، والسبب.</p></div></header>
       ${tower()}</section>`);
     towerDrag(document.querySelector('#rdBox .rt-stage'));
+    document.querySelectorAll('#rdBox [data-mode]').forEach(b=>b.addEventListener('click',()=>{if(!window.TKCOOL)return;TKCOOL.set(b.dataset.mode);document.querySelectorAll('#rdBox [data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));const f=document.querySelector('#rdBox .hq-fps');if(f)f.textContent='FPS '+TKCOOL.fps();}));
     document.querySelectorAll('#rdBox [data-sysr]').forEach(sys=>{const op=()=>{if(window.PF_OPEN)PF_OPEN();else{sys.classList.remove('shake');void sys.offsetWidth;sys.classList.add('shake');}};sys.addEventListener('click',op);sys.addEventListener('keydown',e=>{if(e.key==='Enter')op();});});
     document.body.insertAdjacentHTML('beforeend',`<div class="rdo" id="rdo" hidden role="dialog" aria-modal="true" aria-label="نتائج رادار تيكو"><div class="rd-sheet"><div class="rd-top">${lg?`<img class="rd-logo sm" src="${lg}" alt="" width="34" height="34">`:''}<b id="rdTitle">رادار تيكو</b><span class="rd-own" id="rdOwn" hidden title="التوصيات تُسجَّل في سجل الرادار">● REC</span><button type="button" class="rd-again" id="rdAgain">فحص جديد</button><button type="button" class="rd-x" id="rdX" aria-label="إغلاق">✕</button>
       <nav class="rd-tabs">${RADARS.map(D=>`<button type="button" class="rd-tab" data-t="${D.k}"></button>`).join('')}</nav></div><div id="rdBody"></div><button type="button" class="rd-av" id="rdAv" hidden aria-label="إيقاف الشرح"><span class="av-box"><i class="av-w w1"></i><i class="av-w w2"></i><i class="av-w w3"></i><canvas class="av-g"></canvas><span class="av-dot"></span></span></button><svg class="av-line" id="rdAvL" aria-hidden="true"><defs><linearGradient id="avGr" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7DD3FC" stop-opacity=".25"/><stop offset="1" stop-color="#BAE6FD" stop-opacity=".95"/></linearGradient></defs><path class="c2"/><path class="c1"/>${Array.from({length:9},()=>'<circle class="nd"/>').join('')}<rect class="bx" rx="12"/><rect class="bx2" rx="12"/><circle class="end" r="3"/></svg></div></div>`);
@@ -7725,5 +8037,5 @@ html.locked .gate{display:flex}
   window.TIKO_AGENT={start,stop,tools,_conf:conf};
 })();
 
-</script><script>(function(){var B='abfcc6a296';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
+</script><script>(function(){var B='4b4642af7b';try{if(sessionStorage.getItem('wv-upd')===B)return;}catch(e){}fetch('./?nc='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var B='([0-9a-f]{10})'/);if(m&&m[1]!==B){try{sessionStorage.setItem('wv-upd',m[1]);}catch(e){}location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});})();</script></body>
 </html>
