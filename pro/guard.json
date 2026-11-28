@@ -1,12 +1,12 @@
 {
- "at": "2026-11-27 18:56 UTC",
+ "at": "2026-11-28 10:51 UTC",
  "state": "ok",
  "reasons": [],
- "win_last": null,
- "n_last": 0,
+ "win_last": 100.0,
+ "n_last": 1,
  "ref_win": 83.2,
- "drawdown_now": 0.7,
- "since_change": 0.0,
+ "drawdown_now": 0.0,
+ "since_change": -1.4,
  "rolled_back": null,
  "issue": null
 }
